@@ -3,7 +3,9 @@
 import React, { Component } from 'react';
 import {
   DrawerLayoutAndroid,
+  Image,
   View,
+  StyleSheet,
   Text
 } from 'react-native';
 
@@ -25,6 +27,12 @@ export default class TabsView extends Component {
   // this._renderNavigationView = this._renderNavigationView.bind(this);
     return (
       <View>
+        <Image style={styles.headerImage}
+          source={require('./img/drawer-header.png')}>
+          <View>
+            <Image source={require('./img/logo.png')} />
+          </View>
+        </Image>
         <DrawerItem
           title="News"
           isSelected={this.state.selectedTab === 'news'}
@@ -70,6 +78,7 @@ export default class TabsView extends Component {
         // we need a reference to this child component, e.g. to call closeDrawer()
         // React (native) has a way to directly access a component's children, see
         // https://facebook.github.io/react/docs/refs-and-the-dom.html
+        drawerWidth={290} // same width as drawer header image
         renderNavigationView={this._renderNavigationView}>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           {this._renderTabContent()}
@@ -78,3 +87,10 @@ export default class TabsView extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  headerImage: {
+    padding: 20,
+    justifyContent: 'flex-end',
+  },
+});
