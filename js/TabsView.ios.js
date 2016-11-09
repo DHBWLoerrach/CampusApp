@@ -1,3 +1,4 @@
+// @flow
 'use strict';
 
 import React, { Component } from 'react';
@@ -9,7 +10,15 @@ import {
 
 import Colors from './util/Colors';
 
+type Tab = 'news' | 'schedule' | 'canteen' | 'service';
+
+type State = {
+  selectedTab: Tab;
+}
+
 export default class TabsView extends Component {
+  state: State;
+
   constructor() {
     super();
     this.state = {selectedTab: 'news'};

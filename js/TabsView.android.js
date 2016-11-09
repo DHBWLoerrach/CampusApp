@@ -1,3 +1,4 @@
+// @flow
 'use strict';
 
 import React, { Component } from 'react';
@@ -11,15 +12,24 @@ import {
 
 import DrawerItem from './DrawerItem';
 
+type Tab = 'news' | 'schedule' | 'canteen' | 'service' | 'imprint';
+
+type State = {
+  selectedTab: Tab;
+}
+
 export default class TabsView extends Component {
+  state: State;
+  drawer: ?DrawerLayoutAndroid;
+
   constructor() {
     super();
     this.state = {selectedTab: 'news'};
   }
 
-  _onDrawerItemPressed(tab) {
+  _onDrawerItemPressed(tab: Tab) {
     this.setState({selectedTab: tab});
-    this.drawer.closeDrawer(); // drawer is set via ref attribute (see render())
+    this.drawer && this.drawer.closeDrawer(); // drawer is set via ref attribute (see render())
   }
 
   _renderNavigationView = () => {

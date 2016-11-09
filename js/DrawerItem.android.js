@@ -1,3 +1,4 @@
+// @flow
 'use strict';
 
 import React, { Component } from 'react';
@@ -12,6 +13,14 @@ import {
 import Colors from './util/Colors';
 
 export default class DrawerItem extends Component {
+  props: {
+    icon: number;
+    isSelected: boolean;
+    selectedIcon: number;
+    title: string;
+    onPress: () => void;
+  };
+
   render() {
     const icon = this.props.isSelected ? this.props.selectedIcon : this.props.icon;
     return (
