@@ -25,7 +25,7 @@ export default class TabsView extends Component {
 
   constructor() {
     super();
-    this.state = {selectedTab: 'news'};
+    this.state = {selectedTab: 'service'};
   }
 
   _onDrawerItemPressed(tab: Tab) {
