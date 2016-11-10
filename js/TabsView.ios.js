@@ -10,6 +10,8 @@ import {
 
 import Colors from './util/Colors';
 
+import ServiceScreen from './tabs/service/ServiceScreen';
+
 type Tab = 'news' | 'schedule' | 'canteen' | 'service';
 
 type State = {
@@ -61,7 +63,7 @@ export default class TabsView extends Component {
           selected={this.state.selectedTab === 'service'}
           onPress={() => this.setState({selectedTab: 'service'})}
           icon={require('./tabs/service/img/service-icon.png')}>
-          {this._renderTabContent('Service Tab')}
+          <ServiceScreen/>
         </TabBarIOS.Item>
       </TabBarIOS>
     );

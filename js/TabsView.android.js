@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import DrawerItem from './DrawerItem';
+import ServiceScreen from './tabs/service/ServiceScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service' | 'imprint';
 
@@ -78,6 +79,10 @@ export default class TabsView extends Component {
   }
 
   _renderTabContent() {
+    switch (this.state.selectedTab) {
+      case 'service':
+        return <ServiceScreen/>;
+    }
     return (<Text>{this.state.selectedTab}</Text>);
   };
 
