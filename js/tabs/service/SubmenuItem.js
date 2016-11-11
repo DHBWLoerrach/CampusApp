@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableWithoutFeedback, // TODO: check if a visual is needed?
   View,
 } from 'react-native';
 import Colors from '../../util/Colors';
@@ -14,14 +14,14 @@ import Colors from '../../util/Colors';
 export default class SubmenuItem extends Component {
   render() {
     return(
-      <TouchableHighlight onPress={this.props.onPress}>
+      <TouchableWithoutFeedback onPress={this.props.onPress}>
         <View style={styles.container}>
           <Image source={this.props.icon} />
           <Text style={styles.label}>
             {this.props.label}
           </Text>
         </View>
-      </TouchableHighlight>
+      </TouchableWithoutFeedback>
     );
   }
 }
