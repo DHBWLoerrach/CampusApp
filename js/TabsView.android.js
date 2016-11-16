@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import DrawerItem from './DrawerItem';
+import NewsScreen from './tabs/news/NewsScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service' | 'imprint';
@@ -25,7 +26,7 @@ export default class TabsView extends Component {
 
   constructor() {
     super();
-    this.state = {selectedTab: 'service'};
+    this.state = {selectedTab: 'news'};
   }
 
   _onDrawerItemPressed(tab: Tab) {
@@ -80,6 +81,8 @@ export default class TabsView extends Component {
 
   _renderTabContent() {
     switch (this.state.selectedTab) {
+      case 'news':
+        return <NewsScreen/>;
       case 'service':
         return <ServiceScreen/>;
     }

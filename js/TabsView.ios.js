@@ -11,6 +11,7 @@ import {
 import Colors from './util/Colors';
 
 import ServiceScreen from './tabs/service/ServiceScreen';
+import NewsScreen from './tabs/news/NewsScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service';
 
@@ -23,7 +24,7 @@ export default class TabsView extends Component {
 
   constructor() {
     super();
-    this.state = {selectedTab: 'service'};
+    this.state = {selectedTab: 'news'};
   }
 
   _renderTabContent(pageText){
@@ -42,7 +43,7 @@ export default class TabsView extends Component {
           selected={this.state.selectedTab === 'news'}
           onPress={() => this.setState({selectedTab: 'news'})}
           icon={require('./tabs/news/img/news-icon.png')}>
-          {this._renderTabContent('News Tab')}
+          <NewsScreen/>
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title="Vorlesungsplan"
