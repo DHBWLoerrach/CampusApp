@@ -13,7 +13,13 @@ import {
 import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
 
+import type { NewsItem } from '../../util/types';
+
 export default class NewsCell extends Component {
+  props: {
+    news: NewsItem;
+  };
+
   render() {
     const image = require("./img/news-announcement.png");
     return(

@@ -11,6 +11,8 @@ import {
 import NewsCell from './NewsCell';
 import Colors from '../../util/Colors';
 
+import NewsItem from '../../util/types.js';
+
 export default class NewsScreen extends Component {
   constructor() {
     super();
@@ -24,7 +26,7 @@ export default class NewsScreen extends Component {
     };
   }
 
-  _renderRow(newsItem) {
+  _renderRow(newsItem: NewsItem) {
     return(<NewsCell news={newsItem}/>);
   }
 

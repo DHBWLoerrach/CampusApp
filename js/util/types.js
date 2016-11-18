@@ -8,3 +8,9 @@ export type Lecture = {
   endTime: number;
   location: ?string;
 };
+
+export type NewsItem = {
+  image: ?string;
+  heading: string;
+  subheading: string;
+}
