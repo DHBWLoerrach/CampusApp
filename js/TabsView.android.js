@@ -12,6 +12,7 @@ import {
 
 import DrawerItem from './DrawerItem';
 import NewsScreen from './tabs/news/NewsScreen';
+import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service' | 'imprint';
@@ -26,7 +27,7 @@ export default class TabsView extends Component {
 
   constructor() {
     super();
-    this.state = {selectedTab: 'news'};
+    this.state = {selectedTab: 'schedule'};
   }
 
   _onDrawerItemPressed(tab: Tab) {
@@ -83,6 +84,8 @@ export default class TabsView extends Component {
     switch (this.state.selectedTab) {
       case 'news':
         return <NewsScreen/>;
+      case 'schedule':
+          return <ScheduleScreen/>;
       case 'service':
         return <ServiceScreen/>;
     }

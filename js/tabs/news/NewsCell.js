@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import Colors from '../../util/Colors';
+import Constants from '../../util/Constants';
 
 export default class NewsCell extends Component {
   render() {
@@ -34,19 +35,18 @@ export default class NewsCell extends Component {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    padding: 15,
+    paddingVertical: Constants.listViewRowPaddingVertical,
+    paddingHorizontal: Constants.listViewRowPaddingHorizontal,
   },
   image: {
     marginRight: 15,
   },
   heading: {
-    fontSize: 15, // TODO make global constant
+    fontSize: Constants.bigFont,
     fontWeight: 'bold',
-    marginBottom: 4,
     color: Colors.dhbwRed,
   },
   subheading: {
-    fontSize: 12, // TODO make global constant
-    marginBottom: 4,
+    fontSize: Constants.smallFont,
   },
 });
