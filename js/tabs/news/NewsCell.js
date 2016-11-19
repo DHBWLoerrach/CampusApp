@@ -23,12 +23,12 @@ export default class NewsCell extends Component {
   render() {
     const image = require("./img/news-announcement.png");
     return(
-      // TODO: Heading overflows to the right ...
       <TouchableHighlight underlayColor={Colors.cellBorder}
         onPress={()=>alert('Show news details')}>
         <View style={styles.row}>
           <Image source={image} style={styles.image}/>
-          <View>
+          {/* TODO: does not work on Android, remove flex and it works - bug? */}
+          <View style={{flex: 1}}>
             <Text style={styles.heading}>{this.props.news.heading}</Text>
             <Text style={styles.subheading}>{this.props.news.subheading}</Text>
           </View>

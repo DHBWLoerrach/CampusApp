@@ -27,7 +27,7 @@ export default class TabsView extends Component {
 
   constructor() {
     super();
-    this.state = {selectedTab: 'schedule'};
+    this.state = {selectedTab: 'news'};
   }
 
   _onDrawerItemPressed(tab: Tab) {
@@ -85,7 +85,7 @@ export default class TabsView extends Component {
       case 'news':
         return <NewsScreen/>;
       case 'schedule':
-          return <ScheduleScreen/>;
+        return <ScheduleScreen/>;
       case 'service':
         return <ServiceScreen/>;
     }

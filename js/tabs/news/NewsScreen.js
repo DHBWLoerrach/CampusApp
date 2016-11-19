@@ -20,8 +20,8 @@ export default class NewsScreen extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([
         {heading: 'News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1', subheading: 'Foobar'},
-        {heading: 'Angespannte Parkplatzsituation zum Studieninformationstag', subheading: 'Blabla'},
-        {heading: 'News3', subheading: 'OneTwoThree'},
+        {heading: 'Angespannte Parkplatzsituation zum komm Studieninformationstag', subheading: 'Blabla'},
+        {heading: 'News3', subheading: 'OneTwoThree und so weiter immer weiter eins123'},
       ])
     };
   }
@@ -36,7 +36,7 @@ export default class NewsScreen extends Component {
 
   render() {
     return(
-      <ListView
+      <ListView style={{backgroundColor: 'white'}}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         renderSeparator={this._renderSeparator}

@@ -64,7 +64,7 @@ export default class ScheduleScreen extends Component {
 
   render() {
     return(
-      <ListView
+      <ListView style={{backgroundColor: 'white'}}
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
         renderSeparator={this._renderSeparator}
