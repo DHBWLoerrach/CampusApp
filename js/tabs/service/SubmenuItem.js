@@ -6,22 +6,23 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback, // TODO: check if a visual is needed?
   View,
 } from 'react-native';
+
 import Colors from '../../util/Colors';
+import IconTouchable from '../../util/IconTouchable';
 
 export default class SubmenuItem extends Component {
   render() {
     return(
-      <TouchableWithoutFeedback onPress={this.props.onPress}>
+      <IconTouchable onPress={()=>alert('Go to submenu')}>
         <View style={styles.container}>
           <Image source={this.props.icon} />
           <Text style={styles.label}>
             {this.props.label}
           </Text>
         </View>
-      </TouchableWithoutFeedback>
+      </IconTouchable>
     );
   }
 }
