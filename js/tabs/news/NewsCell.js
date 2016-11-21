@@ -6,12 +6,12 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native';
 
 import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
+import ListCellTouchable from '../../util/ListCellTouchable';
 
 import type { NewsItem } from '../../util/types';
 
@@ -23,7 +23,7 @@ export default class NewsCell extends Component {
   render() {
     const image = require("./img/news-announcement.png");
     return(
-      <TouchableHighlight underlayColor={Colors.cellBorder}
+      <ListCellTouchable underlayColor={Colors.cellBorder}
         onPress={()=>alert('Show news details')}>
         <View style={styles.row}>
           <Image source={image} style={styles.image}/>
@@ -33,7 +33,7 @@ export default class NewsCell extends Component {
             <Text style={styles.subheading}>{this.props.news.subheading}</Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </ListCellTouchable>
     );
   }
 }
