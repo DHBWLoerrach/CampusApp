@@ -4,14 +4,13 @@
 import React, { Component } from 'react';
 import {
   ListView,
-  StyleSheet,
-  View,
 } from 'react-native';
 
-import NewsCell from './NewsCell';
+import CampusListView from '../../util/CampusListView';
 import Colors from '../../util/Colors';
-
 import NewsItem from '../../util/types.js';
+
+import NewsCell from './NewsCell';
 
 export default class NewsScreen extends Component {
   constructor() {
@@ -30,24 +29,12 @@ export default class NewsScreen extends Component {
     return(<NewsCell news={newsItem}/>);
   }
 
-  _renderSeparator(sectionId, rowId) {
-    return(<View style={styles.separator} key={rowId}/>);
-  }
-
   render() {
     return(
-      <ListView style={{backgroundColor: 'white'}}
+      <CampusListView
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
-        renderSeparator={this._renderSeparator}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  separator: {
-    backgroundColor: Colors.cellBorder,
-    height: 1,
-  },
-});

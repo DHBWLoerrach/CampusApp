@@ -4,12 +4,10 @@
 import React, { Component } from 'react';
 import {
   ListView,
-  StyleSheet,
-  Text,
-  View,
 } from 'react-native';
 
 import Colors from '../../util/Colors';
+import CampusListView from '../../util/CampusListView';
 
 import type { Lecture } from '../../util/types';
 
@@ -54,30 +52,17 @@ export default class ScheduleScreen extends Component {
     return <LectureRow lecture={lecture}/>;
   }
 
-  _renderSeparator(sectionId, rowId) {
-    return(<View style={styles.separator} key={rowId}/>);
-  }
-
   _renderDayHeader(sectionData: any, sectionID: string) {
     return <DayHeader title={sectionID} />;
   }
 
   render() {
     return(
-      <ListView style={{backgroundColor: 'white'}}
+      <CampusListView
         dataSource={this.state.dataSource}
         renderRow={this._renderRow}
-        renderSeparator={this._renderSeparator}
         renderSectionHeader={this._renderDayHeader}
       />
     );
   }
 }
-
-
-const styles = StyleSheet.create({
-  separator: {
-    backgroundColor: Colors.cellBorder,
-    height: 1,
-  },
-});
