@@ -4,9 +4,11 @@
 import React, { Component } from 'react';
 import {
   ListView,
+  View,
 } from 'react-native';
 
 import Colors from '../../util/Colors';
+import CampusHeader from '../../util/CampusHeader';
 import CampusListView from '../../util/CampusListView';
 
 import type { Lecture } from '../../util/types';
@@ -58,11 +60,14 @@ export default class ScheduleScreen extends Component {
 
   render() {
     return(
-      <CampusListView
-        dataSource={this.state.dataSource}
-        renderRow={this._renderRow}
-        renderSectionHeader={this._renderDayHeader}
-      />
+      <View>
+        <CampusHeader title="Vorlesungsplan"/>
+        <CampusListView
+          dataSource={this.state.dataSource}
+          renderRow={this._renderRow}
+          renderSectionHeader={this._renderDayHeader}
+        />
+      </View>
     );
   }
 }

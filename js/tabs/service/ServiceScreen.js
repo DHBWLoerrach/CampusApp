@@ -6,7 +6,10 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  View,
 } from 'react-native';
+
+import CampusHeader from '../../util/CampusHeader';
 
 import Submenu from './Submenu';
 
@@ -46,15 +49,19 @@ export default class ServiceScreen extends Component {
 
   render() {
     return(
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Submenu menuItems={this._getSubmenuItems()}/>
-      </ScrollView>
+      <View>
+        <CampusHeader title="Service"/>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+          <Submenu menuItems={this._getSubmenuItems()}/>
+        </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   contentContainer: {
+    backgroundColor: 'white',
     marginTop: 20,
   }
 });
