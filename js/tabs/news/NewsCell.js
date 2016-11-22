@@ -24,7 +24,7 @@ export default class NewsCell extends Component {
     const image = require("./img/news-announcement.png");
     return(
       <ListCellTouchable underlayColor={Colors.cellBorder}
-        onPress={()=>alert('Show news details')}>
+        onPress={this.props.onPress}>
         <View style={styles.row}>
           <Image source={image} style={styles.image}/>
           {/* TODO: does not work on Android, remove flex and it works - bug? */}
