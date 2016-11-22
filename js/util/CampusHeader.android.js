@@ -15,7 +15,6 @@ export default class CampusHeader extends Component {
     let leftActionItem = this.props.leftActionItem;
     if (!leftActionItem) {
       leftActionItem = {
-        title: 'Menu',
         icon: require('../img/menu.png'),
         onPress: () => alert('TODO: show drawer')
       };
