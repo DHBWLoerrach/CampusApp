@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    flex: 2,
     alignItems: 'center',
   },
   leftActionItem: {
