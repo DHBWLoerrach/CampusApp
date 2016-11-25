@@ -74,7 +74,7 @@ class NewsDetail extends Component {
     </html>
     `;
 
-    let leftActionItem = {
+    const leftActionItem = {
       title: 'Back',
       icon: require('../../img/arrow-back.png'),
       onPress: this.props.backAction,
