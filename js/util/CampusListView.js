@@ -18,12 +18,12 @@ export default class CampusListView extends Component {
   render() {
     return(
       <ListView
+        automaticallyAdjustContentInsets={false} // iOS: avoid top margin inset
         dataSource={this.props.dataSource}
         renderRow={this.props.renderRow}
         renderSectionHeader={this.props.renderSectionHeader}
         renderSeparator={this._renderSeparator}
-        style={styles.listView}
-      >
+        style={styles.listView}>
         {this.props.children}
       </ListView>
     );

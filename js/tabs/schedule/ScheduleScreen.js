@@ -30,7 +30,7 @@ export default class ScheduleScreen extends Component {
       dataSource: dataSource.cloneWithRowsAndSections({
         'Montag, 21.11.2016': {
           1: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
-          2: {title: 'Betriebssysteme', startTime: '13:00', endTime: '16:15'},
+          2: {title: 'Betriebssysteme für Fortgeschrittene', startTime: '13:00', endTime: '16:15'},
         },
         'Dienstag, 22.11.2016': {
           3: {title: 'Workshop'},
@@ -45,6 +45,13 @@ export default class ScheduleScreen extends Component {
         },
         'Freitag, 25.11.2016': {
           7: {title: 'Workshop'},
+        },
+        'Montag, 28.11.2016': {
+          8: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
+          9: {title: 'Betriebssysteme für Fortgeschrittene', startTime: '13:00', endTime: '16:15'},
+        },
+        'Dienstag, 29.11.2016': {
+          10: {title: 'Workshop'},
         },
       })
     };
