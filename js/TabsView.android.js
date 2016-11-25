@@ -89,7 +89,11 @@ export default class TabsView extends Component {
       case 'service':
         return <ServiceScreen/>;
     }
-    return (<Text>{this.state.selectedTab}</Text>);
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Text>{this.state.selectedTab}</Text>
+      </View>
+    );
   };
 
   render() {
@@ -101,9 +105,7 @@ export default class TabsView extends Component {
         // https://facebook.github.io/react/docs/refs-and-the-dom.html
         drawerWidth={290} // same width as drawer header image
         renderNavigationView={this._renderNavigationView}>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          {this._renderTabContent()}
-        </View>
+        {this._renderTabContent()}
       </DrawerLayoutAndroid>
     );
   }

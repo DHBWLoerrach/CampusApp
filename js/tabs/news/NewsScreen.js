@@ -27,7 +27,7 @@ class NewsList extends Component {
     this.state = {
       dataSource: ds.cloneWithRows([
         {heading: 'News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1 News1', subheading: 'Foobar'},
-        {heading: 'Angespannte Parkplatzsituation zum komm Studieninformationstag', subheading: 'Blabla'},
+        {heading: 'Angespannte Parkplatzsituation zum Studieninformationstag erwartet', subheading: 'Blabla'},
         {heading: 'News3', subheading: 'OneTwoThree und so weiter immer weiter eins123'},
         {heading: 'News3', subheading: 'OneTwoThree und so weiter immer weiter eins123'},
         {heading: 'News3', subheading: 'OneTwoThree und so weiter immer weiter eins123'},
@@ -152,8 +152,7 @@ export default class NewsScreen extends Component {
 
   render() {
     return(
-      // TODO: NavigationCardStack not working on Android
-      // TODO: once Android works, check if back button functions out of the box
+      // TODO: Android: check if back button functions out of the box
       <NavigationCardStack
         onNavigateBack={this._onPopRoute}
         navigationState={this.state.navigationState}

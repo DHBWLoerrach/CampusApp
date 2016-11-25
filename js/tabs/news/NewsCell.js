@@ -27,8 +27,7 @@ export default class NewsCell extends Component {
         onPress={this.props.onPress}>
         <View style={styles.row}>
           <Image source={image} style={styles.image}/>
-          {/* TODO: does not work on Android, remove flex and it works - bug? */}
-          <View style={{flex: 1}}>
+          <View style={styles.newsheadings}>
             <Text style={styles.heading}>{this.props.news.heading}</Text>
             <Text style={styles.subheading}>{this.props.news.subheading}</Text>
           </View>
@@ -46,6 +45,9 @@ const styles = StyleSheet.create({
   },
   image: {
     marginRight: 15,
+  },
+  newsheadings: {
+    flex: 1,
   },
   heading: {
     fontSize: Constants.bigFont,
