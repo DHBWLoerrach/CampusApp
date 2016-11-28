@@ -5,10 +5,12 @@ import React, { Component } from 'react';
 import {
   ListView,
   NavigationExperimental,
+  StyleSheet,
   View,
   WebView,
 } from 'react-native';
 
+import Colors from '../../util/Colors';
 import CampusHeader from '../../util/CampusHeader';
 import CampusListView from '../../util/CampusListView';
 import NewsItem from '../../util/types.js';
@@ -60,10 +62,29 @@ class NewsList extends Component {
 
 class NewsDetail extends Component {
   render() {
+    const styles = StyleSheet.create({
+      webContainer: {
+        flex: 1
+      }
+    });
+
+    const title = '„Jetzt liegt es an uns!“';
+    const description = 'DHBW Lörrach verabschiedet ihre Absolventen';
+    const img = '<img src="https://www.dhbw-loerrach.de/index.php?eID=tx_nawsecuredl&u=0&g=0&t=1480417426&hash=1b37de338234132444b7b5fcfefefc0bdbf5293a&file=typo3temp/_processed_/csm_161119_Absolventenfeier_2016_46_web_0040a003ee.jpg" width="250" height="250" alt="" border="0">';
+
     const HTML = `
     <!DOCTYPE html>\n
     <html>
+      <head>
+        <style>
+          body {font-family: -apple-system;}
+          h1 {color: ${Colors.dhbwRed};}
+        </style>
+      </head>
       <body>
+        <h1>${title}</h1>
+        <h2>${description}</h2>
+        ${img}
         <br><br><div>Mit den Worten „Sie haben alle Voraussetzungen für ein spannendes und ausfüllendes Leben: Machen Sie etwas daraus!“ verabschiedete Prof. Dr. Theodor Sproll, Rektor der DHBW Lörrach, mehr als 500 Absolventinnen und Absolventen, die in diesem Herbst ihr duales Bachelor-Studium in Lörrach erfolgreich beendet haben. Am Samstagabend feierten die frischgebackenen Hochschulabsolventen mit vielen Angehörigen und Hochschulmitgliedern im Basler Congress Center diesen wichtigen und wegweisenden Lebensabschnitt.
      In seiner Rede hob Rektor Sproll hervor, dass die Absolventinnen und Absolventen wegen ihres Fachwissens und Talents von der Arbeitswelt dringend erwartet werden. Die DHBW Lörrach dürfe behaupten, so Sproll, einen wichtigen Anteil an der positiven Entwicklung in der Stadt, der Region und ganz Baden-Württemberg zu leisten. Um diese Attraktivität zu erhalten, müsse kontinuierlich an am Ausbau der Stärken der Region gearbeitet werden. „Es bedarf junger Talente wie Ihnen, die ihren wichtigen Beitrag zur wirtschaftlichen und gesellschaftlichen Entwicklung beitragen können“, so Sproll. Ebenso wichtig wie das notwendige technische Rüstzeug sei für die jungen Menschen aber auch das Gespür und Geschick, sich in unterschiedlichen Kulturen bewegen zu können und die Unterschiedlichkeit als Stärke nutzen zu können.
      Die Absolventinnen und Absolventen sieht der Lörracher Rektor für eine Zukunft mit permanenten und immer schnelleren Veränderungen bestens gerüstet. Wichtig sei dabei vor allem die Bereitschaft, sich permanent mit diesen Änderungen auseinanderzusetzen und die Bereitschaft, diese auch positiv zu gestalten.&nbsp;</div>
@@ -80,12 +101,11 @@ class NewsDetail extends Component {
       onPress: this.props.backAction,
     };
     return(
-      <View>
+      <View style={styles.webContainer}>
         <CampusHeader title="News" leftActionItem={leftActionItem}/>
-        <WebView
-          style={{height: 400}}
+        <WebView contentInset={{bottom: 50}}
           source={{html: HTML}}
-          scalesPageToFit={false}
+          bounces={false}
         />
       </View>
     );
