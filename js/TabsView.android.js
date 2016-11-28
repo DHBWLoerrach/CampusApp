@@ -28,6 +28,8 @@ export default class TabsView extends Component {
   constructor() {
     super();
     this.state = {selectedTab: 'news'};
+
+    this._renderNavigationView = this._renderNavigationView.bind(this);
   }
 
   _onDrawerItemPressed(tab: Tab) {
@@ -35,9 +37,7 @@ export default class TabsView extends Component {
     this.drawer && this.drawer.closeDrawer(); // drawer is set via ref attribute (see render())
   }
 
-  _renderNavigationView = () => {
-  // using fat arrow like () => binds this function properly, effect is like this:
-  // this._renderNavigationView = this._renderNavigationView.bind(this);
+  _renderNavigationView() {
     return (
       <View>
         <Image style={styles.headerImage}
