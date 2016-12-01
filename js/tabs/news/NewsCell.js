@@ -18,6 +18,7 @@ import type { NewsItem } from '../../util/types';
 export default class NewsCell extends Component {
   props: {
     news: NewsItem;
+    onPress: ?() => void;
   };
 
   render() {
