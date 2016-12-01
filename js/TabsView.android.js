@@ -25,8 +25,8 @@ export default class TabsView extends Component {
   state: State;
   drawer: ?DrawerLayoutAndroid;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {selectedTab: 'news'};
 
     this._renderNavigationView = this._renderNavigationView.bind(this);

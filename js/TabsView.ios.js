@@ -23,8 +23,8 @@ type State = {
 export default class TabsView extends Component {
   state: State;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {selectedTab: 'news'};
   }
 

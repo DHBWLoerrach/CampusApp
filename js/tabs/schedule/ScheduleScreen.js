@@ -17,8 +17,8 @@ import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
 export default class ScheduleScreen extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     const dataSource = new ListView.DataSource({
       getRowData: (data, sectionId, rowId) => data[sectionId][rowId],
       getSectionHeaderData: (data, sectionId) => data[sectionId],
