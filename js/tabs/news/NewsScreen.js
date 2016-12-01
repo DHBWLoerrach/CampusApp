@@ -72,7 +72,7 @@ class NewsDetail extends Component {
 
     const title = '„Jetzt liegt es an uns!“';
     const description = 'DHBW Lörrach verabschiedet ihre Absolventen';
-    const img = '<img src="https://www.dhbw-loerrach.de/index.php?eID=tx_nawsecuredl&u=0&g=0&t=1480417426&hash=1b37de338234132444b7b5fcfefefc0bdbf5293a&file=typo3temp/_processed_/csm_161119_Absolventenfeier_2016_46_web_0040a003ee.jpg" width="250" height="250" alt="" border="0">';
+    const img = '<img src="https://www.dhbw-loerrach.de/uploads/pics/161119_Absolventenfeier_2016_46_web.jpg" width="250" height="250" alt="" border="0">';
 
     const HTML = `
     <!DOCTYPE html>\n
