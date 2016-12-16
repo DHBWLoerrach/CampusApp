@@ -10,7 +10,7 @@ export type Lecture = {
 };
 
 export type NewsItem = {
-  image: ?string;
+  imgUrl: ?string;
   heading: string;
   subheading: string;
   time: any;

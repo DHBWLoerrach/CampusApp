@@ -9,7 +9,7 @@ export function fetchNewsData(newsXMLData) {
   var newsList = [];
   for(var i = 0; i < newsItems.length; i++) {
     var newsItem = newsItems.item(i);
-    var newsContent = "", newsImage = "";
+    var newsContent = "", newsImage = null;
 
     // there is one content:encoded element per news item
     var contentElement = newsItem.getElementsByTagName('content:encoded').item(0);

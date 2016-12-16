@@ -25,18 +25,19 @@ export default class NewsCell extends Component {
   };
 
   render() {
-    const image = require("./img/news-announcement.png");
+    let image = require('./img/news-announcement.png');
+    if(this.props.news.imgUrl) image = {uri: this.props.news.imgUrl};
     return(
       <ListCellTouchable underlayColor={Colors.cellBorder}
         onPress={this.props.onPress}>
         <View style={styles.row}>
-          <Image source={image} style={styles.image}/>
+          <Image style={styles.image} source={image}/>
           <View style={styles.newsheadings}>
             <Text style={styles.heading}>{this.props.news.heading}</Text>
             <Text style={styles.subheading}>{this.props.news.subheading}</Text>
             <Text style={styles.time}>
               {distanceInWordsToNow(
-                this.props.news.time, {locale: deLocale, addSuffix: true,}
+                this.props.news.time, {locale: deLocale, addSuffix: true}
               )}
             </Text>
           </View>
@@ -53,6 +54,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: Constants.listViewRowPaddingHorizontal,
   },
   image: {
+    height: 100,
+    width: 100,
     marginRight: 15,
   },
   newsheadings: {
