@@ -14,7 +14,7 @@ import NewsCell from './NewsCell';
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
 import CampusListView from '../../util/CampusListView';
-import { fetchNewsData } from '../../util/helpers';
+import { fetchNewsData } from '../../util/helpers'; //TODO: container component?
 
 export default class NewsList extends Component {
   constructor(props) {
@@ -34,6 +34,7 @@ export default class NewsList extends Component {
       const responseBody = await response.text();
       const newsItems = fetchNewsData(responseBody);
 
+      // TODO: would a ScrollView suffice? we only have < 30 items
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({loading: false, newsItems: ds.cloneWithRows(newsItems)});
     } catch(e) {
@@ -48,29 +49,23 @@ export default class NewsList extends Component {
   _renderScreenContent() {
     const {newsItems, loading, error} = this.state;
 
-    const styles = {
-      flex: 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-    };
-
     if(loading) {
       return(
-        <View style={styles}>
-          <ActivityIndicator animating={true} />
+        <View style={styles.center}>
+          <ActivityIndicator animating={true}/>
         </View>
       );
     }
 
-    if (error) {
+    if(error) {
       return(
-        <View style={styles}>
-          <Text> Fehler beim Laden der News </Text>
+        <View style={styles.center}>
+          <Text>Fehler beim Laden der News</Text>
         </View>
       );
     }
 
-    return (
+    return(
       <CampusListView
         dataSource={this.state.newsItems} renderRow={this._renderRow}/>
     );
@@ -78,10 +73,22 @@ export default class NewsList extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={styles.container}>
         <CampusHeader title="News"/>
         {this._renderScreenContent()}
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});

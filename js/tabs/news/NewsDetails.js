@@ -13,12 +13,6 @@ import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
   render() {
-    const styles = StyleSheet.create({
-      webContainer: {
-        flex: 1
-      }
-    });
-
     const title = '„Jetzt liegt es an uns!“';
     const description = 'DHBW Lörrach verabschiedet ihre Absolventen';
     const img = '<img src="https://www.dhbw-loerrach.de/uploads/pics/161119_Absolventenfeier_2016_46_web.jpg" width="250" height="250" alt="" border="0">';
@@ -52,8 +46,8 @@ export default class NewsDetails extends Component {
       onPress: this.props.backAction,
     };
     return(
-      <View style={styles.webContainer}>
-        <CampusHeader title="News" leftActionItem={leftActionItem}/>
+      <View style={styles.container}>
+        <CampusHeader title='News' leftActionItem={leftActionItem}/>
         <WebView contentInset={{bottom: 50}}
           source={{html: HTML}}
           bounces={false}
@@ -62,3 +56,9 @@ export default class NewsDetails extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
