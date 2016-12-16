@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "date-fns": "^1.20.1",
     "react": "~15.4.0-rc.4",
     "react-native": "0.39.2",
     "xmldom": "^0.1.27"
