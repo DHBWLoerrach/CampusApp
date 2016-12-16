@@ -47,11 +47,11 @@ export default class NewsScreen extends Component {
   //   return true;
   // }
 
-  _onNavigationChange(type) {
+  _onNavigationChange(type, data) {
     let {navigationState} = this.state;
     switch (type) {
       case 'push':
-        const route = {key: 'Route-' + Date.now()};
+        const route = {key: 'Route-' + Date.now(), news: data.news};
         navigationState = NavigationStateUtils.push(navigationState, route);
         break;
 
@@ -70,7 +70,10 @@ export default class NewsScreen extends Component {
       return(<NewsList onPressNewsItem={this._onPushRoute}/>);
     }
     else {
-      return(<NewsDetails backAction={this._onPopRoute}/>);
+      return(
+        <NewsDetails
+          backAction={this._onPopRoute} news={sceneProps.scene.route.news}/>
+      );
     }
   }
 

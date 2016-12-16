@@ -29,7 +29,7 @@ export default class NewsCell extends Component {
     if(this.props.news.imgUrl) image = {uri: this.props.news.imgUrl};
     return(
       <ListCellTouchable underlayColor={Colors.cellBorder}
-        onPress={this.props.onPress}>
+        onPress={() => this.props.onPress({news: this.props.news})}>
         <View style={styles.row}>
           <Image style={styles.image} source={image}/>
           <View style={styles.newsheadings}>

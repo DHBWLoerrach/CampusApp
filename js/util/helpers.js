@@ -38,10 +38,12 @@ export function fetchNewsData(newsXMLData) {
       id: i,
       heading: newsItem.getElementsByTagName('title').item(0).childNodes.item(0).nodeValue,
       subheading: newsItem.getElementsByTagName('description').item(0).childNodes.item(0).nodeValue,
-      url: newsItem.getElementsByTagName('link').item(0).childNodes.item(0).nodeValue,
+      // TODO: use this to open news in browser (e.g. Safari on iOS)?
+      // when used, add url to NewsItem type
+      // url: newsItem.getElementsByTagName('link').item(0).childNodes.item(0).nodeValue,
       time: time,
       imgUrl: newsImage,
-      text: newsContent,
+      body: newsContent,
     });
    };
 

@@ -13,5 +13,6 @@ export type NewsItem = {
   imgUrl: ?string;
   heading: string;
   subheading: string;
+  body: string;
   time: any;
 }
