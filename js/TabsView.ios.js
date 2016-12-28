@@ -25,7 +25,7 @@ export default class TabsView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedTab: 'news'};
+    this.state = {selectedTab: 'schedule'};
   }
 
   _renderTabContent(pageText){

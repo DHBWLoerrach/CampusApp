@@ -13,6 +13,7 @@ import CampusListView from '../../util/CampusListView';
 
 import type { Lecture } from '../../util/types';
 
+import CourseModal from './CourseModal';
 import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
@@ -27,6 +28,8 @@ export default class ScheduleScreen extends Component {
     });
 
     this.state = {
+      course: 'ABC',
+      courseModalVisible: false,
       dataSource: dataSource.cloneWithRowsAndSections({
         'Montag, 21.11.2016': {
           1: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
@@ -65,14 +68,39 @@ export default class ScheduleScreen extends Component {
     return <DayHeader title={sectionID} />;
   }
 
+  _setCourseModalVisible(visible) {
+    this.setState({courseModalVisible: visible});
+  }
+
+  _setCourseName(course) {
+    this.setState({course: course});
+    this._setCourseModalVisible(false);
+  }
+
   render() {
+    const rightActionItem = {
+      title: 'Edit',
+      icon: require('./img/edit.png'),
+      onPress: () => this._setCourseModalVisible(true),
+      show: 'always', // needed for Android
+    };
+
     return(
       <View>
-        <CampusHeader title="Vorlesungsplan"/>
+        <CampusHeader
+          title={`Vorlesungsplan ${this.state.course}`}
+          rightActionItem={rightActionItem}
+        />
         <CampusListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}
           renderSectionHeader={this._renderDayHeader}
+        />
+        <CourseModal
+          visible={this.state.courseModalVisible}
+          course={this.state.course}
+          onClose={() => this._setCourseModalVisible(false)}
+          onCourseChange={(course) => this._setCourseName(course)}
         />
       </View>
     );
