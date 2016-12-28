@@ -17,7 +17,7 @@ export default class CampusHeader extends Component {
       if(actionItem) {
         return(
           <TouchableOpacity onPress={actionItem.onPress}>
-            <Image source={actionItem.icon}/>
+            <Image style={styles.actionImage} source={actionItem.icon}/>
           </TouchableOpacity>
         );
       } else {
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: Colors.dhbwRed,
     paddingTop: 20,
-    height: 100,
+    height: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -59,15 +59,22 @@ const styles = StyleSheet.create({
   leftActionItem: {
     flex: 1,
     alignItems: 'flex-start',
+    paddingHorizontal: 5,
   },
   titleText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 36,
+    fontSize: 22,
     letterSpacing: -1,
   },
   rightActionItem: {
     flex: 1,
     alignItems: 'flex-end',
+    paddingLeft: 5,
+    paddingRight: 25,
+  },
+  actionImage: {
+    width: 22,
+    height: 22,
   },
 });
