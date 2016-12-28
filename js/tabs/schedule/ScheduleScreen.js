@@ -3,7 +3,9 @@
 
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
   ListView,
+  StyleSheet,
   View,
 } from 'react-native';
 
@@ -17,46 +19,24 @@ import CourseModal from './CourseModal';
 import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
+import { getLecturesFromiCalData } from '../../util/helpers'; //TODO: container component?
+
+const dataSource = new ListView.DataSource({
+  rowHasChanged: (r1, r2) => r1 !== r2,
+  sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+});
+
 export default class ScheduleScreen extends Component {
   constructor(props) {
     super(props);
-    const dataSource = new ListView.DataSource({
-      getRowData: (data, sectionId, rowId) => data[sectionId][rowId],
-      getSectionHeaderData: (data, sectionId) => data[sectionId],
-      rowHasChanged: (r1, r2) => r1 !== r2,
-      sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
-    });
 
+    let course = null;
     this.state = {
-      course: 'ABC',
-      courseModalVisible: false,
-      dataSource: dataSource.cloneWithRowsAndSections({
-        'Montag, 21.11.2016': {
-          1: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
-          2: {title: 'Betriebssysteme für Fortgeschrittene', startTime: '13:00', endTime: '16:15'},
-        },
-        'Dienstag, 22.11.2016': {
-          3: {title: 'Workshop'},
-        },
-        'Mittwoch, 23.11.2016': {
-          4: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
-          5: {title: 'Betriebssysteme', startTime: '13:00', endTime: '16:15'},
-        },
-        'Donnerstag, 24.11.2016': {
-          5: {title: 'Web', startTime: '9:00', endTime: '12:15', location: 'A333'},
-          6: {title: 'BWL', startTime: '13:00', endTime: '16:15'},
-        },
-        'Freitag, 25.11.2016': {
-          7: {title: 'Workshop'},
-        },
-        'Montag, 28.11.2016': {
-          8: {title: 'Prog1', startTime: '9:00', endTime: '12:15', location: 'A333'},
-          9: {title: 'Betriebssysteme für Fortgeschrittene', startTime: '13:00', endTime: '16:15'},
-        },
-        'Dienstag, 29.11.2016': {
-          10: {title: 'Workshop'},
-        },
-      })
+      course: course,
+      courseModalVisible: !course,
+      dataSource: dataSource.cloneWithRowsAndSections({}),
+      error: false,
+      loading: false,
     };
   }
 
@@ -73,8 +53,53 @@ export default class ScheduleScreen extends Component {
   }
 
   _setCourseName(course) {
-    this.setState({course: course});
+    this.setState({course: course, loading: true});
     this._setCourseModalVisible(false);
+    this._fetchSchedule(course);
+  }
+
+  async _fetchSchedule(course) {
+    const scheduleUrl = 'https://webmail.dhbw-loerrach.de/owa/calendar/kal-@course@@dhbw-loerrach.de/Kalender/calendar.ics';
+    const scheduleUrlWithCourse = scheduleUrl.replace('@course@', course);
+
+    try {
+      const response = await fetch(scheduleUrlWithCourse);
+      const responseBody = await response.text();
+      const lectures = getLecturesFromiCalData(responseBody);
+
+      this.setState({loading: false,
+        dataSource: dataSource.cloneWithRowsAndSections(lectures)});
+    } catch(error) {
+      this.setState({loading: false, error: true});
+    }
+  }
+
+  _renderScreenContent() {
+    const {lectures, loading, error} = this.state;
+
+    if(loading) {
+      return(
+        <View style={styles.center}>
+          <ActivityIndicator animating={true}/>
+        </View>
+      );
+    }
+
+    if(error) {
+      return(
+        <View style={styles.center}>
+          <Text>Fehler beim Laden des Vorlesungsplanes</Text>
+        </View>
+      );
+    }
+
+    return(
+      <CampusListView
+        dataSource={this.state.dataSource}
+        renderRow={this._renderRow}
+        renderSectionHeader={this._renderDayHeader}
+      />
+    );
   }
 
   render() {
@@ -85,24 +110,32 @@ export default class ScheduleScreen extends Component {
       show: 'always', // needed for Android
     };
 
-    return(
-      <View>
+    return (
+      <View style={styles.container}>
         <CampusHeader
           title={`Vorlesungsplan ${this.state.course}`}
           rightActionItem={rightActionItem}
         />
-        <CampusListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderRow}
-          renderSectionHeader={this._renderDayHeader}
-        />
+        {this._renderScreenContent()}
         <CourseModal
           visible={this.state.courseModalVisible}
           course={this.state.course}
-          onClose={() => this._setCourseModalVisible(false)}
+          onClose={() => this._setCourseModalVisible(!this.state.course)}
           onCourseChange={(course) => this._setCourseName(course)}
         />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
