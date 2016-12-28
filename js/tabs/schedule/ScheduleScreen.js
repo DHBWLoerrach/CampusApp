@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
+  Button,
   ListView,
   StyleSheet,
   View,
@@ -30,10 +31,9 @@ export default class ScheduleScreen extends Component {
   constructor(props) {
     super(props);
 
-    let course = null;
     this.state = {
-      course: course,
-      courseModalVisible: !course,
+      course: null,
+      courseModalVisible: false,
       dataSource: dataSource.cloneWithRowsAndSections({}),
       error: false,
       loading: false,
@@ -93,6 +93,16 @@ export default class ScheduleScreen extends Component {
       );
     }
 
+    if(!this.state.course) {
+      return(
+        <View style={styles.center}>
+          <Button title="Kurs auswählen" color={Colors.dhbwRed}
+            onPress={() => this._setCourseModalVisible(true)}
+          />
+        </View>
+      );
+    }
+
     return(
       <CampusListView
         dataSource={this.state.dataSource}
@@ -103,24 +113,30 @@ export default class ScheduleScreen extends Component {
   }
 
   render() {
-    const rightActionItem = {
-      title: 'Edit',
-      icon: require('./img/edit.png'),
-      onPress: () => this._setCourseModalVisible(true),
-      show: 'always', // needed for Android
-    };
+    let rightActionItem = null;
+    if(this.state.course) {
+      rightActionItem = {
+        title: 'Edit',
+        icon: require('./img/edit.png'),
+        onPress: () => this._setCourseModalVisible(true),
+        show: 'always', // needed for Android
+      };
+    }
+
+    let title = 'Vorlesungsplan';
+    if(this.state.course) title += ` ${this.state.course}`;
 
     return (
       <View style={styles.container}>
         <CampusHeader
-          title={`Vorlesungsplan ${this.state.course}`}
+          title={title}
           rightActionItem={rightActionItem}
         />
         {this._renderScreenContent()}
         <CourseModal
           visible={this.state.courseModalVisible}
           course={this.state.course}
-          onClose={() => this._setCourseModalVisible(!this.state.course)}
+          onClose={() => this._setCourseModalVisible(false)}
           onCourseChange={(course) => this._setCourseName(course)}
         />
       </View>
