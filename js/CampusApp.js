@@ -17,7 +17,7 @@ export default class CampusApp extends Component {
   constructor() {
     super();
     this.state = {
-      store: setupStore(() => {}),
+      store: setupStore(),
     };
   }
 

@@ -1,12 +1,18 @@
 // @flow
 'use strict';
 
+import { AsyncStorage } from 'react-native';
 import {
   applyMiddleware,
   combineReducers,
+  compose,
   createStore,
 } from 'redux';
 import thunk from 'redux-thunk'; // thunk middleware to use functions as actions
+import {
+  persistStore,
+  autoRehydrate,
+} from 'redux-persist';
 import { fetchNewsData } from './util/helpers';
 
 // ACTIONS
@@ -87,13 +93,10 @@ function news(state = {
 
 // SETUP STORE with middleware
 
-export default function setupStore(onComplete: ?() => void) {
-  let store = createStore(reducers, applyMiddleware(thunk));
-  // store = autoRehydrate()(store)(reducers);
-  // persistStore(store, {storage: AsyncStorage}, onComplete);
+export default function setupStore() {
+  // enhance store: autohydrate (offline data), thunk middleware (functions actions)
+  const storeEnhancers = compose(autoRehydrate(), applyMiddleware(thunk));
+  const store = createStore(combineReducers({news}), {}, storeEnhancers);
+  persistStore(store, {storage: AsyncStorage});
   return store;
 }
-
-const reducers = combineReducers({
-  news,
-});
