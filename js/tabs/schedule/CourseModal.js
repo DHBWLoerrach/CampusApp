@@ -60,7 +60,7 @@ export default class CourseModal extends Component {
               autoCorrect={false}
               autoFocus={true}
               defaultValue={this.state.course}
-              maxLength={10}
+              maxLength={15}
               onChangeText={(course) =>
                 this.setState({course: course && course.trim().toUpperCase()})
               }
