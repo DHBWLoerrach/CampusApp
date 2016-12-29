@@ -3,6 +3,9 @@
 
 import React, { Component } from 'react';
 import { NavigationExperimental } from 'react-native';
+import { connect } from 'react-redux';
+
+import { fetchNews } from '../../campusRedux';
 
 import NewsList from './NewsList';
 import NewsDetails from './NewsDetails';
@@ -12,7 +15,15 @@ const {
   StateUtils: NavigationStateUtils,
 } = NavigationExperimental;
 
-export default class NewsScreen extends Component {
+function selectPropsFromStore(store) {
+  return {
+    news: store.news.news,
+    isFetching: store.news.isFetching,
+    networkError: store.news.networkError,
+  };
+}
+
+class NewsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +39,10 @@ export default class NewsScreen extends Component {
     this._onPushRoute = this._onNavigationChange.bind(null, 'push');
     this._onPopRoute = this._onNavigationChange.bind(null, 'pop');
     // this._handleBackButton = this._handleBackButton.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.dispatch(fetchNews());
   }
 
   // TODO: just in case if Android's back button does not work out of the box
@@ -67,7 +82,14 @@ export default class NewsScreen extends Component {
 
   _renderScene(sceneProps) {
     if(sceneProps.scene.route.key === 'News') {
-      return(<NewsList onPressNewsItem={this._onPushRoute}/>);
+      return(
+        <NewsList
+          news={this.props.news}
+          isFetching={this.props.isFetching}
+          networkError={this.props.networkError}
+          onPressNewsItem={this._onPushRoute}
+        />
+      );
     }
     else {
       return(
@@ -88,3 +110,5 @@ export default class NewsScreen extends Component {
     );
   }
 }
+
+export default connect(selectPropsFromStore)(NewsScreen);

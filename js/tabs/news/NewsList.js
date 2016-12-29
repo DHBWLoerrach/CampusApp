@@ -14,32 +14,12 @@ import NewsCell from './NewsCell';
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
 import CampusListView from '../../util/CampusListView';
-import { fetchNewsData } from '../../util/helpers'; //TODO: container component?
 
 export default class NewsList extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      error: false,
-      newsItems: [],
-    };
 
     this._renderRow = this._renderRow.bind(this);
-  }
-
-  componentWillMount = async () => {
-    try {
-      const response = await fetch('https://www.dhbw-loerrach.de/index.php?id=3965&type=105');
-      const responseBody = await response.text();
-      const newsItems = fetchNewsData(responseBody);
-
-      // TODO: would a ScrollView suffice? we only have < 30 items
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      this.setState({loading: false, newsItems: ds.cloneWithRows(newsItems)});
-    } catch(e) {
-      this.setState({loading: false, error: true});
-    }
   }
 
   _renderRow(newsItem: NewsItem) {
@@ -47,9 +27,9 @@ export default class NewsList extends Component {
   }
 
   _renderScreenContent() {
-    const {newsItems, loading, error} = this.state;
+    const {news, isFetching, networkError} = this.props;
 
-    if(loading) {
+    if(isFetching) {
       return(
         <View style={styles.center}>
           <ActivityIndicator animating={true}/>
@@ -57,7 +37,7 @@ export default class NewsList extends Component {
       );
     }
 
-    if(error) {
+    if(networkError) {
       return(
         <View style={styles.center}>
           <Text>Fehler beim Laden der News</Text>
@@ -65,9 +45,11 @@ export default class NewsList extends Component {
       );
     }
 
+    // TODO: would a ScrollView suffice? we only have < 30 items
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return(
       <CampusListView
-        dataSource={this.state.newsItems} renderRow={this._renderRow}/>
+        dataSource={ds.cloneWithRows(news)} renderRow={this._renderRow}/>
     );
   }
 
