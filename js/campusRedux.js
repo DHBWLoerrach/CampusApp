@@ -17,10 +17,10 @@ import { news } from './tabs/news/redux';
 
 // SETUP STORE with middleware
 
-export default function setupStore() {
+export default function setupStore(onComplete: ?() => void) {
   // enhance store: autohydrate (offline data), thunk middleware (functions actions)
   const storeEnhancers = compose(autoRehydrate(), applyMiddleware(thunk));
   const store = createStore(combineReducers({news}), {}, storeEnhancers);
-  persistStore(store, {storage: AsyncStorage});
+  persistStore(store, {storage: AsyncStorage}, onComplete);
   return store;
 }

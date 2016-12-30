@@ -3,6 +3,7 @@
 
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
   StatusBar,
   StyleSheet,
   View,
@@ -17,11 +18,17 @@ export default class CampusApp extends Component {
   constructor() {
     super();
     this.state = {
-      store: setupStore(),
+      loading: true, // while loading offline data with redux
+      store: setupStore(() => this.setState({loading: false})),
     };
   }
 
   render() {
+    const content = this.state.loading ?
+      <View style={styles.center}>
+        <ActivityIndicator animating={true}/>
+      </View>
+      : <TabsView/>;
     return (
       <Provider store={this.state.store}>
         <View style={styles.container}>
@@ -30,7 +37,7 @@ export default class CampusApp extends Component {
             backgroundColor="rgba(0, 0, 0, 0.2)"
             barStyle="light-content"
            />
-          <TabsView/>
+          {content}
         </View>
       </Provider>
     );
@@ -41,4 +48,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });

@@ -41,8 +41,6 @@ export function fetchNews() { // a function as actions (enabled by thunk)
       const response = await fetch('https://www.dhbw-loerrach.de/index.php?id=3965&type=105');
       const responseBody = await response.text();
       const newsItems = fetchNewsData(responseBody);
-      console.log('OK3')
-      console.log(newsItems)
       dispatch(receiveNews(newsItems));
     } catch(e) { // TODO: distinguish between network and other errors
       dispatch(errorFetchingNews());

@@ -37,7 +37,7 @@ export default class NewsList extends Component {
       );
     }
 
-    if(networkError) {
+    if(networkError && !news.length) { // TODO: distinguish between network and other errors
       return(
         <View style={styles.center}>
           <Text>Fehler beim Laden der News</Text>
