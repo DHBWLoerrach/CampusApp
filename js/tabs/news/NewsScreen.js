@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { NavigationExperimental } from 'react-native';
 import { connect } from 'react-redux';
 
-import { fetchNews } from '../../campusRedux';
+import { fetchNews } from './redux';
 
 import NewsList from './NewsList';
 import NewsDetails from './NewsDetails';

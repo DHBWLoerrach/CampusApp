@@ -20,7 +20,7 @@ import CourseModal from './CourseModal';
 import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
-import { getLecturesFromiCalData } from '../../util/helpers'; //TODO: container component?
+import getLecturesFromiCalData from './helpers'; //TODO: container component?
 
 const dataSource = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2,
