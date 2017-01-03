@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Button,
   ListView,
+  Platform,
   StyleSheet,
   Text,
   View,
@@ -43,6 +44,14 @@ class ScheduleScreen extends Component {
     this.state = { courseModalVisible: false };
   }
 
+  componentWillMount() {
+    // only Android: fetch lectures before component is rendered (happens on selection)
+    // (see CampusTabsView.ios where we make sure this happens on iOS)
+    if(Platform.OS === 'android' && this.props.course) {
+      this.props.dispatch(fetchLectures(this.props.course));
+    }
+  }
+
   _renderRow(lecture: Lecture) {
     return <LectureRow lecture={lecture}/>;
   }
@@ -78,7 +87,7 @@ class ScheduleScreen extends Component {
       );
     }
 
-    if(networkError) {
+    if(networkError && !lectures) { // TODO: distinguish between network and other errors
       return (
         <View style={styles.center}>
           <Text style={styles.infoText}>Keine Daten vorhanden</Text>
