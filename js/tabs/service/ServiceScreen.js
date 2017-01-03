@@ -49,9 +49,9 @@ export default class ServiceScreen extends Component {
 
   render() {
     return(
-      <View>
+      <View style={styles.screenContainer}>
         <CampusHeader title="Service"/>
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+        <ScrollView>
           <Submenu menuItems={this._getSubmenuItems()}/>
         </ScrollView>
       </View>
@@ -60,8 +60,8 @@ export default class ServiceScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  screenContainer: {
+    flex: 1,
     backgroundColor: 'white',
-    marginTop: 20,
-  }
+  },
 });
