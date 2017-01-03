@@ -111,7 +111,7 @@ class Row extends Component {
   _handleTelPress() {
     const { tel } = this.props.link;
     if(tel) {
-      const telLink = "tel:" + tel;
+      const telLink = 'tel:' + tel;
       if(Platform.OS === 'ios') {
         Alert.alert('Nummer wählen?', tel,
           [{text: 'Nein'},{text: 'Ja', onPress: () => this._openTelLink(telLink)}]);

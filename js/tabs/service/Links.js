@@ -28,6 +28,9 @@ export const linksAccounts = [{
 },
 ];
 
+export const linkBib = 
+  'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23182';
+
 export const linksEmergency = [{
   title: 'Ansprechpartner Studiengänge und Serviceeinrichtungen',
   url: 'https://www.dhbw-loerrach.de/mitarbeiterinnen.html?&no_cache=1',
@@ -58,17 +61,10 @@ export const linksEmergency = [{
 },
 ];
 
-export const linksStudy = [{
-  title: 'Exkursionen',
-  url: 'https://www.dhbw-loerrach.de/2537.html',
-}, {
-  title: 'Gebühren/Beiträge',
-  url: 'https://www.dhbw-loerrach.de/2470.html',
-}, {
-  title: 'Ausland/Internationales',
-  url: 'https://www.dhbw-loerrach.de/auslandsaufenthalte.html?&L=0',
-},
-];
+export const linkFeedback = {
+  title: 'Feedback senden',
+  url: 'mailto:apps@dhbw-loerrach.de?subject=Campus%20App%20Feedback',
+};
 
 export const linksFreetime= [{
   title: 'Sprachen',
@@ -82,5 +78,17 @@ export const linksFreetime= [{
 }, {
   title: 'Veranstaltungen',
   url: 'https://www.dhbw-loerrach.de/termine.html',
+},
+];
+
+export const linksStudy = [{
+  title: 'Exkursionen',
+  url: 'https://www.dhbw-loerrach.de/2537.html',
+}, {
+  title: 'Gebühren/Beiträge',
+  url: 'https://www.dhbw-loerrach.de/2470.html',
+}, {
+  title: 'Ausland/Internationales',
+  url: 'https://www.dhbw-loerrach.de/auslandsaufenthalte.html?&L=0',
 },
 ];

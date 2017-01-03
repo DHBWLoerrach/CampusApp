@@ -3,6 +3,7 @@
 
 import React, { Component } from 'react';
 import {
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -11,8 +12,10 @@ import {
 
 import CampusHeader from '../../util/CampusHeader';
 
+import Feedback from './Feedback';
 import {
   linksAccounts,
+  linkBib,
   linksEmergency,
   linksFreetime,
   linksStudy,
@@ -44,15 +47,20 @@ export default class ServiceScreen extends Component {
         icon: require('./img/school.png'),
         onPress: this._onContentSelect.bind(
           this, {name: 'study', label: 'Studium'}),
-      },
-      {label: 'Bibliothek',icon: require('./img/study.png'),
+      }, {
+        label: 'Bibliothek',
+        icon: require('./img/study.png'),
+        onPress: this._openLink.bind(this, linkBib),
       }, {
         label: 'Freizeit',
         icon: require('./img/sun.png'),
         onPress: this._onContentSelect.bind(
           this, {name: 'freetime', label: 'Freizeit'}),
-      },
-      {label: 'Feedback', icon: require('./img/mail.png'),
+      }, {
+        label: 'Feedback',
+        icon: require('./img/mail.png'),
+        onPress: this._onContentSelect.bind(
+          this, {name: 'feedback', label: 'Feedback'}),
       },
       {label: 'Einstellungen',icon: require('./img/settings.png'),
       },
@@ -80,6 +88,10 @@ export default class ServiceScreen extends Component {
     // }
   }
 
+  _openLink(url) {
+    Linking.openURL(url);
+  }
+
   _getContent() {
     switch(this.state.selectedContent.name){
       case 'submenu': return <Submenu menuItems={this._getSubmenuItems()}/>;
@@ -87,7 +99,7 @@ export default class ServiceScreen extends Component {
       case 'emergency': return (<LinksList title='Hilfe im Notfall' links={linksEmergency} />);
       case 'study': return (<LinksList title='Studium' links={linksStudy} />);
       case 'freetime': return (<LinksList title='Freizeit' links={linksFreetime} />);
-      // case 'feedback': return (<Feedback/>);
+      case 'feedback': return (<Feedback/>);
       // case 'settings': return (<Settings/>);
       // case 'about': return (<About/>);
       // case 'disclaimer': return (<Disclaimer/>);
