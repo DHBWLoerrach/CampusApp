@@ -7,8 +7,10 @@ import {
   Button,
   ListView,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
 import CampusHeader from '../../util/CampusHeader';
@@ -20,24 +22,25 @@ import CourseModal from './CourseModal';
 import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
-import getLecturesFromiCalData from './helpers'; //TODO: container component?
+import {
+  clearLectures,
+  fetchLectures,
+} from './redux';
 
-const dataSource = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2,
-  sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
-});
+function selectPropsFromStore(store) {
+  return {
+    course: store.schedule.course,
+    lectures: store.schedule.lectures,
+    isFetching: store.schedule.isFetching,
+    networkError: store.schedule.networkError,
+  };
+}
 
-export default class ScheduleScreen extends Component {
+class ScheduleScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      course: null,
-      courseModalVisible: false,
-      dataSource: dataSource.cloneWithRowsAndSections({}),
-      error: false,
-      loading: false,
-    };
+    this.state = { courseModalVisible: false };
   }
 
   _renderRow(lecture: Lecture) {
@@ -49,52 +52,45 @@ export default class ScheduleScreen extends Component {
   }
 
   _setCourseModalVisible(visible) {
-    this.setState({courseModalVisible: visible});
+    this.setState({ courseModalVisible: visible });
   }
 
   _setCourseName(course) {
-    this.setState({course: course, loading: true});
     this._setCourseModalVisible(false);
-    this._fetchSchedule(course);
-  }
-
-  async _fetchSchedule(course) {
-    const scheduleUrl = 'https://webmail.dhbw-loerrach.de/owa/calendar/kal-@course@@dhbw-loerrach.de/Kalender/calendar.ics';
-    const scheduleUrlWithCourse = scheduleUrl.replace('@course@', course);
-
-    try {
-      const response = await fetch(scheduleUrlWithCourse);
-      const responseBody = await response.text();
-      const lectures = getLecturesFromiCalData(responseBody);
-
-      this.setState({loading: false,
-        dataSource: dataSource.cloneWithRowsAndSections(lectures)});
-    } catch(error) {
-      this.setState({loading: false, error: true});
+    if(course !== this.props.course) { // only update data if new course given
+      this._refreshData(course);
     }
   }
 
-  _renderScreenContent() {
-    const {lectures, loading, error} = this.state;
+  _refreshData(course) {
+    this.props.dispatch(clearLectures());
+    this.props.dispatch(fetchLectures(course));
+  }
 
-    if(loading) {
-      return(
+  _renderScreenContent() {
+    const { course, lectures, isFetching, networkError } = this.props;
+
+    if(isFetching) {
+      return (
         <View style={styles.center}>
           <ActivityIndicator animating={true}/>
         </View>
       );
     }
 
-    if(error) {
-      return(
+    if(networkError) {
+      return (
         <View style={styles.center}>
-          <Text>Fehler beim Laden des Vorlesungsplanes</Text>
+          <Text style={styles.infoText}>Keine Daten vorhanden</Text>
+          <Button title="Vorlesungsplan laden" color={Colors.dhbwRed}
+            onPress={() => this._refreshData(this.props.course)}
+          />
         </View>
       );
     }
 
-    if(!this.state.course) {
-      return(
+    if(!course) {
+      return (
         <View style={styles.center}>
           <Button title="Kurs auswählen" color={Colors.dhbwRed}
             onPress={() => this._setCourseModalVisible(true)}
@@ -103,9 +99,13 @@ export default class ScheduleScreen extends Component {
       );
     }
 
-    return(
+    const dataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+      sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+    });
+    return (
       <CampusListView
-        dataSource={this.state.dataSource}
+        dataSource={dataSource.cloneWithRowsAndSections(lectures)}
         renderRow={this._renderRow}
         renderSectionHeader={this._renderDayHeader}
       />
@@ -113,8 +113,8 @@ export default class ScheduleScreen extends Component {
   }
 
   render() {
-    let rightActionItem = null;
-    if(this.state.course) {
+    let rightActionItem = null, {course} = this.props;
+    if(course) {
       rightActionItem = {
         title: 'Edit',
         icon: require('./img/edit.png'),
@@ -124,7 +124,7 @@ export default class ScheduleScreen extends Component {
     }
 
     let title = 'Vorlesungsplan';
-    if(this.state.course) title += ` ${this.state.course}`;
+    if(course) title += ' ' + course;
 
     return (
       <View style={styles.container}>
@@ -135,7 +135,7 @@ export default class ScheduleScreen extends Component {
         {this._renderScreenContent()}
         <CourseModal
           visible={this.state.courseModalVisible}
-          course={this.state.course}
+          course={course}
           onClose={() => this._setCourseModalVisible(false)}
           onCourseChange={(course) => this._setCourseName(course)}
         />
@@ -153,5 +153,10 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  infoText: {
+    marginBottom: 15,
+  },
 });
+
+export default connect(selectPropsFromStore)(ScheduleScreen);

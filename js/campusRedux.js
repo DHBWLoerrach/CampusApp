@@ -14,13 +14,15 @@ import {
   autoRehydrate,
 } from 'redux-persist';
 import { news } from './tabs/news/redux';
+import { schedule } from './tabs/schedule/redux';
 
 // SETUP STORE with middleware
 
 export default function setupStore(onComplete: ?() => void) {
+  const reducers = combineReducers({ news, schedule });
   // enhance store: autohydrate (offline data), thunk middleware (functions actions)
   const storeEnhancers = compose(autoRehydrate(), applyMiddleware(thunk));
-  const store = createStore(combineReducers({news}), {}, storeEnhancers);
+  const store = createStore(reducers, {}, storeEnhancers);
   persistStore(store, {storage: AsyncStorage}, onComplete);
   return store;
 }
