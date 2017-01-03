@@ -15,7 +15,7 @@ import IconTouchable from '../../util/IconTouchable';
 export default class SubmenuItem extends Component {
   render() {
     return(
-      <IconTouchable onPress={()=>alert('Go to submenu')}>
+      <IconTouchable onPress={this.props.onPress}>
         <View style={styles.container}>
           <Image source={this.props.icon} />
           <Text style={styles.label}>
