@@ -8,15 +8,28 @@ import {
   View,
 } from 'react-native';
 
+import { connect } from 'react-redux';
+
+import { selectRole } from './redux';
+
 import RoleSelection from './RoleSelection';
 import { textSettings } from './Texts';
 
-export default class Settings extends Component {
+function selectPropsFromStore(store) {
+  return {
+    selectedRole: store.settings.selectedRole,
+  };
+}
+
+class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Text>{textSettings}</Text>
-        <RoleSelection/>
+        <RoleSelection
+          role={this.props.selectedRole}
+          onRoleChange={(role) => this.props.dispatch(selectRole(role))}
+        />
       </View>
     );
   }
@@ -30,3 +43,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
+
+export default connect(selectPropsFromStore)(Settings);

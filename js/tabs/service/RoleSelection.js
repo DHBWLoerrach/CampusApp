@@ -33,19 +33,25 @@ class RadioButton extends Component {
 }
 
 export default class RoleSelection extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: 'student'
-    };
-  }
-  render() {
+  render() { // TODO: flow type for roles
     return(
       <View>
-        <RadioButton selected={this.state.selected === 'student'} label='Student/in' onPress={() => this.setState({selected: 'student'})}/>
-        <RadioButton selected={this.state.selected === 'lecturer'} label='Lehrbeauftragte/r' onPress={() => this.setState({selected: 'lecturer'})}/>
-        <RadioButton selected={this.state.selected === 'employee'} label='Mitarbeiter/in' onPress={() => this.setState({selected: 'employee'})}/>
-        <RadioButton selected={this.state.selected === 'guest'} label='Gast' onPress={() => this.setState({selected: 'guest'})}/>
+        <RadioButton
+          selected={this.props.role === 'student'}
+          label='Student/in'
+          onPress={() => this.props.onRoleChange('student')}/>
+        <RadioButton
+          selected={this.props.role === 'lecturer'}
+          label='Lehrbeauftragte/r'
+          onPress={() => this.props.onRoleChange('lecturer')}/>
+        <RadioButton
+          selected={this.props.role === 'employee'}
+          label='Mitarbeiter/in'
+          onPress={() => this.props.onRoleChange('employee')}/>
+        <RadioButton
+          selected={this.props.role === 'guest'}
+          label='Gast'
+          onPress={() => this.props.onRoleChange('guest')}/>
       </View>
     )
   }
