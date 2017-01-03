@@ -24,10 +24,11 @@ export default class CourseModal extends Component {
   }
 
   _onPressClicked(course) {
-    if(courseList.indexOf(course) >= 0) {
+    if(!course) {
+      Alert.alert('Bitte Kursnamen eingeben');
+    } else if(courseList.indexOf(course) >= 0) {
       this.props.onCourseChange(course);
-    }
-    else {
+    } else {
       Alert.alert('Kurs nicht vorhanden',
         `Es gibt keinen Online-Stundenplan für den Kurs ${course}.`);
     }
