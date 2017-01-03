@@ -27,10 +27,10 @@ export default class NewsList extends Component {
   }
 
   _renderScreenContent() {
-    const {news, isFetching, networkError} = this.props;
+    const { news, isFetching, networkError } = this.props;
 
     if(isFetching) {
-      return(
+      return (
         <View style={styles.center}>
           <ActivityIndicator animating={true}/>
         </View>
@@ -38,7 +38,7 @@ export default class NewsList extends Component {
     }
 
     if(networkError && !news.length) { // TODO: distinguish between network and other errors
-      return(
+      return (
         <View style={styles.center}>
           <Text>Fehler beim Laden der News</Text>
         </View>
@@ -47,7 +47,7 @@ export default class NewsList extends Component {
 
     // TODO: would a ScrollView suffice? we only have < 30 items
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    return(
+    return (
       <CampusListView
         dataSource={ds.cloneWithRows(news)} renderRow={this._renderRow}/>
     );
