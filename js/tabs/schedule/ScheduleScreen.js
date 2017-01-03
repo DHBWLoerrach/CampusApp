@@ -4,9 +4,9 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
+  AppState,
   Button,
   ListView,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -42,12 +42,21 @@ class ScheduleScreen extends Component {
     super(props);
 
     this.state = { courseModalVisible: false };
+    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
   componentWillMount() {
-    // only Android: fetch lectures before component is rendered (happens on selection)
-    // (see CampusTabsView.ios where we make sure this happens on iOS)
-    if(Platform.OS === 'android' && this.props.course) {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  // the schedule screen shall be refreshed each time it gets visible
+  _handleAppStateChange(newAppState) {
+    // TODO: load data on navigation change
+    if(newAppState === 'active' && this.props && this.props.course) {
       this.props.dispatch(fetchLectures(this.props.course));
     }
   }
