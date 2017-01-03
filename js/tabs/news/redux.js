@@ -5,7 +5,7 @@ import fetchNewsData from './helpers';
 
 // ACTIONS
 // action that is dispatched whenever the news will we fetched
-export const REQUEST_NEWS = 'REQUEST_NEWS';
+const REQUEST_NEWS = 'REQUEST_NEWS';
 
 export function requestNews() {
   return {
@@ -14,7 +14,7 @@ export function requestNews() {
 }
 
 // action that is dispatched whenever fetching the news finished
-export const RECEIVE_NEWS = 'RECEIVE_NEWS';
+const RECEIVE_NEWS = 'RECEIVE_NEWS';
 
 export function receiveNews(news) {
   return {
@@ -25,7 +25,7 @@ export function receiveNews(news) {
 }
 
 // action that is dispatched whenever an error occurred while fetching the news data
-export const ERROR_FETCHING_NEWS = 'ERROR_FETCHING_NEWS';
+const ERROR_FETCHING_NEWS = 'ERROR_FETCHING_NEWS';
 
 export function errorFetchingNews() {
   return {
@@ -48,7 +48,7 @@ export function fetchNews() { // a function as actions (enabled by thunk)
   }
 }
 
-// REDUCERS
+// REDUCER
 export function news(state = {
   isFetching: false,
   networkError: false,
