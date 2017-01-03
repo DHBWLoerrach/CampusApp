@@ -25,6 +25,7 @@ import {
 } from './Links';
 import LinksList from './LinksList';
 import Privacy from './Privacy';
+import Settings from './Settings';
 import Submenu from './Submenu';
 
 export default class ServiceScreen extends Component {
@@ -65,8 +66,11 @@ export default class ServiceScreen extends Component {
         icon: require('./img/mail.png'),
         onPress: this._onContentSelect.bind(
           this, {name: 'feedback', label: 'Feedback'}),
-      },
-      {label: 'Einstellungen',icon: require('./img/settings.png'),
+      }, {
+        label: 'Einstellungen',
+        icon: require('./img/settings.png'),
+        onPress: this._onContentSelect.bind(
+          this, {name: 'settings', label: 'Einstellungen'}),
       },
     ];
 
@@ -115,7 +119,7 @@ export default class ServiceScreen extends Component {
       case 'study': return (<LinksList title='Studium' links={linksStudy} />);
       case 'freetime': return (<LinksList title='Freizeit' links={linksFreetime} />);
       case 'feedback': return (<Feedback/>);
-      // case 'settings': return (<Settings/>);
+      case 'settings': return (<Settings/>);
       case 'about': return (<About/>);
       case 'disclaimer': return (<Disclaimer/>);
       case 'imprint': return (<Imprint/>);

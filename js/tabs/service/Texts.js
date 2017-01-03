@@ -104,6 +104,10 @@ export function textPrivacy() {
   </View>
 )};
 
+export const textSettings =
+  'Hier kannst du deine Rolle ändern. Je nach ausgewählter Rolle werden ' +
+  'Dir unterschiedliche Preise im Speiseplan der Mensa angezeigt.\n\n';
+
 const styles = StyleSheet.create({
   container: {
     padding: 15,
