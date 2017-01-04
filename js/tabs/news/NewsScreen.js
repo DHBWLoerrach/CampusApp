@@ -2,18 +2,25 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { NavigationExperimental } from 'react-native';
+import {
+  ActivityIndicator,
+  BackAndroid,
+  ListView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 import { connect } from 'react-redux';
 
+import NewsCell from './NewsCell';
+import NewsDetails from './NewsDetails';
 import { fetchNews } from './redux';
 
-import NewsList from './NewsList';
-import NewsDetails from './NewsDetails';
-
-const {
-  CardStack: NavigationCardStack,
-  StateUtils: NavigationStateUtils,
-} = NavigationExperimental;
+import NewsItem from '../../util/types.js';
+import CampusHeader from '../../util/CampusHeader';
+import CampusListView from '../../util/CampusListView';
 
 function selectPropsFromStore(store) {
   return {
@@ -26,89 +33,95 @@ function selectPropsFromStore(store) {
 class NewsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      navigationState: {
-        index: 0,
-        routes: [{key: 'News'}],
-      },
-    };
 
-    this._onNavigationChange = this._onNavigationChange.bind(this);
-    this._renderScene = this._renderScene.bind(this);
+    this.state = {selectedNewsItem: null,};
 
-    this._onPushRoute = this._onNavigationChange.bind(null, 'push');
-    this._onPopRoute = this._onNavigationChange.bind(null, 'pop');
-    // this._handleBackButton = this._handleBackButton.bind(this);
+    this._renderRow = this._renderRow.bind(this);
   }
 
   componentWillMount() {
     this.props.dispatch(fetchNews());
   }
 
-  // TODO: just in case if Android's back button does not work out of the box
-  // componentDidMount() {
-  //   BackAndroid.addEventListener('hardwareBackPress', this._handleBackButton);
-  // }
-  //
-  // componentWillUnmount() {
-  //   BackAndroid.removeEventListener('hardwareBackPress', this._handleBackButton);
-  // }
-  //
-  // _handleBackButton() {
-  //   if (this.state.navigationState.index === 0) {
-  //     return false;
-  //   }
-  //   this._onPopRoute();
-  //   return true;
-  // }
-
-  _onNavigationChange(type, data) {
-    let {navigationState} = this.state;
-    switch (type) {
-      case 'push':
-        const route = {key: 'Route-' + Date.now(), news: data.news};
-        navigationState = NavigationStateUtils.push(navigationState, route);
-        break;
-
-      case 'pop':
-        navigationState = NavigationStateUtils.pop(navigationState);
-        break;
+  _onNewsItemPressed(newsItem) {
+    if(Platform.OS === 'android'){
+      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress.bind(this));
     }
-
-    if (this.state.navigationState !== navigationState) {
-      this.setState({navigationState});
-    }
+    this.setState({ selectedNewsItem: newsItem });
   }
 
-  _renderScene(sceneProps) {
-    if(sceneProps.scene.route.key === 'News') {
-      return(
-        <NewsList
-          news={this.props.news}
-          isFetching={this.props.isFetching}
-          networkError={this.props.networkError}
-          onPressNewsItem={this._onPushRoute}
-        />
+  _onBackPress() {
+    if(this.state.selectedNewsItem !== null){
+      if(Platform.OS === 'android'){
+        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress.bind(this));
+      }
+      this.setState({selectedNewsItem: null})
+      return true; // Back button handled
+    }
+    return false;
+  }
+
+  _renderRow(newsItem: NewsItem) {
+    return (
+      <NewsCell news={newsItem} onPress={() => this._onNewsItemPressed(newsItem)}/>
+    );
+  }
+
+  _renderScreenContent() {
+    const { news, isFetching, networkError } = this.props;
+
+    if(isFetching) {
+      return (
+        <View style={styles.center}>
+          <ActivityIndicator animating={true}/>
+        </View>
       );
     }
-    else {
-      return(
-        <NewsDetails
-          backAction={this._onPopRoute} news={sceneProps.scene.route.news}/>
+
+    if(networkError && !news.length) { // TODO: distinguish between network and other errors
+      return (
+        <View style={styles.center}>
+          <Text>Fehler beim Laden der News</Text>
+        </View>
       );
     }
+
+    // TODO: would a ScrollView suffice? we only have < 30 items
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    return (
+      <CampusListView
+        dataSource={ds.cloneWithRows(news)} renderRow={this._renderRow}/>
+    );
   }
 
   render() {
-    return(
-      // TODO: Android: check if back button functions out of the box
-      <NavigationCardStack
-        onNavigateBack={this._onPopRoute}
-        navigationState={this.state.navigationState}
-        renderScene={this._renderScene}
-      />
+    if(this.state.selectedNewsItem !== null) {
+      return (
+        <NewsDetails
+          backAction={this._onBackPress.bind(this)}
+          news={this.state.selectedNewsItem}/>
+      );
+    };
+
+    return (
+      <View style={styles.container}>
+        <CampusHeader title="News"/>
+        {this._renderScreenContent()}
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
 
 export default connect(selectPropsFromStore)(NewsScreen);
