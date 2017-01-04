@@ -4,15 +4,16 @@
 import React, { Component } from 'react';
 import {
   Image,
-  View,
   StyleSheet,
-  Text
+  Text,
+  View,
 } from 'react-native';
 
 import CampusDrawerLayout from './CampusDrawerLayout';
 import DrawerItem from './DrawerItem';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
+import CanteenScreen from './tabs/canteen/CanteenScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 import ImprintScreen from './tabs/service/ImprintScreen';
 
@@ -28,7 +29,7 @@ export default class TabsView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedTab: 'imprint'};
+    this.state = {selectedTab: 'canteen'};
 
     this._renderNavigationView = this._renderNavigationView.bind(this);
   }
@@ -87,16 +88,13 @@ export default class TabsView extends Component {
         return <NewsScreen/>;
       case 'schedule':
         return <ScheduleScreen/>;
+      case 'canteen':
+        return <CanteenScreen/>;
       case 'service':
         return <ServiceScreen/>;
       case 'imprint':
         return <ImprintScreen/>;
     }
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>{this.state.selectedTab}</Text>
-      </View>
-    );
   };
 
   // context API is used to open drawer from CampusHeader

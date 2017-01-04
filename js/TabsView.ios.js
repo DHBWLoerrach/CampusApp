@@ -4,14 +4,13 @@
 import React, { Component } from 'react';
 import {
   TabBarIOS,
-  Text,
-  View,
 } from 'react-native';
 
 import Colors from './util/Colors';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
+import CanteenScreen from './tabs/canteen/CanteenScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service';
@@ -25,16 +24,8 @@ export default class TabsView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedTab: 'news'};
+    this.state = {selectedTab: 'canteen'};
   }
-
-  _renderTabContent(pageText){
-    return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>{pageText}</Text>
-      </View>
-    );
-  };
 
   render() {
     return (
@@ -58,7 +49,7 @@ export default class TabsView extends Component {
           selected={this.state.selectedTab === 'canteen'}
           onPress={() => this.setState({selectedTab: 'canteen'})}
           icon={require('./tabs/canteen/img/canteen-icon.png')}>
-          {this._renderTabContent('Canteen Tab')}
+          <CanteenScreen/>
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title="Service"
