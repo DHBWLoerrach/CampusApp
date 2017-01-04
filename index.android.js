@@ -1,6 +1,6 @@
 'use strict';
 
 import { AppRegistry } from 'react-native';
-import CampusApp from './js/CampusApp';
+import RootComponent from './js/RootComponent';
 
-AppRegistry.registerComponent('CampusApp', () => CampusApp);
+AppRegistry.registerComponent('CampusApp', () => RootComponent);

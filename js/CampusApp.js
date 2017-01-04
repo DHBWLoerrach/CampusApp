@@ -8,38 +8,39 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Provider } from 'react-redux';
 
-import setupStore from './campusRedux';
+import { connect } from 'react-redux';
 
+import WelcomeScreen from './WelcomeScreen';
 import TabsView from './TabsView';
 
-export default class CampusApp extends Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true, // while loading offline data with redux
-      store: setupStore(() => this.setState({loading: false})),
-    };
-  }
+function selectPropsFromStore(store) {
+  return {
+    selectedRole: store.settings.selectedRole,
+  };
+}
 
+class CampusApp extends Component {
   render() {
-    const content = this.state.loading ?
-      <View style={styles.center}>
-        <ActivityIndicator animating={true}/>
-      </View>
-      : <TabsView/>;
-    return (
-      <Provider store={this.state.store}>
-        <View style={styles.container}>
-          <StatusBar
-            translucent={true}
-            backgroundColor="rgba(0, 0, 0, 0.2)"
-            barStyle="light-content"
-           />
-          {content}
+    let content = <TabsView/>;
+    if(this.props.loading) {
+      content =
+        <View style={styles.center}>
+          <ActivityIndicator animating={true}/>
         </View>
-      </Provider>
+    } else if(!this.props.selectedRole) {
+      content = <WelcomeScreen/>;
+    }
+
+    return (
+      <View style={styles.container}>
+        <StatusBar
+          translucent={true}
+          backgroundColor="rgba(0, 0, 0, 0.2)"
+          barStyle="light-content"
+        />
+        {content}
+      </View>
     );
   }
 }
@@ -54,3 +55,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   }
 });
+
+export default connect(selectPropsFromStore)(CampusApp);
