@@ -3,6 +3,7 @@
 
 import React, { Component } from 'react';
 import {
+  BackAndroid,
   Linking,
   Platform,
   ScrollView,
@@ -34,6 +35,24 @@ export default class ServiceScreen extends Component {
     this.state = {
       selectedContent: {name: 'submenu', label: 'Service'}
     };
+  }
+
+  _onContentSelect(newContent) {
+    this.setState({selectedContent: newContent});
+    if(Platform.OS === 'android'){
+      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress.bind(this));
+    }
+  }
+
+  _onBackPress(){
+    if(this.state.selectedContent.name !== 'submenu'){
+      if(Platform.OS === 'android'){
+        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress.bind(this));
+      }
+      this.setState({selectedContent: {name: 'submenu', label: 'Service'}})
+      return true; // Back button handled
+    }
+    return false;
   }
 
   _getSubmenuItems() {
@@ -100,13 +119,6 @@ export default class ServiceScreen extends Component {
     return submenuItems;
   }
 
-  _onContentSelect(newContent) {
-    this.setState({selectedContent: newContent});
-    // if(Platform.OS === 'android'){
-    //   BackAndroid.addEventListener('hardwareBackPress', this.onBackPress.bind(this));
-    // }
-  }
-
   _openLink(url) {
     Linking.openURL(url);
   }
@@ -128,9 +140,21 @@ export default class ServiceScreen extends Component {
   }
 
   render() {
+    let leftActionItem = null;
+    if(this.state.selectedContent.name !== 'submenu') {
+      leftActionItem = {
+        title: 'Back',
+        icon: require('../../img/arrow-back.png'),
+        onPress: this._onBackPress.bind(this),
+      }
+    };
+
     return(
       <View style={styles.screenContainer}>
-        <CampusHeader title={this.state.selectedContent.label}/>
+        <CampusHeader
+          title={this.state.selectedContent.label}
+          leftActionItem={leftActionItem}
+        />
         <ScrollView>{this._getContent()}</ScrollView>
       </View>
     );
