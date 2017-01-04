@@ -36,6 +36,7 @@ class NewsScreen extends Component {
 
     this.state = {selectedNewsItem: null,};
 
+    this._onBackPress = this._onBackPress.bind(this);
     this._renderRow = this._renderRow.bind(this);
   }
 
@@ -45,7 +46,7 @@ class NewsScreen extends Component {
 
   _onNewsItemPressed(newsItem) {
     if(Platform.OS === 'android'){
-      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress.bind(this));
+      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress);
     }
     this.setState({ selectedNewsItem: newsItem });
   }
@@ -53,7 +54,7 @@ class NewsScreen extends Component {
   _onBackPress() {
     if(this.state.selectedNewsItem !== null){
       if(Platform.OS === 'android'){
-        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress.bind(this));
+        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress);
       }
       this.setState({selectedNewsItem: null})
       return true; // Back button handled

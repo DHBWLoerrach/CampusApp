@@ -35,19 +35,21 @@ export default class ServiceScreen extends Component {
     this.state = {
       selectedContent: {name: 'submenu', label: 'Service'}
     };
+
+    this._onBackPress = this._onBackPress.bind(this);
   }
 
   _onContentSelect(newContent) {
     this.setState({selectedContent: newContent});
     if(Platform.OS === 'android'){
-      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress.bind(this));
+      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress);
     }
   }
 
   _onBackPress(){
     if(this.state.selectedContent.name !== 'submenu'){
       if(Platform.OS === 'android'){
-        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress.bind(this));
+        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress);
       }
       this.setState({selectedContent: {name: 'submenu', label: 'Service'}})
       return true; // Back button handled
