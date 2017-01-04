@@ -3,13 +3,13 @@
 
 import React, { Component } from 'react';
 import {
-  DrawerLayoutAndroid,
   Image,
   View,
   StyleSheet,
   Text
 } from 'react-native';
 
+import CampusDrawerLayout from './CampusDrawerLayout';
 import DrawerItem from './DrawerItem';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -22,8 +22,8 @@ type State = {
 }
 
 export default class TabsView extends Component {
+  _drawer: ?CampusDrawerLayout;
   state: State;
-  drawer: ?DrawerLayoutAndroid;
 
   constructor(props) {
     super(props);
@@ -34,7 +34,7 @@ export default class TabsView extends Component {
 
   _onDrawerItemPressed(tab: Tab) {
     this.setState({selectedTab: tab});
-    this.drawer && this.drawer.closeDrawer(); // drawer is set via ref attribute (see render())
+    this._drawer.closeDrawer(); // drawer is set via ref attribute (see render())
   }
 
   _renderNavigationView() {
@@ -96,20 +96,33 @@ export default class TabsView extends Component {
     );
   };
 
+  // context API is used to open drawer from CampusHeader
+  // https://facebook.github.io/react/docs/context.html
+  getChildContext() {
+    return {
+      openDrawer: () => this._drawer.openDrawer(),
+    };
+  }
+
   render() {
     return(
-      <DrawerLayoutAndroid
-        ref={(drawer) => this.drawer = drawer} // use ref attribute with callback
+      <CampusDrawerLayout
+        ref={(drawer) => this._drawer = drawer} // callback to store reference
         // we need a reference to this child component, e.g. to call closeDrawer()
         // React (native) has a way to directly access a component's children, see
         // https://facebook.github.io/react/docs/refs-and-the-dom.html
         drawerWidth={290} // same width as drawer header image
         renderNavigationView={this._renderNavigationView}>
         {this._renderTabContent()}
-      </DrawerLayoutAndroid>
+      </CampusDrawerLayout>
     );
   }
 }
+
+// needed to use context API (see getChildContext())
+TabsView.childContextTypes = {
+  openDrawer: React.PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   headerImage: {

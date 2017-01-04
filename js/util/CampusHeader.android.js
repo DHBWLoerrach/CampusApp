@@ -16,7 +16,7 @@ export default class CampusHeader extends Component {
     if (!leftActionItem) {
       leftActionItem = {
         icon: require('../img/menu.png'),
-        onPress: () => alert('TODO: show drawer')
+        onPress: () => this.context.openDrawer(), // open drawer via context
       };
     }
 
@@ -41,6 +41,11 @@ export default class CampusHeader extends Component {
     );
   }
 }
+
+// needed to use context API to open CampusDrawerLayout (see above)
+CampusHeader.contextTypes = {
+  openDrawer: React.PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   headerWrapper: {
