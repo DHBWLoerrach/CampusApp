@@ -14,6 +14,7 @@ import DrawerItem from './DrawerItem';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
+import ImprintScreen from './tabs/service/ImprintScreen';
 
 type Tab = 'news' | 'schedule' | 'canteen' | 'service' | 'imprint';
 
@@ -27,7 +28,7 @@ export default class TabsView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedTab: 'news'};
+    this.state = {selectedTab: 'imprint'};
 
     this._renderNavigationView = this._renderNavigationView.bind(this);
   }
@@ -47,35 +48,35 @@ export default class TabsView extends Component {
           </View>
         </Image>
         <DrawerItem
-          title="News"
+          title='News'
           isSelected={this.state.selectedTab === 'news'}
           onPress={() => this._onDrawerItemPressed('news')}
           icon={require('./tabs/news/img/news-icon.png')}
           selectedIcon={require('./tabs/news/img/news-icon-active.png')}/>
         <DrawerItem
-          title="Vorlesungsplan"
+          title='Vorlesungsplan'
           isSelected={this.state.selectedTab === 'schedule'}
           onPress={() => this._onDrawerItemPressed('schedule')}
           icon={require('./tabs/schedule/img/schedule-icon.png')}
           selectedIcon={require('./tabs/schedule/img/schedule-icon-active.png')}/>
         <DrawerItem
-          title="Mensa"
+          title='Mensa'
           isSelected={this.state.selectedTab === 'canteen'}
           onPress={() => this._onDrawerItemPressed('canteen')}
           icon={require('./tabs/canteen/img/canteen-icon.png')}
           selectedIcon={require('./tabs/canteen/img/canteen-icon-active.png')}/>
         <DrawerItem
-          title="Service"
+          title='Service'
           isSelected={this.state.selectedTab === 'service'}
           onPress={() => this._onDrawerItemPressed('service')}
           icon={require('./tabs/service/img/service-icon.png')}
           selectedIcon={require('./tabs/service/img/service-icon-active.png')}/>
         <DrawerItem
-          title="Impressum"
+          title='Impressum'
           isSelected={this.state.selectedTab === 'imprint'}
           onPress={() => this._onDrawerItemPressed('imprint')}
-          icon={require('./tabs/imprint/img/imprint-icon.png')}
-          selectedIcon={require('./tabs/imprint/img/imprint-icon-active.png')}/>
+          icon={require('./tabs/service/img/imprint-icon.png')}
+          selectedIcon={require('./tabs/service/img/imprint-icon-active.png')}/>
       </View>
     );
   }
@@ -88,6 +89,8 @@ export default class TabsView extends Component {
         return <ScheduleScreen/>;
       case 'service':
         return <ServiceScreen/>;
+      case 'imprint':
+        return <ImprintScreen/>;
     }
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>

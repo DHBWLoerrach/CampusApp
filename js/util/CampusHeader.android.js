@@ -28,7 +28,7 @@ export default class CampusHeader extends Component {
     }
 
     return(
-      <View style={styles.headerWrapper}>
+      <View style={[styles.headerWrapper, this.props.style]}>
         <ToolbarAndroid
           navIcon={leftActionItem && leftActionItem.icon}
           onIconClicked={leftActionItem && leftActionItem.onPress}
