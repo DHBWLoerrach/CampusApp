@@ -29,7 +29,7 @@ export default class TabsView extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {selectedTab: 'canteen'};
+    this.state = {selectedTab: 'news'};
 
     this._renderNavigationView = this._renderNavigationView.bind(this);
   }
