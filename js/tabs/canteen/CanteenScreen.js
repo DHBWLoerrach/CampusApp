@@ -3,18 +3,25 @@
 
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Platform,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 
 import { connect } from 'react-redux';
+import deLocale from 'date-fns/locale/de';
+import format from 'date-fns/format';
+import isSaturday from 'date-fns/is_saturday'
+import isSunday from 'date-fns/is_sunday'
 
 import CampusHeader from '../../util/CampusHeader';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 
 import CanteenDayListView from './CanteenDayListView';
+import { fetchDayPlans } from './redux';
 
 const textCanteenInfo =
   'Mo-Fr geöffnet 8.30-13.45 Uhr \n' +
@@ -34,6 +41,9 @@ const textNfcInfo =
 function selectPropsFromStore(store) {
   return {
     selectedRole: store.settings.selectedRole,
+    dayPlans: store.canteen.dayPlans,
+    isFetching: store.canteen.isFetching,
+    networkError: store.canteen.networkError,
   };
 }
 
@@ -44,6 +54,47 @@ class CanteenScreen extends Component {
     return Alert.alert('Mensa Hangstraße 46-50', textBody);
   }
 
+  componentWillMount() {
+    this.props.dispatch(fetchDayPlans());
+  }
+
+  _getPages() {
+    return (
+      this.props.dayPlans.slice(0,5).map(
+        (dayPlan,index) => {
+          const dateParts = dayPlan.date.split('.').reverse();
+          const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+          return {
+            title: format(date, 'dd DD.MM.', { locale: deLocale }),
+            content: <CanteenDayListView meals={dayPlan.menus} role={this.props.selectedRole}/>,
+          };
+        }
+      )
+    );
+  }
+
+  _renderScreenContent() {
+    const { news, isFetching, networkError } = this.props;
+
+    if(isFetching) {
+      return (
+        <View style={styles.center}>
+          <ActivityIndicator animating={true}/>
+        </View>
+      );
+    }
+
+    if(networkError && !this.props.dayPlans.length) { // TODO: distinguish between network and other errors
+      return (
+        <View style={styles.center}>
+          <Text>Fehler beim Laden des Speiseplans</Text>
+        </View>
+      );
+    }
+
+    return <TabbedSwipeView count={this.props.dayPlans.length} pages={this._getPages()}/>;
+  }
+
   render() {
     const rightActionItem = {
       title: 'Info',
@@ -52,33 +103,11 @@ class CanteenScreen extends Component {
       show: 'always', // needed for Android
     };
 
-    const meal1 = {name: 'Schnitzel', addition: ['Dioxin','Chlor'],vegetarian: false, prices: [{price: '2€'},{price: '3€'},{price: '4€'}]};
-    const meal2 = {name: 'Nudeln', vegetarian: true, prices: [{price: '1,50€'},{price: '1,90€'},{price: '2€'}]};
-    const meal3 = {name: 'Salat', vegetarian: true, prices: [{price: '0,90€'},{price: '1,10€'},{price: '1,30€'}]};
-    const meals = [meal1,meal2,meal3];
-
-    const pages = [{
-        title: 'Mo 22.12',
-        content: <CanteenDayListView meals={meals} role={this.props.selectedRole}/>,
-      }, {
-        title: 'Di 23.12',
-        content: <CanteenDayListView meals={meals} role={this.props.selectedRole}/>,
-      }, {
-        title: 'Mi 24.12',
-        content: <CanteenDayListView meals={meals} role={this.props.selectedRole}/>,
-      }, {
-        title: 'Do 25.12',
-        content: <CanteenDayListView meals={meals} role={this.props.selectedRole}/>,
-      }, {
-        title: 'Fr 26.12',
-        content: <CanteenDayListView meals={meals} role={this.props.selectedRole}/>,
-      },
-    ];
     return (
       <View style={styles.container}>
         <CampusHeader title='Mensa' style={styles.header}
           rightActionItem={rightActionItem}/>
-        <TabbedSwipeView count={5} pages={pages}/>
+          {this._renderScreenContent()}
       </View>
     );
   }
@@ -91,6 +120,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
