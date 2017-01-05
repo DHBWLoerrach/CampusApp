@@ -768,6 +768,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.loerrach.campusapp;
 				PRODUCT_NAME = CampusApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -786,6 +787,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.loerrach.campusapp;
 				PRODUCT_NAME = CampusApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
