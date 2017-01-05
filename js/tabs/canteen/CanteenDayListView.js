@@ -4,10 +4,45 @@
 import React, { Component } from 'react';
 import {
   Alert,
+  Image,
+  StyleSheet,
+  Text,
   View,
 } from 'react-native';
 
-import MealRow from './MealRow';
+import Colors from '../../util/Colors';
+import ListCellTouchable from '../../util/ListCellTouchable';
+
+class MealRow extends Component {
+  render() {
+    const { meal, role } = this.props;
+    let vegetarian;
+    if (meal.vegetarian) {
+      vegetarian =
+        <Image style={styles.vegetarian} source={require('./img/vegetarian.png')} />;
+    }
+    let price = meal.prices[0].price; // Student
+    if(role === 'guest' || role === 'lecturer') { // Gäste oder Lehrbeauftragte
+        price = meal.prices[2].price;
+    } else if(role === 'employee') { // Mitarbeiter
+      price = meal.prices[1].price;
+    }
+    return (
+      <ListCellTouchable underlayColor={Colors.cellBorder}
+        onPress={this.props.onPress}>
+        <View style={styles.row}>
+          <Text style={styles.name}>
+            {meal.name}
+          </Text>
+          <View style={styles.right}>
+            <Text style={styles.price}>{price}</Text>
+            {vegetarian}
+          </View>
+        </View>
+      </ListCellTouchable>
+    );
+  }
+}
 
 export default class CanteenDayListView extends Component {
   _showMealInfo(meal) {
@@ -17,15 +52,46 @@ export default class CanteenDayListView extends Component {
   }
 
   render() {
-    const meal1 = {name: 'Schnitzel', addition: ['Dioxin','Chlor'],vegetarian: false, prices: [{price: '2€'},{price: '3€'},{price: '4€'}]};
-    const meal2 = {name: 'Nudeln', vegetarian: true, prices: [{price: '1,50€'},{price: '1,90€'},{price: '2€'}]};
-    const meal3 = {name: 'Salat', vegetarian: true, prices: [{price: '0,90€'},{price: '1,10€'},{price: '1,30€'}]};
-    return (
-      <View>
-        <MealRow role={this.props.role} onPress={() => this._showMealInfo(meal1)} meal={meal1}/>
-        <MealRow role={this.props.role} onPress={() => this._showMealInfo(meal2)} meal={meal2}/>
-        <MealRow role={this.props.role} onPress={() => this._showMealInfo(meal3)} meal={meal3}/>
-      </View>
+    const { meals, role } = this.props;
+    const mealRows = meals.map(
+      (meal,index) =>
+        <MealRow
+          key={'meal' + index}
+          meal={meal}
+          role={role}
+          onPress={() => this._showMealInfo(meal)}
+        />
     );
+    return <View>{mealRows}</View>;
   }
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    borderColor: Colors.cellBorder,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  name: {
+    flex: 1,
+    fontSize: 17,
+  },
+  price: {
+    color: Colors.dhbwRed,
+    fontSize: 17,
+    paddingBottom: 4,
+    textAlign: 'right',
+    width: 50,
+  },
+  right: {
+    alignItems: 'flex-end',
+  },
+  vegetarian: {
+    backgroundColor: 'transparent',
+    height: 28,
+    width: 28,
+  },
+});
