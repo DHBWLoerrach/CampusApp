@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  AppState,
   Button,
   ListView,
   StyleSheet,
@@ -42,21 +41,10 @@ class ScheduleScreen extends Component {
     super(props);
 
     this.state = { courseModalVisible: false };
-    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
   componentWillMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  // the schedule screen shall be refreshed each time it gets visible
-  _handleAppStateChange(newAppState) {
-    // TODO: load data on navigation change
-    if(newAppState === 'active' && this.props && this.props.course) {
+    if(this.props.course) {
       this.props.dispatch(fetchLectures(this.props.course));
     }
   }
