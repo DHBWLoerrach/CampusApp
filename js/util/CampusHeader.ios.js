@@ -28,15 +28,16 @@ export default class CampusHeader extends Component {
   render() {
     return(
       <View style={styles.header}>
-        <View style={styles.leftActionItem}>
+        <View style={styles.leftItem}>
           {this._renderActionItem(this.props.leftActionItem)}
         </View>
-        <View style={styles.headerTitle}>
-          <Text style={styles.titleText}>
+        <View style={styles.centerItem}>
+          <Text style={styles.titleText}
+            ellipsizeMode='tail' numberOfLines={1}>
             {this.props.title}
           </Text>
         </View>
-        <View style={styles.rightActionItem}>
+        <View style={styles.rightItem}>
           {this._renderActionItem(this.props.rightActionItem)}
         </View>
       </View>
@@ -46,32 +47,33 @@ export default class CampusHeader extends Component {
 
 const styles = StyleSheet.create({
   header: {
+    flexDirection: 'row',
     backgroundColor: Colors.dhbwRed,
     paddingTop: 20,
     height: 60,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
-  headerTitle: {
-    alignItems: 'center',
+  leftItem: {
+    width: 25,
+    justifyContent: 'center',
+    paddingLeft: 3,
   },
-  leftActionItem: {
+  centerItem: {
     flex: 1,
-    alignItems: 'flex-start',
-    paddingHorizontal: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  rightItem: {
+    width: 25,
+    justifyContent: 'center',
+    paddingRight: 3,
   },
   titleText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 22,
     letterSpacing: -1,
-  },
-  rightActionItem: {
-    flex: 1,
-    alignItems: 'flex-end',
-    paddingLeft: 5,
-    paddingRight: 25,
   },
   actionImage: {
     width: 22,
