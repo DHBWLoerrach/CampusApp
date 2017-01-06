@@ -19,7 +19,7 @@ export default class About extends Component {
           apps@dhbw-loerrach.de
         </Text>
         <Text style={styles.version}>
-          Version (App): 1.5
+          Version (App): 1.5.1
         </Text>
       </View>
     );
