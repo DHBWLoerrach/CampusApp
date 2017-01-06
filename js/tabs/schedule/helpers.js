@@ -1,6 +1,7 @@
 import ICAL from 'ical.js';
 import startOfToday from 'date-fns/start_of_today';
 import format from 'date-fns/format';
+import deLocale from 'date-fns/locale/de';
 
 export default function getLecturesFromiCalData(iCalendarData) {
   var jcalData = ICAL.parse(iCalendarData);
@@ -118,7 +119,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
       location: event.location,
     }
 
-    var day = format(event.startDate, 'dddd DD.MM.YY');
+    var day = format(event.startDate, 'dddd DD.MM.YY', { locale: deLocale });
     var lecturesOnDay = theLectures[day] || {};
     lecturesOnDay[i] = lecture;
     theLectures[day] = lecturesOnDay;
