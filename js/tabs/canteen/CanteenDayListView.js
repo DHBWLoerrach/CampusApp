@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import Colors from '../../util/Colors';
+import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
 
 class MealRow extends Component {
@@ -22,9 +23,9 @@ class MealRow extends Component {
         <Image style={styles.vegetarian} source={require('./img/vegetarian.png')} />;
     }
     let price = meal.prices[0].price; // Student
-    if(role === 'guest' || role === 'lecturer') { // Gäste oder Lehrbeauftragte
+    if(role === roles[3] || role === roles[1]) { // Gäste oder Lehrbeauftragte
         price = meal.prices[2].price;
-    } else if(role === 'employee') { // Mitarbeiter
+    } else if(role === roles[2]) { // Mitarbeiter
       price = meal.prices[1].price;
     }
     return (

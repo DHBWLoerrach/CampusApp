@@ -11,6 +11,8 @@ import {
   View,
 } from 'react-native';
 
+import { roles } from '../../util/Constants';
+
 const RadioButtonTouchable = Platform.OS === 'android'
   ? TouchableNativeFeedback
   : TouchableOpacity;
@@ -37,21 +39,21 @@ export default class RoleSelection extends Component {
     return(
       <View>
         <RadioButton
-          selected={this.props.role === 'student'}
-          label='Student/in'
-          onPress={() => this.props.onRoleChange('student')}/>
+          selected={this.props.role === roles[0]}
+          label={roles[0]}
+          onPress={() => this.props.onRoleChange(roles[0])}/>
         <RadioButton
-          selected={this.props.role === 'lecturer'}
-          label='Lehrbeauftragte/r'
-          onPress={() => this.props.onRoleChange('lecturer')}/>
+          selected={this.props.role === roles[1]}
+          label={roles[1]}
+          onPress={() => this.props.onRoleChange(roles[1])}/>
         <RadioButton
-          selected={this.props.role === 'employee'}
-          label='Mitarbeiter/in'
-          onPress={() => this.props.onRoleChange('employee')}/>
+          selected={this.props.role === roles[2]}
+          label={roles[2]}
+          onPress={() => this.props.onRoleChange(roles[2])}/>
         <RadioButton
-          selected={this.props.role === 'guest'}
-          label='Gast'
-          onPress={() => this.props.onRoleChange('guest')}/>
+          selected={this.props.role === roles[3]}
+          label={roles[3]}
+          onPress={() => this.props.onRoleChange(roles[3])}/>
       </View>
     )
   }
