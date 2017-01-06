@@ -30,10 +30,7 @@ const ButtonTouchable = Platform.OS === 'android'
 class WelcomeScreen extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      selectedRole: 'student',
-      disclaimerChecked: false,
-    };
+    this.state = { disclaimerChecked: false, };
   }
 
   _onSubmit() {
