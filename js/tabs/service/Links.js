@@ -20,15 +20,12 @@ export const linksAccounts = [{
   title: 'StuV',
   url: 'http://stuv-loerrach.de/',
 }, {
-  title: 'Video2Brain',
-  url: 'https://www.video2brain.com/de/edu-login/',
-}, {
   title: 'Handbuch DHBW-IT',
   url: 'https://www.dhbw-loerrach.de/3012.html',
 },
 ];
 
-export const linkBib = 
+export const linkBib =
   'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23182';
 
 export const linksEmergency = [{
