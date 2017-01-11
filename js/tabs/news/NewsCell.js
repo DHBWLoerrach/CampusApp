@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: Constants.listViewRowPaddingVertical,
     paddingHorizontal: Constants.listViewRowPaddingHorizontal,
+    borderColor: Colors.cellBorder,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   image: {
     height: 100,

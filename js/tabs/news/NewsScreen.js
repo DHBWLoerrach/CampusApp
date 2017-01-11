@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import {
   ActivityIndicator,
   BackAndroid,
-  ListView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -20,7 +20,6 @@ import { fetchNews } from './redux';
 
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
-import CampusListView from '../../util/CampusListView';
 
 function selectPropsFromStore(store) {
   return {
@@ -37,7 +36,6 @@ class NewsScreen extends Component {
     this.state = {selectedNewsItem: null,};
 
     this._onBackPress = this._onBackPress.bind(this);
-    this._renderRow = this._renderRow.bind(this);
   }
 
   componentWillMount() {
@@ -62,9 +60,13 @@ class NewsScreen extends Component {
     return false;
   }
 
-  _renderRow(newsItem: NewsItem) {
+  _renderNewsItems(news) {
     return (
-      <NewsCell news={newsItem} onPress={() => this._onNewsItemPressed(newsItem)}/>
+      news.map(
+        (newsItem, index) =>
+          <NewsCell key={'t' + index} news={newsItem}
+            onPress={() => this._onNewsItemPressed(newsItem)}/>
+      )
     );
   }
 
@@ -87,11 +89,8 @@ class NewsScreen extends Component {
       );
     }
 
-    // TODO: would a ScrollView suffice? we only have < 30 items
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return (
-      <CampusListView
-        dataSource={ds.cloneWithRows(news)} renderRow={this._renderRow}/>
+      <ScrollView bounces={false}>{this._renderNewsItems(news)}</ScrollView>
     );
   }
 
