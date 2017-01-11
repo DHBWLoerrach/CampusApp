@@ -3,10 +3,13 @@
 
 import React from 'react';
 import {
+  Linking,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+
+import Colors from '../../util/Colors';
 
 export const textAbout =
   'Die Idee zu dieser Campus App entstand auf Initiative der StuV in enger ' +
@@ -46,9 +49,7 @@ export function textImprint() {
         http://www.dhbw-loerrach.de{"\n"}{"\n"}
         Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz: DE287664832{"\n"}
     </Text>
-    <Text style={styles.headline}>
-        Rechtsform und zuständige Aufsichtsbehörde
-    </Text>
+    <Text style={styles.headline}>Rechtsform und zuständige Aufsichtsbehörde</Text>
     <Text style={styles.text}>
         Die Duale Hochschule Baden-Württemberg ist nach § 1 Abs. 1 DH-ErrichtG vom 12.12.2008 eine rechtsfähige Körperschaft des öffentlichen Rechts und zugleich staatliche Einrichtung. Die Duale Hochschule Baden-Württemberg Lörrach ist nach § 1 Abs. 2 DH-ErrichtG vom 12.12.2008 eine rechtlich unselbständige Untereinheit dieser Hochschule.{"\n"}{"\n"}
         Dienstanbieter im Sinne des TDG bzw. des MDStV ist als Träger der Dualen Hochschule das Land Baden-Württemberg vertreten durch die Ministerin für Wissenschaft, Forschung und Kunst Theresia Bauer, MdL.{"\n"}{"\n"}
@@ -62,17 +63,21 @@ export function textImprint() {
         poststelle@mwk.bwl.de{"\n"}
         http://www.mwk.bwl.de{"\n"}
     </Text>
-    <Text style={styles.headline}>
-        Externe Links
-    </Text>
+    <Text style={styles.headline}>Externe Links</Text>
     <Text style={styles.text}>
         Die Campus App enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben und für welche die DHBW Lörrach keine Gewähr übernehmen kann. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Es ist nicht auszuschließen, dass die Inhalte im Nachhinein von den jeweiligen Anbietern verändert werden. Sollten Sie der Ansicht sein, dass die verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst unangemessene Inhalte enthalten, teilen Sie uns dies bitte mit.
     </Text>
-    <Text style={styles.headline}>
-        Urheberrecht
-    </Text>
+    <Text style={styles.headline}>Urheberrecht</Text>
     <Text style={styles.text}>
         Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden einer Urheberrechtsverletzung wird der Inhalte umgehend entfernt bzw. mit dem entsprechenden Urheberrechts-Vermerk kenntlich gemacht.
+    </Text>
+    <Text style={styles.headline}>Quellcode</Text>
+    <Text style={styles.text}>
+        Der Quellcode dieser App wurde als Open Source Projekt unter der 3-Klausel-BSD-Lizenz veröffentlicht:
+    </Text>
+    <Text style={styles.link}
+      onPress={() => Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')}>
+      github.com/DHBWLoerrach/CampusApp
     </Text>
   </View>
 )};
@@ -115,5 +120,8 @@ const styles = StyleSheet.create({
   headline: {
     fontSize: 20,
     marginTop: 20,
+  },
+  link: {
+    color: Colors.link,
   }
 });
