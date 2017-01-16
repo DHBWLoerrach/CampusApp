@@ -73,6 +73,17 @@ class ScheduleScreen extends Component {
     this.props.dispatch(fetchLectures(course));
   }
 
+  _renderMessage(message) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.infoText}>{message}</Text>
+        <Button title="Vorlesungsplan laden" color={Colors.dhbwRed}
+          onPress={() => this._refreshData(this.props.course)}
+        />
+      </View>
+    );
+  }
+
   _renderScreenContent() {
     const { course, lectures, isFetching, networkError } = this.props;
 
@@ -84,15 +95,15 @@ class ScheduleScreen extends Component {
       );
     }
 
-    if(networkError && !lectures) { // TODO: distinguish between network and other errors
-      return (
-        <View style={styles.center}>
-          <Text style={styles.infoText}>Keine Daten vorhanden</Text>
-          <Button title="Vorlesungsplan laden" color={Colors.dhbwRed}
-            onPress={() => this._refreshData(this.props.course)}
-          />
-        </View>
-      );
+    if(networkError && !lectures) {
+      const text = 'Fehler mit der Internetverbindung. Probiere es später noch einmal.';
+      return this._renderMessage(text);
+    }
+
+    if(!Object.keys(lectures).length) {
+      const text = 'Aktuell sind für Kurs '  + course + ' keine Termine vorhanden'
+        + ' oder Dein Studiengang veröffentlicht keine Termine online.';
+      return this._renderMessage(text);
     }
 
     if(!course) {
@@ -161,7 +172,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   infoText: {
+    justifyContent: 'center',
     marginBottom: 15,
+    paddingHorizontal: 20,
   },
 });
 

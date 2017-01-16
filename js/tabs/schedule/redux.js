@@ -60,7 +60,7 @@ export function fetchLectures(course) {
         const lectures = getLecturesFromiCalData(responseBody);
         dispatch(receiveCourseSchedule(course, lectures));
       } else { // got no response from exchange server, server possibly busy
-        dispatch(errorFetchingSchedule(course)); // TODO: different error types
+        dispatch(errorFetchingSchedule(course)); // TODO: different error types?
       }
     } catch(error) { // problem with network, dispatch error
       dispatch(errorFetchingSchedule(course));
