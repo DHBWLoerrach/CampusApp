@@ -17,7 +17,7 @@ export default class TabbedSwipeView extends Component {
     super(props);
     this.state = {
       selectedIndex: 0,
-      initialSelectedIndex: 0, // TODO show todays menu
+      initialSelectedIndex: 0,
       pageWidth: 0,
       pageHeight: 0,
       scrollingTo: null,
@@ -92,7 +92,7 @@ export default class TabbedSwipeView extends Component {
         </View>
           <ScrollView style={styles.scrollview}
             ref={(scrollView) => { this._scrollView = scrollView; }}
-            contentOffset={{ // TODO show todays menu
+            contentOffset={{
               x: this.state.pageWidth * this.state.initialSelectedIndex,
               y: 0,
             }}
