@@ -18,6 +18,7 @@ import isSaturday from 'date-fns/is_saturday'
 import isSunday from 'date-fns/is_sunday'
 
 import CampusHeader from '../../util/CampusHeader';
+import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 
 import CanteenDayListView from './CanteenDayListView';
@@ -74,7 +75,7 @@ class CanteenScreen extends Component {
   }
 
   _renderScreenContent() {
-    const { news, isFetching, networkError } = this.props;
+    const { dayPlans, isFetching, networkError } = this.props;
 
     if(isFetching) {
       return (
@@ -84,15 +85,15 @@ class CanteenScreen extends Component {
       );
     }
 
-    if(networkError && !this.props.dayPlans.length) { // TODO: distinguish between network and other errors
+    const buttonText = 'Speiseplan laden';
+    if(networkError && !dayPlans.length) {
       return (
-        <View style={styles.center}>
-          <Text>Fehler beim Laden des Speiseplans</Text>
-        </View>
+        <ReloadView buttonText={buttonText}
+          onPress={() => this.props.dispatch(fetchDayPlans())}/>
       );
     }
 
-    return <TabbedSwipeView count={this.props.dayPlans.length} pages={this._getPages()}/>;
+    return <TabbedSwipeView count={dayPlans.length} pages={this._getPages()}/>;
   }
 
   render() {

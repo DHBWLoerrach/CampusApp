@@ -20,6 +20,7 @@ import { fetchNews } from './redux';
 
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
+import ReloadView from '../../util/ReloadView';
 
 function selectPropsFromStore(store) {
   return {
@@ -81,11 +82,11 @@ class NewsScreen extends Component {
       );
     }
 
-    if(networkError && !news.length) { // TODO: distinguish between network and other errors
+    const buttonText = 'News laden';
+    if(networkError && !news.length) {
       return (
-        <View style={styles.center}>
-          <Text>Fehler beim Laden der News</Text>
-        </View>
+        <ReloadView buttonText={buttonText}
+          onPress={() => this.props.dispatch(fetchNews())}/>
       );
     }
 

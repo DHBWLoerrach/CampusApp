@@ -40,7 +40,7 @@ export function fetchDayPlans() { // a function as actions (enabled by thunk)
       const responseBody = await response.text();
       const dayPlans = fetchCanteenData(responseBody);
       dispatch(receiveDayPlans(dayPlans));
-    } catch(e) { // TODO: distinguish between network and other errors
+    } catch(e) {
       dispatch(errorFetchingDayPlans());
     }
   }

@@ -42,7 +42,7 @@ export function fetchNews() { // a function as actions (enabled by thunk)
       const responseBody = await response.text();
       const newsItems = fetchNewsData(responseBody);
       dispatch(receiveNews(newsItems));
-    } catch(e) { // TODO: distinguish between network and other errors
+    } catch(e) {
       dispatch(errorFetchingNews());
     }
   }

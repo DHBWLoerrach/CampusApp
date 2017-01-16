@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import Colors from '../../util/Colors';
 import CampusHeader from '../../util/CampusHeader';
 import CampusListView from '../../util/CampusListView';
+import ReloadView from '../../util/ReloadView';
 
 import type { Lecture } from '../../util/types';
 
@@ -73,20 +74,9 @@ class ScheduleScreen extends Component {
     this.props.dispatch(fetchLectures(course));
   }
 
-  _renderMessage(message) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.infoText}>{message}</Text>
-        <Button title="Vorlesungsplan laden" color={Colors.dhbwRed}
-          onPress={() => this._refreshData(this.props.course)}
-        />
-      </View>
-    );
-  }
-
   _renderScreenContent() {
     const { course, lectures, isFetching, networkError } = this.props;
-        
+
     if(!course) {
       return (
         <View style={styles.center}>
@@ -105,15 +95,21 @@ class ScheduleScreen extends Component {
       );
     }
 
+    const buttonText = 'Vorlesungsplan laden';
     if(networkError && !lectures) {
-      const text = 'Fehler mit der Internetverbindung. Probiere es später noch einmal.';
-      return this._renderMessage(text);
+      return (
+          <ReloadView buttonText={buttonText}
+            onPress={() => this._refreshData(course)}/>
+      );
     }
 
     if(lectures && !Object.keys(lectures).length) {
-      const text = 'Aktuell sind für Kurs '  + course + ' keine Termine vorhanden'
-        + ' oder Dein Studiengang veröffentlicht keine Termine online.';
-      return this._renderMessage(text);
+      const text = 'Aktuell sind für Kurs '  + course + ' keine Termine '
+        + 'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
+      return (
+          <ReloadView message={text} buttonText={buttonText}
+            onPress={() => this._refreshData(course)}/>
+      );
     }
 
     const dataSource = new ListView.DataSource({
@@ -170,11 +166,6 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  infoText: {
-    justifyContent: 'center',
-    marginBottom: 15,
-    paddingHorizontal: 20,
   },
 });
 
