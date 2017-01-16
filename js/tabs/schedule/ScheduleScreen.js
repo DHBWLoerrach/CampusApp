@@ -86,6 +86,16 @@ class ScheduleScreen extends Component {
 
   _renderScreenContent() {
     const { course, lectures, isFetching, networkError } = this.props;
+        
+    if(!course) {
+      return (
+        <View style={styles.center}>
+          <Button title="Kurs auswählen" color={Colors.dhbwRed}
+            onPress={() => this._setCourseModalVisible(true)}
+          />
+        </View>
+      );
+    }
 
     if(isFetching) {
       return (
@@ -100,20 +110,10 @@ class ScheduleScreen extends Component {
       return this._renderMessage(text);
     }
 
-    if(!Object.keys(lectures).length) {
+    if(lectures && !Object.keys(lectures).length) {
       const text = 'Aktuell sind für Kurs '  + course + ' keine Termine vorhanden'
         + ' oder Dein Studiengang veröffentlicht keine Termine online.';
       return this._renderMessage(text);
-    }
-
-    if(!course) {
-      return (
-        <View style={styles.center}>
-          <Button title="Kurs auswählen" color={Colors.dhbwRed}
-            onPress={() => this._setCourseModalVisible(true)}
-          />
-        </View>
-      );
     }
 
     const dataSource = new ListView.DataSource({
