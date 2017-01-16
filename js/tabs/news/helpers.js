@@ -28,9 +28,6 @@ export default function fetchNewsData(newsXMLData) {
         newsContent += cdataElem.nodeValue;
       }
     }
-    // remove HTML tags and &nbsp; from text content for the detail view
-    newsContent = newsContent.replace(/(<([^>]+)>)/ig, "");
-    newsContent = newsContent.replace(/&nbsp;/ig," ");
 
     // news time is in format 'ddd, D MMM YYYY HH:mm:ss ZZ', so use Date object
     const time = new Date(newsItem.getElementsByTagName('pubDate').item(0).childNodes.item(0).nodeValue);
