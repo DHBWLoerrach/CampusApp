@@ -10,7 +10,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
   // get timezone contained in iCal Data and register with TimezoneService
   var timezoneComp = comp.getFirstSubcomponent('vtimezone');
   if(!timezoneComp){
-    return null;
+    return {};
   }
   var tzid = timezoneComp.getFirstPropertyValue('tzid');
   var timezone = new ICAL.Timezone({
