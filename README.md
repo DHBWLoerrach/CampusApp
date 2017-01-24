@@ -1,9 +1,6 @@
 # CampusApp
 DHBW Lörrach Campus App
 
-The complete source code of this app will be available here soon. Meanwhile, you
-can install the app for Android or iOS.
-
 Android:
 https://play.google.com/store/apps/details?id=de.dhbwloe.loerrach.campusapp
 
