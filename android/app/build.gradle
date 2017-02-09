@@ -90,8 +90,8 @@ android {
         applicationId "de.dhbwloe.loerrach.campusapp"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 24
-        versionName "1.5.3"
+        versionCode 25
+        versionName "1.5.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
