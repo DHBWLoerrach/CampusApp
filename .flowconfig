@@ -50,4 +50,4 @@ module.file_ext=.jsx
 module.file_ext=.json
 
 [version]
-^0.38.0
+^0.40.0
