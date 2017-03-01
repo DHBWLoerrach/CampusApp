@@ -18,7 +18,7 @@ public class MainApplication extends Application implements ReactApplication {
      * This enables e.g. the dev menu.
      */
     @Override
-    protected boolean getUseDeveloperSupport() {
+    public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
 
