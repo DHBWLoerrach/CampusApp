@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
   },
   label: {
     color: Colors.lightText,
-    marginTop: 5
+    textAlign: 'center',
   }
 });

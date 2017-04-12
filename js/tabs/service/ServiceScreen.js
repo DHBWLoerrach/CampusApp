@@ -28,6 +28,8 @@ import LinksList from './LinksList';
 import Privacy from './Privacy';
 import Settings from './Settings';
 import Submenu from './Submenu';
+import { textCafeteriaKKH, textHieber } from './Texts';
+
 
 export default class ServiceScreen extends Component {
   constructor(props) {
@@ -37,6 +39,20 @@ export default class ServiceScreen extends Component {
     };
 
     this._onBackPress = this._onBackPress.bind(this);
+  }
+
+  _sectionsForKBC() {
+    return [{
+      title: 'Cafeteria im KKH',
+      onPress: this._onContentSelect.bind(
+        this, {name: 'cafeteriaKKH', label: 'Cafeteria im KKH',
+          prevState: {name: 'kbc', label: 'Angebote bei der KBC'}})
+      }, {
+      title: "Hieber's Frische Center",
+      onPress: this._onContentSelect.bind(
+        this, {name: 'hieber', label: "Hieber's Frische Center", 
+          prevState: {name: 'kbc', label: 'Angebote bei der KBC'}})
+      }];
   }
 
   _onContentSelect(newContent) {
@@ -51,7 +67,11 @@ export default class ServiceScreen extends Component {
       if(Platform.OS === 'android'){
         BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress);
       }
-      this.setState({selectedContent: {name: 'submenu', label: 'Service'}})
+      if(this.state.selectedContent.prevState) {
+        this.setState({selectedContent: this.state.selectedContent.prevState})
+      } else {
+        this.setState({selectedContent: {name: 'submenu', label: 'Service'}})
+      }
       return true; // Back button handled
     }
     return false;
@@ -77,6 +97,11 @@ export default class ServiceScreen extends Component {
         label: 'Bibliothek',
         icon: require('./img/study.png'),
         onPress: this._openLink.bind(this, linkBib),
+      }, {
+        label: 'Angebote bei der KBC',
+        icon: require('./img/kbc.png'),
+        onPress: this._onContentSelect.bind(
+          this, {name: 'kbc', label: 'Angebote bei der KBC'}),
       }, {
         label: 'Freizeit',
         icon: require('./img/sun.png'),
@@ -131,6 +156,7 @@ export default class ServiceScreen extends Component {
       case 'accounts': return (<LinksList title='Service-Zugänge' links={linksAccounts} />);
       case 'emergency': return (<LinksList title='Hilfe im Notfall' links={linksEmergency} />);
       case 'study': return (<LinksList title='Studium' links={linksStudy} />);
+      case 'kbc': return (<LinksList title='Angebote beim Bürogebäude KBC' links={this._sectionsForKBC()} />);
       case 'freetime': return (<LinksList title='Freizeit' links={linksFreetime} />);
       case 'feedback': return (<Feedback/>);
       case 'settings': return (<Settings/>);
@@ -138,6 +164,8 @@ export default class ServiceScreen extends Component {
       case 'disclaimer': return (<Disclaimer/>);
       case 'imprint': return (<Imprint/>);
       case 'privacy': return (<Privacy/>);
+      case 'cafeteriaKKH': return textCafeteriaKKH();
+      case 'hieber': return textHieber();
     };
   }
 

@@ -83,7 +83,7 @@ class Row extends Component {
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
-          <Image source={this.props.link.url ?
+          <Image source={this.props.link.url || this.props.link.onPress ?
             require('./img/chevron-right.png')
             : this.props.link.tel ? require('./img/phone.png'): null}
           />

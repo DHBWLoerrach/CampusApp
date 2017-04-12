@@ -63,7 +63,7 @@ export const linkFeedback = {
   url: 'mailto:apps@dhbw-loerrach.de?subject=Campus%20App%20Feedback',
 };
 
-export const linksFreetime= [{
+export const linksFreetime = [{
   title: 'Sprachen',
   url: 'https://www.dhbw-loerrach.de/sprachen.html',
 }, {

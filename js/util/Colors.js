@@ -8,5 +8,5 @@ module.exports = {
   dhbwGray: '#5C6971',
   dhbwRed: '#E2001A',
   lightText: '#7F91A7',
-  link: '#002350',
+  link: '#E2001A',
 };
