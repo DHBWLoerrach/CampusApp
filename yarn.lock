@@ -1638,7 +1638,7 @@ fbjs-scripts@^0.7.0:
     semver "^5.1.0"
     through2 "^2.0.0"
 
-fbjs@^0.8.4, fbjs@^0.8.9, fbjs@~0.8.9:
+fbjs@^0.8.9, fbjs@~0.8.9:
   version "0.8.12"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.12.tgz#10b5d92f76d45575fd63a217d4ea02bea2f8ed04"
   dependencies:
@@ -3260,27 +3260,6 @@ raw-body@~2.1.2:
     iconv-lite "0.4.13"
     unpipe "1.0.0"
 
-react-addons-create-fragment@15.5.0-alpha.0:
-  version "15.5.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/react-addons-create-fragment/-/react-addons-create-fragment-15.5.0-alpha.0.tgz#13fabfc9902ea13c8df8c5b76ebd77da14d179cd"
-  dependencies:
-    fbjs "^0.8.4"
-    object-assign "^4.1.0"
-
-react-addons-pure-render-mixin@15.5.0-alpha.0:
-  version "15.5.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/react-addons-pure-render-mixin/-/react-addons-pure-render-mixin-15.5.0-alpha.0.tgz#b11949ff8232cf5ced444e9dd83542e0ef6bf144"
-  dependencies:
-    fbjs "^0.8.4"
-    object-assign "^4.1.0"
-
-react-addons-shallow-compare@15.5.0-alpha.0:
-  version "15.5.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.5.0-alpha.0.tgz#c19da4ec4b14691f299812e55b1d980b34960b76"
-  dependencies:
-    fbjs "^0.8.4"
-    object-assign "^4.1.0"
-
 react-clone-referenced-element@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-clone-referenced-element/-/react-clone-referenced-element-1.0.1.tgz#2bba8c69404c5e4a944398600bcc4c941f860682"
@@ -3296,9 +3275,9 @@ react-devtools-core@^2.0.8:
     cross-env "^3.1.4"
     ws "^2.0.3"
 
-react-native@0.43.0:
-  version "0.43.0"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.43.0.tgz#782b3e3918590d36f9b362b80d72341e8468c3aa"
+react-native@0.43.3:
+  version "0.43.3"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.43.3.tgz#4f8e0d8d88827553789c02ef21cbc1afb68474d0"
   dependencies:
     absolute-path "^0.0.0"
     art "^0.10.0"
@@ -3355,9 +3334,6 @@ react-native@0.43.0:
     optimist "^0.6.1"
     plist "^1.2.0"
     promise "^7.1.1"
-    react-addons-create-fragment "15.5.0-alpha.0"
-    react-addons-pure-render-mixin "15.5.0-alpha.0"
-    react-addons-shallow-compare "15.5.0-alpha.0"
     react-clone-referenced-element "^1.0.1"
     react-devtools-core "^2.0.8"
     react-timer-mixin "^0.13.2"
