@@ -31,10 +31,13 @@ export default function fetchNewsData(newsXMLData) {
 
     // news time is in format 'ddd, D MMM YYYY HH:mm:ss ZZ', so use Date object
     const time = new Date(newsItem.getElementsByTagName('pubDate').item(0).childNodes.item(0).nodeValue);
+
+    // description element can be empty
+    const description = newsItem.getElementsByTagName('description').item(0).childNodes.item(0);
     newsList.push({
       id: i,
       heading: newsItem.getElementsByTagName('title').item(0).childNodes.item(0).nodeValue,
-      subheading: newsItem.getElementsByTagName('description').item(0).childNodes.item(0).nodeValue,
+      subheading: description ? description.nodeValue : null,
       // TODO: use this to open news in browser (e.g. Safari on iOS)?
       // when used, add url to NewsItem type
       // url: newsItem.getElementsByTagName('link').item(0).childNodes.item(0).nodeValue,
