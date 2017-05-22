@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react';
 import {
-  BackAndroid,
+  BackHandler,
   DrawerLayoutAndroid,
 }
 from 'react-native';
@@ -33,7 +33,7 @@ export default class CampusDrawerLayout extends Component {
   }
 
   componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButton);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     this._drawer = null;
   }
 
@@ -43,11 +43,11 @@ export default class CampusDrawerLayout extends Component {
   }
 
   onDrawerOpen() {
-    BackAndroid.addEventListener('hardwareBackPress', this.handleBackButton);
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   onDrawerClose() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.handleBackButton);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   closeDrawer() {

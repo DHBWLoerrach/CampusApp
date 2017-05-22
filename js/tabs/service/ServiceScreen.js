@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react';
 import {
-  BackAndroid,
+  BackHandler,
   Linking,
   Platform,
   ScrollView,
@@ -50,7 +50,7 @@ export default class ServiceScreen extends Component {
       }, {
       title: "Hieber's Frische Center",
       onPress: this._onContentSelect.bind(
-        this, {name: 'hieber', label: "Hieber's Frische Center", 
+        this, {name: 'hieber', label: "Hieber's Frische Center",
           prevState: {name: 'kbc', label: 'Angebote bei der KBC'}})
       }];
   }
@@ -58,14 +58,14 @@ export default class ServiceScreen extends Component {
   _onContentSelect(newContent) {
     this.setState({selectedContent: newContent});
     if(Platform.OS === 'android'){
-      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
     }
   }
 
   _onBackPress(){
     if(this.state.selectedContent.name !== 'submenu'){
       if(Platform.OS === 'android'){
-        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress);
+        BackHandler.removeEventListener('hardwareBackPress', this._onBackPress);
       }
       if(this.state.selectedContent.prevState) {
         this.setState({selectedContent: this.state.selectedContent.prevState})

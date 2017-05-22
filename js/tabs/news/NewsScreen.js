@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  BackAndroid,
+  BackHandler,
   Platform,
   ScrollView,
   StyleSheet,
@@ -45,7 +45,7 @@ class NewsScreen extends Component {
 
   _onNewsItemPressed(newsItem) {
     if(Platform.OS === 'android'){
-      BackAndroid.addEventListener('hardwareBackPress', this._onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
     }
     this.setState({ selectedNewsItem: newsItem });
   }
@@ -53,7 +53,7 @@ class NewsScreen extends Component {
   _onBackPress() {
     if(this.state.selectedNewsItem !== null){
       if(Platform.OS === 'android'){
-        BackAndroid.removeEventListener('hardwareBackPress', this._onBackPress);
+        BackHandler.removeEventListener('hardwareBackPress', this._onBackPress);
       }
       this.setState({selectedNewsItem: null})
       return true; // Back button handled
