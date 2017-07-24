@@ -14,6 +14,11 @@ export default function fetchNewsData(newsXMLData) {
     // there is one content:encoded element per news item
     var contentElement = newsItem.getElementsByTagName('content:encoded').item(0);
 
+    let imageElement = newsItem.getElementsByTagName('imageUri').item(0);
+    if(imageElement) {
+      newsImage = imageElement.getElementsByTagName('img').item(0).getAttribute('src'); 
+    }
+
     // the content:encoded element has CDATA children
     // but only non-empty ones are contained in the childNode list of contentElement
     var cdataElements = contentElement.childNodes;
@@ -22,7 +27,7 @@ export default function fetchNewsData(newsXMLData) {
       // check if CDATA element contains a file attribute
       var imageFileAttribute = cdataElem.nodeValue.match(/(file=)(.*?)(?=")/g);
       // a CDATA element may contain an image element or just text
-      if(imageFileAttribute !== null) {
+      if(!newsImage && imageFileAttribute !== null) {
         newsImage = websiteUrl + imageFileAttribute[0].substring(5);
       } else {
         newsContent += cdataElem.nodeValue;
