@@ -86,11 +86,20 @@ class CanteenScreen extends Component {
     }
 
     const buttonText = 'Speiseplan laden';
-    if(networkError && !dayPlans.length) {
-      return (
-        <ReloadView buttonText={buttonText}
-          onPress={() => this.props.dispatch(fetchDayPlans())}/>
-      );
+    if(dayPlans.length === 0) {
+      if(networkError) {
+        return (
+          <ReloadView buttonText={buttonText}
+            onPress={() => this.props.dispatch(fetchDayPlans())}/>
+        );
+      }
+      else {
+        const infoText = 'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
+        return (
+          <ReloadView buttonText={buttonText} message={infoText}
+            onPress={() => this.props.dispatch(fetchDayPlans())}/>
+        );
+      }
     }
 
     return <TabbedSwipeView count={dayPlans.length} pages={this._getPages()}/>;
