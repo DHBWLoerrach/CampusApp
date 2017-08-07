@@ -3,6 +3,7 @@
 
 import React, { Component } from 'react';
 import {
+  Platform,
   StyleSheet,
   View,
   WebView,
@@ -13,12 +14,13 @@ import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
   render() {
+    const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '' ;
     const HTML = `
         <!DOCTYPE html>\n
         <html>
           <head>
             <style>
-              body {font-family: -apple-system;}
+              body {font-family: -apple-system; ${fontSize} }
               h1 {color: ${Colors.dhbwRed};}
             </style>
           </head>
