@@ -1,13 +1,6 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import Colors from './Colors';
 import PagerTab from './PagerTab';
@@ -20,7 +13,7 @@ export default class TabbedSwipeView extends Component {
       initialSelectedIndex: 0,
       pageWidth: 0,
       pageHeight: 0,
-      scrollingTo: null,
+      scrollingTo: null
     };
 
     this._handleHorizontalScroll = this._handleHorizontalScroll.bind(this);
@@ -31,7 +24,7 @@ export default class TabbedSwipeView extends Component {
   _getPageSize(event) {
     this.setState({
       pageWidth: event.nativeEvent.layout.width,
-      pageHeight: event.nativeEvent.layout.height,
+      pageHeight: event.nativeEvent.layout.height
     });
   }
 
@@ -42,7 +35,7 @@ export default class TabbedSwipeView extends Component {
     let selectedIndex = event.nativeEvent.position;
     if (selectedIndex === undefined) {
       selectedIndex = Math.round(
-        event.nativeEvent.contentOffset.x / this.state.pageWidth,
+        event.nativeEvent.contentOffset.x / this.state.pageWidth
       );
     }
 
@@ -50,66 +43,71 @@ export default class TabbedSwipeView extends Component {
     if (selectedIndex < 0 || selectedIndex >= this.props.count) return;
 
     // do nothing if requested scrolling position has not yet been reached
-    if (this.state.scrollingTo !== null && this.state.scrollingTo !== selectedIndex) {
+    if (
+      this.state.scrollingTo !== null &&
+      this.state.scrollingTo !== selectedIndex
+    ) {
       return;
     }
 
     // position has been reached, set new state
-    this.setState({selectedIndex, scrollingTo: null});
+    this.setState({ selectedIndex, scrollingTo: null });
   }
 
   _swipeToPage(index) {
-    if(index === this.state.selectedIndex) return;
+    if (index === this.state.selectedIndex) return;
     this._scrollView.scrollTo({
       x: index * this.state.pageWidth,
-      animated: true,
+      animated: true
     });
-    this.setState({scrollingTo: index});
+    this.setState({ scrollingTo: index });
   }
 
   render() {
-    const tabs = this.props.pages.map(
-      (page, index) =>
-        <PagerTab key={'t' + index} title={page.title}
-          isSelected={index === this.state.selectedIndex}
-          onPress={() => this._swipeToPage(index)}
-        />
-    );
+    const tabs = this.props.pages.map((page, index) => (
+      <PagerTab
+        key={'t' + index}
+        title={page.title}
+        isSelected={index === this.state.selectedIndex}
+        onPress={() => this._swipeToPage(index)}
+      />
+    ));
 
     const { pageWidth, pageHeight } = this.state;
     const dimensions = { width: pageWidth, height: pageHeight };
-    const pages = this.props.pages.map(
-      (page,index) =>
-        <View style={[styles.card, dimensions]} key={'p' + index}>
-          {page.content}
-        </View>
-    );
+    const pages = this.props.pages.map((page, index) => (
+      <View style={[styles.card, dimensions]} key={'p' + index}>
+        {page.content}
+      </View>
+    ));
 
-    return(
+    return (
       <View style={styles.container}>
-        <View style={styles.segmentsContainer}>
-          {tabs}
-        </View>
-          <ScrollView style={styles.scrollview}
-            ref={(scrollView) => { this._scrollView = scrollView; }}
-            contentOffset={{
-              x: this.state.pageWidth * this.state.initialSelectedIndex,
-              y: 0,
-            }}
-            horizontal={true}
-            pagingEnabled={true}
-            scrollsToTop={false}
-            bounces={false}
-            onScroll={this._handleHorizontalScroll}
-            scrollEventThrottle={100}
-            removeClippedSubviews={true}
-            automaticallyAdjustContentInsets={false}
-            directionalLockEnabled={true}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            onLayout={this._getPageSize}>
-            {pages}
-          </ScrollView>
+        <View style={styles.segmentsContainer}>{tabs}</View>
+        <ScrollView
+          style={styles.scrollview}
+          ref={scrollView => {
+            this._scrollView = scrollView;
+          }}
+          contentOffset={{
+            x: this.state.pageWidth * this.state.initialSelectedIndex,
+            y: 0
+          }}
+          horizontal={true}
+          pagingEnabled={true}
+          scrollsToTop={false}
+          bounces={false}
+          onScroll={this._handleHorizontalScroll}
+          scrollEventThrottle={100}
+          removeClippedSubviews={true}
+          automaticallyAdjustContentInsets={false}
+          directionalLockEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          onLayout={this._getPageSize}
+        >
+          {pages}
+        </ScrollView>
       </View>
     );
   }
@@ -117,19 +115,19 @@ export default class TabbedSwipeView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   segmentsContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.dhbwRed,
     paddingBottom: 6,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   scrollview: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   card: {
-    backgroundColor: 'transparent',
-  },
+    backgroundColor: 'transparent'
+  }
 });

@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
 
 import { Provider } from 'react-redux';
@@ -14,14 +12,14 @@ export default class RootComponent extends Component {
     super(props);
     this.state = {
       loading: true, // while loading offline data with redux
-      store: setupStore(() => this.setState({loading: false})),
+      store: setupStore(() => this.setState({ loading: false }))
     };
   }
 
   render() {
     return (
       <Provider store={this.state.store}>
-        <CampusApp loading={this.state.loading}/>
+        <CampusApp loading={this.state.loading} />
       </Provider>
     );
   }

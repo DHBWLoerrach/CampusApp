@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 module.exports = {
   cellBorder: '#EEEEEE',
   lightGray: '#DADADA',
@@ -8,5 +6,5 @@ module.exports = {
   dhbwGray: '#5C6971',
   dhbwRed: '#E2001A',
   lightText: '#7F91A7',
-  link: '#E2001A',
+  link: '#E2001A'
 };

@@ -1,39 +1,30 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from './Colors.js';
 
 export default class CampusHeader extends Component {
   _renderActionItem(actionItem) {
-      if(actionItem) {
-        return(
-          <TouchableOpacity onPress={actionItem.onPress}>
-            <Image style={styles.actionImage} source={actionItem.icon}/>
-          </TouchableOpacity>
-        );
-      } else {
-        return null;
-      }
+    if (actionItem) {
+      return (
+        <TouchableOpacity onPress={actionItem.onPress}>
+          <Image style={styles.actionImage} source={actionItem.icon} />
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
   }
 
   render() {
-    return(
+    return (
       <View style={styles.header}>
         <View style={styles.leftItem}>
           {this._renderActionItem(this.props.leftActionItem)}
         </View>
         <View style={styles.centerItem}>
-          <Text style={styles.titleText}
-            ellipsizeMode='tail' numberOfLines={1}>
+          <Text style={styles.titleText} ellipsizeMode="tail" numberOfLines={1}>
             {this.props.title}
           </Text>
         </View>
@@ -50,33 +41,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.dhbwRed,
     paddingTop: 20,
-    height: 60,
+    height: 60
   },
   leftItem: {
     width: 25,
     justifyContent: 'center',
-    paddingLeft: 3,
+    paddingLeft: 3
   },
   centerItem: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 3,
+    paddingHorizontal: 3
   },
   rightItem: {
     width: 25,
     justifyContent: 'center',
-    paddingRight: 3,
+    paddingRight: 3
   },
   titleText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 22,
-    letterSpacing: -1,
+    letterSpacing: -1
   },
   actionImage: {
     width: 22,
-    height: 22,
-  },
+    height: 22
+  }
 });

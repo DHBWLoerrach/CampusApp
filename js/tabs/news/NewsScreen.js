@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
@@ -9,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -26,7 +24,7 @@ function selectPropsFromStore(store) {
   return {
     news: store.news.news,
     isFetching: store.news.isFetching,
-    networkError: store.news.networkError,
+    networkError: store.news.networkError
   };
 }
 
@@ -34,7 +32,7 @@ class NewsScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedNewsItem: null,};
+    this.state = { selectedNewsItem: null };
 
     this._onBackPress = this._onBackPress.bind(this);
   }
@@ -44,49 +42,51 @@ class NewsScreen extends Component {
   }
 
   _onNewsItemPressed(newsItem) {
-    if(Platform.OS === 'android'){
+    if (Platform.OS === 'android') {
       BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
     }
     this.setState({ selectedNewsItem: newsItem });
   }
 
   _onBackPress() {
-    if(this.state.selectedNewsItem !== null){
-      if(Platform.OS === 'android'){
+    if (this.state.selectedNewsItem !== null) {
+      if (Platform.OS === 'android') {
         BackHandler.removeEventListener('hardwareBackPress', this._onBackPress);
       }
-      this.setState({selectedNewsItem: null})
+      this.setState({ selectedNewsItem: null });
       return true; // Back button handled
     }
     return false;
   }
 
   _renderNewsItems(news) {
-    return (
-      news.map(
-        (newsItem, index) =>
-          <NewsCell key={'t' + index} news={newsItem}
-            onPress={() => this._onNewsItemPressed(newsItem)}/>
-      )
-    );
+    return news.map((newsItem, index) => (
+      <NewsCell
+        key={'t' + index}
+        news={newsItem}
+        onPress={() => this._onNewsItemPressed(newsItem)}
+      />
+    ));
   }
 
   _renderScreenContent() {
     const { news, isFetching, networkError } = this.props;
 
-    if(isFetching) {
+    if (isFetching) {
       return (
         <View style={styles.center}>
-          <ActivityIndicator animating={true}/>
+          <ActivityIndicator animating={true} />
         </View>
       );
     }
 
     const buttonText = 'News laden';
-    if(networkError && !news.length) {
+    if (networkError && !news.length) {
       return (
-        <ReloadView buttonText={buttonText}
-          onPress={() => this.props.dispatch(fetchNews())}/>
+        <ReloadView
+          buttonText={buttonText}
+          onPress={() => this.props.dispatch(fetchNews())}
+        />
       );
     }
 
@@ -96,17 +96,18 @@ class NewsScreen extends Component {
   }
 
   render() {
-    if(this.state.selectedNewsItem !== null) {
+    if (this.state.selectedNewsItem !== null) {
       return (
         <NewsDetails
           backAction={this._onBackPress.bind(this)}
-          news={this.state.selectedNewsItem}/>
+          news={this.state.selectedNewsItem}
+        />
       );
-    };
+    }
 
     return (
       <View style={styles.container}>
-        <CampusHeader title="News"/>
+        <CampusHeader title="News" />
         {this._renderScreenContent()}
       </View>
     );
@@ -116,12 +117,12 @@ class NewsScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   }
 });
 

@@ -1,12 +1,6 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  BackHandler,
-  DrawerLayoutAndroid,
-}
-from 'react-native';
+import { BackHandler, DrawerLayoutAndroid } from 'react-native';
 
 export default class CampusDrawerLayout extends Component {
   _drawer: ?DrawerLayoutAndroid;
@@ -24,7 +18,7 @@ export default class CampusDrawerLayout extends Component {
   render() {
     return (
       <DrawerLayoutAndroid
-        ref={(drawer) => this._drawer = drawer}
+        ref={drawer => (this._drawer = drawer)}
         {...this.props}
         onDrawerOpen={this.onDrawerOpen}
         onDrawerClose={this.onDrawerClose}

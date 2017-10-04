@@ -1,18 +1,8 @@
 // @flow
-'use strict';
-
 import { AsyncStorage } from 'react-native';
-import {
-  applyMiddleware,
-  combineReducers,
-  compose,
-  createStore,
-} from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk'; // thunk middleware to use functions as actions
-import {
-  persistStore,
-  autoRehydrate,
-} from 'redux-persist';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import { news } from './tabs/news/redux';
 import { schedule } from './tabs/schedule/redux';
 import { canteen } from './tabs/canteen/redux';
@@ -25,6 +15,6 @@ export default function setupStore(onComplete: ?() => void) {
   // enhance store: autohydrate (offline data), thunk middleware (functions actions)
   const storeEnhancers = compose(autoRehydrate(), applyMiddleware(thunk));
   const store = createStore(reducers, {}, storeEnhancers);
-  persistStore(store, {storage: AsyncStorage}, onComplete);
+  persistStore(store, { storage: AsyncStorage }, onComplete);
   return store;
 }

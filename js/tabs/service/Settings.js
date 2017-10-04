@@ -1,12 +1,6 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { connect } from 'react-redux';
 
@@ -17,7 +11,7 @@ import { textSettings } from './Texts';
 
 function selectPropsFromStore(store) {
   return {
-    selectedRole: store.settings.selectedRole,
+    selectedRole: store.settings.selectedRole
   };
 }
 
@@ -28,7 +22,7 @@ class Settings extends Component {
         <Text>{textSettings}</Text>
         <RoleSelection
           role={this.props.selectedRole}
-          onRoleChange={(role) => this.props.dispatch(selectRole(role))}
+          onRoleChange={role => this.props.dispatch(selectRole(role))}
         />
       </View>
     );
@@ -40,8 +34,8 @@ const styles = StyleSheet.create({
     padding: 15
   },
   optionContainer: {
-    flexDirection: 'row',
-  },
+    flexDirection: 'row'
+  }
 });
 
 export default connect(selectPropsFromStore)(Settings);

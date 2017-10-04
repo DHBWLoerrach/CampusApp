@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
@@ -8,7 +6,7 @@ import {
   ListView,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -23,17 +21,14 @@ import CourseModal from './CourseModal';
 import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
-import {
-  clearLectures,
-  fetchLectures,
-} from './redux';
+import { clearLectures, fetchLectures } from './redux';
 
 function selectPropsFromStore(store) {
   return {
     course: store.schedule.course,
     lectures: store.schedule.lectures,
     isFetching: store.schedule.isFetching,
-    networkError: store.schedule.networkError,
+    networkError: store.schedule.networkError
   };
 }
 
@@ -45,13 +40,13 @@ class ScheduleScreen extends Component {
   }
 
   componentWillMount() {
-    if(this.props.course) {
+    if (this.props.course) {
       this.props.dispatch(fetchLectures(this.props.course));
     }
   }
 
   _renderRow(lecture: Lecture) {
-    return <LectureRow lecture={lecture}/>;
+    return <LectureRow lecture={lecture} />;
   }
 
   _renderDayHeader(sectionData: any, sectionID: string) {
@@ -64,7 +59,8 @@ class ScheduleScreen extends Component {
 
   _setCourseName(course) {
     this._setCourseModalVisible(false);
-    if(course !== this.props.course) { // only update data if new course given
+    if (course !== this.props.course) {
+      // only update data if new course given
       this._refreshData(course);
     }
   }
@@ -77,44 +73,54 @@ class ScheduleScreen extends Component {
   _renderScreenContent() {
     const { course, lectures, isFetching, networkError } = this.props;
 
-    if(!course) {
+    if (!course) {
       return (
         <View style={styles.center}>
-          <Button title="Kurs auswählen" color={Colors.dhbwRed}
+          <Button
+            title="Kurs auswählen"
+            color={Colors.dhbwRed}
             onPress={() => this._setCourseModalVisible(true)}
           />
         </View>
       );
     }
 
-    if(isFetching) {
+    if (isFetching) {
       return (
         <View style={styles.center}>
-          <ActivityIndicator animating={true}/>
+          <ActivityIndicator animating={true} />
         </View>
       );
     }
 
     const buttonText = 'Vorlesungsplan laden';
-    if(networkError && !lectures) {
+    if (networkError && !lectures) {
       return (
-          <ReloadView buttonText={buttonText}
-            onPress={() => this._refreshData(course)}/>
+        <ReloadView
+          buttonText={buttonText}
+          onPress={() => this._refreshData(course)}
+        />
       );
     }
 
-    if(lectures && !Object.keys(lectures).length) {
-      const text = 'Aktuell sind für Kurs '  + course + ' keine Termine '
-        + 'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
+    if (lectures && !Object.keys(lectures).length) {
+      const text =
+        'Aktuell sind für Kurs ' +
+        course +
+        ' keine Termine ' +
+        'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
       return (
-          <ReloadView message={text} buttonText={buttonText}
-            onPress={() => this._refreshData(course)}/>
+        <ReloadView
+          message={text}
+          buttonText={buttonText}
+          onPress={() => this._refreshData(course)}
+        />
       );
     }
 
     const dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
-      sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+      sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     });
     return (
       <CampusListView
@@ -126,31 +132,29 @@ class ScheduleScreen extends Component {
   }
 
   render() {
-    let rightActionItem = null, {course} = this.props;
-    if(course) {
+    let rightActionItem = null,
+      { course } = this.props;
+    if (course) {
       rightActionItem = {
         title: 'Edit',
         icon: require('./img/edit.png'),
         onPress: () => this._setCourseModalVisible(true),
-        show: 'always', // needed for Android
+        show: 'always' // needed for Android
       };
     }
 
     let title = 'Vorlesungsplan';
-    if(course) title += ' ' + course;
+    if (course) title += ' ' + course;
 
     return (
       <View style={styles.container}>
-        <CampusHeader
-          title={title}
-          rightActionItem={rightActionItem}
-        />
+        <CampusHeader title={title} rightActionItem={rightActionItem} />
         {this._renderScreenContent()}
         <CourseModal
           visible={this.state.courseModalVisible}
           course={course}
           onClose={() => this._setCourseModalVisible(false)}
-          onCourseChange={(course) => this._setCourseName(course)}
+          onCourseChange={course => this._setCourseName(course)}
         />
       </View>
     );
@@ -160,13 +164,13 @@ class ScheduleScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'
+  }
 });
 
 export default connect(selectPropsFromStore)(ScheduleScreen);

@@ -9,7 +9,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
 
   // get timezone contained in iCal Data and register with TimezoneService
   var timezoneComp = comp.getFirstSubcomponent('vtimezone');
-  if(!timezoneComp){
+  if (!timezoneComp) {
     return {};
   }
   var tzid = timezoneComp.getFirstPropertyValue('tzid');
@@ -19,12 +19,12 @@ export default function getLecturesFromiCalData(iCalendarData) {
   });
   ICAL.TimezoneService.register(tzid, timezone);
 
-  var vevents = comp.getAllSubcomponents("vevent");
+  var vevents = comp.getAllSubcomponents('vevent');
 
   // process events
   var events = [];
 
-  if(vevents != null){
+  if (vevents != null) {
     // get all recurrence exceptions (events that have been part of a recurrence  )
     // MS exchange generates iCal data having incomplete RECURRENCE-IDs for
     // VEVENTs that are recurrence exceptions (individual events as part of
@@ -37,50 +37,55 @@ export default function getLecturesFromiCalData(iCalendarData) {
     // TODO: in case this bug gets fixed in MS exchange, we need to ignore
     // the recurrence exceptions in the loop below to avoid duplicate entries
 
-    for (var i=0,  total = vevents.length; i < total; i++) {
+    for (var i = 0, total = vevents.length; i < total; i++) {
       var event = new ICAL.Event(vevents[i]);
-      if(event.isRecurring()) {
+      if (event.isRecurring()) {
         var next = null;
         var iterator = event.iterator();
-        while(next = iterator.next()) { // next is a ICAL.Time object
+        while ((next = iterator.next())) {
+          // next is a ICAL.Time object
           var recurrenceEvent = event.getOccurrenceDetails(next).item;
           // Skip all occurences that actually are in our list of exceptions.
           // Those actual events will be added to the result anyway.
           // Without this workaround for the MS exchange iCal bug we could use
           // event.getOccurrenceDetails(next) to get the recurrence exception.
-          if(recurrenceExceptions[event.uid] &&
-            recurrenceExceptions[event.uid].indexOf(next.toJSDate().toDateString()) >= 0) {
+          if (
+            recurrenceExceptions[event.uid] &&
+            recurrenceExceptions[event.uid].indexOf(
+              next.toJSDate().toDateString()
+            ) >= 0
+          ) {
             continue;
           }
           events.push({
-            "description": recurrenceEvent.summary,
-            "startDate": next.toJSDate(),
-            "startTime": next.toJSDate().getTime(),
-            "endDate": next.toJSDate(),
-            "endTime": recurrenceEvent.endDate.toJSDate().getTime(),
-            "location": recurrenceEvent.location,
+            description: recurrenceEvent.summary,
+            startDate: next.toJSDate(),
+            startTime: next.toJSDate().getTime(),
+            endDate: next.toJSDate(),
+            endTime: recurrenceEvent.endDate.toJSDate().getTime(),
+            location: recurrenceEvent.location
           });
         }
       } else {
         events.push({
-          "description": event.summary,
-          "startDate": event.startDate.toJSDate(),
-          "startTime": event.startDate.toJSDate().getTime(),
-          "endDate": event.endDate.toJSDate(),
-          "endTime": event.endDate.toJSDate().getTime(),
-          "location": event.location,
+          description: event.summary,
+          startDate: event.startDate.toJSDate(),
+          startTime: event.startDate.toJSDate().getTime(),
+          endDate: event.endDate.toJSDate(),
+          endTime: event.endDate.toJSDate().getTime(),
+          location: event.location
         });
         // if event lasts longer than one day add an extra event for each day
-        for(var day=1; day<event.duration.days; day++) {
+        for (var day = 1; day < event.duration.days; day++) {
           var startDate = event.startDate.toJSDate();
           startDate.setDate(startDate.getDate() + 1);
           events.push({
-            "description": event.summary,
-            "startDate": startDate,
-            "startTime": event.startDate.toJSDate().getTime(),
-            "endDate": event.endDate.toJSDate(),
-            "endTime": event.endDate.toJSDate().getTime(),
-            "location": event.location,
+            description: event.summary,
+            startDate: startDate,
+            startTime: event.startDate.toJSDate().getTime(),
+            endDate: event.endDate.toJSDate(),
+            endTime: event.endDate.toJSDate().getTime(),
+            location: event.location
           });
         }
       }
@@ -91,33 +96,36 @@ export default function getLecturesFromiCalData(iCalendarData) {
   var rangeStart = startOfToday();
   var rangeEnd = new Date().setDate(rangeStart.getDate() + range);
 
-  var filteredEvents = events.filter(function (filterEvent){
-    return (filterEvent.startTime >= rangeStart.getTime()) && (filterEvent.endDate <= rangeEnd);
-  })
+  var filteredEvents = events.filter(function(filterEvent) {
+    return (
+      filterEvent.startTime >= rangeStart.getTime() &&
+      filterEvent.endDate <= rangeEnd
+    );
+  });
 
-  filteredEvents.sort(function(event1, event2){
-    if(event1.startDate < event2.startDate){
+  filteredEvents.sort(function(event1, event2) {
+    if (event1.startDate < event2.startDate) {
       return -1;
     }
 
-    if(event1.startDate > event2.startDate){
+    if (event1.startDate > event2.startDate) {
       return 1;
     }
     return 0;
-  })
+  });
 
   // prepare lectures for rendering in ListContainer
   // TODO: combine with above legacy iterate/sort/filter actions
   var theLectures = {};
-  for (var i=0,  length=filteredEvents.length; i < length; i++) {
+  for (var i = 0, length = filteredEvents.length; i < length; i++) {
     var event = filteredEvents[i];
     var lecture = {};
     lecture = {
       title: event.description,
       startTime: format(event.startTime, 'HH:mm'),
       endTime: format(event.endTime, 'HH:mm'),
-      location: event.location,
-    }
+      location: event.location
+    };
 
     var day = format(event.startDate, 'dddd DD.MM.YY', { locale: deLocale });
     var lecturesOnDay = theLectures[day] || {};
@@ -131,10 +139,10 @@ function _getRecurrenceExceptions(vevents) {
   // result: for all recurrences with exceptions, we map the event's uid
   // to the days of the occurring exceptions
   var result = {};
-  for (var i=0,  total = vevents.length; i < total; i++) {
+  for (var i = 0, total = vevents.length; i < total; i++) {
     var event = new ICAL.Event(vevents[i]);
-    if(event.isRecurrenceException()) {
-      if(!result[event.uid]) {
+    if (event.isRecurrenceException()) {
+      if (!result[event.uid]) {
         result[event.uid] = [];
       }
       result[event.uid].push(event.recurrenceId.toJSDate().toDateString());

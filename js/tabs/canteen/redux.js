@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 import { canteenApiKey } from '../../../env.js';
 
 import fetchCanteenData from './helpers';
@@ -19,7 +17,7 @@ export function receiveDayPlans(dayPlans) {
     type: RECEIVE_DAYPLANS,
     dayPlans: dayPlans,
     receivedAt: Date.now()
-  }
+  };
 }
 
 // action that is dispatched whenever an error occurred while fetching the dayplans data
@@ -28,11 +26,12 @@ export function errorFetchingDayPlans() {
   return {
     type: ERROR_FETCHING_DAYPLANS,
     dayPlans: []
-  }
+  };
 }
 
-export function fetchDayPlans() { // a function as actions (enabled by thunk)
-  return async function (dispatch) {
+export function fetchDayPlans() {
+  // a function as actions (enabled by thunk)
+  return async function(dispatch) {
     dispatch(requestDayPlans());
     try {
       const canteenUrl = `https://www.swfr.de/index.php?id=1400&type=98&&tx_swfrspeiseplan_pi1[apiKey]=${canteenApiKey}&tx_swfrspeiseplan_pi1[ort]=677`;
@@ -40,36 +39,42 @@ export function fetchDayPlans() { // a function as actions (enabled by thunk)
       const responseBody = await response.text();
       const dayPlans = fetchCanteenData(responseBody);
       dispatch(receiveDayPlans(dayPlans));
-    } catch(e) {
+    } catch (e) {
       dispatch(errorFetchingDayPlans());
     }
-  }
+  };
 }
 
 // REDUCER
-export function canteen(state = {
-  isFetching: false,
-  networkError: false,
-  lastUpdated: null,
-  dayPlans: []
-}, action) {
+export function canteen(
+  state = {
+    isFetching: false,
+    networkError: false,
+    lastUpdated: null,
+    dayPlans: []
+  },
+  action
+) {
   switch (action.type) {
     case REQUEST_DAYPLANS:
-      return {...state,
+      return {
+        ...state,
         isFetching: true,
         networkError: false
       };
     case RECEIVE_DAYPLANS:
-      return {...state,
+      return {
+        ...state,
         isFetching: false,
         dayPlans: action.dayPlans,
         networkError: false,
         lastUpdated: action.receivedAt
       };
     case ERROR_FETCHING_DAYPLANS:
-      return {...state,
+      return {
+        ...state,
         isFetching: false,
-        networkError: true,
+        networkError: true
       };
     default:
       return state;

@@ -1,13 +1,6 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, StatusBar, StyleSheet, View } from 'react-native';
 
 import { connect } from 'react-redux';
 
@@ -16,20 +9,21 @@ import TabsView from './TabsView';
 
 function selectPropsFromStore(store) {
   return {
-    selectedRole: store.settings.selectedRole,
+    selectedRole: store.settings.selectedRole
   };
 }
 
 class CampusApp extends Component {
   render() {
-    let content = <TabsView/>;
-    if(this.props.loading) {
-      content =
+    let content = <TabsView />;
+    if (this.props.loading) {
+      content = (
         <View style={styles.center}>
-          <ActivityIndicator animating={true}/>
+          <ActivityIndicator animating={true} />
         </View>
-    } else if(!this.props.selectedRole) {
-      content = <WelcomeScreen/>;
+      );
+    } else if (!this.props.selectedRole) {
+      content = <WelcomeScreen />;
     }
 
     return (
@@ -47,12 +41,12 @@ class CampusApp extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   }
 });
 

@@ -1,20 +1,13 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  View,
-  WebView,
-} from 'react-native';
+import { Platform, StyleSheet, View, WebView } from 'react-native';
 
 import CampusHeader from '../../util/CampusHeader';
 import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
   render() {
-    const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '' ;
+    const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '';
     const HTML = `
         <!DOCTYPE html>\n
         <html>
@@ -36,14 +29,15 @@ export default class NewsDetails extends Component {
     const leftActionItem = {
       title: 'Back',
       icon: require('../../img/arrow-back.png'),
-      onPress: this.props.backAction,
+      onPress: this.props.backAction
     };
 
-    return(
+    return (
       <View style={styles.container}>
-        <CampusHeader title='News' leftActionItem={leftActionItem}/>
-        <WebView contentInset={{bottom: 50}}
-          source={{html: HTML}}
+        <CampusHeader title="News" leftActionItem={leftActionItem} />
+        <WebView
+          contentInset={{ bottom: 50 }}
+          source={{ html: HTML }}
           bounces={false}
         />
       </View>

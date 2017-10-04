@@ -1,6 +1,4 @@
 // @flow
-'use strict';
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -8,14 +6,13 @@ import {
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 
 import { roles } from '../../util/Constants';
 
-const RadioButtonTouchable = Platform.OS === 'android'
-  ? TouchableNativeFeedback
-  : TouchableOpacity;
+const RadioButtonTouchable =
+  Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
 class RadioButton extends Component {
   render() {
@@ -23,9 +20,11 @@ class RadioButton extends Component {
       <RadioButtonTouchable onPress={this.props.onPress}>
         <View style={styles.radioButton}>
           <View style={styles.outerCircle}>
-            {this.props.selected ? <View style={styles.innerCircle}/> : null}
+            {this.props.selected ? <View style={styles.innerCircle} /> : null}
           </View>
-          <Text style={[styles.label, this.props.selected ? styles.bold : null]}>
+          <Text
+            style={[styles.label, this.props.selected ? styles.bold : null]}
+          >
             {this.props.label}
           </Text>
         </View>
@@ -35,27 +34,32 @@ class RadioButton extends Component {
 }
 
 export default class RoleSelection extends Component {
-  render() { // TODO: flow type for roles
-    return(
+  render() {
+    // TODO: flow type for roles
+    return (
       <View>
         <RadioButton
           selected={this.props.role === roles[0]}
           label={roles[0]}
-          onPress={() => this.props.onRoleChange(roles[0])}/>
+          onPress={() => this.props.onRoleChange(roles[0])}
+        />
         <RadioButton
           selected={this.props.role === roles[1]}
           label={roles[1]}
-          onPress={() => this.props.onRoleChange(roles[1])}/>
+          onPress={() => this.props.onRoleChange(roles[1])}
+        />
         <RadioButton
           selected={this.props.role === roles[2]}
           label={roles[2]}
-          onPress={() => this.props.onRoleChange(roles[2])}/>
+          onPress={() => this.props.onRoleChange(roles[2])}
+        />
         <RadioButton
           selected={this.props.role === roles[3]}
           label={roles[3]}
-          onPress={() => this.props.onRoleChange(roles[3])}/>
+          onPress={() => this.props.onRoleChange(roles[3])}
+        />
       </View>
-    )
+    );
   }
 }
 
@@ -63,7 +67,7 @@ const styles = StyleSheet.create({
   radioButton: {
     flex: 1,
     flexDirection: 'row',
-    marginBottom: 5,
+    marginBottom: 5
   },
   outerCircle: {
     height: 20,
@@ -72,18 +76,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   innerCircle: {
     height: 10,
     width: 10,
     borderRadius: 5,
-    backgroundColor: 'black',
+    backgroundColor: 'black'
   },
   label: {
-    marginLeft: 5,
+    marginLeft: 5
   },
   bold: {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   }
 });

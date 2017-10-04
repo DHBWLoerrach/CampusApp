@@ -1,13 +1,6 @@
- // @flow
-'use strict';
-
+// @flow
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Linking,
-} from 'react-native';
+import { StyleSheet, Text, View, Linking } from 'react-native';
 
 import Colors from '../../util/Colors';
 
@@ -18,19 +11,23 @@ export default class About extends Component {
     return (
       <View style={styles.container}>
         <Text>{textAbout}</Text>
-        <Text style={styles.link} onPress={() => Linking.openURL('mailto:apps@dhbw-loerrach.de')}>
+        <Text
+          style={styles.link}
+          onPress={() => Linking.openURL('mailto:apps@dhbw-loerrach.de')}
+        >
           apps@dhbw-loerrach.de
         </Text>
         <Text style={styles.marginBig}>
           Diese App ist ein Open Source Projekt:
         </Text>
-        <Text style={[styles.margin,styles.link]}
-          onPress={() => Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')}>
+        <Text
+          style={[styles.margin, styles.link]}
+          onPress={() =>
+            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')}
+        >
           github.com/DHBWLoerrach/CampusApp
         </Text>
-        <Text style={styles.marginBig}>
-          Version (App): 1.5.8
-        </Text>
+        <Text style={styles.marginBig}>Version (App): 1.5.8</Text>
       </View>
     );
   }
@@ -38,16 +35,16 @@ export default class About extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 20
   },
   link: {
     fontSize: 15,
-    color: Colors.link,
+    color: Colors.link
   },
   marginBig: {
-    marginTop: 24,
+    marginTop: 24
   },
   margin: {
-    marginTop: 12,
+    marginTop: 12
   }
 });
