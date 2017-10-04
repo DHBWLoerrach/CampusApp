@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import deLocale from 'date-fns/locale/de';
+import format from 'date-fns/format';
 
 import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
@@ -19,6 +20,13 @@ export default class NewsCell extends Component {
 
   render() {
     let image = require('./img/news-announcement.png');
+    let time =
+      this.props.topic === 'events'
+        ? format(new Date(this.props.news.time), 'DD.MM.YYYY')
+        : distanceInWordsToNow(this.props.news.time, {
+            locale: deLocale,
+            addSuffix: true
+          });
     if (this.props.news.imgUrl) image = { uri: this.props.news.imgUrl };
     return (
       <ListCellTouchable
@@ -30,12 +38,7 @@ export default class NewsCell extends Component {
           <View style={styles.newsheadings}>
             <Text style={styles.heading}>{this.props.news.heading}</Text>
             <Text style={styles.subheading}>{this.props.news.subheading}</Text>
-            <Text style={styles.time}>
-              {distanceInWordsToNow(this.props.news.time, {
-                locale: deLocale,
-                addSuffix: true
-              })}
-            </Text>
+            <Text style={styles.time}>{time}</Text>
           </View>
         </View>
       </ListCellTouchable>

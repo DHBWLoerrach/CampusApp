@@ -19,6 +19,8 @@ import { fetchNews } from './redux';
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
 import ReloadView from '../../util/ReloadView';
+import TabbedSwipeView from '../../util/TabbedSwipeView';
+import { feeds } from '../../util/Constants';
 
 function selectPropsFromStore(store) {
   return {
@@ -29,13 +31,8 @@ function selectPropsFromStore(store) {
 }
 
 class NewsScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { selectedNewsItem: null };
-
-    this._onBackPress = this._onBackPress.bind(this);
-  }
+  state = { selectedNewsItem: null };
+  _onBackPress = this._onBackPress.bind(this);
 
   componentWillMount() {
     this.props.dispatch(fetchNews());
@@ -59,14 +56,35 @@ class NewsScreen extends Component {
     return false;
   }
 
-  _renderNewsItems(news) {
-    return news.map((newsItem, index) => (
-      <NewsCell
-        key={'t' + index}
-        news={newsItem}
-        onPress={() => this._onNewsItemPressed(newsItem)}
-      />
-    ));
+  _renderNewsItems(news, topic) {
+    if (news) {
+      if (topic === 'events') {
+        news = news.sort((a, b) => new Date(a.time) - new Date(b.time));
+      }
+      return news.map((newsItem, index) => (
+        <NewsCell
+          key={'t' + index}
+          news={newsItem}
+          topic={topic}
+          onPress={() => this._onNewsItemPressed(newsItem)}
+        />
+      ));
+    } else {
+      return <View />;
+    }
+  }
+
+  _getPages(news) {
+    return feeds.map(feed => {
+      return {
+        title: feed.name,
+        content: (
+          <ScrollView bounces={false}>
+            {this._renderNewsItems(news[feed.key], feed.key)}
+          </ScrollView>
+        )
+      };
+    });
   }
 
   _renderScreenContent() {
@@ -89,10 +107,7 @@ class NewsScreen extends Component {
         />
       );
     }
-
-    return (
-      <ScrollView bounces={false}>{this._renderNewsItems(news)}</ScrollView>
-    );
+    return <TabbedSwipeView count={2} pages={this._getPages(news)} />;
   }
 
   render() {
@@ -107,7 +122,7 @@ class NewsScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <CampusHeader title="News" />
+        <CampusHeader title="News" style={styles.header} />
         {this._renderScreenContent()}
       </View>
     );
@@ -123,6 +138,9 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  header: {
+    elevation: 0
   }
 });
 
