@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { StyleSheet, ToolbarAndroid, View } from 'react-native';
+import PropTypes from 'prop-types';
 
 import Colors from './Colors.js';
 
@@ -39,7 +40,7 @@ export default class CampusHeader extends Component {
 
 // needed to use context API to open CampusDrawerLayout (see above)
 CampusHeader.contextTypes = {
-  openDrawer: React.PropTypes.func
+  openDrawer: PropTypes.func
 };
 
 const styles = StyleSheet.create({

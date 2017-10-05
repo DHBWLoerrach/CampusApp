@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import PropTypes from 'prop-types';
 
 import CampusDrawerLayout from './CampusDrawerLayout';
 import DrawerItem from './DrawerItem';
@@ -123,7 +124,7 @@ export default class TabsView extends Component {
 
 // needed to use context API (see getChildContext())
 TabsView.childContextTypes = {
-  openDrawer: React.PropTypes.func
+  openDrawer: PropTypes.func
 };
 
 const styles = StyleSheet.create({
