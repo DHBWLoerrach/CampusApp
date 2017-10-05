@@ -19,10 +19,10 @@ export default function fetchNewsData(newsXMLData) {
 
     let imageElement = newsItem.getElementsByTagName('imageUri').item(0);
     if (imageElement) {
-      newsImage = imageElement
-        .getElementsByTagName('img')
-        .item(0)
-        .getAttribute('src');
+      const imgElem = imageElement.getElementsByTagName('img');
+      if (imgElem.length > 0) {
+        newsImage = imgElem.item(0).getAttribute('src');
+      }
     }
 
     // the content:encoded element has CDATA children

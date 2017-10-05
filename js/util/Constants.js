@@ -6,7 +6,7 @@ module.exports = {
   listViewRowPaddingVertical: 8,
   roles: ['Student/in', 'Lehrbeauftragte/r', 'Mitarbeiter/in', 'Gast'],
   feeds: [
-    { name: 'News', key: 'news', id: 3965, type: 105, subId: 0 },
-    { name: 'Termine', key: 'events', id: 3961, type: 104, subId: 1 }
+    { name: 'News', key: 'news', id: 4081 },
+    { name: 'Termine', key: 'events', id: 3961 }
   ]
 };

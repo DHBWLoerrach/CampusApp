@@ -43,10 +43,7 @@ export function fetchNews() {
       await Promise.all(
         feeds.map(async feed => {
           response = await fetch(
-            'https://www.dhbw-loerrach.de/index.php?id=' +
-              feed.id +
-              '&type=' +
-              feed.type
+            `https://www.dhbw-loerrach.de/index.php?id=${feed.id}`
           );
           responseBody = await response.text();
           newsItems[feed.key] = fetchNewsData(responseBody);
