@@ -9,8 +9,8 @@ export default class TabbedSwipeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: 0,
-      initialSelectedIndex: 0,
+      selectedIndex: this.props.selectedIndex || 0,
+      initialSelectedIndex: this.props.selectedIndex || 0,
       pageWidth: 0,
       pageHeight: 0,
       scrollingTo: null

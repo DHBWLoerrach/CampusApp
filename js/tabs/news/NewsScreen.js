@@ -31,18 +31,21 @@ function selectPropsFromStore(store) {
 }
 
 class NewsScreen extends Component {
-  state = { selectedNewsItem: null };
+  state = { selectedIndex: 0, selectedNewsItem: null };
   _onBackPress = this._onBackPress.bind(this);
 
   componentWillMount() {
     this.props.dispatch(fetchNews());
   }
 
-  _onNewsItemPressed(newsItem) {
+  _onNewsItemPressed(newsItem, topic) {
     if (Platform.OS === 'android') {
       BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
     }
-    this.setState({ selectedNewsItem: newsItem });
+    this.setState({
+      selectedIndex: topic === 'news' ? 0 : 1,
+      selectedNewsItem: newsItem
+    });
   }
 
   _onBackPress() {
@@ -66,7 +69,7 @@ class NewsScreen extends Component {
           key={'t' + index}
           news={newsItem}
           topic={topic}
-          onPress={() => this._onNewsItemPressed(newsItem)}
+          onPress={() => this._onNewsItemPressed(newsItem, topic)}
         />
       ));
     } else {
@@ -107,7 +110,13 @@ class NewsScreen extends Component {
         />
       );
     }
-    return <TabbedSwipeView count={2} pages={this._getPages(news)} />;
+    return (
+      <TabbedSwipeView
+        count={2}
+        pages={this._getPages(news)}
+        selectedIndex={this.state.selectedIndex}
+      />
+    );
   }
 
   render() {

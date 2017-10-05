@@ -8,7 +8,7 @@ import PagerTab from './PagerTab';
 export default class TabbedSwipeView extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedIndex: 0 };
+    this.state = { selectedIndex: this.props.selectedIndex || 0 };
 
     this._onPageSelected = this._onPageSelected.bind(this);
   }
@@ -40,6 +40,7 @@ export default class TabbedSwipeView extends Component {
         <View style={styles.segmentsContainer}>{tabs}</View>
         <ViewPagerAndroid
           style={styles.container}
+          initialPage={this.props.selectedIndex}
           onPageSelected={this._onPageSelected}
           ref={viewPager => {
             this._viewPager = viewPager;
