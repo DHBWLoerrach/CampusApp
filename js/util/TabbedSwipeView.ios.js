@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.dhbwRed,
     paddingBottom: 6,
-    justifyContent: 'center'
+    justifyContent: 'space-around'
   },
   scrollview: {
     flex: 1,
