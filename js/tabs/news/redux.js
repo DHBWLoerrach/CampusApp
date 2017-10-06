@@ -29,7 +29,7 @@ const ERROR_FETCHING_NEWS = 'ERROR_FETCHING_NEWS';
 export function errorFetchingNews() {
   return {
     type: ERROR_FETCHING_NEWS,
-    news: []
+    news: {}
   };
 }
 

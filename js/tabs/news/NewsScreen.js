@@ -102,7 +102,7 @@ class NewsScreen extends Component {
     }
 
     const buttonText = 'News laden';
-    if (networkError && !news.length) {
+    if (networkError && Object.keys(news).length === 0) {
       return (
         <ReloadView
           buttonText={buttonText}
