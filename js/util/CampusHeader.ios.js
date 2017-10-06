@@ -8,7 +8,10 @@ export default class CampusHeader extends Component {
   _renderActionItem(actionItem) {
     if (actionItem) {
       return (
-        <TouchableOpacity onPress={actionItem.onPress}>
+        <TouchableOpacity
+          onPress={actionItem.onPress}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
           <Image style={styles.actionImage} source={actionItem.icon} />
         </TouchableOpacity>
       );
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
     height: 60
   },
   leftItem: {
-    width: 25,
+    width: 40,
     justifyContent: 'center',
     paddingLeft: 3
   },
