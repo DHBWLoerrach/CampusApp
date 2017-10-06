@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Button,
-  ListView,
+  SectionList,
   StyleSheet,
   Text,
   View
@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
 import CampusHeader from '../../util/CampusHeader';
-import CampusListView from '../../util/CampusListView';
 import ReloadView from '../../util/ReloadView';
 
 import type { Lecture } from '../../util/types';
@@ -47,10 +46,6 @@ class ScheduleScreen extends Component {
 
   _renderRow(lecture: Lecture) {
     return <LectureRow lecture={lecture} />;
-  }
-
-  _renderDayHeader(sectionData: any, sectionID: string) {
-    return <DayHeader title={sectionID} />;
   }
 
   _setCourseModalVisible(visible) {
@@ -103,7 +98,7 @@ class ScheduleScreen extends Component {
       );
     }
 
-    if (lectures && !Object.keys(lectures).length) {
+    if (lectures && !lectures.length) {
       const text =
         'Aktuell sind für Kurs ' +
         course +
@@ -118,15 +113,16 @@ class ScheduleScreen extends Component {
       );
     }
 
-    const dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-      sectionHeaderHasChanged: (s1, s2) => s1 !== s2
-    });
+    // contenInset: needed for last item to be displayed above tab bar on iOS
     return (
-      <CampusListView
-        dataSource={dataSource.cloneWithRowsAndSections(lectures)}
-        renderRow={this._renderRow}
-        renderSectionHeader={this._renderDayHeader}
+      <SectionList
+        bounces={false}
+        contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
+        sections={lectures}
+        renderItem={({ item }) => this._renderRow(item)}
+        renderSectionHeader={({ section }) => (
+          <DayHeader title={section.title} />
+        )}
       />
     );
   }

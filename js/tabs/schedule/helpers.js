@@ -114,25 +114,30 @@ export default function getLecturesFromiCalData(iCalendarData) {
     return 0;
   });
 
-  // prepare lectures for rendering in ListContainer
+  // prepare lectures for rendering in SectionList
   // TODO: combine with above legacy iterate/sort/filter actions
-  var theLectures = {};
-  for (var i = 0, length = filteredEvents.length; i < length; i++) {
-    var event = filteredEvents[i];
-    var lecture = {};
-    lecture = {
+  let currentKey = 1;
+  const result = filteredEvents.reduce((lectures, event) => {
+    const day = format(event.startDate, 'dddd DD.MM.YY', { locale: deLocale });
+
+    const lecture = {
+      key: currentKey,
       title: event.description,
       startTime: format(event.startTime, 'HH:mm'),
       endTime: format(event.endTime, 'HH:mm'),
       location: event.location
     };
 
-    var day = format(event.startDate, 'dddd DD.MM.YY', { locale: deLocale });
-    var lecturesOnDay = theLectures[day] || {};
-    lecturesOnDay[i] = lecture;
-    theLectures[day] = lecturesOnDay;
-  }
-  return theLectures;
+    const index = lectures.findIndex(dayItem => dayItem.title === day);
+    if (index >= 0) {
+      lectures[index].data.push(lecture);
+    } else {
+      lectures.push({ title: day, data: [lecture] });
+    }
+    currentKey += 1;
+    return lectures;
+  }, []);
+  return result;
 }
 
 function _getRecurrenceExceptions(vevents) {
