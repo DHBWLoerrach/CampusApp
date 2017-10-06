@@ -37,7 +37,9 @@ export default class NewsCell extends Component {
           <Image style={styles.image} source={image} />
           <View style={styles.newsheadings}>
             <Text style={styles.heading}>{this.props.news.heading}</Text>
-            <Text style={styles.subheading}>{this.props.news.subheading}</Text>
+            <Text style={styles.subheading} numberOfLines={3}>
+              {this.props.news.subheading}
+            </Text>
             <Text style={styles.time}>{time}</Text>
           </View>
         </View>

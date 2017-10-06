@@ -75,12 +75,7 @@ export default function fetchNewsData(newsXMLData) {
 export function fetchNewsDataFromFb(fbJsonNewsData) {
   let newsList = [];
   fbJsonNewsData.data.map((newsElem, index) => {
-    if (
-      newsElem.description ||
-      newsElem.message ||
-      newsElem.caption ||
-      newsElem.story
-    ) {
+    if (newsElem.description || newsElem.message || newsElem.caption) {
       newsList.push({
         id: index,
         url: newsElem.permalink_url,
@@ -88,7 +83,7 @@ export function fetchNewsDataFromFb(fbJsonNewsData) {
           _formatHeading(newsElem.caption) ||
           _formatHeading(newsElem.name) ||
           'StuV DHBW News',
-        subheading: newsElem.story || '',
+        subheading: newsElem.description || newsElem.message || '',
         time: _parseFbDate(newsElem.created_time),
         imgUrl: newsElem.full_picture,
         body: newsElem.description || newsElem.message
