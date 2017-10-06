@@ -8,5 +8,6 @@ module.exports = {
   feeds: [
     { name: 'News', key: 'news', id: 4081 },
     { name: 'Termine', key: 'events', id: 3961 }
+    // { name: 'StuV', key: 'stuvdhbwloerrach' }
   ]
 };

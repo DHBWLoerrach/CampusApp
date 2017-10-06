@@ -71,3 +71,52 @@ export default function fetchNewsData(newsXMLData) {
 
   return newsList;
 }
+
+export function fetchNewsDataFromFb(fbJsonNewsData) {
+  let newsList = [];
+  fbJsonNewsData.data.map((newsElem, index) => {
+    if (
+      newsElem.description ||
+      newsElem.message ||
+      newsElem.caption ||
+      newsElem.story
+    ) {
+      newsList.push({
+        id: index,
+        url: newsElem.permalink_url,
+        heading:
+          _formatHeading(newsElem.caption) ||
+          _formatHeading(newsElem.name) ||
+          'StuV DHBW News',
+        subheading: newsElem.story || '',
+        time: _parseFbDate(newsElem.created_time),
+        imgUrl: newsElem.full_picture,
+        body: newsElem.description || newsElem.message
+      });
+    }
+  });
+  return newsList;
+}
+
+function _parseFbDate(fbDate) {
+  let dateString =
+    fbDate.slice(0, fbDate.length - 2) + ':' + fbDate.slice(fbDate.length - 2);
+  return new Date(dateString);
+}
+
+function _formatHeading(heading) {
+  if (!heading) {
+    return null;
+  }
+  const regex = /(@\[.*?:\d*:|])/g; // replaces facebook's annotations
+  heading = heading.replace(regex, '');
+
+  // Trim heading and add ... when the title is too long
+  const maxLength = 75;
+  if (heading.length > 75) {
+    heading = heading.substring(0, 75);
+    heading = heading + '...';
+  }
+
+  return heading;
+}

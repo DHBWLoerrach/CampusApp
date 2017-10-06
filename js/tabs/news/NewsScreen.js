@@ -43,7 +43,7 @@ class NewsScreen extends Component {
       BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
     }
     this.setState({
-      selectedIndex: topic === 'news' ? 0 : 1,
+      selectedIndex: ['news', 'events', 'stuvdhbwloerrach'].indexOf(topic),
       selectedNewsItem: newsItem
     });
   }
@@ -112,7 +112,6 @@ class NewsScreen extends Component {
     }
     return (
       <TabbedSwipeView
-        count={2}
         pages={this._getPages(news)}
         selectedIndex={this.state.selectedIndex}
       />
