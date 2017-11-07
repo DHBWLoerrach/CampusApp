@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 
 import CampusDrawerLayout from './CampusDrawerLayout';
@@ -36,14 +36,7 @@ export default class TabsView extends Component {
   _renderNavigationView() {
     return (
       <View>
-        <Image
-          style={styles.headerImage}
-          source={require('./img/drawer-header.png')}
-        >
-          <View>
-            <Image source={require('./img/logo.png')} />
-          </View>
-        </Image>
+        <Image source={require('./img/drawer-header.png')} />
         <DrawerItem
           title="News"
           isSelected={this.state.selectedTab === 'news'}
@@ -126,10 +119,3 @@ export default class TabsView extends Component {
 TabsView.childContextTypes = {
   openDrawer: PropTypes.func
 };
-
-const styles = StyleSheet.create({
-  headerImage: {
-    padding: 20,
-    justifyContent: 'flex-end'
-  }
-});
