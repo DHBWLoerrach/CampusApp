@@ -4,7 +4,7 @@ import { DOMParser } from 'xmldom';
 
 export default function fetchNewsData(newsXMLData) {
   var domParser = new DOMParser();
-  var xmlDOM = domParser.parseFromString(newsXMLData, 'application/xml');
+  var xmlDOM = domParser.parseFromString(newsXMLData, 'application/xhtml');
   var newsItems = xmlDOM.getElementsByTagName('item');
   var newsList = [];
   for (var i = 0; i < newsItems.length; i++) {
@@ -31,7 +31,9 @@ export default function fetchNewsData(newsXMLData) {
     for (var j = 0; j < cdataElements.length; j++) {
       var cdataElem = cdataElements.item(j);
       // check if CDATA element contains a file attribute
-      var imageFileAttribute = cdataElem.nodeValue.match(/(file=)(.*?)(?=")/g);
+      var imageFileAttribute = cdataElem.nodeValue.match(
+        /(file=)(.*?)(?=")/g
+      );
       // a CDATA element may contain an image element or just text
       if (!newsImage && imageFileAttribute !== null) {
         newsImage = websiteUrl + imageFileAttribute[0].substring(5);
@@ -95,7 +97,9 @@ export function fetchNewsDataFromFb(fbJsonNewsData) {
 
 function _parseFbDate(fbDate) {
   let dateString =
-    fbDate.slice(0, fbDate.length - 2) + ':' + fbDate.slice(fbDate.length - 2);
+    fbDate.slice(0, fbDate.length - 2) +
+    ':' +
+    fbDate.slice(fbDate.length - 2);
   return new Date(dateString);
 }
 
