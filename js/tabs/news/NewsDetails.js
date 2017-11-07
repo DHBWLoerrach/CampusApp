@@ -8,6 +8,8 @@ import Colors from '../../util/Colors';
 export default class NewsDetails extends Component {
   render() {
     const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '';
+    let { heading, subheading, imgUrl, body } = this.props.news;
+    if (body === subheading) subheading = '';
     const HTML = `
         <!DOCTYPE html>\n
         <html>
@@ -18,10 +20,10 @@ export default class NewsDetails extends Component {
             </style>
           </head>
           <body>
-            <h1>${this.props.news.heading}</h1>
-            <h2>${this.props.news.subheading}</h2>
-            <img src="${this.props.news.imgUrl}" width="100%">
-            ${this.props.news.body}
+            <h1>${heading}</h1>
+            <h2>${subheading}</h2>
+            <img src="${imgUrl}" width="100%">
+            ${body}
           </body>
         </html>
     `;

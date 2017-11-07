@@ -85,10 +85,10 @@ export function fetchNewsDataFromFb(fbJsonNewsData) {
           _formatHeading(newsElem.caption) ||
           _formatHeading(newsElem.name) ||
           'StuV DHBW News',
-        subheading: newsElem.description || newsElem.message || '',
+        subheading: newsElem.message || newsElem.description || '',
         time: _parseFbDate(newsElem.created_time),
         imgUrl: newsElem.full_picture,
-        body: newsElem.description || newsElem.message
+        body: newsElem.description || newsElem.message || ''
       });
     }
   });
