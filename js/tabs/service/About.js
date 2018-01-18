@@ -23,11 +23,12 @@ export default class About extends Component {
         <Text
           style={[styles.margin, styles.link]}
           onPress={() =>
-            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')}
+            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')
+          }
         >
           github.com/DHBWLoerrach/CampusApp
         </Text>
-        <Text style={styles.marginBig}>Version (App): 2.0.4</Text>
+        <Text style={styles.marginBig}>Version (App): 2.0.5</Text>
       </View>
     );
   }
