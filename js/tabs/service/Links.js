@@ -89,10 +89,6 @@ export const linksFreetime = [
   {
     title: 'Wohnungsbörse',
     url: 'https://www.dhbw-loerrach.de/528.html?&MP=528-3535'
-  },
-  {
-    title: 'Veranstaltungen',
-    url: 'https://www.dhbw-loerrach.de/termine.html'
   }
 ];
 
