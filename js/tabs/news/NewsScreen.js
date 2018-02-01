@@ -4,7 +4,7 @@ import {
   ActivityIndicator,
   BackHandler,
   Platform,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
   View
@@ -62,22 +62,21 @@ class NewsScreen extends Component {
     return false;
   }
 
-  _renderNewsItems(news, topic) {
-    if (news) {
-      if (topic === 'events') {
-        news = news.sort((a, b) => new Date(a.time) - new Date(b.time));
-      }
-      return news.map((newsItem, index) => (
-        <NewsCell
-          key={'t' + index}
-          news={newsItem}
-          topic={topic}
-          onPress={() => this._onNewsItemPressed(newsItem, topic)}
-        />
-      ));
-    } else {
-      return <View />;
+  _getItems(news, topic) {
+    if (news && topic === 'events') {
+      news = news.sort((a, b) => new Date(a.time) - new Date(b.time));
     }
+    return news;
+  }
+
+  _renderNewsItem(item, topic) {
+    return (
+      <NewsCell
+        news={item}
+        topic={topic}
+        onPress={() => this._onNewsItemPressed(item, topic)}
+      />
+    );
   }
 
   _getPages(news) {
@@ -85,12 +84,12 @@ class NewsScreen extends Component {
       return {
         title: feed.name,
         content: (
-          <ScrollView
-            bounces={false}
+          <FlatList
             contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
-          >
-            {this._renderNewsItems(news[feed.key], feed.key)}
-          </ScrollView>
+            data={this._getItems(news[feed.key], feed.key)}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
+          />
         )
       };
     });
