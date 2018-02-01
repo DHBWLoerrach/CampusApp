@@ -11,8 +11,8 @@ export const textAbout =
   'allen Studierenden im Herbst 2015. Die App wurde von Studierenden für ' +
   'Studierende der DHBW Lörrach entwickelt. Die Konzeption und Umsetzung ' +
   'erfolgte im Rahmen verschiedener Lehrveranstaltungen des Studienzentrums ' +
-  'für Informatik und IT-Management (SZI) durch Studierende der Kurse TIF13, ' +
-  'WWI13B-SE und WWI13C-AM unter der Leitung von Prof. Dr. Erik Behrends.\n\n' +
+  'für Informatik und IT-Management (SZI) durch Studierende ' +
+  'unter der Leitung von Prof. Dr. Erik Behrends.\n\n' +
   'Die Campus App soll kontinuierlich weiterentwickelt werden. Dafür freuen ' +
   'wir uns auf Euer Feedback und Eure Verbesserungsvorschläge:\n';
 
@@ -22,11 +22,12 @@ export function textCafeteriaKKH() {
       <View style={styles.block}>
         <Text style={styles.headline}>Cafeteria im KKH</Text>
         <Text style={styles.text}>
-          Im fünften OG des Kreiskrankenhauses Lörrach können Sie Ihr Esssen in
-          einer Cafeteria mit Sonnenterrasse und eindrucksvollem Panoramablick
-          über Lörrach genießen. Das tägliche Mittagsangebot hält für jeden
-          Geschmack etwas bereit. Die Karte wird pro Woche veröffentlicht und
-          beinhaltet je ein Tagesangebot für folgende Rubriken
+          Im fünften OG des Kreiskrankenhauses Lörrach können Sie Ihr
+          Esssen in einer Cafeteria mit Sonnenterrasse und eindrucksvollem
+          Panoramablick über Lörrach genießen. Das tägliche Mittagsangebot
+          hält für jeden Geschmack etwas bereit. Die Karte wird pro Woche
+          veröffentlicht und beinhaltet je ein Tagesangebot für folgende
+          Rubriken
         </Text>
         <Text style={[styles.text, { paddingLeft: 20 }]}>
           • Suppe {'\n'}
@@ -47,7 +48,9 @@ export function textCafeteriaKKH() {
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Mittagstisch</Text>
-        <Text style={styles.text}>Montag bis Sonntag: 11:30 – 13:45 Uhr</Text>
+        <Text style={styles.text}>
+          Montag bis Sonntag: 11:30 – 13:45 Uhr
+        </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Preise</Text>
@@ -60,7 +63,8 @@ export function textCafeteriaKKH() {
           onPress={() =>
             Linking.openURL(
               'https://www.google.de/maps/dir/Marie-Curie-Stra%C3%9Fe+4,+79539+L%C3%B6rrach/Spitalstra%C3%9Fe+25,+79539+L%C3%B6rrach/@47.6113313,7.6571084,17z/am=t/data=!4m14!4m13!1m5!1m1!1s0x4791b0966fbcb1e1:0xfc6978d1d1304112!2m2!1d7.65858!2d47.60873!1m5!1m1!1s0x4791b09109212865:0x11aee00a889d586e!2m2!1d7.65887!2d47.61412!3e2'
-            )}
+            )
+          }
         >
           Wegbeschreibung im Browser öffnen
         </Text>
@@ -68,7 +72,8 @@ export function textCafeteriaKKH() {
         <Text
           style={styles.link}
           onPress={() =>
-            Linking.openURL('https://www.dhbw-loerrach.de/mensa.html')}
+            Linking.openURL('https://www.dhbw-loerrach.de/mensa.html')
+          }
         >
           Speisepläne anzeigen
         </Text>
@@ -97,12 +102,12 @@ export function textHieber() {
       <View style={styles.block}>
         <Text style={styles.headline}>Hieber’s Frische Center</Text>
         <Text style={styles.text}>
-          Im Eingangsbereich des Hieber’s Frische Center finden Sie einen offen
-          designten, modernen Food Court mit urbaner Atmosphäre. Täglich
-          wechselnde Gerichte mit Fleisch oder in vegetarischen Varianten,
-          gutbürgerliche und mediterrane Küche, Pizza und Pasta, Gerichte zum
-          Mitnehmen, Snacks, Backwaren, vegane Snacks, Panini, Focacci und
-          vieles mehr bieten für jeden Geschmack etwas.
+          Im Eingangsbereich des Hieber’s Frische Center finden Sie einen
+          offen designten, modernen Food Court mit urbaner Atmosphäre.
+          Täglich wechselnde Gerichte mit Fleisch oder in vegetarischen
+          Varianten, gutbürgerliche und mediterrane Küche, Pizza und Pasta,
+          Gerichte zum Mitnehmen, Snacks, Backwaren, vegane Snacks, Panini,
+          Focacci und vieles mehr bieten für jeden Geschmack etwas.
         </Text>
       </View>
       <View style={styles.block}>
@@ -115,21 +120,24 @@ export function textHieber() {
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Mittagstisch</Text>
-        <Text style={styles.text}>Montag bis Samstag 8:00 – 21:00 Uhr</Text>
+        <Text style={styles.text}>
+          Montag bis Samstag 8:00 – 21:00 Uhr
+        </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Preise</Text>
         <Text style={styles.text}>
-          Je nach Gericht bezahlen Sie i.d.R. zwischen 3 und 8 Euro. Es wird
-          kein gesonderter Studierendenrabatt gewährt. Die Bezahlung erfolgt in
-          bar oder mit Karte. {'\n'}
+          Je nach Gericht bezahlen Sie i.d.R. zwischen 3 und 8 Euro. Es
+          wird kein gesonderter Studierendenrabatt gewährt. Die Bezahlung
+          erfolgt in bar oder mit Karte. {'\n'}
         </Text>
         <Text
           style={styles.link}
           onPress={() =>
             Linking.openURL(
               'https://www.google.de/maps/dir/Marie-Curie-Stra%C3%9Fe+4,+79539+L%C3%B6rrach/Meeraner+Pl.+1,+79539+L%C3%B6rrach/@47.6113313,7.6571084,17z/am=t/data=!4m14!4m13!1m5!1m1!1s0x4791b0966fbcb1e1:0xfc6978d1d1304112!2m2!1d7.65858!2d47.60873!1m5!1m1!1s0x4791b0960e19e73d:0x6a397541db898989!2m2!1d7.658188!2d47.6074594!3e2'
-            )}
+            )
+          }
         >
           Wegbeschreibung im Browser öffnen
         </Text>
@@ -160,18 +168,17 @@ export function textImprint() {
           Rechtsform und zuständige Aufsichtsbehörde
         </Text>
         <Text style={styles.text}>
-          Die Duale Hochschule Baden-Württemberg ist nach § 1 Abs. 1 DH-ErrichtG
-          vom 12.12.2008 eine rechtsfähige Körperschaft des öffentlichen Rechts
-          und zugleich staatliche Einrichtung. Die Duale Hochschule
-          Baden-Württemberg Lörrach ist nach § 1 Abs. 2 DH-ErrichtG vom
-          12.12.2008 eine rechtlich unselbständige Untereinheit dieser
-          Hochschule.{'\n'}
+          Die Duale Hochschule Baden-Württemberg ist nach § 1 Abs. 1
+          DH-ErrichtG vom 12.12.2008 eine rechtsfähige Körperschaft des
+          öffentlichen Rechts und zugleich staatliche Einrichtung. Die
+          Duale Hochschule Baden-Württemberg Lörrach ist nach § 1 Abs. 2
+          DH-ErrichtG vom 12.12.2008 eine rechtlich unselbständige
+          Untereinheit dieser Hochschule.{'\n'}
           {'\n'}
           Dienstanbieter im Sinne des TDG bzw. des MDStV ist als Träger der
           Dualen Hochschule das Land Baden-Württemberg vertreten durch die
-          Ministerin für Wissenschaft, Forschung und Kunst Theresia Bauer, MdL.{
-            '\n'
-          }
+          Ministerin für Wissenschaft, Forschung und Kunst Theresia Bauer,
+          MdL.{'\n'}
           {'\n'}
           Zuständige Aufsichtsbehörde:{'\n'}
           Ministerium für Wissenschaft, Forschung und Kunst{'\n'}
@@ -187,30 +194,31 @@ export function textImprint() {
       <View style={styles.block}>
         <Text style={styles.headline}>Externe Links</Text>
         <Text style={styles.text}>
-          Die Campus App enthält Links zu externen Webseiten Dritter, auf deren
-          Inhalte wir keinen Einfluss haben und für welche die DHBW Lörrach
-          keine Gewähr übernehmen kann. Für die Inhalte der verlinkten Seiten
-          ist stets der jeweilige Anbieter oder Betreiber der Seiten
-          verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der
-          Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige
-          Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Es ist
-          nicht auszuschließen, dass die Inhalte im Nachhinein von den
-          jeweiligen Anbietern verändert werden. Sollten Sie der Ansicht sein,
-          dass die verlinkten externen Seiten gegen geltendes Recht verstoßen
-          oder sonst unangemessene Inhalte enthalten, teilen Sie uns dies bitte
-          mit.
+          Die Campus App enthält Links zu externen Webseiten Dritter, auf
+          deren Inhalte wir keinen Einfluss haben und für welche die DHBW
+          Lörrach keine Gewähr übernehmen kann. Für die Inhalte der
+          verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber
+          der Seiten verantwortlich. Die verlinkten Seiten wurden zum
+          Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
+          Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht
+          erkennbar. Es ist nicht auszuschließen, dass die Inhalte im
+          Nachhinein von den jeweiligen Anbietern verändert werden. Sollten
+          Sie der Ansicht sein, dass die verlinkten externen Seiten gegen
+          geltendes Recht verstoßen oder sonst unangemessene Inhalte
+          enthalten, teilen Sie uns dies bitte mit.
         </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Urheberrecht</Text>
         <Text style={styles.text}>
           Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt
-          wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden
-          Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf
-          eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen
-          entsprechenden Hinweis. Bei Bekanntwerden einer
-          Urheberrechtsverletzung wird der Inhalte umgehend entfernt bzw. mit
-          dem entsprechenden Urheberrechts-Vermerk kenntlich gemacht.
+          wurden, werden die Urheberrechte Dritter beachtet. Insbesondere
+          werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie
+          trotzdem auf eine Urheberrechtsverletzung aufmerksam werden,
+          bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden
+          einer Urheberrechtsverletzung wird der Inhalte umgehend entfernt
+          bzw. mit dem entsprechenden Urheberrechts-Vermerk kenntlich
+          gemacht.
         </Text>
       </View>
       <View style={styles.block}>
@@ -222,7 +230,8 @@ export function textImprint() {
         <Text
           style={styles.link}
           onPress={() =>
-            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')}
+            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')
+          }
         >
           github.com/DHBWLoerrach/CampusApp
         </Text>
@@ -236,16 +245,18 @@ export function textPrivacy() {
     <View style={styles.container}>
       <View style={styles.block}>
         <Text style={styles.text}>
-          Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Ich
-          nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit und
-          Aktualität der Inhalte keine Gewähr übernommen werden kann. Im
-          Zweifelsfall ist insbesondere der Online-Stundenplan zu prüfen.{'\n'}
+          Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
+          Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit
+          und Aktualität der Inhalte keine Gewähr übernommen werden kann.
+          Im Zweifelsfall ist insbesondere der Online-Stundenplan zu
+          prüfen.{'\n'}
           Die Campus App ist frei zugänglich. Für die Nutzung müssen keine
-          personenbezogenen Daten eingegeben werden. Der Zugriff auf die Campus
-          App der DHBW Lörrach wird durch die App-Stores protokolliert, erfolgt
-          jedoch nicht personenbezogen. Damit kann vom Betreiber der App nicht
-          nachvollzogen werden, auf welche Seiten einzelne Benutzer zugegriffen
-          bzw. welche Funktionen sie genutzt haben.
+          personenbezogenen Daten eingegeben werden. Der Zugriff auf die
+          Campus App der DHBW Lörrach wird durch die App-Stores
+          protokolliert, erfolgt jedoch nicht personenbezogen. Damit kann
+          vom Betreiber der App nicht nachvollzogen werden, auf welche
+          Seiten einzelne Benutzer zugegriffen bzw. welche Funktionen sie
+          genutzt haben.
         </Text>
       </View>
       <View style={styles.block}>
