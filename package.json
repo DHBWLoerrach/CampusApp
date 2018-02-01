@@ -10,7 +10,7 @@
     "date-fns": "^1.29.0",
     "ical.js": "^1.2.2",
     "react": "16.2.0",
-    "react-native": "0.52.0",
+    "react-native": "0.52.2",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.1",
