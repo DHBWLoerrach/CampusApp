@@ -51,7 +51,10 @@ class NewsScreen extends Component {
   _onBackPress() {
     if (this.state.selectedNewsItem !== null) {
       if (Platform.OS === 'android') {
-        BackHandler.removeEventListener('hardwareBackPress', this._onBackPress);
+        BackHandler.removeEventListener(
+          'hardwareBackPress',
+          this._onBackPress
+        );
       }
       this.setState({ selectedNewsItem: null });
       return true; // Back button handled
@@ -82,7 +85,10 @@ class NewsScreen extends Component {
       return {
         title: feed.name,
         content: (
-          <ScrollView bounces={false}>
+          <ScrollView
+            bounces={false}
+            contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
+          >
             {this._renderNewsItems(news[feed.key], feed.key)}
           </ScrollView>
         )
