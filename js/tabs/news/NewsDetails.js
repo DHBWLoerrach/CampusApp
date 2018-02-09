@@ -10,6 +10,8 @@ export default class NewsDetails extends Component {
     const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '';
     let { heading, subheading, imgUrl, body } = this.props.news;
     if (body === subheading) subheading = '';
+    // HACK/TODO: prevent changes in font size (affects iOS)
+    body = body.replace(/font-size:/g, 'fs');
     const HTML = `
         <!DOCTYPE html>\n
         <html>
