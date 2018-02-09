@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Colors from '../../util/Colors';
-import Constants from '../../util/Constants';
+import Colors from './Colors';
+import Constants from './Constants';
 
 export default class DayHeader extends Component {
   props: {

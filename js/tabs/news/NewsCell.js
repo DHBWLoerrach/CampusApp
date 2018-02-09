@@ -20,13 +20,17 @@ export default class NewsCell extends Component {
 
   render() {
     let image = require('./img/news-announcement.png');
-    let time =
-      this.props.topic === 'events'
-        ? format(new Date(this.props.news.time), 'DD.MM.YYYY')
-        : distanceInWordsToNow(this.props.news.time, {
-            locale: deLocale,
-            addSuffix: true
-          });
+    // formatting for news items: relative date (e.g. "3 days ago")
+    let time = distanceInWordsToNow(this.props.news.time, {
+      locale: deLocale,
+      addSuffix: true
+    });
+    let extraStyle = {};
+    // special formatting for events: absolute date in red
+    if (this.props.topic === 'events') {
+      time = format(new Date(this.props.news.time), 'DD.MM.YYYY');
+      extraStyle = { color: Colors.dhbwRed };
+    }
     if (this.props.news.imgUrl) image = { uri: this.props.news.imgUrl };
     return (
       <ListCellTouchable
@@ -40,7 +44,7 @@ export default class NewsCell extends Component {
             <Text style={styles.subheading} numberOfLines={3}>
               {this.props.news.subheading}
             </Text>
-            <Text style={styles.time}>{time}</Text>
+            <Text style={[styles.time, extraStyle]}>{time}</Text>
           </View>
         </View>
       </ListCellTouchable>

@@ -12,12 +12,12 @@ import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
 import CampusHeader from '../../util/CampusHeader';
+import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 
 import type { Lecture } from '../../util/types';
 
 import CourseModal from './CourseModal';
-import DayHeader from './DayHeader';
 import LectureRow from './LectureRow';
 
 import { clearLectures, fetchLectures } from './redux';

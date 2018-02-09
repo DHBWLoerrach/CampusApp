@@ -5,6 +5,7 @@ import {
   BackHandler,
   Platform,
   FlatList,
+  SectionList,
   StyleSheet,
   Text,
   View
@@ -12,12 +13,16 @@ import {
 
 import { connect } from 'react-redux';
 
+import deLocale from 'date-fns/locale/de';
+import format from 'date-fns/format';
+
 import NewsCell from './NewsCell';
 import NewsDetails from './NewsDetails';
 import { fetchNews } from './redux';
 
 import NewsItem from '../../util/types.js';
 import CampusHeader from '../../util/CampusHeader';
+import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 import { feeds } from '../../util/Constants';
@@ -62,11 +67,25 @@ class NewsScreen extends Component {
     return false;
   }
 
-  _getItems(news, topic) {
-    if (news && topic === 'events') {
-      news = news.sort((a, b) => new Date(a.time) - new Date(b.time));
-    }
-    return news;
+  _getSectionsForEvents(news) {
+    if (!news || news.length === 0) return [];
+
+    let month = format(new Date(news[0].time), 'MMMM YYYY', {
+      locale: deLocale
+    });
+    let sections = [{ data: [], title: month }];
+    news.forEach(item => {
+      month = format(new Date(item.time), 'MMMM YYYY', {
+        locale: deLocale
+      });
+      let lastSection = sections[sections.length - 1];
+      if (lastSection.title == month) {
+        lastSection.data.push(item);
+      } else {
+        sections.push({ data: [item], title: month });
+      }
+    });
+    return sections;
   }
 
   _renderNewsItem(item, topic) {
@@ -81,16 +100,32 @@ class NewsScreen extends Component {
 
   _getPages(news) {
     return feeds.map(feed => {
-      return {
-        title: feed.name,
-        content: (
+      let content = null;
+      if (feed.key === 'events') {
+        content = (
+          <SectionList
+            contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
+            sections={this._getSectionsForEvents(news[feed.key])}
+            keyExtractor={item => 'item' + item.id}
+            renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
+            renderSectionHeader={({ section }) => (
+              <DayHeader title={section.title} />
+            )}
+          />
+        );
+      } else {
+        content = (
           <FlatList
             contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
-            data={this._getItems(news[feed.key], feed.key)}
+            data={news[feed.key]}
             keyExtractor={item => 'item' + item.id}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
           />
-        )
+        );
+      }
+      return {
+        title: feed.name,
+        content
       };
     });
   }
