@@ -87,7 +87,7 @@ class NewsScreen extends Component {
           <FlatList
             contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
             data={this._getItems(news[feed.key], feed.key)}
-            keyExtractor={item => item.id}
+            keyExtractor={item => 'item' + item.id}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
           />
         )
