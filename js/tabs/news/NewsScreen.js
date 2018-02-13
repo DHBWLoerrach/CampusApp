@@ -70,19 +70,17 @@ class NewsScreen extends Component {
   _getSectionsForEvents(news) {
     if (!news || news.length === 0) return [];
 
-    let month = format(new Date(news[0].time), 'MMMM YYYY', {
-      locale: deLocale
-    });
-    let sections = [{ data: [], title: month }];
+    let sections = [];
     news.forEach(item => {
       month = format(new Date(item.time), 'MMMM YYYY', {
         locale: deLocale
       });
-      let lastSection = sections[sections.length - 1];
-      if (lastSection.title == month) {
-        lastSection.data.push(item);
+
+      let index = sections.findIndex(section => section.title === month);
+      if (index === -1) {
+        sections.push({ title: month, data: [item] })
       } else {
-        sections.push({ data: [item], title: month });
+        sections[index].data.push(item);
       }
     });
     return sections;
