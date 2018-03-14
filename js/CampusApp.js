@@ -1,11 +1,16 @@
 // @flow
 import React, { Component } from 'react';
-import { ActivityIndicator, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StatusBar,
+  StyleSheet,
+  View
+} from 'react-native';
 
 import { connect } from 'react-redux';
 
 import WelcomeScreen from './WelcomeScreen';
-import TabsView from './TabsView';
+import Navigator from './Navigator';
 
 function selectPropsFromStore(store) {
   return {
@@ -15,7 +20,7 @@ function selectPropsFromStore(store) {
 
 class CampusApp extends Component {
   render() {
-    let content = <TabsView />;
+    let content = <Navigator />;
     if (this.props.loading) {
       content = (
         <View style={styles.center}>
