@@ -73,7 +73,6 @@ class NewsScreen extends Component {
       if (feed.key === 'events') {
         content = (
           <SectionList
-            contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
             sections={this._getSectionsForEvents(news[feed.key])}
             keyExtractor={item => 'item' + item.id}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
@@ -85,7 +84,6 @@ class NewsScreen extends Component {
       } else {
         content = (
           <FlatList
-            contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
             data={news[feed.key]}
             keyExtractor={item => 'item' + item.id}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}

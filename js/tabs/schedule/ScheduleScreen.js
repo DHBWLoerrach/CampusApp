@@ -116,7 +116,6 @@ class ScheduleScreen extends Component {
     return (
       <SectionList
         bounces={false}
-        contentInset={{ top: 0, left: 0, bottom: 50, right: 0 }}
         sections={lectures}
         renderItem={({ item }) => this._renderRow(item)}
         renderSectionHeader={({ section }) => (
