@@ -12,11 +12,12 @@ import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
+import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 
 import type { Lecture } from '../../util/types';
 
-import CourseModal from './CourseModal';
+import EditCourse from './EditCourse';
 import LectureRow from './LectureRow';
 
 import { clearLectures, fetchLectures } from './redux';
@@ -31,11 +32,16 @@ function selectPropsFromStore(store) {
 }
 
 class ScheduleScreen extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { courseModalVisible: false };
-  }
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerRight: (
+        <HeaderIcon
+          onPress={() => navigation.navigate('EditCourse')}
+          icon="edit"
+        />
+      )
+    };
+  };
 
   componentWillMount() {
     if (this.props.course) {
@@ -47,12 +53,7 @@ class ScheduleScreen extends Component {
     return <LectureRow lecture={lecture} />;
   }
 
-  _setCourseModalVisible(visible) {
-    this.setState({ courseModalVisible: visible });
-  }
-
   _setCourseName(course) {
-    this._setCourseModalVisible(false);
     if (course !== this.props.course) {
       // only update data if new course given
       this._refreshData(course);
@@ -73,7 +74,7 @@ class ScheduleScreen extends Component {
           <Button
             title="Kurs eingeben"
             color={Colors.dhbwRed}
-            onPress={() => this._setCourseModalVisible(true)}
+            onPress={() => this.props.navigation.navigate('EditCourse')}
           />
         </View>
       );
@@ -128,28 +129,12 @@ class ScheduleScreen extends Component {
   render() {
     let rightActionItem = null,
       { course } = this.props;
-    if (course) {
-      rightActionItem = {
-        title: 'Edit',
-        icon: require('./img/edit.png'),
-        onPress: () => this._setCourseModalVisible(true),
-        show: 'always' // needed for Android
-      };
-    }
 
     let title = 'Vorlesungsplan';
     if (course) title += ' ' + course;
 
     return (
-      <View style={styles.container}>
-        {this._renderScreenContent()}
-        <CourseModal
-          visible={this.state.courseModalVisible}
-          course={course}
-          onClose={() => this._setCourseModalVisible(false)}
-          onCourseChange={course => this._setCourseName(course)}
-        />
-      </View>
+      <View style={styles.container}>{this._renderScreenContent()}</View>
     );
   }
 }

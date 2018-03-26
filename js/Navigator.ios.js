@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import NewsScreen from './tabs/news/NewsScreen';
 import NewsDetails from './tabs/news/NewsDetails';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
+import EditCourse from './tabs/schedule/EditCourse';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
@@ -70,6 +71,13 @@ const AppNavigator = StackNavigator(
     },
     NewsDetails: {
       screen: NewsDetails
+    },
+    EditCourse: {
+      screen: EditCourse,
+      navigationOptions: {
+        title: 'Kurs eingeben',
+        headerBackTitle: 'Abbrechen'
+      }
     },
     Accounts: {
       screen: LinksList,
