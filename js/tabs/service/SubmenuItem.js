@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import Colors from '../../util/Colors';
 import IconTouchable from '../../util/IconTouchable';
@@ -10,7 +10,7 @@ export default class SubmenuItem extends Component {
     return (
       <IconTouchable onPress={this.props.onPress}>
         <View style={styles.container}>
-          <Image source={this.props.icon} />
+          {this.props.icon}
           <Text style={styles.label}>{this.props.label}</Text>
         </View>
       </IconTouchable>

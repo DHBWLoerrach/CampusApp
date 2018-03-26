@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import { Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import { textFeedback } from './Texts';
 import ListCellTouchable from '../../util/ListCellTouchable';
@@ -21,7 +22,7 @@ export default class Feedback extends Component {
             <Text style={styles.title} numberOfLines={2}>
               Feedback senden
             </Text>
-            <Image source={require('./img/chevron-right.png')} />
+            <MaterialIcon name="chevron-right" size={36} />;
           </View>
         </ListCellTouchable>
       </View>

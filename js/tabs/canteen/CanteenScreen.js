@@ -94,7 +94,8 @@ class CanteenScreen extends Component {
           />
         );
       } else {
-        const infoText = 'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
+        const infoText =
+          'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
         return (
           <ReloadView
             buttonText={buttonText}
@@ -105,13 +106,14 @@ class CanteenScreen extends Component {
       }
     }
 
-    return <TabbedSwipeView count={dayPlans.length} pages={this._getPages()} />;
+    return (
+      <TabbedSwipeView count={dayPlans.length} pages={this._getPages()} />
+    );
   }
 
   render() {
     const rightActionItem = {
       title: 'Info',
-      icon: require('./img/question.png'),
       onPress: this._onPress,
       show: 'always' // needed for Android
     };

@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import {
   Alert,
   Platform,
-  Image,
   Linking,
   StyleSheet,
   Text,
   View
 } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from '../../util/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
@@ -73,6 +73,19 @@ class Row extends Component {
 
   render() {
     const { title, url, tel } = this.props.link;
+
+    let icon = null;
+    if (this.props.link.tel) {
+      icon = <MaterialIcon name="phone" size={36} />;
+    }
+    if (
+      this.props.link.url ||
+      this.props.link.onPress ||
+      this.props.link.screen
+    ) {
+      icon = <MaterialIcon name="chevron-right" size={36} />;
+    }
+
     return (
       <ListCellTouchable
         underlayColor={Colors.cellBorder}
@@ -82,15 +95,7 @@ class Row extends Component {
           <Text style={styles.title} numberOfLines={2}>
             {title}
           </Text>
-          <Image
-            source={
-              this.props.link.url ||
-              this.props.link.onPress ||
-              this.props.link.screen
-                ? require('./img/chevron-right.png')
-                : this.props.link.tel ? require('./img/phone.png') : null
-            }
-          />
+          {icon}
         </View>
       </ListCellTouchable>
     );
