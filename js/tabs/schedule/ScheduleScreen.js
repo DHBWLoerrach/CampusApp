@@ -11,7 +11,6 @@ import {
 import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
-import CampusHeader from '../../util/CampusHeader';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 
@@ -144,7 +143,6 @@ class ScheduleScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <CampusHeader title={title} rightActionItem={rightActionItem} />
         {this._renderScreenContent()}
         <CourseModal
           visible={this.state.courseModalVisible}

@@ -47,7 +47,10 @@ export default class CourseModal extends Component {
         visible={this.props.visible}
         onRequestClose={this.props.onClose}
       >
-        <CampusHeader title="Kurs auswählen" leftActionItem={cancelAction} />
+        <CampusHeader
+          title="Kurs auswählen"
+          rightActionItem={cancelAction}
+        />
         <View style={styles.container}>
           <Text>
             Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
@@ -63,7 +66,8 @@ export default class CourseModal extends Component {
               onChangeText={course =>
                 this.setState({
                   course: course && course.trim().toUpperCase()
-                })}
+                })
+              }
             />
             <Button
               title="Kurs anzeigen"
@@ -72,8 +76,9 @@ export default class CourseModal extends Component {
             />
           </View>
           <Text>
-            Nicht alle Kurse haben einen Online-Stundenplan. Falls ein Kalender
-            fehlt, dann teile uns dies bitte mit, siehe Service -- Feedback.
+            Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
+            Kalender fehlt, dann teile uns dies bitte mit, siehe Service --
+            Feedback.
           </Text>
         </View>
       </Modal>

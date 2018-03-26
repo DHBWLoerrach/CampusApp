@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  BackHandler,
-  Platform,
   FlatList,
   SectionList,
   StyleSheet,
@@ -21,7 +19,6 @@ import NewsDetails from './NewsDetails';
 import { fetchNews } from './redux';
 
 import NewsItem from '../../util/types.js';
-import CampusHeader from '../../util/CampusHeader';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
@@ -44,9 +41,6 @@ class NewsScreen extends Component {
   }
 
   _onNewsItemPressed(newsItem, topic) {
-    if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', this._onBackPress);
-    }
     this.setState({
       selectedIndex: ['news', 'events', 'stuvdhbwloerrach'].indexOf(topic),
       selectedNewsItem: newsItem
@@ -55,12 +49,6 @@ class NewsScreen extends Component {
 
   _onBackPress() {
     if (this.state.selectedNewsItem !== null) {
-      if (Platform.OS === 'android') {
-        BackHandler.removeEventListener(
-          'hardwareBackPress',
-          this._onBackPress
-        );
-      }
       this.setState({ selectedNewsItem: null });
       return true; // Back button handled
     }
@@ -78,7 +66,7 @@ class NewsScreen extends Component {
 
       let index = sections.findIndex(section => section.title === month);
       if (index === -1) {
-        sections.push({ title: month, data: [item] })
+        sections.push({ title: month, data: [item] });
       } else {
         sections[index].data.push(item);
       }
@@ -167,10 +155,7 @@ class NewsScreen extends Component {
     }
 
     return (
-      <View style={styles.container}>
-        <CampusHeader title="News" style={styles.header} />
-        {this._renderScreenContent()}
-      </View>
+      <View style={styles.container}>{this._renderScreenContent()}</View>
     );
   }
 }

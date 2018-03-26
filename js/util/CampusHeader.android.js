@@ -8,12 +8,6 @@ import Colors from './Colors.js';
 export default class CampusHeader extends Component {
   render() {
     let leftActionItem = this.props.leftActionItem;
-    if (!leftActionItem) {
-      leftActionItem = {
-        icon: require('../img/menu.png'),
-        onPress: () => this.context.openDrawer() // open drawer via context
-      };
-    }
 
     let rightActionItem = this.props.rightActionItem;
     let rightActionItemSelected = null;
