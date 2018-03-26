@@ -1,55 +1,37 @@
 // @flow
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import CampusHeader from '../../util/CampusHeader';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 
 import About from './About';
-import Disclaimer from './Disclaimer';
-import Imprint from './Imprint';
-import Privacy from './Privacy';
+import InfoText from './InfoText';
+import { textPrivacy, textDisclaimer, textImprint } from './Texts';
 
 export default class ImprintScreen extends Component {
   render() {
     const pages = [
       {
         title: 'Impressum',
-        content: (
-          <ScrollView>
-            <Imprint />
-          </ScrollView>
-        )
+        content: <InfoText text={textImprint()} />
       },
       {
         title: 'Haftung',
-        content: (
-          <ScrollView>
-            <Disclaimer />
-          </ScrollView>
-        )
+        content: <InfoText text={textDisclaimer()} />
       },
       {
         title: 'Datenschutz',
-        content: (
-          <ScrollView>
-            <Privacy />
-          </ScrollView>
-        )
+        content: <InfoText text={textPrivacy()} />
       },
       {
         title: 'Über',
-        content: (
-          <ScrollView>
-            <About />
-          </ScrollView>
-        )
+        content: <About />
       }
     ];
 
     return (
       <View style={styles.container}>
-        <CampusHeader title="Impressum" style={styles.header} />
         <TabbedSwipeView pages={pages} />
       </View>
     );
@@ -57,9 +39,6 @@ export default class ImprintScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    elevation: 0 // disable shadow below header to avoid border above pager tabs
-  },
   container: {
     flex: 1
   }

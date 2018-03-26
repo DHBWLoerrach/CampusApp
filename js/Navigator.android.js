@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import NewsDetails from './tabs/news/NewsDetails';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
+import ImprintScreen from './tabs/service/ImprintScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
 import Colors from './util/Colors';
@@ -17,7 +19,7 @@ const Drawer = DrawerNavigator(
       navigationOptions: {
         title: 'News',
         drawerIcon: ({ tintColor }) => (
-          <Icon name="rss-feed" size={24} color={tintColor} />
+          <MaterialIcon name="rss-feed" size={24} color={tintColor} />
         )
       }
     },
@@ -26,7 +28,7 @@ const Drawer = DrawerNavigator(
       navigationOptions: {
         title: 'Vorlesungsplan',
         drawerIcon: ({ tintColor }) => (
-          <Icon name="school" size={24} color={tintColor} />
+          <MaterialIcon name="school" size={24} color={tintColor} />
         )
       }
     },
@@ -35,7 +37,20 @@ const Drawer = DrawerNavigator(
       navigationOptions: {
         title: 'Mensa',
         drawerIcon: ({ tintColor }) => (
-          <Icon name="restaurant" size={24} color={tintColor} />
+          <MaterialIcon name="restaurant" size={24} color={tintColor} />
+        )
+      }
+    },
+    Imprint: {
+      screen: ImprintScreen,
+      navigationOptions: {
+        title: 'Impressum',
+        drawerIcon: ({ tintColor }) => (
+          <MaterialCommunityIcon
+            name="file-document"
+            size={24}
+            color={tintColor}
+          />
         )
       }
     },
@@ -44,7 +59,7 @@ const Drawer = DrawerNavigator(
       navigationOptions: {
         title: 'Service',
         drawerIcon: ({ tintColor }) => (
-          <Icon name="info-outline" size={24} color={tintColor} />
+          <MaterialIcon name="info-outline" size={24} color={tintColor} />
         )
       }
     }

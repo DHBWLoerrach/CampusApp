@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   linksAccounts,
@@ -21,6 +21,7 @@ import {
 } from './Links';
 import Submenu from './Submenu';
 import { textPrivacy, textDisclaimer, textImprint } from './Texts';
+import Color from '../../util/Colors';
 
 const iconSize = 36;
 
@@ -30,25 +31,36 @@ export default class ServiceScreen extends Component {
     var submenuItems = [
       {
         label: 'Service-Zugänge',
-        icon: <MaterialIcon name="screen-share" size={iconSize} />,
+        icon: (
+          <MaterialIcon
+            name="screen-share"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
         onPress: () => navigate('Accounts', { links: linksAccounts })
       },
       {
         label: 'Hilfe im Notfall',
-        icon: <MaterialIcon name="phone" size={iconSize} />,
+        icon: (
+          <MaterialIcon name="phone" size={iconSize} color={Color.icon} />
+        ),
         onPress: () => navigate('Emergency', { links: linksEmergency })
       },
       {
         label: 'Studium',
-        icon: <MaterialIcon name="school" size={iconSize} />,
+        icon: (
+          <MaterialIcon name="school" size={iconSize} color={Color.icon} />
+        ),
         onPress: () => navigate('Study', { links: linksStudy })
       },
       {
         label: 'Bibliothek',
         icon: (
-          <MaterialCommunityIcons
+          <MaterialCommunityIcon
             name="book-open-variant"
             size={iconSize}
+            color={Color.icon}
           />
         ),
         onPress: () => Linking.openURL(linkBib)
@@ -60,17 +72,35 @@ export default class ServiceScreen extends Component {
       },
       {
         label: 'Freizeit',
-        icon: <MaterialIcon name="wb-sunny" size={iconSize} />,
+        icon: (
+          <MaterialIcon
+            name="wb-sunny"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
         onPress: () => navigate('Freetime', { links: linksFreetime })
       },
       {
         label: 'Feedback',
-        icon: <MaterialIcon name="mail-outline" size={iconSize} />,
+        icon: (
+          <MaterialIcon
+            name="mail-outline"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
         onPress: () => navigate('Feedback')
       },
       {
         label: 'Einstellungen',
-        icon: <MaterialIcon name="settings" size={iconSize} />,
+        icon: (
+          <MaterialIcon
+            name="settings"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
         onPress: () => navigate('Settings')
       }
     ];
@@ -79,7 +109,13 @@ export default class ServiceScreen extends Component {
       submenuItems.push(
         {
           label: 'Über',
-          icon: <MaterialIcon name="help-outline" size={iconSize} />,
+          icon: (
+            <MaterialIcon
+              name="help-outline"
+              size={iconSize}
+              color={Color.icon}
+            />
+          ),
           onPress: () => navigate('About')
         },
         {
@@ -90,13 +126,23 @@ export default class ServiceScreen extends Component {
         {
           label: 'Impressum',
           icon: (
-            <MaterialCommunityIcons name="file-document" size={iconSize} />
+            <MaterialCommunityIcon
+              name="file-document"
+              size={iconSize}
+              color={Color.icon}
+            />
           ),
           onPress: () => navigate('Imprint', { text: textImprint() })
         },
         {
           label: 'Datenschutz',
-          icon: <MaterialIcon name="remove-red-eye" size={iconSize} />,
+          icon: (
+            <MaterialIcon
+              name="remove-red-eye"
+              size={iconSize}
+              color={Color.icon}
+            />
+          ),
           onPress: () => navigate('Privacy', { text: textPrivacy() })
         }
       );

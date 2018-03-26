@@ -3,9 +3,13 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 
 export default class InfoText extends Component {
   render() {
+    const { navigation } = this.props;
+    const text = navigation
+      ? navigation.getParam('text')
+      : this.props.text;
     return (
       <View style={styles.container}>
-        <ScrollView>{this.props.navigation.getParam('text')}</ScrollView>
+        <ScrollView>{text}</ScrollView>
       </View>
     );
   }
