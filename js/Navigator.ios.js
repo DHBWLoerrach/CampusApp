@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Text } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -67,6 +68,9 @@ const AppNavigator = StackNavigator(
       headerStyle: {
         backgroundColor: Colors.dhbwRed,
         borderBottomWidth: 0
+      },
+      headerTitleStyle: {
+        fontSize: 22
       }
     }
   }
