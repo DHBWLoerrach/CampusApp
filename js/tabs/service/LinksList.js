@@ -24,11 +24,17 @@ export default class LinksList extends Component {
   };
 
   render() {
-    const content = this.props.links.map((link, index) => (
-      <Row link={link} key={index} />
-    ));
+    const content = this.props.navigation
+      .getParam('links')
+      .map((link, index) => (
+        <Row
+          link={link}
+          key={index}
+          navigate={this.props.navigation.navigate}
+        />
+      ));
     return (
-      <View>
+      <View style={styles.container}>
         <ItemsWithSeparator>{content}</ItemsWithSeparator>
       </View>
     );
@@ -78,7 +84,9 @@ class Row extends Component {
           </Text>
           <Image
             source={
-              this.props.link.url || this.props.link.onPress
+              this.props.link.url ||
+              this.props.link.onPress ||
+              this.props.link.screen
                 ? require('./img/chevron-right.png')
                 : this.props.link.tel ? require('./img/phone.png') : null
             }
@@ -91,6 +99,7 @@ class Row extends Component {
   _handlePress() {
     this._handleOnPress();
     this._handleUrlPress();
+    this._handleScreenPress();
     this._handleTelPress();
   }
 
@@ -102,6 +111,11 @@ class Row extends Component {
   _handleUrlPress() {
     const { url } = this.props.link;
     if (url) Linking.openURL(url);
+  }
+
+  _handleScreenPress() {
+    const { screen, text } = this.props.link;
+    if (screen) this.props.navigate(screen, { text });
   }
 
   _handleTelPress() {
@@ -125,6 +139,10 @@ class Row extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
   separator: {
     backgroundColor: Colors.cellBorder,
     height: StyleSheet.hairlineWidth

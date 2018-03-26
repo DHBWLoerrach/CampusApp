@@ -1,3 +1,5 @@
+import { textCafeteriaKKH, textHieber } from './Texts';
+
 // @flow
 export const linksAccounts = [
   {
@@ -72,11 +74,6 @@ export const linksEmergency = [
   }
 ];
 
-export const linkFeedback = {
-  title: 'Feedback senden',
-  url: 'mailto:apps@dhbw-loerrach.de?subject=Campus%20App%20Feedback'
-};
-
 export const linksFreetime = [
   {
     title: 'Sprachen',
@@ -104,5 +101,18 @@ export const linksStudy = [
   {
     title: 'Ausland/Internationales',
     url: 'https://www.dhbw-loerrach.de/auslandsaufenthalte.html?&L=0'
+  }
+];
+
+export const linksKBC = [
+  {
+    title: 'Cafeteria im KKH',
+    screen: 'CafeteriaKKH',
+    text: textCafeteriaKKH()
+  },
+  {
+    title: "Hieber's Frische Center",
+    screen: 'Hieber',
+    text: textHieber()
   }
 ];

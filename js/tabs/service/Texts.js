@@ -82,15 +82,27 @@ export function textCafeteriaKKH() {
   );
 }
 
-export const textDisclaimerIntro =
-  'Mit dem ersten Start der Campus App der DHBW Lörrach wurde folgender ' +
-  ' Regelung zugestimmt: \n';
-
-export const textDisclaimer =
-  'Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. ' +
-  'Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit und ' +
-  'Aktualität der Inhalte keine Gewähr übernommen werden kann. ' +
-  'Im Zweifelsfall ist insbesondere der Online-Stundenplan zu prüfen.';
+export function textDisclaimer() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.block}>
+        <Text style={styles.text}>
+          Mit dem ersten Start der Campus App der DHBW Lörrach wurde
+          folgender Regelung zugestimmt:
+        </Text>
+      </View>
+      <View style={styles.block}>
+        <Text style={styles.text}>
+          Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
+          Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit
+          und Aktualität der Inhalte keine Gewähr übernommen werden kann.
+          Im Zweifelsfall ist insbesondere der Online-Stundenplan zu
+          prüfen.
+        </Text>
+      </View>
+    </View>
+  );
+}
 
 export const textFeedback =
   'Falls du Fehler oder Verbesserungsvorschläge melden möchtest, schicke uns ' +

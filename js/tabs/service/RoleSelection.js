@@ -20,10 +20,15 @@ class RadioButton extends Component {
       <RadioButtonTouchable onPress={this.props.onPress}>
         <View style={styles.radioButton}>
           <View style={styles.outerCircle}>
-            {this.props.selected ? <View style={styles.innerCircle} /> : null}
+            {this.props.selected ? (
+              <View style={styles.innerCircle} />
+            ) : null}
           </View>
           <Text
-            style={[styles.label, this.props.selected ? styles.bold : null]}
+            style={[
+              styles.label,
+              this.props.selected ? styles.bold : null
+            ]}
           >
             {this.props.label}
           </Text>
@@ -65,7 +70,6 @@ export default class RoleSelection extends Component {
 
 const styles = StyleSheet.create({
   radioButton: {
-    flex: 1,
     flexDirection: 'row',
     marginBottom: 5
   },
