@@ -1,14 +1,18 @@
 // @flow
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, WebView } from 'react-native';
+import { Platform, WebView } from 'react-native';
 
-import CampusHeader from '../../util/CampusHeader';
 import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
   render() {
     const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '';
-    let { heading, subheading, imgUrl, body } = this.props.news;
+    let {
+      heading,
+      subheading,
+      imgUrl,
+      body
+    } = this.props.navigation.getParam('news');
     if (body === subheading) subheading = '';
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
@@ -30,27 +34,6 @@ export default class NewsDetails extends Component {
         </html>
     `;
 
-    const leftActionItem = {
-      title: 'Back',
-      icon: require('../../img/arrow-back.png'),
-      onPress: this.props.backAction
-    };
-
-    return (
-      <View style={styles.container}>
-        <CampusHeader title="News" leftActionItem={leftActionItem} />
-        <WebView
-          contentInset={{ bottom: 50 }}
-          source={{ html: HTML }}
-          bounces={false}
-        />
-      </View>
-    );
+    return <WebView source={{ html: HTML }} bounces={false} />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-});

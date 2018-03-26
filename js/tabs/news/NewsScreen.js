@@ -15,7 +15,6 @@ import deLocale from 'date-fns/locale/de';
 import format from 'date-fns/format';
 
 import NewsCell from './NewsCell';
-import NewsDetails from './NewsDetails';
 import { fetchNews } from './redux';
 
 import NewsItem from '../../util/types.js';
@@ -33,26 +32,8 @@ function selectPropsFromStore(store) {
 }
 
 class NewsScreen extends Component {
-  state = { selectedIndex: 0, selectedNewsItem: null };
-  _onBackPress = this._onBackPress.bind(this);
-
   componentWillMount() {
     this.props.dispatch(fetchNews());
-  }
-
-  _onNewsItemPressed(newsItem, topic) {
-    this.setState({
-      selectedIndex: ['news', 'events', 'stuvdhbwloerrach'].indexOf(topic),
-      selectedNewsItem: newsItem
-    });
-  }
-
-  _onBackPress() {
-    if (this.state.selectedNewsItem !== null) {
-      this.setState({ selectedNewsItem: null });
-      return true; // Back button handled
-    }
-    return false;
   }
 
   _getSectionsForEvents(news) {
@@ -79,7 +60,9 @@ class NewsScreen extends Component {
       <NewsCell
         news={item}
         topic={topic}
-        onPress={() => this._onNewsItemPressed(item, topic)}
+        onPress={() =>
+          this.props.navigation.navigate('NewsDetails', { news: item })
+        }
       />
     );
   }
@@ -136,24 +119,10 @@ class NewsScreen extends Component {
         />
       );
     }
-    return (
-      <TabbedSwipeView
-        pages={this._getPages(news)}
-        selectedIndex={this.state.selectedIndex}
-      />
-    );
+    return <TabbedSwipeView pages={this._getPages(news)} />;
   }
 
   render() {
-    if (this.state.selectedNewsItem !== null) {
-      return (
-        <NewsDetails
-          backAction={this._onBackPress.bind(this)}
-          news={this.state.selectedNewsItem}
-        />
-      );
-    }
-
     return (
       <View style={styles.container}>{this._renderScreenContent()}</View>
     );

@@ -3,6 +3,7 @@ import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import NewsScreen from './tabs/news/NewsScreen';
+import NewsDetails from './tabs/news/NewsDetails';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
 import ServiceScreen from './tabs/service/ServiceScreen';
@@ -59,6 +60,9 @@ const AppNavigator = StackNavigator(
   {
     Root: {
       screen: Drawer
+    },
+    NewsDetails: {
+      screen: NewsDetails
     }
   },
   {
