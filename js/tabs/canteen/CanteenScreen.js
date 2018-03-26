@@ -15,7 +15,7 @@ import format from 'date-fns/format';
 import isSaturday from 'date-fns/is_saturday';
 import isSunday from 'date-fns/is_sunday';
 
-import CampusHeader from '../../util/CampusHeader';
+import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 
@@ -47,11 +47,18 @@ function selectPropsFromStore(store) {
 }
 
 class CanteenScreen extends Component {
-  _onPress() {
-    let textBody = textCanteenInfo;
-    if (Platform.OS === 'android') textBody += textNfcInfo;
-    return Alert.alert('Mensa Hangstraße 46-50', textBody);
-  }
+  static navigationOptions = {
+    headerRight: (
+      <HeaderIcon
+        onPress={() => {
+          let textBody = textCanteenInfo;
+          if (Platform.OS === 'android') textBody += textNfcInfo;
+          return Alert.alert('Mensa Hangstraße 46-50', textBody);
+        }}
+        icon="help-outline"
+      />
+    )
+  };
 
   componentWillMount() {
     this.props.dispatch(fetchDayPlans());
@@ -112,29 +119,13 @@ class CanteenScreen extends Component {
   }
 
   render() {
-    const rightActionItem = {
-      title: 'Info',
-      onPress: this._onPress,
-      show: 'always' // needed for Android
-    };
-
     return (
-      <View style={styles.container}>
-        <CampusHeader
-          title="Mensa"
-          style={styles.header}
-          rightActionItem={rightActionItem}
-        />
-        {this._renderScreenContent()}
-      </View>
+      <View style={styles.container}>{this._renderScreenContent()}</View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  header: {
-    elevation: 0 // disable shadow below header to avoid border above pager tabs
-  },
   container: {
     flex: 1,
     backgroundColor: 'white'

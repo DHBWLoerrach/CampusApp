@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import CampusHeader from '../../util/CampusHeader';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 
 import About from './About';
