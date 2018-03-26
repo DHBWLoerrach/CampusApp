@@ -48,7 +48,7 @@ export default class CourseModal extends Component {
         onRequestClose={this.props.onClose}
       >
         <CampusHeader
-          title="Kurs auswählen"
+          title="Kurs eingeben"
           rightActionItem={cancelAction}
         />
         <View style={styles.container}>

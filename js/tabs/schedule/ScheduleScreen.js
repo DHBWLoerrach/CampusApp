@@ -71,7 +71,7 @@ class ScheduleScreen extends Component {
       return (
         <View style={styles.center}>
           <Button
-            title="Kurs auswählen"
+            title="Kurs eingeben"
             color={Colors.dhbwRed}
             onPress={() => this._setCourseModalVisible(true)}
           />
