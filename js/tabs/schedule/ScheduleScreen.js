@@ -33,31 +33,36 @@ function selectPropsFromStore(store) {
 
 class ScheduleScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const headerTitle = navigation.getParam('course', 'Vorlesungsplan');
     return {
       headerRight: (
         <HeaderIcon
           onPress={() => navigation.navigate('EditCourse')}
           icon="edit"
         />
-      )
+      ),
+      headerTitle
     };
   };
 
-  componentWillMount() {
-    if (this.props.course) {
-      this.props.dispatch(fetchLectures(this.props.course));
-    }
+  componentDidMount() {
+    // set title to course when this screen component mounts...
+    this.props.navigation.setParams({ course: this.props.course });
+    // ...and everytime we navigate to this screen
+    this._navListener = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        this.props.navigation.setParams({ course: this.props.course });
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    this._navListener.remove();
   }
 
   _renderRow(lecture: Lecture) {
     return <LectureRow lecture={lecture} />;
-  }
-
-  _setCourseName(course) {
-    if (course !== this.props.course) {
-      // only update data if new course given
-      this._refreshData(course);
-    }
   }
 
   _refreshData(course) {
@@ -65,9 +70,7 @@ class ScheduleScreen extends Component {
     this.props.dispatch(fetchLectures(course));
   }
 
-  _renderScreenContent() {
-    const { course, lectures, isFetching, networkError } = this.props;
-
+  _renderScreenContent(course, lectures, isFetching, networkError) {
     if (!course) {
       return (
         <View style={styles.center}>
@@ -127,14 +130,16 @@ class ScheduleScreen extends Component {
   }
 
   render() {
-    let rightActionItem = null,
-      { course } = this.props;
-
-    let title = 'Vorlesungsplan';
-    if (course) title += ' ' + course;
-
+    const { course, lectures, isFetching, networkError } = this.props;
     return (
-      <View style={styles.container}>{this._renderScreenContent()}</View>
+      <View style={styles.container}>
+        {this._renderScreenContent(
+          course,
+          lectures,
+          isFetching,
+          networkError
+        )}
+      </View>
     );
   }
 }

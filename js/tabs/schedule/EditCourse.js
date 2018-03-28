@@ -8,19 +8,32 @@ import {
   TextInput,
   View
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
 import HeaderIcon from '../../util/HeaderIcon';
 import { courseList } from '../../../env.js';
 
-export default class EditCourse extends Component {
+import { clearLectures, fetchLectures } from './redux';
+
+function selectPropsFromStore(store) {
+  return {
+    course: store.schedule.course
+  };
+}
+
+class EditCourse extends Component {
   state = { course: this.props.course };
 
   _onPressClicked(course) {
     if (!course) {
       Alert.alert('Bitte Kursnamen eingeben');
     } else if (courseList.indexOf(course) >= 0) {
-      this.props.onCourseChange(course);
+      if (course !== this.props.course) {
+        this.props.dispatch(clearLectures());
+        this.props.dispatch(fetchLectures(course));
+      }
+      this.props.navigation.goBack();
     } else {
       Alert.alert(
         'Kurs nicht vorhanden',
@@ -81,3 +94,5 @@ const styles = StyleSheet.create({
     width: 140
   }
 });
+
+export default connect(selectPropsFromStore)(EditCourse);

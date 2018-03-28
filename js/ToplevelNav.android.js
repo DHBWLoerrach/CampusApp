@@ -25,7 +25,6 @@ const Drawer = DrawerNavigator(
     Schedule: {
       screen: ScheduleScreen,
       navigationOptions: {
-        title: 'Vorlesungsplan',
         drawerIcon: ({ tintColor }) => (
           <MaterialIcon name="school" size={24} color={tintColor} />
         )

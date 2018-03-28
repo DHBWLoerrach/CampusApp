@@ -23,6 +23,7 @@ const Tabs = TabNavigator(
     Schedule: {
       screen: ScheduleScreen,
       navigationOptions: {
+        title: 'Vorlesungsplan',
         tabBarIcon: ({ tintColor }) => (
           <MaterialIcon name="school" size={36} color={tintColor} />
         )
