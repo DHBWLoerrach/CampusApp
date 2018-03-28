@@ -48,22 +48,28 @@ class WelcomeScreen extends Component {
             <Text style={[styles.heading, styles.welcome]}>
               Willkommen an der DHBW Lörrach
             </Text>
-            <Image style={styles.logo} source={require('./img/logo.png')} />
+            <Image
+              style={styles.logo}
+              source={require('./img/logo.png')}
+            />
           </View>
           <View style={styles.selection}>
-            <Text style={[styles.heading, styles.selectionText]}>Ich bin:</Text>
+            <Text style={[styles.heading, styles.selectionText]}>
+              Ich bin:
+            </Text>
             <RoleSelection
               role={this.state.selectedRole}
               onRoleChange={role => this.setState({ selectedRole: role })}
             />
           </View>
-          <Text style={styles.disclaimer}>{textDisclaimer}</Text>
+          <Text style={styles.disclaimer}>{textDisclaimer()}</Text>
           <View style={styles.footer}>
             <View style={styles.agreeDisclaimer}>
               <Text style={styles.disclaimerLabel}>Ich stimme zu:</Text>
               <Switch
                 onValueChange={value =>
-                  this.setState({ disclaimerChecked: value })}
+                  this.setState({ disclaimerChecked: value })
+                }
                 value={this.state.disclaimerChecked}
               />
             </View>
@@ -73,7 +79,8 @@ class WelcomeScreen extends Component {
                   styles.submit,
                   {
                     color:
-                      this.state.disclaimerChecked && this.state.selectedRole
+                      this.state.disclaimerChecked &&
+                      this.state.selectedRole
                         ? Colors.dhbwRed
                         : Colors.dhbwGray
                   }
