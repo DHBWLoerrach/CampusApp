@@ -110,6 +110,7 @@ const AppNavigator = StackNavigator(
   },
   {
     navigationOptions: {
+      headerBackTitle: null,
       headerTintColor: 'white',
       headerStyle: {
         backgroundColor: Colors.dhbwRed,
