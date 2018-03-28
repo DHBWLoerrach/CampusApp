@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { StackNavigator, DrawerNavigator } from 'react-navigation';
+import React from 'react';
+import { DrawerNavigator } from 'react-navigation';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import NewsScreen from './tabs/news/NewsScreen';
-import NewsDetails from './tabs/news/NewsDetails';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
 import ImprintScreen from './tabs/service/ImprintScreen';
@@ -71,28 +70,4 @@ const Drawer = DrawerNavigator(
   }
 );
 
-const AppNavigator = StackNavigator(
-  {
-    Root: {
-      screen: Drawer
-    },
-    NewsDetails: {
-      screen: NewsDetails
-    }
-  },
-  {
-    navigationOptions: {
-      headerTintColor: 'white',
-      headerStyle: {
-        backgroundColor: Colors.dhbwRed,
-        borderBottomWidth: 0
-      }
-    }
-  }
-);
-
-export default class Navigator extends Component {
-  render() {
-    return <AppNavigator />;
-  }
-}
+export default Drawer;
