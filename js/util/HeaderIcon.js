@@ -20,7 +20,11 @@ export default class HeaderIcon extends Component {
         style={styles.icon}
       >
         <View>
-          <MaterialIcon name={this.props.icon} size={24} color="white" />
+          <MaterialIcon
+            name={this.props.icon}
+            size={this.props.size || 24}
+            color="white"
+          />
         </View>
       </Touchable>
     );
@@ -29,6 +33,6 @@ export default class HeaderIcon extends Component {
 
 const styles = StyleSheet.create({
   icon: {
-    paddingHorizontal: 3
+    paddingHorizontal: 8
   }
 });

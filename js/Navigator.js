@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Platform, StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -114,7 +115,13 @@ const AppNavigator = StackNavigator(
       headerTintColor: 'white',
       headerStyle: {
         backgroundColor: Colors.dhbwRed,
-        borderBottomWidth: 0
+        borderBottomWidth: 0,
+        ...Platform.select({
+          android: {
+            elevation: 0,
+            paddingTop: StatusBar.currentHeight
+          }
+        })
       },
       headerTitleStyle: {
         fontSize: 22

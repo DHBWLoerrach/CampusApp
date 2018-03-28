@@ -3,6 +3,8 @@ import { DrawerNavigator } from 'react-navigation';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import HeaderIcon from './util/HeaderIcon';
+
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
@@ -15,33 +17,55 @@ const Drawer = DrawerNavigator(
   {
     News: {
       screen: NewsScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         title: 'News',
         drawerIcon: ({ tintColor }) => (
           <MaterialIcon name="rss-feed" size={24} color={tintColor} />
+        ),
+        headerLeft: (
+          <HeaderIcon
+            onPress={() => navigation.navigate('DrawerToggle')}
+            icon="menu"
+            size={36}
+          />
         )
-      }
+      })
     },
     Schedule: {
       screen: ScheduleScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
+        title: 'Vorlesungsplan',
         drawerIcon: ({ tintColor }) => (
           <MaterialIcon name="school" size={24} color={tintColor} />
+        ),
+        headerLeft: (
+          <HeaderIcon
+            onPress={() => navigation.navigate('DrawerToggle')}
+            icon="menu"
+            size={36}
+          />
         )
-      }
+      })
     },
     Canteen: {
       screen: CanteenScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         title: 'Mensa',
         drawerIcon: ({ tintColor }) => (
           <MaterialIcon name="restaurant" size={24} color={tintColor} />
+        ),
+        headerLeft: (
+          <HeaderIcon
+            onPress={() => navigation.navigate('DrawerToggle')}
+            icon="menu"
+            size={36}
+          />
         )
-      }
+      })
     },
     Imprint: {
       screen: ImprintScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         title: 'Impressum',
         drawerIcon: ({ tintColor }) => (
           <MaterialCommunityIcon
@@ -49,17 +73,31 @@ const Drawer = DrawerNavigator(
             size={24}
             color={tintColor}
           />
+        ),
+        headerLeft: (
+          <HeaderIcon
+            onPress={() => navigation.navigate('DrawerToggle')}
+            icon="menu"
+            size={36}
+          />
         )
-      }
+      })
     },
     Service: {
       screen: ServiceScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         title: 'Service',
         drawerIcon: ({ tintColor }) => (
           <MaterialIcon name="info-outline" size={24} color={tintColor} />
+        ),
+        headerLeft: (
+          <HeaderIcon
+            onPress={() => navigation.navigate('DrawerToggle')}
+            icon="menu"
+            size={36}
+          />
         )
-      }
+      })
     }
   },
   {
