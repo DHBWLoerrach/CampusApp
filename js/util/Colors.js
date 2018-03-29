@@ -1,4 +1,3 @@
-// @flow
 module.exports = {
   cellBorder: '#EEEEEE',
   lightGray: '#DADADA',

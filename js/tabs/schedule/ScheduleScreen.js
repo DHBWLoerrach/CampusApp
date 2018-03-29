@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
@@ -14,8 +13,6 @@ import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
-
-import type { Lecture } from '../../util/types';
 
 import EditCourse from './EditCourse';
 import LectureRow from './LectureRow';
@@ -61,7 +58,7 @@ class ScheduleScreen extends Component {
     this._navListener.remove();
   }
 
-  _renderRow(lecture: Lecture) {
+  _renderRow(lecture) {
     return <LectureRow lecture={lecture} />;
   }
 

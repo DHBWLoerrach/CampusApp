@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
@@ -17,7 +16,6 @@ import format from 'date-fns/format';
 import NewsCell from './NewsCell';
 import { fetchNews } from './redux';
 
-import NewsItem from '../../util/types.js';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';

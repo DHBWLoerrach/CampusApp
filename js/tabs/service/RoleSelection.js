@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import {
   Platform,
@@ -40,7 +39,6 @@ class RadioButton extends Component {
 
 export default class RoleSelection extends Component {
   render() {
-    // TODO: flow type for roles
     return (
       <View>
         <RadioButton

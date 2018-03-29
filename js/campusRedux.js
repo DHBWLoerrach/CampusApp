@@ -1,6 +1,10 @@
-// @flow
 import { AsyncStorage } from 'react-native';
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import {
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore
+} from 'redux';
 import thunk from 'redux-thunk'; // thunk middleware to use functions as actions
 import { persistStore, autoRehydrate } from 'redux-persist';
 import { news } from './tabs/news/redux';

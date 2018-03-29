@@ -1,4 +1,3 @@
-// @flow
 import getLecturesFromiCalData from './helpers';
 
 // ACTIONS
@@ -51,7 +50,10 @@ export function fetchLectures(course) {
     try {
       const scheduleUrl =
         'https://webmail.dhbw-loerrach.de/owa/calendar/kal-@course@@dhbw-loerrach.de/Kalender/calendar.ics';
-      const scheduleUrlWithCourse = scheduleUrl.replace('@course@', course);
+      const scheduleUrlWithCourse = scheduleUrl.replace(
+        '@course@',
+        course
+      );
 
       const response = await fetch(scheduleUrlWithCourse);
       if (response.ok) {

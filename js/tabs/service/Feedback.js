@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';

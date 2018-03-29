@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import {
   Alert,
@@ -14,15 +13,6 @@ import Colors from '../../util/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
 
 export default class LinksList extends Component {
-  props: {
-    title: string,
-    links: Array<{
-      title: string,
-      url?: string,
-      onPress?: () => void
-    }>
-  };
-
   render() {
     const content = this.props.navigation
       .getParam('links')
@@ -42,10 +32,6 @@ export default class LinksList extends Component {
 }
 
 class ItemsWithSeparator extends Component {
-  props: {
-    children: any
-  };
-
   render() {
     const children = [];
     const length = React.Children.count(this.props.children);
@@ -62,15 +48,6 @@ class ItemsWithSeparator extends Component {
 }
 
 class Row extends Component {
-  props: {
-    link: {
-      title: string,
-      url?: string,
-      tel?: string,
-      onPress?: () => void
-    }
-  };
-
   render() {
     const { title, url, tel } = this.props.link;
 

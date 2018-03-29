@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -6,10 +5,6 @@ import Colors from './Colors';
 import Constants from './Constants';
 
 export default class DayHeader extends Component {
-  props: {
-    title: string
-  };
-
   render() {
     return (
       <View style={styles.header}>

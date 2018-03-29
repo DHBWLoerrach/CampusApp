@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 

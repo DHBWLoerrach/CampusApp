@@ -1,4 +1,3 @@
-// @flow
 // action
 const SELECT_ROLE = 'SELECT_ROLE';
 

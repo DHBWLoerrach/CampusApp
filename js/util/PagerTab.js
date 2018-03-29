@@ -1,14 +1,12 @@
-// @flow
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity
+} from 'react-native';
 
 export default class PagerTab extends Component {
-  props: {
-    title: string,
-    isSelected: boolean,
-    onPress: () => void
-  };
-
   render() {
     let selectedTabStyle;
     if (this.props.isSelected) selectedTabStyle = { borderColor: 'white' };

@@ -1,6 +1,5 @@
 import { textCafeteriaKKH, textHieber } from './Texts';
 
-// @flow
 export const linksAccounts = [
   {
     title: 'Homepage',

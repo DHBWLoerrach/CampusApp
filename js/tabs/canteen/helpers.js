@@ -1,4 +1,3 @@
-// @flow
 import { DOMParser } from 'xmldom';
 
 export default function fetchCanteenData(canteenXMLData) {
@@ -51,7 +50,9 @@ export default function fetchCanteenData(canteenXMLData) {
 
       addition = addition.concat(addition2);
 
-      var vegetarianAttribute = menuElement.attributes.getNamedItem('zusatz');
+      var vegetarianAttribute = menuElement.attributes.getNamedItem(
+        'zusatz'
+      );
       var vegetarian =
         vegetarianAttribute != null &&
         (vegetarianAttribute.nodeValue === 'vegetarisch' ||

@@ -1,4 +1,3 @@
-// @flow
 import { canteenApiKey } from '../../../env.js';
 
 import fetchCanteenData from './helpers';

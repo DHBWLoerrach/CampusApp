@@ -1,17 +1,10 @@
-// @flow
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
 
-import type { Lecture } from '../../util/types';
-
 export default class LectureRow extends Component {
-  props: {
-    lecture: Lecture
-  };
-
   render() {
     const lecture = this.props.lecture;
     let time = lecture.startTime + ' - ' + lecture.endTime;

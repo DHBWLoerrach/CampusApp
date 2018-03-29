@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
@@ -10,14 +9,7 @@ import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
 
-import type { NewsItem } from '../../util/types';
-
 export default class NewsCell extends Component {
-  props: {
-    news: NewsItem,
-    onPress: ?() => void
-  };
-
   render() {
     let image = require('./img/news-announcement.png');
     // formatting for news items: relative date (e.g. "3 days ago")

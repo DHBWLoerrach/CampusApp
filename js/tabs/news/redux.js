@@ -1,4 +1,3 @@
-// @flow
 import fetchNewsData from './helpers';
 import { feeds } from '../../util/Constants';
 import { fbAccessToken } from '../../../env.js';
