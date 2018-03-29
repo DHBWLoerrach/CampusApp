@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from './util/Colors';
 
+import NewsScreen from './tabs/news/NewsScreen';
+import ScheduleScreen from './tabs/schedule/ScheduleScreen';
+import CanteenScreen from './tabs/canteen/CanteenScreen';
+import ServiceScreen from './tabs/service/ServiceScreen';
 import NewsDetails from './tabs/news/NewsDetails';
 import EditCourse from './tabs/schedule/EditCourse';
 import InfoText from './tabs/service/InfoText';
@@ -13,12 +17,91 @@ import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
 
-import ToplevelNav from './ToplevelNav';
+const iconSize = Platform.OS === 'ios' ? 32 : 24;
+
+const Tabs = TabNavigator(
+  {
+    News: {
+      screen: NewsScreen,
+      navigationOptions: {
+        title: 'News',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialIcon
+            name="rss-feed"
+            size={iconSize}
+            color={tintColor}
+          />
+        )
+      }
+    },
+    Schedule: {
+      screen: ScheduleScreen,
+      navigationOptions: {
+        title: 'Vorlesungsplan',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialIcon name="school" size={iconSize} color={tintColor} />
+        )
+      }
+    },
+    Canteen: {
+      screen: CanteenScreen,
+      navigationOptions: {
+        title: 'Mensa',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialIcon
+            name="restaurant"
+            size={iconSize}
+            color={tintColor}
+          />
+        )
+      }
+    },
+    Service: {
+      screen: ServiceScreen,
+      navigationOptions: {
+        title: 'Service',
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialIcon
+            name="info-outline"
+            size={iconSize}
+            color={tintColor}
+          />
+        )
+      }
+    }
+  },
+  {
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+      activeTintColor: Colors.dhbwRed,
+      inactiveTintColor: '#929292',
+      style: {
+        backgroundColor: '#f4f4f4' // for bottom tab bar
+      },
+      indicatorStyle: {
+        height: 0 // prevent indicator line in Android
+      },
+      showIcon: true,
+      upperCaseLabel: false,
+      ...Platform.select({
+        // Android: labels with smaller font and wider
+        android: {
+          labelStyle: {
+            margin: 0,
+            width: 100
+          }
+        }
+      }),
+      pressColor: Colors.lightGray
+    },
+    swipeEnabled: false
+  }
+);
 
 const AppNavigator = StackNavigator(
   {
     Root: {
-      screen: ToplevelNav
+      screen: Tabs
     },
     NewsDetails: {
       screen: NewsDetails
@@ -122,9 +205,6 @@ const AppNavigator = StackNavigator(
             paddingTop: StatusBar.currentHeight
           }
         })
-      },
-      headerTitleStyle: {
-        fontSize: 22
       }
     }
   }

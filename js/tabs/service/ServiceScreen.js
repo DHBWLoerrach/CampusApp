@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import {
   Image,
   Linking,
-  Platform,
   ScrollView,
   StyleSheet,
   View
@@ -102,51 +101,46 @@ export default class ServiceScreen extends Component {
           />
         ),
         onPress: () => navigate('Settings')
+      },
+      {
+        label: 'Über',
+        icon: (
+          <MaterialIcon
+            name="help-outline"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
+        onPress: () => navigate('About')
+      },
+      {
+        label: 'Haftung',
+        icon: <Image source={require('./img/disclaimer.png')} />,
+        onPress: () => navigate('Disclaimer', { text: textDisclaimer() })
+      },
+      {
+        label: 'Impressum',
+        icon: (
+          <MaterialCommunityIcon
+            name="file-document"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
+        onPress: () => navigate('Imprint', { text: textImprint() })
+      },
+      {
+        label: 'Datenschutz',
+        icon: (
+          <MaterialIcon
+            name="remove-red-eye"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
+        onPress: () => navigate('Privacy', { text: textPrivacy() })
       }
     ];
-
-    if (Platform.OS === 'ios') {
-      submenuItems.push(
-        {
-          label: 'Über',
-          icon: (
-            <MaterialIcon
-              name="help-outline"
-              size={iconSize}
-              color={Color.icon}
-            />
-          ),
-          onPress: () => navigate('About')
-        },
-        {
-          label: 'Haftung',
-          icon: <Image source={require('./img/disclaimer.png')} />,
-          onPress: () => navigate('Disclaimer', { text: textDisclaimer() })
-        },
-        {
-          label: 'Impressum',
-          icon: (
-            <MaterialCommunityIcon
-              name="file-document"
-              size={iconSize}
-              color={Color.icon}
-            />
-          ),
-          onPress: () => navigate('Imprint', { text: textImprint() })
-        },
-        {
-          label: 'Datenschutz',
-          icon: (
-            <MaterialIcon
-              name="remove-red-eye"
-              size={iconSize}
-              color={Color.icon}
-            />
-          ),
-          onPress: () => navigate('Privacy', { text: textPrivacy() })
-        }
-      );
-    }
     return submenuItems;
   }
 
