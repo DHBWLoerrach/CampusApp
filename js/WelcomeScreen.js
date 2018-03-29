@@ -62,7 +62,7 @@ class WelcomeScreen extends Component {
               onRoleChange={role => this.setState({ selectedRole: role })}
             />
           </View>
-          <Text style={styles.disclaimer}>{textDisclaimer()}</Text>
+          <View style={styles.disclaimer}>{textDisclaimer()}</View>
           <View style={styles.footer}>
             <View style={styles.agreeDisclaimer}>
               <Text style={styles.disclaimerLabel}>Ich stimme zu:</Text>
@@ -141,7 +141,8 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: 20
   },
   agreeDisclaimer: {
     flexDirection: 'row'
