@@ -9,8 +9,8 @@
   "dependencies": {
     "date-fns": "^1.29.0",
     "ical.js": "^1.2.2",
-    "react": "16.3.1",
-    "react-native": "0.55.3",
+    "react": "16.4.1",
+    "react-native": "0.56.0",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.5.2",
     "react-redux": "^5.0.6",
@@ -23,9 +23,9 @@
     "preset": "jest-react-native"
   },
   "devDependencies": {
-    "babel-jest": "22.1.0",
-    "babel-preset-react-native": "4.0.0",
-    "jest": "22.1.2",
-    "react-test-renderer": "16.2.0"
+    "babel-jest": "23.2.0",
+    "babel-preset-react-native": "^5",
+    "jest": "23.3.0",
+    "react-test-renderer": "16.4.1"
   }
 }
