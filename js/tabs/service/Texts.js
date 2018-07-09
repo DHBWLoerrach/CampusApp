@@ -81,7 +81,10 @@ export function textCafeteriaKKH() {
   );
 }
 
-export function textDisclaimer() {
+export const disclaimerText =
+  'Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte keine Gewähr übernommen werden kann. Im Zweifelsfall ist insbesondere der Online-Stundenplan zu prüfen.';
+
+export function textAgreedDisclaimer() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -91,13 +94,17 @@ export function textDisclaimer() {
         </Text>
       </View>
       <View style={styles.block}>
-        <Text style={styles.text}>
-          Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
-          Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit
-          und Aktualität der Inhalte keine Gewähr übernommen werden kann.
-          Im Zweifelsfall ist insbesondere der Online-Stundenplan zu
-          prüfen.
-        </Text>
+        <Text style={styles.text}>{disclaimerText}</Text>
+      </View>
+    </View>
+  );
+}
+
+export function textDisclaimer() {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.block, { marginBottom: 0 }]}>
+        <Text style={styles.text}>{disclaimerText}</Text>
       </View>
     </View>
   );

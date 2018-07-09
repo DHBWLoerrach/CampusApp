@@ -18,7 +18,7 @@ import {
   linksStudy
 } from './Links';
 import Submenu from './Submenu';
-import { textPrivacy, textDisclaimer, textImprint } from './Texts';
+import { textPrivacy, textAgreedDisclaimer, textImprint } from './Texts';
 import Color from '../../util/Colors';
 
 const iconSize = 36;
@@ -115,7 +115,8 @@ export default class ServiceScreen extends Component {
       {
         label: 'Haftung',
         icon: <Image source={require('./img/disclaimer.png')} />,
-        onPress: () => navigate('Disclaimer', { text: textDisclaimer() })
+        onPress: () =>
+          navigate('Disclaimer', { text: textAgreedDisclaimer() })
       },
       {
         label: 'Impressum',

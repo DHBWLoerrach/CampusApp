@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10
   },
   header: {
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
     marginBottom: 20
   },
   agreeDisclaimer: {
