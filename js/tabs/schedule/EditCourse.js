@@ -10,7 +10,6 @@ import {
 import { connect } from 'react-redux';
 
 import Colors from '../../util/Colors';
-import HeaderIcon from '../../util/HeaderIcon';
 import { courseList } from '../../../env.js';
 
 import { clearLectures, fetchLectures } from './redux';
@@ -79,6 +78,8 @@ class EditCourse extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: 'white',
     padding: 15
   },
   inputContainer: {

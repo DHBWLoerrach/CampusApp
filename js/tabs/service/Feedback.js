@@ -21,7 +21,7 @@ export default class Feedback extends Component {
             <Text style={styles.title} numberOfLines={2}>
               Feedback senden
             </Text>
-            <MaterialIcon name="chevron-right" size={36} />;
+            <MaterialIcon name="chevron-right" size={36} />
           </View>
         </ListCellTouchable>
       </View>
