@@ -80,7 +80,7 @@ const ServiceStack = createStackNavigator(
   {
     Home: {
       screen: ServiceScreen,
-      navigationOptions: { title: 'Service-Links & weitere Infos' }
+      navigationOptions: { title: 'Service-Links und weitere Infos' }
     },
     Accounts: {
       screen: LinksList,
@@ -155,7 +155,7 @@ const AppNavigator = createBottomTabNavigator(
         title: 'Mensa'
       }
     },
-    Service: ServiceStack
+    Services: ServiceStack
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -165,11 +165,9 @@ const AppNavigator = createBottomTabNavigator(
         if (routeName === 'News') iconName = 'rss-feed';
         else if (routeName === 'Schedule') iconName = 'school';
         else if (routeName === 'Canteen') iconName = 'restaurant';
-        else if (routeName === 'Service') iconName = 'info-outline';
+        else if (routeName === 'Services') iconName = 'info-outline';
 
-        return (
-          <MaterialIcon name={iconName} size={32} color={tintColor} />
-        );
+        return <MaterialIcon name={iconName} size={32} color={tintColor} />;
       }
     }),
     tabBarOptions: {

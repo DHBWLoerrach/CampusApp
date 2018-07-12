@@ -119,9 +119,7 @@ class NewsScreen extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>{this._renderScreenContent()}</View>
-    );
+    return <View style={styles.container}>{this._renderScreenContent()}</View>;
   }
 }
 
