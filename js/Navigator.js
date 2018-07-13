@@ -80,7 +80,7 @@ const ServiceStack = createStackNavigator(
   {
     Home: {
       screen: ServiceScreen,
-      navigationOptions: { title: 'Service-Links und weitere Infos' }
+      navigationOptions: { title: 'Services der DHBW Lörrach' }
     },
     Accounts: {
       screen: LinksList,
@@ -167,7 +167,9 @@ const AppNavigator = createBottomTabNavigator(
         else if (routeName === 'Canteen') iconName = 'restaurant';
         else if (routeName === 'Services') iconName = 'info-outline';
 
-        return <MaterialIcon name={iconName} size={32} color={tintColor} />;
+        return (
+          <MaterialIcon name={iconName} size={32} color={tintColor} />
+        );
       }
     }),
     tabBarOptions: {
