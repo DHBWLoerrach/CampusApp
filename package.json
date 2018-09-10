@@ -12,7 +12,7 @@
     "react": "16.4.1",
     "react-native": "0.56.1",
     "react-native-vector-icons": "^4.5.0",
-    "react-navigation": "^2.6.2",
+    "react-navigation": "^2.13.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.1",
