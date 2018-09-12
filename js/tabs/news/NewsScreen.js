@@ -59,7 +59,10 @@ class NewsScreen extends Component {
         news={item}
         topic={topic}
         onPress={() =>
-          this.props.navigation.navigate('NewsDetails', { news: item })
+          this.props.navigation.navigate('NewsDetails', {
+            news: item,
+            topic
+          })
         }
       />
     );
@@ -119,7 +122,9 @@ class NewsScreen extends Component {
   }
 
   render() {
-    return <View style={styles.container}>{this._renderScreenContent()}</View>;
+    return (
+      <View style={styles.container}>{this._renderScreenContent()}</View>
+    );
   }
 }
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Platform, WebView } from 'react-native';
 
+import format from 'date-fns/format';
+
 import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
@@ -10,8 +12,15 @@ export default class NewsDetails extends Component {
       heading,
       subheading,
       imgUrl,
-      body
+      body,
+      time
     } = this.props.navigation.getParam('news');
+    let topic = this.props.navigation.getParam('topic');
+    if (topic === 'events') {
+      time = `<h1>${format(new Date(time), 'DD.MM.YYYY')}</h1>`;
+    } else {
+      time = '';
+    }
     if (body === subheading) subheading = '';
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
@@ -25,6 +34,7 @@ export default class NewsDetails extends Component {
             </style>
           </head>
           <body>
+            ${time}
             <h1>${heading}</h1>
             <h2>${subheading}</h2>
             <img src="${imgUrl}" width="100%">
