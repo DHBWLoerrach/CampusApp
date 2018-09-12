@@ -29,33 +29,32 @@ export function textCafeteriaKKH() {
           Rubriken
         </Text>
         <Text style={[styles.text, { paddingLeft: 20 }]}>
-          • Suppe {'\n'}
-          • Deftig & Würzig {'\n'}
-          • Leicht & Lecker {'\n'}
-          • Vegetarisch & Vital {'\n'}
-          • Dessert {'\n'}
-          • Abendessen
+          • Suppe {'\n'}• Deftig & Würzig {'\n'}• Leicht & Lecker {'\n'}•
+          Vegetarisch & Vital {'\n'}• Dessert {'\n'}• Abendessen
         </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Ort</Text>
         <Text style={styles.text}>
-          Spitalstraße 25{'\n'}
-          79539 Lörrach{'\n'}
+          Spitalstraße 25
+          {'\n'}
+          79539 Lörrach
+          {'\n'}
           5. OG
         </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Mittagstisch</Text>
         <Text style={styles.text}>
-          Montag bis Sonntag: 11:30 – 13:45 Uhr
+          Montag bis Freitag: 11:30 – 13:45 Uhr
         </Text>
       </View>
       <View style={styles.block}>
         <Text style={styles.headline}>Preise</Text>
         <Text style={styles.text}>
-          Ein Mittagessen kostet ca. 4 Euro. Es wird kein gesonderter
-          Studierendenrabatt gewährt. Die Bezahlung erfolgt in bar.{'\n'}
+          Ein Mittagessen kostet ca. 4,50 Euro. Es wird kein gesonderter
+          Studierendenrabatt gewährt. Die Bezahlung erfolgt in bar.
+          {'\n'}
         </Text>
         <Text
           style={styles.link}
@@ -132,7 +131,8 @@ export function textHieber() {
         <Text style={styles.headline}>Ort</Text>
         <Text style={styles.text}>
           Meeraner Platz 1{'\n'}
-          79539 Lörrach{'\n'}
+          79539 Lörrach
+          {'\n'}
           Eingangsbereich (unterer Eingang)
         </Text>
       </View>
@@ -170,12 +170,17 @@ export function textImprint() {
     <View style={styles.container}>
       <View style={styles.block}>
         <Text style={styles.text}>
-          Duale Hochschule Baden-Württemberg Lörrach{'\n'}
-          Hangstraße 46-50{'\n'}
-          79539 Lörrach{'\n'}
+          Duale Hochschule Baden-Württemberg Lörrach
+          {'\n'}
+          Hangstraße 46-50
+          {'\n'}
+          79539 Lörrach
+          {'\n'}
           Fon +49 7621 2071 - 0{'\n'}
-          info@dhbw-loerrach.de{'\n'}
-          http://www.dhbw-loerrach.de{'\n'}
+          info@dhbw-loerrach.de
+          {'\n'}
+          http://www.dhbw-loerrach.de
+          {'\n'}
           {'\n'}
           Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz:
           DE287664832
@@ -191,21 +196,30 @@ export function textImprint() {
           öffentlichen Rechts und zugleich staatliche Einrichtung. Die
           Duale Hochschule Baden-Württemberg Lörrach ist nach § 1 Abs. 2
           DH-ErrichtG vom 12.12.2008 eine rechtlich unselbständige
-          Untereinheit dieser Hochschule.{'\n'}
+          Untereinheit dieser Hochschule.
+          {'\n'}
           {'\n'}
           Dienstanbieter im Sinne des TDG bzw. des MDStV ist als Träger der
           Dualen Hochschule das Land Baden-Württemberg vertreten durch die
           Ministerin für Wissenschaft, Forschung und Kunst Theresia Bauer,
-          MdL.{'\n'}
+          MdL.
           {'\n'}
-          Zuständige Aufsichtsbehörde:{'\n'}
-          Ministerium für Wissenschaft, Forschung und Kunst{'\n'}
-          Baden-Württemberg{'\n'}
-          Königstraße 46{'\n'}
-          70173 Stuttgart{'\n'}
+          {'\n'}
+          Zuständige Aufsichtsbehörde:
+          {'\n'}
+          Ministerium für Wissenschaft, Forschung und Kunst
+          {'\n'}
+          Baden-Württemberg
+          {'\n'}
+          Königstraße 46
+          {'\n'}
+          70173 Stuttgart
+          {'\n'}
           Telefon: +49 711 279 - 0{'\n'}
-          Telefax: +49 711 279 - 3081{'\n'}
-          poststelle@mwk.bwl.de{'\n'}
+          Telefax: +49 711 279 - 3081
+          {'\n'}
+          poststelle@mwk.bwl.de
+          {'\n'}
           http://www.mwk.bwl.de
         </Text>
       </View>
@@ -267,7 +281,8 @@ export function textPrivacy() {
           Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit
           und Aktualität der Inhalte keine Gewähr übernommen werden kann.
           Im Zweifelsfall ist insbesondere der Online-Stundenplan zu
-          prüfen.{'\n'}
+          prüfen.
+          {'\n'}
           Die Campus App ist frei zugänglich. Für die Nutzung müssen keine
           personenbezogenen Daten eingegeben werden. Der Zugriff auf die
           Campus App der DHBW Lörrach wird durch die App-Stores
@@ -281,17 +296,26 @@ export function textPrivacy() {
         <Text style={styles.headline}>Ansprechpartner</Text>
         <Text style={styles.text}>
           Zu Fragen bzgl. des Datenschutzes wenden Sie sich bitte an den
-          Datenschutzbeauftragten der DHBW Lörrach:{'\n'}
+          Datenschutzbeauftragten der DHBW Lörrach:
           {'\n'}
-          Prof. Dr. Lutz-Peter Kurdelski{'\n'}
-          Professor für Lehraufgaben{'\n'}
-          Tel: +49 7621 2071 423{'\n'}
-          kurdelski@dhbw-loerrach.de{'\n'}
           {'\n'}
-          Anschrift{'\n'}
-          Duale Hochschule Baden-Württemberg Lörrach{'\n'}
-          Hangstraße 46-50{'\n'}
-          79539 Lörrach{'\n'}
+          Prof. Dr. Lutz-Peter Kurdelski
+          {'\n'}
+          Professor für Lehraufgaben
+          {'\n'}
+          Tel: +49 7621 2071 423
+          {'\n'}
+          kurdelski@dhbw-loerrach.de
+          {'\n'}
+          {'\n'}
+          Anschrift
+          {'\n'}
+          Duale Hochschule Baden-Württemberg Lörrach
+          {'\n'}
+          Hangstraße 46-50
+          {'\n'}
+          79539 Lörrach
+          {'\n'}
           Tel: +49 7621 2071 0{'\n'}
           info@dhbw-loerrach.de
         </Text>
