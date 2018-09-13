@@ -43,6 +43,8 @@ export default class NewsDetails extends Component {
         </html>
     `;
 
-    return <WebView source={{ html: HTML }} bounces={false} />;
+    return (
+      <WebView useWebKit={true} source={{ html: HTML }} bounces={false} />
+    );
   }
 }
