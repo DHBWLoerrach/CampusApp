@@ -9,8 +9,8 @@
   "dependencies": {
     "date-fns": "^1.29.0",
     "ical.js": "^1.2.2",
-    "react": "16.4.1",
-    "react-native": "0.56.1",
+    "react": "16.5.0",
+    "react-native": "0.57.0",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^2.13.0",
     "react-redux": "^5.0.6",
