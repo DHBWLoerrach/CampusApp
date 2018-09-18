@@ -17,7 +17,7 @@ export default class NewsDetails extends Component {
     } = this.props.navigation.getParam('news');
     let topic = this.props.navigation.getParam('topic');
     if (topic === 'events') {
-      time = `<h1>${format(new Date(time), 'DD.MM.YYYY')}</h1>`;
+      time = `<h3>${format(new Date(time), 'DD.MM.YYYY HH:mm')} Uhr</h3>`;
     } else {
       time = '';
     }
