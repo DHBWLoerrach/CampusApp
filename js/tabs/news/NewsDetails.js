@@ -13,17 +13,27 @@ export default class NewsDetails extends Component {
       subheading,
       imgUrl,
       body,
-      time
+      time,
+      attachment
     } = this.props.navigation.getParam('news');
     let topic = this.props.navigation.getParam('topic');
+    let timeHeading = '';
     if (topic === 'events') {
-      time = `<h3>${format(new Date(time), 'DD.MM.YYYY HH:mm')} Uhr</h3>`;
-    } else {
-      time = '';
+      timeHeading = `<h3>${format(
+        new Date(time),
+        'DD.MM.YYYY HH:mm'
+      )} Uhr</h3>`;
     }
     if (body === subheading) subheading = '';
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
+    let attachmentFooter = '';
+    if (attachment) {
+      attachmentFooter = `<p>
+        ${attachment.title} <br/> 
+        <a href='${attachment.url}'>Herunterladen (${attachment.size})</a>
+        </p>`;
+    }
     const HTML = `
         <!DOCTYPE html>\n
         <html>
@@ -34,11 +44,12 @@ export default class NewsDetails extends Component {
             </style>
           </head>
           <body>
-            ${time}
+            ${timeHeading}
             <h1>${heading}</h1>
             <h2>${subheading}</h2>
             <img src="${imgUrl}" width="100%">
             ${body}
+            ${attachmentFooter}
           </body>
         </html>
     `;

@@ -8,9 +8,10 @@ export default function fetchNewsData(newsXMLData) {
   var newsItems = xmlDOM.getElementsByTagName('item');
   var newsList = [];
   for (var i = 0; i < newsItems.length; i++) {
-    var newsItem = newsItems.item(i);
-    var newsContent = '',
-      newsImage = null;
+    let newsItem = newsItems.item(i);
+    let newsContent = '',
+      newsImage = null,
+      attachment = null;
 
     // there is one content:encoded element per news item
     var contentElement = newsItem
@@ -55,6 +56,26 @@ export default function fetchNewsData(newsXMLData) {
       .getElementsByTagName('description')
       .item(0)
       .childNodes.item(0);
+
+    let attachmentElement = newsItem.getElementsByTagName('anhang');
+    if (attachmentElement.length > 0) {
+      attachmentElement = attachmentElement.item(0);
+      const url = attachmentElement
+        .getElementsByTagName('anhang-url')
+        .item(0)
+        .childNodes.item(0).nodeValue;
+      console.log(url);
+      const title = attachmentElement
+        .getElementsByTagName('anhang-title')
+        .item(0)
+        .childNodes.item(0).nodeValue;
+      const size = attachmentElement
+        .getElementsByTagName('anhang-size')
+        .item(0)
+        .childNodes.item(0).nodeValue;
+      attachment = { url, title, size };
+    }
+
     newsList.push({
       id: i,
       heading: newsItem
@@ -67,7 +88,8 @@ export default function fetchNewsData(newsXMLData) {
       // url: newsItem.getElementsByTagName('link').item(0).childNodes.item(0).nodeValue,
       time: time,
       imgUrl: newsImage,
-      body: newsContent
+      body: newsContent,
+      attachment: attachment
     });
   }
 
