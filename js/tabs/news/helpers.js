@@ -58,7 +58,8 @@ export default function fetchNewsData(newsXMLData) {
       .childNodes.item(0);
 
     let attachmentElements = newsItem.getElementsByTagName('attachment');
-    attachmentElements.forEach(attachment => {
+    for (let i = 0; i < attachmentElements.length; i++) {
+      let attachment = attachmentElements.item(0);
       const url = attachment
         .getElementsByTagName('attachment-url')
         .item(0)
@@ -72,7 +73,7 @@ export default function fetchNewsData(newsXMLData) {
         .item(0)
         .childNodes.item(0).nodeValue;
       attachments.push({ url, title, size });
-    });
+    }
 
     newsList.push({
       id: i,

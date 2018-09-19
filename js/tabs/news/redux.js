@@ -63,6 +63,7 @@ export function fetchNews() {
       );
       dispatch(receiveNews(newsItems));
     } catch (e) {
+      console.log(e);
       dispatch(errorFetchingNews());
     }
   };
