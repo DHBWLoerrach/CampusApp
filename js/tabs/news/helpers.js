@@ -11,7 +11,7 @@ export default function fetchNewsData(newsXMLData) {
     let newsItem = newsItems.item(i);
     let newsContent = '',
       newsImage = null,
-      attachment = null;
+      attachments = [];
 
     // there is one content:encoded element per news item
     var contentElement = newsItem
@@ -57,24 +57,22 @@ export default function fetchNewsData(newsXMLData) {
       .item(0)
       .childNodes.item(0);
 
-    let attachmentElement = newsItem.getElementsByTagName('anhang');
-    if (attachmentElement.length > 0) {
-      attachmentElement = attachmentElement.item(0);
-      const url = attachmentElement
-        .getElementsByTagName('anhang-url')
+    let attachmentElements = newsItem.getElementsByTagName('attachment');
+    attachmentElements.forEach(attachment => {
+      const url = attachment
+        .getElementsByTagName('attachment-url')
         .item(0)
         .childNodes.item(0).nodeValue;
-      console.log(url);
-      const title = attachmentElement
-        .getElementsByTagName('anhang-title')
+      const title = attachment
+        .getElementsByTagName('attachment-title')
         .item(0)
         .childNodes.item(0).nodeValue;
-      const size = attachmentElement
-        .getElementsByTagName('anhang-size')
+      const size = attachment
+        .getElementsByTagName('attachment-size')
         .item(0)
         .childNodes.item(0).nodeValue;
-      attachment = { url, title, size };
-    }
+      attachments.push({ url, title, size });
+    });
 
     newsList.push({
       id: i,
@@ -89,7 +87,7 @@ export default function fetchNewsData(newsXMLData) {
       time: time,
       imgUrl: newsImage,
       body: newsContent,
-      attachment: attachment
+      attachments: attachments
     });
   }
 

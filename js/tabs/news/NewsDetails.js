@@ -14,7 +14,7 @@ export default class NewsDetails extends Component {
       imgUrl,
       body,
       time,
-      attachment
+      attachments
     } = this.props.navigation.getParam('news');
     let topic = this.props.navigation.getParam('topic');
     let timeHeading = '';
@@ -28,10 +28,17 @@ export default class NewsDetails extends Component {
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
     let attachmentFooter = '';
-    if (attachment) {
+    if (attachments.length >= 1) {
+      let attachmentsHTML = '';
+      attachments.forEach(attachment => {
+        attachmentsHTML += `${attachment.title} <br/> 
+        <a href='${attachment.url}'>Herunterladen (${attachment.size})</a> 
+        <br/>
+        <br/>`;
+      });
       attachmentFooter = `<p>
-        ${attachment.title} <br/> 
-        <a href='${attachment.url}'>Herunterladen (${attachment.size})</a>
+        <b>Anhänge</b> <br/> <br/>
+        ${attachmentsHTML}        
         </p>`;
     }
     const HTML = `
