@@ -43,13 +43,15 @@ class ScheduleScreen extends Component {
   };
 
   componentDidMount() {
+    let course = this.props.course;
     // set title to course when this screen component mounts...
-    this.props.navigation.setParams({ course: this.props.course });
+    this.props.navigation.setParams({ course: course });
     // ...and everytime we navigate to this screen
     this._navListener = this.props.navigation.addListener(
       'didFocus',
       () => {
-        this.props.navigation.setParams({ course: this.props.course });
+        this.props.navigation.setParams({ course });
+        if (course) this._refreshData(course);
       }
     );
   }
