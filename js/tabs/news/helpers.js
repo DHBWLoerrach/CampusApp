@@ -59,7 +59,7 @@ export default function fetchNewsData(newsXMLData) {
 
     let attachmentElements = newsItem.getElementsByTagName('attachment');
     for (let i = 0; i < attachmentElements.length; i++) {
-      let attachment = attachmentElements.item(0);
+      let attachment = attachmentElements.item(i);
       const url = attachment
         .getElementsByTagName('attachment-url')
         .item(0)
