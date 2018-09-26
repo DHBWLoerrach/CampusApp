@@ -14,7 +14,6 @@ import DayHeader from '../../util/DayHeader';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 
-import EditCourse from './EditCourse';
 import LectureRow from './LectureRow';
 
 import { clearLectures, fetchLectures } from './redux';
@@ -50,6 +49,8 @@ class ScheduleScreen extends Component {
     this._navListener = this.props.navigation.addListener(
       'didFocus',
       () => {
+        // get current course from redux store
+        let course = this.props.course;
         this.props.navigation.setParams({ course });
         if (course) this._refreshData(course);
       }
