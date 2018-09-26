@@ -27,7 +27,7 @@ export default class About extends Component {
         >
           github.com/DHBWLoerrach/CampusApp
         </Text>
-        <Text style={styles.marginBig}>Version (App): 2.1</Text>
+        <Text style={styles.marginBig}>Version (App): 2.1.1</Text>
       </View>
     );
   }
