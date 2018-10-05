@@ -28,7 +28,7 @@ export default class NewsDetails extends Component {
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
     let attachmentFooter = '';
-    if (attachments.length >= 1) {
+    if (attachments && attachments.length >= 1) {
       let attachmentsHTML = '';
       attachments.forEach(attachment => {
         attachmentsHTML += `${attachment.title} <br/> 
@@ -41,6 +41,7 @@ export default class NewsDetails extends Component {
         ${attachmentsHTML}        
         </p>`;
     }
+    console.log(imgUrl);
     const HTML = `
         <!DOCTYPE html>\n
         <html>
