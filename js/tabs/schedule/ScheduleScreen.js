@@ -52,7 +52,8 @@ class ScheduleScreen extends Component {
         // get current course from redux store
         let course = this.props.course;
         this.props.navigation.setParams({ course });
-        if (course) this._refreshData(course);
+        // Look for new data: fetch lectures without clearing them before
+        if (course) this.props.dispatch(fetchLectures(course));
       }
     );
   }
