@@ -115,3 +115,7 @@ export const linksKBC = [
     text: textHieber()
   }
 ];
+
+export const linkOrientation =
+  'https://www.dhbw-loerrach.de/anfahrt.html';
+

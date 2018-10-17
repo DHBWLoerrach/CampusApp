@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {
   linksAccounts,
@@ -15,6 +16,7 @@ import {
   linksEmergency,
   linksFreetime,
   linksKBC,
+  linkOrientation,
   linksStudy
 } from './Links';
 import Submenu from './Submenu';
@@ -27,6 +29,17 @@ export default class ServiceScreen extends Component {
   _getSubmenuItems() {
     const { navigate } = this.props.navigation;
     var submenuItems = [
+      {
+        label: 'Anreise und Lageplan',
+        icon: (
+          <FontAwesome
+            name="map-marker"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
+        onPress: () => Linking.openURL(linkOrientation)
+      },
       {
         label: 'Service-Zugänge',
         icon: (
