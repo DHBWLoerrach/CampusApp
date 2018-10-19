@@ -101,8 +101,8 @@ android {
         applicationId "de.dhbwloe.loerrach.campusapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
-        versionName "2.1.2"
+        versionCode 40
+        versionName "2.1.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
