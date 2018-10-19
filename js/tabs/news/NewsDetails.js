@@ -31,8 +31,13 @@ export default class NewsDetails extends Component {
     if (attachments && attachments.length >= 1) {
       let attachmentsHTML = '';
       attachments.forEach(attachment => {
+        let url = attachment.url;
+        // on Android use embedded Google docs viewer for PDFs (WebView won't work)
+        // see https://github.com/facebook/react-native/issues/6488
+        if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
+          url = 'http://docs.google.com/gview?embedded=true&url=' + url;
         attachmentsHTML += `${attachment.title} <br/> 
-        <a href='${attachment.url}'>Herunterladen (${attachment.size})</a> 
+        <a href='${url}'>Herunterladen (${attachment.size})</a> 
         <br/>
         <br/>`;
       });
