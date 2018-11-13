@@ -27,6 +27,8 @@ export default class NewsDetails extends Component {
     if (body === subheading) subheading = '';
     // HACK/TODO: prevent changes in font size (affects iOS)
     body = body.replace(/font-size:/g, 'fs');
+    // Remove target="_blank" in URLs (otherwise they won't work on iOS)
+    body = body.replace(/target="_blank"/g, '');
     let attachmentFooter = '';
     if (attachments && attachments.length >= 1) {
       let attachmentsHTML = '';
