@@ -48,7 +48,6 @@ export default class NewsDetails extends Component {
         ${attachmentsHTML}        
         </p>`;
     }
-    console.log(imgUrl);
     const HTML = `
         <!DOCTYPE html>\n
         <html>
