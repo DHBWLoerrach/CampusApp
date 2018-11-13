@@ -23,7 +23,7 @@ export const linksAccounts = [
   },
   {
     title: 'StuV',
-    url: 'http://stuv-loerrach.de/'
+    url: 'https://stuv-loerrach.de/'
   },
   {
     title: 'Handbuch DHBW-IT',
@@ -116,6 +116,4 @@ export const linksKBC = [
   }
 ];
 
-export const linkOrientation =
-  'https://www.dhbw-loerrach.de/anfahrt.html';
-
+export const linkOrientation = 'https://www.dhbw-loerrach.de/anfahrt.html';
