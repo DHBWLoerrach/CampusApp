@@ -120,8 +120,9 @@ class ScheduleScreen extends Component {
     // contenInset: needed for last item to be displayed above tab bar on iOS
     return (
       <SectionList
-        bounces={false}
         sections={lectures}
+        onRefresh={() => this.props.dispatch(fetchLectures(course))}
+        refreshing={isFetching}
         renderItem={({ item }) => this._renderRow(item)}
         renderSectionHeader={({ section }) => (
           <DayHeader title={section.title} />

@@ -8,18 +8,24 @@ export default class TabbedSwipeView extends Component {
   constructor(props) {
     super(props);
     this.state = { selectedIndex: this.props.selectedIndex || 0 };
-
-    this._onPageSelected = this._onPageSelected.bind(this);
   }
 
-  _onPageSelected(event) {
-    this.setState({ selectedIndex: event.nativeEvent.position });
-  }
+  _onPageSelected = event => {
+    const selectedIndex = event.nativeEvent.position;
+    this.setState({ selectedIndex });
+  };
 
   _swipeToPage(index) {
     if (index === this.state.selectedIndex) return;
     this.setState({ selectedIndex: index });
     this._viewPager.setPage(index);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // dispatch tab change event if selected tab changed
+    if (this.state.selectedIndex !== prevState.selectedIndex) {
+      this.props.onTabChanged(this.state.selectedIndex);
+    }
   }
 
   render() {

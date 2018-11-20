@@ -14,22 +14,19 @@ export default class TabbedSwipeView extends Component {
       pageHeight: 0,
       scrollingTo: null
     };
-
-    this._handleHorizontalScroll = this._handleHorizontalScroll.bind(this);
-    this._getPageSize = this._getPageSize.bind(this);
   }
 
   // store width and height of a page (callback for layout of scrollview)
-  _getPageSize(event) {
+  _getPageSize = event => {
     this.setState({
       pageWidth: event.nativeEvent.layout.width,
       pageHeight: event.nativeEvent.layout.height
     });
-  }
+  };
 
   // callback for scroll/swipe events, adopted from F8 sample app
   // https://github.com/fbsamples/f8app/blob/master/js/common/ViewPager.js
-  _handleHorizontalScroll(event) {
+  _handleHorizontalScroll = event => {
     // get current index we are currently scrolling/swaping to
     let selectedIndex = event.nativeEvent.position;
     if (selectedIndex === undefined) {
@@ -50,8 +47,10 @@ export default class TabbedSwipeView extends Component {
     }
 
     // position has been reached, set new state
-    this.setState({ selectedIndex, scrollingTo: null });
-  }
+    if (selectedIndex !== this.state.selectedIndex) {
+      this.setState({ selectedIndex, scrollingTo: null });
+    }
+  };
 
   _swipeToPage(index) {
     if (index === this.state.selectedIndex) return;
@@ -60,6 +59,13 @@ export default class TabbedSwipeView extends Component {
       animated: true
     });
     this.setState({ scrollingTo: index });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // dispatch tab change event if selected tab changed
+    if (this.state.selectedIndex !== prevState.selectedIndex) {
+      this.props.onTabChanged(this.state.selectedIndex);
+    }
   }
 
   render() {

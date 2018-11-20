@@ -34,6 +34,16 @@ export function errorFetchingNews() {
   };
 }
 
+// action that is dispatched when news tab changes (news-events-stuv)
+const TAB_CHANGED = 'TAB_CHANGED';
+
+export function tabChanged(tab) {
+  return {
+    type: TAB_CHANGED,
+    tab
+  };
+}
+
 export function fetchNews() {
   // a function as actions (enabled by thunk)
   return async function(dispatch) {
@@ -75,7 +85,8 @@ export function news(
     isFetching: false,
     networkError: false,
     lastUpdated: null,
-    news: []
+    news: [],
+    tab: 0
   },
   action
 ) {
@@ -99,6 +110,11 @@ export function news(
         ...state,
         isFetching: false,
         networkError: true
+      };
+    case TAB_CHANGED:
+      return {
+        ...state,
+        tab: action.tab
       };
     default:
       return state;

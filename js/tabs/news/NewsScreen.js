@@ -14,7 +14,7 @@ import deLocale from 'date-fns/locale/de';
 import format from 'date-fns/format';
 
 import NewsCell from './NewsCell';
-import { fetchNews } from './redux';
+import { fetchNews, tabChanged } from './redux';
 
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
@@ -24,6 +24,7 @@ import { feeds } from '../../util/Constants';
 function selectPropsFromStore(store) {
   return {
     news: store.news.news,
+    tab: store.news.tab,
     isFetching: store.news.isFetching,
     networkError: store.news.networkError
   };
@@ -76,6 +77,8 @@ class NewsScreen extends Component {
           <SectionList
             sections={this._getSectionsForEvents(news[feed.key])}
             keyExtractor={item => 'item' + item.id}
+            onRefresh={() => this.props.dispatch(fetchNews())}
+            refreshing={this.props.isFetching}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
             renderSectionHeader={({ section }) => (
               <DayHeader title={section.title} />
@@ -86,6 +89,8 @@ class NewsScreen extends Component {
         content = (
           <FlatList
             data={news[feed.key]}
+            onRefresh={() => this.props.dispatch(fetchNews())}
+            refreshing={this.props.isFetching}
             keyExtractor={item => 'item' + item.id}
             renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
           />
@@ -118,7 +123,13 @@ class NewsScreen extends Component {
         />
       );
     }
-    return <TabbedSwipeView pages={this._getPages(news)} />;
+    return (
+      <TabbedSwipeView
+        pages={this._getPages(news)}
+        selectedIndex={this.props.tab}
+        onTabChanged={index => this.props.dispatch(tabChanged(index))}
+      />
+    );
   }
 
   render() {
