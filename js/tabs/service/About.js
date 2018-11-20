@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Linking } from 'react-native';
+import { StyleSheet, Text, ScrollView, Linking } from 'react-native';
 
 import Colors from '../../util/Colors';
 
@@ -8,7 +8,7 @@ import { textAbout } from './Texts';
 export default class About extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text>{textAbout}</Text>
         <Text
           style={styles.link}
@@ -28,7 +28,7 @@ export default class About extends Component {
           github.com/DHBWLoerrach/CampusApp
         </Text>
         <Text style={styles.marginBig}>Version (App): 2.1.4</Text>
-      </View>
+      </ScrollView>
     );
   }
 }
