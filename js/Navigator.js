@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import {
+  createAppContainer,
   createBottomTabNavigator,
   createStackNavigator
 } from 'react-navigation';
@@ -44,7 +45,7 @@ const NewsStack = createStackNavigator(
     NewsDetails: NewsDetails
   },
   {
-    navigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig
   }
 );
 
@@ -60,7 +61,7 @@ const ScheduleStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig
   }
 );
 
@@ -72,7 +73,7 @@ const CanteenStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig
   }
 );
 
@@ -136,11 +137,11 @@ const ServiceStack = createStackNavigator(
     }
   },
   {
-    navigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig
   }
 );
 
-const AppNavigator = createBottomTabNavigator(
+const Tabs = createBottomTabNavigator(
   {
     News: NewsStack,
     Schedule: {
@@ -158,7 +159,7 @@ const AppNavigator = createBottomTabNavigator(
     Services: ServiceStack
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
@@ -177,6 +178,8 @@ const AppNavigator = createBottomTabNavigator(
     }
   }
 );
+
+const AppNavigator = createAppContainer(Tabs);
 
 export default class Navigator extends Component {
   render() {
