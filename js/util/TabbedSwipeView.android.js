@@ -23,7 +23,10 @@ export default class TabbedSwipeView extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // dispatch tab change event if selected tab changed
-    if (this.state.selectedIndex !== prevState.selectedIndex) {
+    if (
+      this.props.onTabChanged &&
+      this.state.selectedIndex !== prevState.selectedIndex
+    ) {
       this.props.onTabChanged(this.state.selectedIndex);
     }
   }
