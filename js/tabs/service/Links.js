@@ -37,14 +37,15 @@ export const linkBib =
 export const linksEmergency = [
   {
     title: 'Ansprechpartner Studiengänge und Serviceeinrichtungen',
-    url: 'https://www.dhbw-loerrach.de/mitarbeiterinnen.html?&no_cache=1'
+    url:
+      'https://www.dhbw-loerrach.de/mitarbeiterinnen.html?&no_cache=1'
   },
   {
     title: 'Polizei',
     tel: '110'
   },
   {
-    title: 'Feuerwehr',
+    title: 'Feuerwehr und Rettungsdienst',
     tel: '112'
   },
   {
@@ -57,7 +58,8 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
-    url: 'https://www.swfr.de/beratung-soziales/beratungsstellen/info/'
+    url:
+      'https://www.swfr.de/beratung-soziales/beratungsstellen/info/'
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
@@ -80,7 +82,8 @@ export const linksFreetime = [
   },
   {
     title: 'Hochschulsport',
-    url: 'https://www.dhbw-loerrach.de/hochschulsport.html?&MP=2003-3455'
+    url:
+      'https://www.dhbw-loerrach.de/hochschulsport.html?&MP=2003-3455'
   },
   {
     title: 'Wohnungsbörse',
@@ -116,4 +119,5 @@ export const linksKBC = [
   }
 ];
 
-export const linkOrientation = 'https://www.dhbw-loerrach.de/anfahrt.html';
+export const linkOrientation =
+  'https://www.dhbw-loerrach.de/anfahrt.html';
