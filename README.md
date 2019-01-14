@@ -32,11 +32,11 @@ Now switch back to the terminal and run
 
 ## Launch app in Android simulator
 
-Please refer to http://facebook.github.io/react-native/docs/getting-started.html
+Please refer to https://facebook.github.io/react-native/docs/getting-started
 
 ## Launch app on Android device
 
-See also http://facebook.github.io/react-native/docs/running-on-device-android.html
+See also https://facebook.github.io/react-native/docs/running-on-device
 
 Make sure Android device is in debug mode (enable developer options) and connect device via USB.
 
@@ -50,7 +50,7 @@ Open terminal/console, cd into CampusApp directory and run
 
 ## Live Reload and Debugging
 
-Please refer to the React Native documentation to learn how about live/hot reloading
+Please refer to the React Native documentation to learn about live/hot reloading
 and debugging options (http://facebook.github.io/react-native/docs/debugging.html)
 
 ## License
