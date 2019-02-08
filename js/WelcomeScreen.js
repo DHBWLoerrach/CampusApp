@@ -21,7 +21,9 @@ import { textDisclaimer } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
 
 const ButtonTouchable =
-  Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+  Platform.OS === 'android'
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
 
 class WelcomeScreen extends Component {
   constructor(props) {
@@ -58,13 +60,17 @@ class WelcomeScreen extends Component {
             </Text>
             <RoleSelection
               role={this.state.selectedRole}
-              onRoleChange={role => this.setState({ selectedRole: role })}
+              onRoleChange={role =>
+                this.setState({ selectedRole: role })
+              }
             />
           </View>
           <View style={styles.disclaimer}>{textDisclaimer()}</View>
           <View style={styles.footer}>
             <View style={styles.agreeDisclaimer}>
-              <Text style={styles.disclaimerLabel}>Ich stimme zu:</Text>
+              <Text style={styles.disclaimerLabel}>
+                Ich stimme zu:
+              </Text>
               <Switch
                 onValueChange={value =>
                   this.setState({ disclaimerChecked: value })
@@ -100,6 +106,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   contentContainer: {
+    backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 10
   },
