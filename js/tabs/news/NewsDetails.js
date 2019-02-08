@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Platform, WebView } from 'react-native';
+import { Platform } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 import format from 'date-fns/format';
 
@@ -37,7 +38,8 @@ export default class NewsDetails extends Component {
         // on Android use embedded Google docs viewer for PDFs (WebView won't work)
         // see https://github.com/facebook/react-native/issues/6488
         if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
-          url = 'http://docs.google.com/gview?embedded=true&url=' + url;
+          url =
+            'http://docs.google.com/gview?embedded=true&url=' + url;
         attachmentsHTML += `${attachment.title} <br/> 
         <a href='${url}'>Herunterladen (${attachment.size})</a> 
         <br/>
@@ -49,12 +51,12 @@ export default class NewsDetails extends Component {
         </p>`;
     }
     const HTML = `
-        <!DOCTYPE html>\n
+        <!DOCTYPE html>
         <html>
           <head>
             <style>
               body {font-family: -apple-system; ${fontSize} }
-              h1 {color: ${Colors.dhbwRed};}
+              h1 {color: ${Colors.dhbwRedWebView}}
             </style>
           </head>
           <body>
@@ -69,7 +71,11 @@ export default class NewsDetails extends Component {
     `;
 
     return (
-      <WebView useWebKit={true} source={{ html: HTML }} bounces={false} />
+      <WebView
+        originWhitelist={['*']}
+        source={{ html: HTML }}
+        bounces={false}
+      />
     );
   }
 }
