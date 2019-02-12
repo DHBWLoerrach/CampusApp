@@ -11,8 +11,6 @@ import {
 import { connect } from 'react-redux';
 import deLocale from 'date-fns/locale/de';
 import format from 'date-fns/format';
-import isSaturday from 'date-fns/is_saturday';
-import isSunday from 'date-fns/is_sunday';
 
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
@@ -24,10 +22,9 @@ import { fetchDayPlans } from './redux';
 const textCanteenInfo =
   'Mo-Fr geöffnet 8.30-13.45 Uhr \n' +
   'Mittagessen: 11.45-13.30 Uhr\n\n' +
-  'Die Preise werden für die gewählte Rolle ' +
-  '(z.B. Student/in, Mitarbeiter/in) angezeigt. ' +
-  'Die Rolle kann jederzeit unter Info > Einstellungen geändert werden.\n\n' +
-  'Tippe auf ein Gericht, um Informationen über Inhaltsstoffe anzeigen zu lassen';
+  'Die Preise werden für die von Dir gewählte Personengruppe ' +
+  'angezeigt (siehe Services > Einstellungen).\n\n' +
+  'Tippe auf ein Gericht, um Informationen über Inhaltsstoffe anzeigen zu lassen.';
 
 const textNfcInfo =
   '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
@@ -66,7 +63,11 @@ class CanteenScreen extends Component {
   _getPages() {
     return this.props.dayPlans.slice(0, 5).map((dayPlan, index) => {
       const dateParts = dayPlan.date.split('.').reverse();
-      const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      const date = new Date(
+        dateParts[0],
+        dateParts[1] - 1,
+        dateParts[2]
+      );
       return {
         title: format(date, 'dd DD.MM.', { locale: deLocale }),
         content: (
@@ -113,13 +114,18 @@ class CanteenScreen extends Component {
     }
 
     return (
-      <TabbedSwipeView count={dayPlans.length} pages={this._getPages()} />
+      <TabbedSwipeView
+        count={dayPlans.length}
+        pages={this._getPages()}
+      />
     );
   }
 
   render() {
     return (
-      <View style={styles.container}>{this._renderScreenContent()}</View>
+      <View style={styles.container}>
+        {this._renderScreenContent()}
+      </View>
     );
   }
 }

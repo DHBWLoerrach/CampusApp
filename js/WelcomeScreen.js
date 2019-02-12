@@ -17,7 +17,10 @@ import { connect } from 'react-redux';
 import Colors from './util/Colors';
 
 import { selectRole } from './tabs/service/redux';
-import { textDisclaimer } from './tabs/service/Texts';
+import {
+  textDisclaimer,
+  textPersonCategory
+} from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
 
 const ButtonTouchable =
@@ -54,10 +57,16 @@ class WelcomeScreen extends Component {
               source={require('./img/logo.png')}
             />
           </View>
-          <View style={styles.selection}>
-            <Text style={[styles.heading, styles.selectionText]}>
-              Ich bin:
+          <View>
+            <Text>
+              Diese App ermöglicht den mobilen Zugriff auf News für
+              Studierende, Vorlesungspläne, Speiseplan der Mensa…
             </Text>
+          </View>
+          <View style={styles.selection}>
+            <View>
+              <Text>{textPersonCategory}</Text>
+            </View>
             <RoleSelection
               role={this.state.selectedRole}
               onRoleChange={role =>
@@ -134,12 +143,11 @@ const styles = StyleSheet.create({
     color: Colors.dhbwRed
   },
   selection: {
-    flexDirection: 'row',
     marginTop: 15
   },
   selectionText: {
     marginRight: 20,
-    marginTop: -5
+    marginBottom: 15
   },
   disclaimer: {
     marginTop: 10

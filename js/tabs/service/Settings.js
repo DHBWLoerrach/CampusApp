@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { selectRole } from './redux';
 
 import RoleSelection from './RoleSelection';
-import { textSettings } from './Texts';
+import { textPersonCategory } from './Texts';
 
 function selectPropsFromStore(store) {
   return {
@@ -18,7 +18,7 @@ class Settings extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>{textSettings}</Text>
+        <Text style={styles.text}>{textPersonCategory}</Text>
         <RoleSelection
           role={this.props.selectedRole}
           onRoleChange={role => this.props.dispatch(selectRole(role))}
@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 15
+  },
+  text: {
+    marginBottom: 15
   }
 });
 
