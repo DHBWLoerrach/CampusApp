@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ViewPagerAndroid } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import ViewPager from '@react-native-community/viewpager';
 
 import Colors from './Colors';
 import PagerTab from './PagerTab';
@@ -46,7 +47,7 @@ export default class TabbedSwipeView extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.segmentsContainer}>{tabs}</View>
-        <ViewPagerAndroid
+        <ViewPager
           style={styles.container}
           initialPage={this.props.selectedIndex}
           onPageSelected={this._onPageSelected}
@@ -55,7 +56,7 @@ export default class TabbedSwipeView extends Component {
           }}
         >
           {pages}
-        </ViewPagerAndroid>
+        </ViewPager>
       </View>
     );
   }

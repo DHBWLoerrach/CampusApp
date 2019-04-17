@@ -936,6 +936,11 @@
     xcode "^2.0.0"
     xmldoc "^0.4.0"
 
+"@react-native-community/viewpager@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-1.1.6.tgz#267da51adbdebfb709e2e22f5e06399f49e6b1ae"
+  integrity sha512-WnlLGNdzkL0GQQ1WK0++giXOgQcEU6Dx+WEj7uYmqLNCsIc1Jhvm1ChTEKOs5N7Otz+VgoPBOvQyEuAUKooSOg==
+
 "@react-navigation/core@~3.3.0":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.3.1.tgz#14021eff792a6e27ee407c867d454b25507efdf2"
