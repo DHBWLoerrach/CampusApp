@@ -9,8 +9,8 @@
   "dependencies": {
     "date-fns": "^1.29.0",
     "ical.js": "^1.2.2",
-    "react": "16.6.3",
-    "react-native": "0.58.4",
+    "react": "16.8.3",
+    "react-native": "0.59.4",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-vector-icons": "^6.2.0",
     "react-native-webview": "^5.0.7",
@@ -25,9 +25,11 @@
     "preset": "react-native"
   },
   "devDependencies": {
-    "babel-jest": "24.1.0",
-    "jest": "24.1.0",
-    "metro-react-native-babel-preset": "0.51.1",
-    "react-test-renderer": "16.6.3"
+    "@babel/core": "^7.4.3",
+    "@babel/runtime": "^7.4.3",
+    "babel-jest": "^24.7.1",
+    "jest": "^24.7.1",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "react-test-renderer": "16.8.3"
   }
 }
