@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   applyMiddleware,
   combineReducers,
@@ -15,9 +15,17 @@ import { settings } from './tabs/service/redux';
 // SETUP STORE with middleware
 
 export default function setupStore(onComplete: ?() => void) {
-  const reducers = combineReducers({ news, schedule, canteen, settings });
+  const reducers = combineReducers({
+    news,
+    schedule,
+    canteen,
+    settings
+  });
   // enhance store: autohydrate (offline data), thunk middleware (functions actions)
-  const storeEnhancers = compose(autoRehydrate(), applyMiddleware(thunk));
+  const storeEnhancers = compose(
+    autoRehydrate(),
+    applyMiddleware(thunk)
+  );
   const store = createStore(reducers, {}, storeEnhancers);
   persistStore(store, { storage: AsyncStorage }, onComplete);
   return store;
