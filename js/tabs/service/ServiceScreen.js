@@ -34,7 +34,7 @@ export default class ServiceScreen extends Component {
     const { navigate } = this.props.navigation;
     var submenuItems = [
       {
-        label: 'Anreise und Lageplan',
+        label: 'Anreise',
         icon: (
           <FontAwesome
             name="map-marker"
@@ -43,6 +43,17 @@ export default class ServiceScreen extends Component {
           />
         ),
         onPress: () => Linking.openURL(linkOrientation)
+      },
+      {
+        label: 'Gebäude Hangstraße',
+        icon: (
+          <MaterialIcon
+            name="map"
+            size={iconSize}
+            color={Color.icon}
+          />
+        ),
+        onPress: () => navigate('CampusHangstr')
       },
       {
         label: 'Service-Zugänge',

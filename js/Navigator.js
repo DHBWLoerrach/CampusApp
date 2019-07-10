@@ -16,6 +16,7 @@ import ServiceScreen from './tabs/service/ServiceScreen';
 import NewsDetails from './tabs/news/NewsDetails';
 import EditCourse from './tabs/schedule/EditCourse';
 import InfoText from './tabs/service/InfoText';
+import InfoImage from './tabs/service/InfoImage';
 import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
@@ -134,6 +135,10 @@ const ServiceStack = createStackNavigator(
     Hieber: {
       screen: InfoText,
       navigationOptions: { title: "Hieber's Frische Center" }
+    },
+    CampusHangstr: {
+      screen: InfoImage,
+      navigationOptions: { title: 'Campus Hangstraße' }
     }
   },
   {
