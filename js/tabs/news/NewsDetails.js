@@ -56,13 +56,13 @@ export default class NewsDetails extends Component {
           <head>
             <style>
               body {font-family: -apple-system; ${fontSize} }
-              h1 {color: ${Colors.dhbwRedWebView}}
+              h2 {color: ${Colors.dhbwRedWebView}}
             </style>
           </head>
           <body>
             ${timeHeading}
-            <h1>${heading}</h1>
-            <h2>${subheading}</h2>
+            <h2>${heading}</h2>
+            <h3>${subheading}</h3>
             <img src="${imgUrl}" width="100%">
             ${body}
             ${attachmentFooter}
