@@ -32,7 +32,7 @@ export const linksAccounts = [
 ];
 
 export const linkBib =
-  'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23182';
+  'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18';
 
 export const linksEmergency = [
   {
