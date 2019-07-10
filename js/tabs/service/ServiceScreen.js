@@ -20,7 +20,11 @@ import {
   linksStudy
 } from './Links';
 import Submenu from './Submenu';
-import { textPrivacy, textAgreedDisclaimer, textImprint } from './Texts';
+import {
+  textPrivacy,
+  textAgreedDisclaimer,
+  textImprint
+} from './Texts';
 import Color from '../../util/Colors';
 
 const iconSize = 36;
@@ -54,19 +58,28 @@ export default class ServiceScreen extends Component {
       {
         label: 'Hilfe im Notfall',
         icon: (
-          <MaterialIcon name="phone" size={iconSize} color={Color.icon} />
+          <MaterialIcon
+            name="phone"
+            size={iconSize}
+            color={Color.icon}
+          />
         ),
-        onPress: () => navigate('Emergency', { links: linksEmergency })
+        onPress: () =>
+          navigate('Emergency', { links: linksEmergency })
       },
       {
         label: 'Studium',
         icon: (
-          <MaterialIcon name="school" size={iconSize} color={Color.icon} />
+          <MaterialIcon
+            name="school"
+            size={iconSize}
+            color={Color.icon}
+          />
         ),
         onPress: () => navigate('Study', { links: linksStudy })
       },
       {
-        label: 'Bibliothek',
+        label: 'Katalog Bibliothek',
         icon: (
           <MaterialCommunityIcon
             name="book-open-variant"
