@@ -8,7 +8,7 @@ import Colors from '../../util/Colors';
 
 export default class NewsDetails extends Component {
   render() {
-    const fontSize = Platform.OS === 'ios' ? 'font-size: 42px;' : '';
+    const fontSize = 'font-size: 42px;';
     let {
       heading,
       subheading,

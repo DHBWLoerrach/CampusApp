@@ -1,18 +1,18 @@
 package de.dhbwloe.loerrach.campusapp;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.facebook.react.PackageList;
+import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
+import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
-import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
 
-import java.util.Arrays;
+import com.facebook.soloader.SoLoader;
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
+
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -33,14 +33,11 @@ public class MainApplication extends Application implements ReactApplication {
      */
     @Override
     protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new RNCViewPagerPackage(),
-            new AsyncStoragePackage(),
-            new RNGestureHandlerPackage(),
-            new VectorIconsPackage(),
-            new RNCWebViewPackage()
-        );
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for example:
+      packages.add(new RNCViewPagerPackage());
+      return packages;
     }
 
     @Override
@@ -52,5 +49,11 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public ReactNativeHost getReactNativeHost() {
       return mReactNativeHost;
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    SoLoader.init(this, /* native exopackage */ false);
   }
 }
