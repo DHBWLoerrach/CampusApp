@@ -19,7 +19,7 @@
     "react-navigation": "^3.11.1",
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
-    "redux-persist": "^4.10.2",
+    "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "xmldom": "^0.1.27"
   },
