@@ -56,7 +56,7 @@ class CanteenScreen extends Component {
     )
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.dispatch(fetchDayPlans());
   }
 
