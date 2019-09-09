@@ -4,7 +4,6 @@ import {
   FlatList,
   SectionList,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
 
@@ -74,7 +73,16 @@ class NewsScreen extends Component {
   _getPages(news) {
     return feeds.map(feed => {
       let content = null;
-      if (feed.key === 'events') {
+      if (news[feed.key] === null) {
+        // this could occur if there's a server problem with a news page
+        content = (
+          <ReloadView
+            buttonText="Nochmal versuchen"
+            message="Es konnten keine Daten geladen werden."
+            onPress={() => this.props.dispatch(fetchNews())}
+          />
+        );
+      } else if (feed.key === 'events') {
         content = (
           <SectionList
             sections={this._getSectionsForEvents(news[feed.key])}
@@ -120,11 +128,10 @@ class NewsScreen extends Component {
       );
     }
 
-    const buttonText = 'News laden';
     if (networkError && Object.keys(news).length === 0) {
       return (
         <ReloadView
-          buttonText={buttonText}
+          buttonText="News laden"
           onPress={() => this.props.dispatch(fetchNews())}
         />
       );

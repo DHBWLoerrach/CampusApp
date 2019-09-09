@@ -60,20 +60,30 @@ export function fetchNews() {
                 '/posts?fields=message,full_picture,caption,description,name,story,created_time,permalink_url&limit=10&access_token=' +
                 fbAccessToken
             );
-            responseBody = await response.json();
-            newsItems[feed.key] = fetchNewsDataFromFb(responseBody);
+            if (!response.ok) {
+              // server problem for a particular feed
+              newsItems[feed.key] = null;
+            } else {
+              responseBody = await response.json();
+              newsItems[feed.key] = fetchNewsDataFromFb(responseBody);
+            }
           } else {
             response = await fetch(
               `https://www.dhbw-loerrach.de/index.php?id=${feed.id}`
             );
-            responseBody = await response.text();
-            newsItems[feed.key] = fetchNewsData(responseBody);
+            if (!response.ok) {
+              // server problem for a particular feed
+              newsItems[feed.key] = null;
+            } else {
+              responseBody = await response.text();
+              newsItems[feed.key] = fetchNewsData(responseBody);
+            }
           }
         })
       );
       dispatch(receiveNews(newsItems));
     } catch (e) {
-      console.log(e);
+      console.warn('Error fetching news:', e);
       dispatch(errorFetchingNews());
     }
   };
