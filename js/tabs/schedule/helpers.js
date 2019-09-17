@@ -1,7 +1,6 @@
 import ICAL from 'ical.js';
-import startOfToday from 'date-fns/start_of_today';
-import format from 'date-fns/format';
-import deLocale from 'date-fns/locale/de';
+import { startOfToday, format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 export default function getLecturesFromiCalData(iCalendarData) {
   var jcalData = ICAL.parse(iCalendarData);
@@ -118,7 +117,9 @@ export default function getLecturesFromiCalData(iCalendarData) {
   // TODO: combine with above legacy iterate/sort/filter actions
   let currentKey = 1;
   const result = filteredEvents.reduce((lectures, event) => {
-    const day = format(event.startDate, 'dddd DD.MM.YY', { locale: deLocale });
+    const day = format(event.startDate, 'EEEE dd.MM.yy', {
+      locale: de
+    });
 
     const lecture = {
       key: currentKey,
@@ -128,7 +129,9 @@ export default function getLecturesFromiCalData(iCalendarData) {
       location: event.location
     };
 
-    const index = lectures.findIndex(dayItem => dayItem.title === day);
+    const index = lectures.findIndex(
+      dayItem => dayItem.title === day
+    );
     if (index >= 0) {
       lectures[index].data.push(lecture);
     } else {
@@ -150,7 +153,9 @@ function _getRecurrenceExceptions(vevents) {
       if (!result[event.uid]) {
         result[event.uid] = [];
       }
-      result[event.uid].push(event.recurrenceId.toJSDate().toDateString());
+      result[event.uid].push(
+        event.recurrenceId.toJSDate().toDateString()
+      );
     }
   }
   return result;

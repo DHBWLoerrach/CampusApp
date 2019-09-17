@@ -4,7 +4,6 @@ import {
   Button,
   SectionList,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -29,7 +28,10 @@ function selectPropsFromStore(store) {
 
 class ScheduleScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const headerTitle = navigation.getParam('course', 'Vorlesungsplan');
+    const headerTitle = navigation.getParam(
+      'course',
+      'Vorlesungsplan'
+    );
     return {
       headerRight: (
         <HeaderIcon
@@ -78,7 +80,9 @@ class ScheduleScreen extends Component {
           <Button
             title="Kurs eingeben"
             color={Colors.dhbwRed}
-            onPress={() => this.props.navigation.navigate('EditCourse')}
+            onPress={() =>
+              this.props.navigation.navigate('EditCourse')
+            }
           />
         </View>
       );

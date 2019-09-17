@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import format from 'date-fns/format';
+import { format } from 'date-fns';
 
 import Colors from '../../util/Colors';
 
@@ -22,7 +22,7 @@ export default class NewsDetails extends Component {
     if (topic === 'events') {
       timeHeading = `<h3>${format(
         new Date(time),
-        'DD.MM.YYYY HH:mm'
+        'dd.MM.yyyy HH:mm'
       )} Uhr</h3>`;
     }
     if (body === subheading) subheading = '';

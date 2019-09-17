@@ -4,13 +4,12 @@ import {
   Alert,
   Platform,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import deLocale from 'date-fns/locale/de';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
@@ -69,7 +68,7 @@ class CanteenScreen extends Component {
         dateParts[2]
       );
       return {
-        title: format(date, 'dd DD.MM.', { locale: deLocale }),
+        title: format(date, 'EE dd.MM.', { locale: de }),
         content: (
           <CanteenDayListView
             meals={dayPlan.menus}

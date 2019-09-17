@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
-import deLocale from 'date-fns/locale/de';
-import format from 'date-fns/format';
+import { formatDistanceToNow, format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 import Colors from '../../util/Colors';
 import Constants from '../../util/Constants';
@@ -13,17 +12,18 @@ export default class NewsCell extends Component {
   render() {
     let image = require('./img/news-announcement.png');
     // formatting for news items: relative date (e.g. "3 days ago")
-    let time = distanceInWordsToNow(this.props.news.time, {
-      locale: deLocale,
+    let time = formatDistanceToNow(new Date(this.props.news.time), {
+      locale: de,
       addSuffix: true
     });
     let extraStyle = {};
     // special formatting for events: absolute date in red
     if (this.props.topic === 'events') {
-      time = format(new Date(this.props.news.time), 'DD.MM.YYYY');
+      time = format(new Date(this.props.news.time), 'dd.MM.yyyy');
       extraStyle = { color: Colors.dhbwRed };
     }
-    if (this.props.news.imgUrl) image = { uri: this.props.news.imgUrl };
+    if (this.props.news.imgUrl)
+      image = { uri: this.props.news.imgUrl };
     return (
       <ListCellTouchable
         underlayColor={Colors.cellBorder}
@@ -32,7 +32,9 @@ export default class NewsCell extends Component {
         <View style={styles.row}>
           <Image style={styles.image} source={image} />
           <View style={styles.newsheadings}>
-            <Text style={styles.heading}>{this.props.news.heading}</Text>
+            <Text style={styles.heading}>
+              {this.props.news.heading}
+            </Text>
             <Text style={styles.subheading} numberOfLines={3}>
               {this.props.news.subheading}
             </Text>

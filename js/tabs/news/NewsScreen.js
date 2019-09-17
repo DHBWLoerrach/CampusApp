@@ -9,8 +9,8 @@ import {
 
 import { connect } from 'react-redux';
 
-import deLocale from 'date-fns/locale/de';
-import format from 'date-fns/format';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 import NewsCell from './NewsCell';
 import { fetchNews, tabChanged } from './redux';
@@ -39,8 +39,8 @@ class NewsScreen extends Component {
 
     let sections = [];
     news.forEach(item => {
-      month = format(new Date(item.time), 'MMMM YYYY', {
-        locale: deLocale
+      month = format(new Date(item.time), 'MMMM yyyy', {
+        locale: de
       });
 
       let index = sections.findIndex(
