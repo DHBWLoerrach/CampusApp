@@ -32,7 +32,6 @@
     "@react-native-community/eslint-config": "^0.0.3",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
-    "jetifier": "^1.6.3",
     "metro-react-native-babel-preset": "^0.54.1",
     "react-test-renderer": "16.8.6"
   }
