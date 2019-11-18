@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import {
-  createAppContainer,
-  createBottomTabNavigator,
-  createStackNavigator
-} from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from './util/Colors';
