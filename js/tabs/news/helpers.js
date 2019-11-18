@@ -4,7 +4,10 @@ import { DOMParser } from 'xmldom';
 
 export default function fetchNewsData(newsXMLData) {
   var domParser = new DOMParser();
-  var xmlDOM = domParser.parseFromString(newsXMLData, 'application/xhtml');
+  var xmlDOM = domParser.parseFromString(
+    newsXMLData,
+    'application/xhtml'
+  );
   var newsItems = xmlDOM.getElementsByTagName('item');
   var newsList = [];
   for (var i = 0; i < newsItems.length; i++) {
@@ -18,7 +21,9 @@ export default function fetchNewsData(newsXMLData) {
       .getElementsByTagName('content:encoded')
       .item(0);
 
-    let imageElement = newsItem.getElementsByTagName('imageUri').item(0);
+    let imageElement = newsItem
+      .getElementsByTagName('imageUri')
+      .item(0);
     if (imageElement) {
       const imgElem = imageElement.getElementsByTagName('img');
       if (imgElem.length > 0) {
@@ -57,7 +62,9 @@ export default function fetchNewsData(newsXMLData) {
       .item(0)
       .childNodes.item(0);
 
-    let attachmentElements = newsItem.getElementsByTagName('attachment');
+    let attachmentElements = newsItem.getElementsByTagName(
+      'attachment'
+    );
     for (let i = 0; i < attachmentElements.length; i++) {
       let attachment = attachmentElements.item(i);
       const url = attachment
@@ -93,50 +100,4 @@ export default function fetchNewsData(newsXMLData) {
   }
 
   return newsList;
-}
-
-export function fetchNewsDataFromFb(fbJsonNewsData) {
-  let newsList = [];
-  fbJsonNewsData.data.map((newsElem, index) => {
-    if (newsElem.description || newsElem.message || newsElem.caption) {
-      newsList.push({
-        id: index,
-        url: newsElem.permalink_url,
-        heading:
-          _formatHeading(newsElem.caption) ||
-          _formatHeading(newsElem.name) ||
-          'StuV DHBW News',
-        subheading: newsElem.message || newsElem.description || '',
-        time: _parseFbDate(newsElem.created_time),
-        imgUrl: newsElem.full_picture,
-        body: newsElem.description || newsElem.message || ''
-      });
-    }
-  });
-  return newsList;
-}
-
-function _parseFbDate(fbDate) {
-  let dateString =
-    fbDate.slice(0, fbDate.length - 2) +
-    ':' +
-    fbDate.slice(fbDate.length - 2);
-  return new Date(dateString);
-}
-
-function _formatHeading(heading) {
-  if (!heading) {
-    return null;
-  }
-  const regex = /(@\[.*?:\d*:|])/g; // replaces facebook's annotations
-  heading = heading.replace(regex, '');
-
-  // Trim heading and add ... when the title is too long
-  const maxLength = 75;
-  if (heading.length > 75) {
-    heading = heading.substring(0, 75);
-    heading = heading + '...';
-  }
-
-  return heading;
 }

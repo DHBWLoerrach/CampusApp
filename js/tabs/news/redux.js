@@ -1,7 +1,5 @@
 import fetchNewsData from './helpers';
 import { feeds } from '../../util/Constants';
-import { fbAccessToken } from '../../../env.js';
-import { fetchNewsDataFromFb } from './helpers';
 
 // ACTIONS
 // action that is dispatched whenever the news will we fetched
@@ -53,31 +51,15 @@ export function fetchNews() {
       let newsItems = {};
       await Promise.all(
         feeds.map(async feed => {
-          if (feed.name == 'StuV') {
-            response = await fetch(
-              'https://graph.facebook.com/' +
-                feed.key +
-                '/posts?fields=message,full_picture,caption,description,name,story,created_time,permalink_url&limit=10&access_token=' +
-                fbAccessToken
-            );
-            if (!response.ok) {
-              // server problem for a particular feed
-              newsItems[feed.key] = null;
-            } else {
-              responseBody = await response.json();
-              newsItems[feed.key] = fetchNewsDataFromFb(responseBody);
-            }
+          response = await fetch(
+            `https://www.dhbw-loerrach.de/index.php?id=${feed.id}`
+          );
+          if (!response.ok) {
+            // server problem for a particular feed
+            newsItems[feed.key] = null;
           } else {
-            response = await fetch(
-              `https://www.dhbw-loerrach.de/index.php?id=${feed.id}`
-            );
-            if (!response.ok) {
-              // server problem for a particular feed
-              newsItems[feed.key] = null;
-            } else {
-              responseBody = await response.text();
-              newsItems[feed.key] = fetchNewsData(responseBody);
-            }
+            responseBody = await response.text();
+            newsItems[feed.key] = fetchNewsData(responseBody);
           }
         })
       );

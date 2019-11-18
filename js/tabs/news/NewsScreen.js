@@ -77,26 +77,7 @@ class NewsScreen extends Component {
   _getPages(news) {
     return feeds.map(feed => {
       let content = null;
-      // TODO: remove if block below and imports once StuV works again
-      if (feed.key === 'stuvdhbwloerrach') {
-        content = (
-          <View style={styles.center}>
-            <Text style={{ padding: 10, fontSize: 18 }}>
-              Die Darstellung der StuV-Inhalte wird zur Zeit
-              überarbeit.
-            </Text>
-            <Button
-              title="Gehe zur StuV bei Facebook"
-              color={Colors.dhbwRed}
-              onPress={() =>
-                Linking.openURL(
-                  'https://www.facebook.com/stuvdhbwloerrach/'
-                )
-              }
-            />
-          </View>
-        );
-      } else if (news[feed.key] === null) {
+      if (news[feed.key] === null) {
         // this could occur if there's a server problem with a news page
         content = (
           <ReloadView
