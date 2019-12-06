@@ -86,6 +86,14 @@ class NewsScreen extends Component {
             onPress={() => this.props.dispatch(fetchNews())}
           />
         );
+      } else if (news[feed.key].length === 0) {
+        content = (
+          <ReloadView
+            message="Keine Einträge"
+            buttonText="Aktualisieren"
+            onPress={() => this.props.dispatch(fetchNews())}
+          />
+        );
       } else if (feed.key === 'events') {
         content = (
           <SectionList
@@ -140,6 +148,7 @@ class NewsScreen extends Component {
         />
       );
     }
+
     return (
       <TabbedSwipeView
         pages={this._getPages(news)}

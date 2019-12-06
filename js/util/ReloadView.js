@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     justifyContent: 'center',
+    fontSize: 20,
     marginBottom: 15,
     paddingHorizontal: 20
   }
