@@ -21,7 +21,7 @@ import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
 
 const stackHeaderConfig = {
-  headerBackTitle: null,
+  headerBackTitle: 'Zurück',
   headerTintColor: 'white',
   headerStyle: {
     backgroundColor: Colors.dhbwRed,
@@ -39,7 +39,9 @@ const NewsStack = createStackNavigator(
   {
     Home: {
       screen: NewsScreen,
-      navigationOptions: { title: 'Neuigkeiten & Termine' }
+      navigationOptions: {
+        title: 'Neuigkeiten & Termine'
+      }
     },
     NewsDetails: NewsDetails
   },
