@@ -1060,10 +1060,10 @@
     eslint-plugin-react-native "3.6.0"
     prettier "1.16.4"
 
-"@react-native-community/viewpager@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-2.0.2.tgz#622b190294b1310c4825c98daeaee1c8443f7124"
-  integrity sha512-CKVhIZdX/Cmb80muog8sKpi5vM8npwFp4tx4Dj1IvTBidZweuO22+VH2rDOj7E0LzdV9IYRJ4FGBwcPBD2qUrQ==
+"@react-native-community/viewpager@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/viewpager/-/viewpager-3.2.0.tgz#2c01ce6f9217017ea72cc2b4b1bc1c67c94b06d1"
+  integrity sha512-Q/plQx5xEvhZbyeG58DUWt5Mt2S3hagq92nbE4MV8r1ZfZQX63Du1/Lgtt4UnGTWjlqMdXxNcXvGIFWuAGZLZw==
 
 "@react-navigation/core@^3.5.1":
   version "3.5.1"
