@@ -77,7 +77,7 @@ class NewsScreen extends Component {
   _getPages(news) {
     return feeds.map(feed => {
       let content = null;
-      if (news[feed.key] === null) {
+      if (!news[feed.key]) {
         // this could occur if there's a server problem with a news page
         content = (
           <ReloadView
