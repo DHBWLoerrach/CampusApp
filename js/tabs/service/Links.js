@@ -27,7 +27,8 @@ export const linksAccounts = [
   },
   {
     title: 'Handbuch DHBW-IT',
-    url: 'https://www.dhbw-loerrach.de/3012.html'
+    url:
+      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184'
   }
 ];
 
@@ -37,8 +38,7 @@ export const linkBib =
 export const linksEmergency = [
   {
     title: 'Ansprechpartner Studiengänge und Serviceeinrichtungen',
-    url:
-      'https://www.dhbw-loerrach.de/mitarbeiterinnen.html?&no_cache=1'
+    url: 'https://www.dhbw-loerrach.de/ansprechpersonen'
   },
   {
     title: 'Polizei',
@@ -54,7 +54,7 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle DHBW Lörrach',
-    url: 'https://www.dhbw-loerrach.de/3359.html'
+    url: 'https://www.dhbw-loerrach.de/studienberatung'
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
@@ -78,31 +78,33 @@ export const linksEmergency = [
 export const linksFreetime = [
   {
     title: 'Sprachen',
-    url: 'https://www.dhbw-loerrach.de/sprachen.html'
+    url:
+      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124'
   },
   {
     title: 'Hochschulsport',
     url:
-      'https://www.dhbw-loerrach.de/hochschulsport.html?&MP=2003-3455'
+      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=5113'
   },
   {
     title: 'Wohnungsbörse',
-    url: 'https://www.dhbw-loerrach.de/528.html?&MP=528-3535'
+    url: 'https://www.dhbw-loerrach.de/wohnungen'
   }
 ];
 
 export const linksStudy = [
   {
     title: 'Exkursionen',
-    url: 'https://www.dhbw-loerrach.de/2537.html'
+    url:
+      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=6065'
   },
   {
     title: 'Gebühren/Beiträge',
-    url: 'https://www.dhbw-loerrach.de/2470.html'
+    url: 'https://www.dhbw-loerrach.de/studienkosten'
   },
   {
     title: 'Ausland/Internationales',
-    url: 'https://www.dhbw-loerrach.de/auslandsaufenthalte.html?&L=0'
+    url: 'https://www.dhbw-loerrach.de/studieren-im-ausland'
   }
 ];
 
@@ -119,5 +121,4 @@ export const linksKBC = [
   }
 ];
 
-export const linkOrientation =
-  'https://www.dhbw-loerrach.de/anfahrt.html';
+export const linkOrientation = 'https://www.dhbw-loerrach.de/anfahrt';
