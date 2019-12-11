@@ -10,7 +10,15 @@ module.exports = {
     'Gast'
   ],
   feeds: [
-    { name: 'DHBW-News', key: 'news', id: 4081 },
-    { name: 'DHBW-Termine', key: 'events', id: 3961 }
+    {
+      name: 'DHBW-News',
+      key: 'news',
+      id: 'rss-campus-app-aktuell'
+    },
+    {
+      name: 'DHBW-Termine',
+      key: 'events',
+      id: 'rss-campus-app-termine'
+    }
   ]
 };

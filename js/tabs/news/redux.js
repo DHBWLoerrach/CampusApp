@@ -52,7 +52,7 @@ export function fetchNews() {
       await Promise.all(
         feeds.map(async feed => {
           response = await fetch(
-            `https://www.dhbw-loerrach.de/index.php?id=${feed.id}`
+            `https://www.dhbw-loerrach.de/${feed.id}`
           );
           if (!response.ok) {
             // server problem for a particular feed
