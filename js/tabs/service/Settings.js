@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { connect } from 'react-redux';
@@ -14,18 +14,16 @@ function selectPropsFromStore(store) {
   };
 }
 
-class Settings extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{textPersonCategory}</Text>
-        <RoleSelection
-          role={this.props.selectedRole}
-          onRoleChange={role => this.props.dispatch(selectRole(role))}
-        />
-      </View>
-    );
-  }
+function Settings(props) {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>{textPersonCategory}</Text>
+      <RoleSelection
+        role={props.selectedRole}
+        onRoleChange={role => props.dispatch(selectRole(role))}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
