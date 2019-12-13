@@ -1,36 +1,47 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   StatusBar,
   StyleSheet,
   View
 } from 'react-native';
-
-import { connect } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
 
-function selectPropsFromStore(store) {
-  return {
-    selectedRole: store.settings.selectedRole
+export const RoleContext = React.createContext(null);
+
+export default function CampusApp() {
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchRole = async () => {
+      const role = await AsyncStorage.getItem('role');
+      setRole(role);
+      setLoading(false);
+    };
+    fetchRole();
+  }, []);
+
+  const changeRole = role => {
+    AsyncStorage.setItem('role', role);
+    setRole(role);
   };
-}
 
-class CampusApp extends Component {
-  render() {
-    let content = <Navigator />;
-    if (this.props.loading) {
-      content = (
-        <View style={styles.center}>
-          <ActivityIndicator animating={true} />
-        </View>
-      );
-    } else if (!this.props.selectedRole) {
-      content = <WelcomeScreen />;
-    }
+  let content = <Navigator />;
+  if (loading) {
+    content = (
+      <View style={styles.center}>
+        <ActivityIndicator animating={true} />
+      </View>
+    );
+  } else if (!role) {
+    content = <WelcomeScreen onSubmit={changeRole} />;
+  }
 
-    return (
+  return (
+    <RoleContext.Provider value={{ role, changeRole }}>
       <View style={styles.container}>
         <StatusBar
           translucent={true}
@@ -39,8 +50,8 @@ class CampusApp extends Component {
         />
         {content}
       </View>
-    );
-  }
+    </RoleContext.Provider>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -53,5 +64,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
-
-export default connect(selectPropsFromStore)(CampusApp);

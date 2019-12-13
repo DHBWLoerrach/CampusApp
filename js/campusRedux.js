@@ -5,7 +5,6 @@ import { persistStore, persistCombineReducers } from 'redux-persist';
 import { news } from './tabs/news/redux';
 import { schedule } from './tabs/schedule/redux';
 import { canteen } from './tabs/canteen/redux';
-import { settings } from './tabs/service/redux';
 
 export default function setupStore(onComplete) {
   const config = {
@@ -16,8 +15,7 @@ export default function setupStore(onComplete) {
   const reducers = persistCombineReducers(config, {
     news,
     schedule,
-    canteen,
-    settings
+    canteen
   });
 
   const store = createStore(

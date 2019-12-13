@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,102 +12,80 @@ import {
   View
 } from 'react-native';
 
-import { connect } from 'react-redux';
-
 import Colors from './util/Colors';
 
-import { selectRole } from './tabs/service/redux';
-import {
-  textDisclaimer,
-  textPersonCategory
-} from './tabs/service/Texts';
+import { textDisclaimer, textPersonCategory } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
 
 const ButtonTouchable =
-  Platform.OS === 'android'
-    ? TouchableNativeFeedback
-    : TouchableOpacity;
+  Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
-class WelcomeScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { disclaimerChecked: false };
-  }
+export default function WelcomeScreen(props) {
+  const [disclaimerChecked, checkDisclaimer] = useState(false);
+  const [role, setRole] = useState(null);
 
-  _onSubmit() {
-    if (this.state.disclaimerChecked && this.state.selectedRole) {
-      this.props.dispatch(selectRole(this.state.selectedRole));
+  const _onSubmit = () => {
+    if (disclaimerChecked && role) {
+      props.onSubmit(role);
     }
-  }
+  };
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image
-          style={styles.headerImage}
-          source={require('./img/drawer-header.png')}
-        />
-        <ScrollView style={styles.contentContainer}>
-          <View style={styles.header}>
-            <Text style={[styles.heading, styles.welcome]}>
-              Willkommen an der DHBW Lörrach
-            </Text>
-            <Image
-              style={styles.logo}
-              source={require('./img/logo.png')}
-            />
-          </View>
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.headerImage}
+        source={require('./img/drawer-header.png')}
+      />
+      <ScrollView style={styles.contentContainer}>
+        <View style={styles.header}>
+          <Text style={[styles.heading, styles.welcome]}>
+            Willkommen an der DHBW Lörrach
+          </Text>
+          <Image style={styles.logo} source={require('./img/logo.png')} />
+        </View>
+        <View>
+          <Text>
+            Diese App ermöglicht den mobilen Zugriff auf News für
+            Studierende, Vorlesungspläne, Speiseplan der Mensa…
+          </Text>
+        </View>
+        <View style={styles.selection}>
           <View>
-            <Text>
-              Diese App ermöglicht den mobilen Zugriff auf News für
-              Studierende, Vorlesungspläne, Speiseplan der Mensa…
-            </Text>
+            <Text>{textPersonCategory}</Text>
           </View>
-          <View style={styles.selection}>
-            <View>
-              <Text>{textPersonCategory}</Text>
-            </View>
-            <RoleSelection
-              role={this.state.selectedRole}
-              onRoleChange={role =>
-                this.setState({ selectedRole: role })
-              }
+          <RoleSelection
+            role={role}
+            onRoleChange={role => setRole(role)}
+          />
+        </View>
+        <View style={styles.disclaimer}>{textDisclaimer()}</View>
+        <View style={styles.footer}>
+          <View style={styles.agreeDisclaimer}>
+            <Text style={styles.disclaimerLabel}>Ich stimme zu:</Text>
+            <Switch
+              onValueChange={value => checkDisclaimer(value)}
+              value={disclaimerChecked}
             />
           </View>
-          <View style={styles.disclaimer}>{textDisclaimer()}</View>
-          <View style={styles.footer}>
-            <View style={styles.agreeDisclaimer}>
-              <Text style={styles.disclaimerLabel}>
-                Ich stimme zu:
-              </Text>
-              <Switch
-                onValueChange={value =>
-                  this.setState({ disclaimerChecked: value })
+          <ButtonTouchable onPress={_onSubmit}>
+            <Text
+              style={[
+                styles.submit,
+                {
+                  color:
+                    disclaimerChecked && role
+                      ? Colors.dhbwRed
+                      : Colors.dhbwGray
                 }
-                value={this.state.disclaimerChecked}
-              />
-            </View>
-            <ButtonTouchable onPress={this._onSubmit.bind(this)}>
-              <Text
-                style={[
-                  styles.submit,
-                  {
-                    color:
-                      this.state.disclaimerChecked &&
-                      this.state.selectedRole
-                        ? Colors.dhbwRed
-                        : Colors.dhbwGray
-                  }
-                ]}
-              >
-                {'Start >'}
-              </Text>
-            </ButtonTouchable>
-          </View>
-        </ScrollView>
-      </View>
-    );
-  }
+              ]}
+            >
+              {'Start >'}
+            </Text>
+          </ButtonTouchable>
+        </View>
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -168,5 +146,3 @@ const styles = StyleSheet.create({
     fontSize: 24
   }
 });
-
-export default connect()(WelcomeScreen);

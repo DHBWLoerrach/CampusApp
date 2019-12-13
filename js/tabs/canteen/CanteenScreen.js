@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
+import { RoleContext } from '../../CampusApp';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
@@ -34,7 +35,6 @@ const textNfcInfo =
 
 function selectPropsFromStore(store) {
   return {
-    selectedRole: store.settings.selectedRole,
     dayPlans: store.canteen.dayPlans,
     isFetching: store.canteen.isFetching,
     networkError: store.canteen.networkError
@@ -55,29 +55,26 @@ class CanteenScreen extends Component {
     )
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.dispatch(fetchDayPlans());
   }
 
-  _getPages() {
-    return this.props.dayPlans.slice(0, 5).map((dayPlan, index) => {
+  _getPages = () => {
+    return this.props.dayPlans.slice(0, 5).map((dayPlan, _) => {
       const dateParts = dayPlan.date.split('.').reverse();
-      const date = new Date(
-        dateParts[0],
-        dateParts[1] - 1,
-        dateParts[2]
-      );
+      const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
       return {
         title: format(date, 'EE dd.MM.', { locale: de }),
         content: (
-          <CanteenDayListView
-            meals={dayPlan.menus}
-            role={this.props.selectedRole}
-          />
+          <RoleContext.Consumer>
+            {({ role }) => (
+              <CanteenDayListView meals={dayPlan.menus} role={role} />
+            )}
+          </RoleContext.Consumer>
         )
       };
     });
-  }
+  };
 
   _renderScreenContent() {
     const { dayPlans, isFetching, networkError } = this.props;
@@ -113,18 +110,13 @@ class CanteenScreen extends Component {
     }
 
     return (
-      <TabbedSwipeView
-        count={dayPlans.length}
-        pages={this._getPages()}
-      />
+      <TabbedSwipeView count={dayPlans.length} pages={this._getPages()} />
     );
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        {this._renderScreenContent()}
-      </View>
+      <View style={styles.container}>{this._renderScreenContent()}</View>
     );
   }
 }

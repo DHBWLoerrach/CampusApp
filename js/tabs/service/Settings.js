@@ -1,27 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { connect } from 'react-redux';
-
-import { selectRole } from './redux';
-
+import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import { textPersonCategory } from './Texts';
 
-function selectPropsFromStore(store) {
-  return {
-    selectedRole: store.settings.selectedRole
-  };
-}
+export default function Settings(props) {
+  const { role, changeRole } = useContext(RoleContext);
 
-function Settings(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{textPersonCategory}</Text>
-      <RoleSelection
-        role={props.selectedRole}
-        onRoleChange={role => props.dispatch(selectRole(role))}
-      />
+      <RoleSelection role={role} onRoleChange={changeRole} />
     </View>
   );
 }
@@ -36,5 +26,3 @@ const styles = StyleSheet.create({
     marginBottom: 15
   }
 });
-
-export default connect(selectPropsFromStore)(Settings);
