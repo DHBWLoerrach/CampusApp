@@ -124,14 +124,13 @@ export default function getLecturesFromiCalData(iCalendarData) {
     const lecture = {
       key: currentKey,
       title: event.description,
+      startDate: startDate,
       startTime: format(event.startTime, 'HH:mm'),
       endTime: format(event.endTime, 'HH:mm'),
       location: event.location
     };
 
-    const index = lectures.findIndex(
-      dayItem => dayItem.title === day
-    );
+    const index = lectures.findIndex(dayItem => dayItem.title === day);
     if (index >= 0) {
       lectures[index].data.push(lecture);
     } else {
@@ -153,9 +152,7 @@ function _getRecurrenceExceptions(vevents) {
       if (!result[event.uid]) {
         result[event.uid] = [];
       }
-      result[event.uid].push(
-        event.recurrenceId.toJSDate().toDateString()
-      );
+      result[event.uid].push(event.recurrenceId.toJSDate().toDateString());
     }
   }
   return result;

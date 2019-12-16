@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -6,7 +6,11 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { connect } from 'react-redux';
+import {
+  useFocusEffect,
+  useNavigation,
+  useNavigationEvents
+} from 'react-navigation-hooks';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -14,140 +18,151 @@ import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 
 import LectureRow from './LectureRow';
+import {
+  clearLecturesFromStore,
+  loadScheduleDataFromStore,
+  fetchLecturesFromWeb,
+  saveLecturesToStore
+} from './store';
 
-import { clearLectures, fetchLectures } from './redux';
+function ScheduleScreen() {
+  const [isLoading, setLoading] = useState(true);
+  const [hasNetworkError, setNetworkError] = useState(false);
+  const [course, setCourse] = useState(null);
+  const [lectures, setLectures] = useState(null);
 
-function selectPropsFromStore(store) {
-  return {
-    course: store.schedule.course,
-    lectures: store.schedule.lectures,
-    isFetching: store.schedule.isFetching,
-    networkError: store.schedule.networkError
-  };
-}
+  const { navigate, setParams } = useNavigation();
 
-class ScheduleScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const headerTitle = navigation.getParam(
-      'course',
-      'Vorlesungsplan'
+  // load fresh data from web and store it locally
+  async function refresh(course) {
+    setLoading(true);
+    setNetworkError(false);
+    const data = await fetchLecturesFromWeb(course);
+    if (data === 'networkError') {
+      setNetworkError(true);
+    } else {
+      saveLecturesToStore(data);
+      setLectures(data);
+    }
+    setLoading(false);
+  }
+
+  async function clearLecturesAndRefresh(course) {
+    await clearLecturesFromStore();
+    refresh(course);
+  }
+
+  // load data from local store or from web if store is emtpy
+  async function loadData() {
+    let { course, lectures } = await loadScheduleDataFromStore();
+    if (course !== null) {
+      setCourse(course);
+    }
+    if (lectures !== null) {
+      setLectures(lectures);
+    } else await refresh(course);
+    setLoading(false);
+  }
+
+  // load data when this component is mounted
+  useEffect(() => {
+    if (lectures === null) loadData();
+  }, []);
+
+  // when screen is focussed, update data from web if new course given or today > first day in lectures
+  useFocusEffect(
+    useCallback(() => {
+      // TODO: force refresh if today > first day in schedule
+      loadData();
+    }, [])
+  );
+
+  // TODO: update header with course name
+
+  // componentDidMount() {
+  //   let course = this.props.course;
+  //   // set title to course when this screen component mounts...
+  //   this.props.navigation.setParams({ course: course });
+  //   // ...and everytime we navigate to this screen
+  //   this._navListener = this.props.navigation.addListener(
+  //     'didFocus',
+  //     () => {
+  //       // get current course from redux store
+  //       let course = this.props.course;
+  //       this.props.navigation.setParams({ course });
+  //       // Look for new data: fetch lectures without clearing them before
+  //       if (course) this.props.dispatch(fetchLectures(course));
+  //     }
+  //   );
+  // }
+
+  // componentWillUnmount() {
+  //   this._navListener.remove();
+  // }
+
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator animating={true} />
+      </View>
     );
-    return {
-      headerRight: (
-        <HeaderIcon
-          onPress={() => navigation.navigate('EditCourse')}
-          icon="edit"
+  }
+
+  if (!course) {
+    return (
+      <View style={styles.center}>
+        <Button
+          title="Kurs eingeben"
+          color={Colors.dhbwRed}
+          onPress={() => navigate('EditCourse')}
         />
-      ),
-      headerTitle
-    };
-  };
-
-  componentDidMount() {
-    let course = this.props.course;
-    // set title to course when this screen component mounts...
-    this.props.navigation.setParams({ course: course });
-    // ...and everytime we navigate to this screen
-    this._navListener = this.props.navigation.addListener(
-      'didFocus',
-      () => {
-        // get current course from redux store
-        let course = this.props.course;
-        this.props.navigation.setParams({ course });
-        // Look for new data: fetch lectures without clearing them before
-        if (course) this.props.dispatch(fetchLectures(course));
-      }
+      </View>
     );
   }
 
-  componentWillUnmount() {
-    this._navListener.remove();
-  }
-
-  _renderRow(lecture) {
-    return <LectureRow lecture={lecture} />;
-  }
-
-  _refreshData(course) {
-    this.props.dispatch(clearLectures());
-    this.props.dispatch(fetchLectures(course));
-  }
-
-  _renderScreenContent(course, lectures, isFetching, networkError) {
-    if (!course) {
-      return (
-        <View style={styles.center}>
-          <Button
-            title="Kurs eingeben"
-            color={Colors.dhbwRed}
-            onPress={() =>
-              this.props.navigation.navigate('EditCourse')
-            }
-          />
-        </View>
-      );
-    }
-
-    if (isFetching) {
-      return (
-        <View style={styles.center}>
-          <ActivityIndicator animating={true} />
-        </View>
-      );
-    }
-
-    const buttonText = 'Vorlesungsplan laden';
-    if (networkError && !lectures) {
-      return (
+  const buttonText = 'Vorlesungsplan laden';
+  if (!lectures && hasNetworkError) {
+    return (
+      <View style={styles.container}>
         <ReloadView
           buttonText={buttonText}
-          onPress={() => this._refreshData(course)}
+          onPress={() => refresh(course)}
         />
-      );
-    }
+      </View>
+    );
+  }
 
-    if (lectures && !lectures.length) {
-      const text =
-        'Aktuell sind für Kurs ' +
-        course +
-        ' keine Termine ' +
-        'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
-      return (
+  if (lectures && !lectures.length) {
+    const text =
+      'Aktuell sind für Kurs ' +
+      course +
+      ' keine Termine ' +
+      'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
+    return (
+      <View style={styles.container}>
         <ReloadView
           message={text}
           buttonText={buttonText}
-          onPress={() => this._refreshData(course)}
+          onPress={() => refresh(course)}
         />
-      );
-    }
+      </View>
+    );
+  }
 
-    // contenInset: needed for last item to be displayed above tab bar on iOS
-    return (
+  // contenInset: needed for last item to be displayed above tab bar on iOS
+  return (
+    <View style={styles.container}>
       <SectionList
         sections={lectures}
-        onRefresh={() => this.props.dispatch(fetchLectures(course))}
-        refreshing={isFetching}
-        renderItem={({ item }) => this._renderRow(item)}
+        onRefresh={() => clearLecturesAndRefresh(course)}
+        refreshing={isLoading}
+        renderItem={({ item }) => <LectureRow lecture={item} />}
         renderSectionHeader={({ section }) => (
           <DayHeader title={section.title} />
         )}
       />
-    );
-  }
-
-  render() {
-    const { course, lectures, isFetching, networkError } = this.props;
-    return (
-      <View style={styles.container}>
-        {this._renderScreenContent(
-          course,
-          lectures,
-          isFetching,
-          networkError
-        )}
-      </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -162,4 +177,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(selectPropsFromStore)(ScheduleScreen);
+ScheduleScreen.navigationOptions = ({ navigation }) => {
+  const headerTitle = navigation.getParam('course', 'Vorlesungsplan');
+  return {
+    headerRight: (
+      <HeaderIcon
+        onPress={() => navigation.navigate('EditCourse')}
+        icon="edit"
+      />
+    ),
+    headerTitle
+  };
+};
+
+export default ScheduleScreen;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Alert,
   Button,
@@ -7,31 +7,43 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { connect } from 'react-redux';
+import { useFocusEffect, useNavigation } from 'react-navigation-hooks';
 
 import Colors from '../../util/Colors';
 import { courseList } from '../../../env.js';
 
-import { clearLectures, fetchLectures } from './redux';
+import {
+  loadCourseFromStore,
+  clearLecturesFromStore,
+  saveCourseToStore
+} from './store';
 
-function selectPropsFromStore(store) {
-  return {
-    course: store.schedule.course
-  };
-}
+export default function EditCourse() {
+  const [course, setCourse] = useState(null);
+  const [currentCourse, setCurrentCourse] = useState(null);
+  const { goBack } = useNavigation();
 
-class EditCourse extends Component {
-  state = { course: this.props.course };
+  // when screen is focussed, load current course from store and keep it in separate state
+  useFocusEffect(
+    useCallback(() => {
+      async function loadCourse() {
+        const data = await loadCourseFromStore();
+        setCourse(data);
+        setCurrentCourse(data);
+      }
+      loadCourse();
+    }, [])
+  );
 
-  _onPressClicked(course) {
+  async function onPressClicked() {
     if (!course) {
       Alert.alert('Bitte Kursnamen eingeben');
     } else if (courseList.indexOf(course) >= 0) {
-      if (course !== this.props.course) {
-        this.props.dispatch(clearLectures());
-        this.props.dispatch(fetchLectures(course));
+      if (course !== currentCourse) {
+        await saveCourseToStore(course);
+        await clearLecturesFromStore();
       }
-      this.props.navigation.goBack();
+      goBack();
     } else {
       Alert.alert(
         'Kurs nicht vorhanden',
@@ -40,40 +52,35 @@ class EditCourse extends Component {
     }
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>
-          Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
-        </Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            autoCapitalize="characters"
-            autoCorrect={false}
-            autoFocus={true}
-            defaultValue={this.state.course}
-            maxLength={15}
-            onChangeText={course =>
-              this.setState({
-                course: course && course.trim().toUpperCase()
-              })
-            }
-          />
-          <Button
-            title="Kurs anzeigen"
-            color={Colors.dhbwRed}
-            onPress={() => this._onPressClicked(this.state.course)}
-          />
-        </View>
-        <Text>
-          Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
-          Kalender fehlt, dann teile uns dies bitte mit, siehe Service --
-          Feedback.
-        </Text>
+  return (
+    <View style={styles.container}>
+      <Text>
+        Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
+      </Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          autoCapitalize="characters"
+          autoCorrect={false}
+          autoFocus={true}
+          defaultValue={course}
+          maxLength={15}
+          onChangeText={course =>
+            setCourse(course && course.trim().toUpperCase())
+          }
+        />
+        <Button
+          title="Kurs anzeigen"
+          color={Colors.dhbwRed}
+          onPress={onPressClicked}
+        />
       </View>
-    );
-  }
+      <Text>
+        Nicht alle Kurse haben einen Online-Stundenplan. Falls ein Kalender
+        fehlt, dann teile uns dies bitte mit, siehe Service -- Feedback.
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -94,5 +101,3 @@ const styles = StyleSheet.create({
     width: 140
   }
 });
-
-export default connect(selectPropsFromStore)(EditCourse);
