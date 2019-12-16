@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
+import { RoleContext } from '../../CampusApp';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
