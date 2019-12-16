@@ -12,7 +12,6 @@ import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
-import { RoleContext } from '../../CampusApp';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
@@ -92,7 +91,7 @@ function CanteenScreen() {
     if (dayPlans === null) loadData();
   }, []);
 
-  // when screen is focussed, load new data empty or if today > dayPlans.first
+  // when screen is focussed, load new data if empty or if today > dayPlans.first
   useFocusEffect(
     useCallback(() => {
       if (!dayPlans || !isToday(getDateObject(dayPlans[0].date))) {

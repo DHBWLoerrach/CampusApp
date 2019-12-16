@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  Button,
   FlatList,
-  Linking,
   SectionList,
   StyleSheet,
-  Text,
   View
 } from 'react-native';
 
@@ -15,7 +12,6 @@ import { connect } from 'react-redux';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
-import Colors from '../../util/Colors';
 import NewsCell from './NewsCell';
 import { fetchNews, tabChanged } from './redux';
 
@@ -47,9 +43,7 @@ class NewsScreen extends Component {
         locale: de
       });
 
-      let index = sections.findIndex(
-        section => section.title === month
-      );
+      let index = sections.findIndex(section => section.title === month);
       if (index === -1) {
         sections.push({ title: month, data: [item] });
       } else {
@@ -101,9 +95,7 @@ class NewsScreen extends Component {
             keyExtractor={item => 'item' + item.id}
             onRefresh={() => this.props.dispatch(fetchNews())}
             refreshing={this.props.isFetching}
-            renderItem={({ item }) =>
-              this._renderNewsItem(item, feed.key)
-            }
+            renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
             renderSectionHeader={({ section }) => (
               <DayHeader title={section.title} />
             )}
@@ -116,9 +108,7 @@ class NewsScreen extends Component {
             onRefresh={() => this.props.dispatch(fetchNews())}
             refreshing={this.props.isFetching}
             keyExtractor={item => 'item' + item.id}
-            renderItem={({ item }) =>
-              this._renderNewsItem(item, feed.key)
-            }
+            renderItem={({ item }) => this._renderNewsItem(item, feed.key)}
           />
         );
       }
@@ -160,9 +150,7 @@ class NewsScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        {this._renderScreenContent()}
-      </View>
+      <View style={styles.container}>{this._renderScreenContent()}</View>
     );
   }
 }
