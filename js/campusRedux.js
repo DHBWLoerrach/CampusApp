@@ -4,7 +4,6 @@ import thunk from 'redux-thunk'; // thunk middleware to use functions as actions
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import { news } from './tabs/news/redux';
 import { schedule } from './tabs/schedule/redux';
-import { canteen } from './tabs/canteen/redux';
 
 export default function setupStore(onComplete) {
   const config = {
@@ -14,8 +13,7 @@ export default function setupStore(onComplete) {
 
   const reducers = persistCombineReducers(config, {
     news,
-    schedule,
-    canteen
+    schedule
   });
 
   const store = createStore(
