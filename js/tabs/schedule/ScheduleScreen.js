@@ -6,7 +6,11 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { useFocusEffect, useNavigation } from 'react-navigation-hooks';
+import {
+  useFocusEffect,
+  useNavigation,
+  useNavigationEvents
+} from 'react-navigation-hooks';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -15,7 +19,6 @@ import ReloadView from '../../util/ReloadView';
 
 import LectureRow from './LectureRow';
 import {
-  clearLecturesFromStore,
   loadScheduleDataFromStore,
   fetchLecturesFromWeb,
   saveLecturesToStore
@@ -29,50 +32,40 @@ function ScheduleScreen() {
 
   const { navigate, setParams } = useNavigation();
 
-  // load fresh data from web and store it locally
-  async function refresh(course) {
+  // load data: first from local store, then fetch latest data from web
+  async function loadData() {
     setLoading(true);
     setNetworkError(false);
-    const data = await fetchLecturesFromWeb(course);
-    if (data === 'networkError') {
-      setNetworkError(true);
-    } else {
-      saveLecturesToStore(data);
-      setLectures(data);
-    }
-    setLoading(false);
-  }
-
-  async function clearLecturesAndRefresh(course) {
-    await clearLecturesFromStore();
-    refresh(course);
-  }
-
-  // load data from local store or from web if store is emtpy
-  async function loadData() {
     let { course, lectures } = await loadScheduleDataFromStore();
-    if (course !== null) {
-      setCourse(course);
-      setParams({ course }); // update navigation params to set header title to course (see bottom of file)
+    setCourse(course);
+    setLectures(lectures);
+    const newLectures = await fetchLecturesFromWeb(course);
+    if (newLectures === 'networkError' && lectures === null) {
+      // new lectures in store and server not reachable
+      setNetworkError(true);
+    } else if (newLectures !== 'networkError') {
+      // use new lecture data from server and store locally
+      setLectures(newLectures);
+      saveLecturesToStore(newLectures);
     }
-    if (lectures !== null) {
-      setLectures(lectures);
-    } else await refresh(course);
     setLoading(false);
   }
 
-  // load data when this component is mounted
-  useEffect(() => {
-    if (lectures === null) loadData();
-  }, []);
-
-  // when screen is focussed, update data from web if new course given or today > first day in lectures
+  // when screen is focussed, load data
   useFocusEffect(
     useCallback(() => {
-      // TODO: force refresh if today > first day in schedule
       loadData();
     }, [])
   );
+
+  useNavigationEvents(event => {
+    // after focus, update navigation params to set header title to course (see bottom of file)
+    async function loadCourseAndSetParam() {
+      let { course } = await loadScheduleDataFromStore();
+      setParams({ course: course });
+    }
+    if (event.type === 'didFocus') loadCourseAndSetParam();
+  });
 
   if (isLoading) {
     return (
@@ -98,10 +91,7 @@ function ScheduleScreen() {
   if (!lectures && hasNetworkError) {
     return (
       <View style={styles.container}>
-        <ReloadView
-          buttonText={buttonText}
-          onPress={() => refresh(course)}
-        />
+        <ReloadView buttonText={buttonText} onPress={loadData} />
       </View>
     );
   }
@@ -117,7 +107,7 @@ function ScheduleScreen() {
         <ReloadView
           message={text}
           buttonText={buttonText}
-          onPress={() => refresh(course)}
+          onPress={loadData}
         />
       </View>
     );
@@ -128,7 +118,7 @@ function ScheduleScreen() {
     <View style={styles.container}>
       <SectionList
         sections={lectures}
-        onRefresh={() => clearLecturesAndRefresh(course)}
+        onRefresh={loadData}
         refreshing={isLoading}
         renderItem={({ item }) => <LectureRow lecture={item} />}
         renderSectionHeader={({ section }) => (
