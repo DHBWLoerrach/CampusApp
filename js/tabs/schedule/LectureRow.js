@@ -13,7 +13,7 @@ export default class LectureRow extends Component {
     }
     return (
       <View style={styles.row}>
-        <Text numberOfLines={2} style={styles.title}>
+        <Text numberOfLines={3} style={styles.title}>
           {lecture.title}
         </Text>
         <Text numberOfLines={1} style={styles.info}>
