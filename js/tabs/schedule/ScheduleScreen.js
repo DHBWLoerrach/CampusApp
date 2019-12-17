@@ -6,11 +6,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-  useNavigationEvents
-} from 'react-navigation-hooks';
+import { useFocusEffect, useNavigation } from 'react-navigation-hooks';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -57,6 +53,7 @@ function ScheduleScreen() {
     let { course, lectures } = await loadScheduleDataFromStore();
     if (course !== null) {
       setCourse(course);
+      setParams({ course }); // update navigation params to set header title to course (see bottom of file)
     }
     if (lectures !== null) {
       setLectures(lectures);
@@ -76,29 +73,6 @@ function ScheduleScreen() {
       loadData();
     }, [])
   );
-
-  // TODO: update header with course name
-
-  // componentDidMount() {
-  //   let course = this.props.course;
-  //   // set title to course when this screen component mounts...
-  //   this.props.navigation.setParams({ course: course });
-  //   // ...and everytime we navigate to this screen
-  //   this._navListener = this.props.navigation.addListener(
-  //     'didFocus',
-  //     () => {
-  //       // get current course from redux store
-  //       let course = this.props.course;
-  //       this.props.navigation.setParams({ course });
-  //       // Look for new data: fetch lectures without clearing them before
-  //       if (course) this.props.dispatch(fetchLectures(course));
-  //     }
-  //   );
-  // }
-
-  // componentWillUnmount() {
-  //   this._navListener.remove();
-  // }
 
   if (isLoading) {
     return (
@@ -178,7 +152,7 @@ const styles = StyleSheet.create({
 });
 
 ScheduleScreen.navigationOptions = ({ navigation }) => {
-  const headerTitle = navigation.getParam('course', 'Vorlesungsplan');
+  let headerTitle = navigation.getParam('course', 'Vorlesungsplan');
   return {
     headerRight: (
       <HeaderIcon
