@@ -12,9 +12,7 @@ export default class About extends Component {
         <Text>{textAbout}</Text>
         <Text
           style={styles.link}
-          onPress={() =>
-            Linking.openURL('mailto:apps@dhbw-loerrach.de')
-          }
+          onPress={() => Linking.openURL('mailto:apps@dhbw-loerrach.de')}
         >
           apps@dhbw-loerrach.de
         </Text>
@@ -24,14 +22,12 @@ export default class About extends Component {
         <Text
           style={[styles.margin, styles.link]}
           onPress={() =>
-            Linking.openURL(
-              'https://github.com/DHBWLoerrach/CampusApp'
-            )
+            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')
           }
         >
           github.com/DHBWLoerrach/CampusApp
         </Text>
-        <Text style={styles.marginBig}>Version (App): 2.3.7</Text>
+        <Text style={styles.marginBig}>Version (App): 2.3.8</Text>
       </ScrollView>
     );
   }
