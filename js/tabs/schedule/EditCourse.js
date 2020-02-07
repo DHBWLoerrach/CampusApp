@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   input: {
     borderColor: '#CCC',
     borderWidth: StyleSheet.hairlineWidth,
+    color: 'black',
     height: 40,
     width: 140
   }
