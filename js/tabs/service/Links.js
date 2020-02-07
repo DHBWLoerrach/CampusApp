@@ -18,17 +18,24 @@ export const linksAccounts = [
     url: 'https://webmail.dhbw-loerrach.de/owa/'
   },
   {
-    title: 'SWFR (Kartenservice)',
-    url: 'https://www.swfr.de/kartenservice/'
+    title: 'Bibliothek',
+    url: 'https://www.dhbw-loerrach.de/bibliothek/'
+  },
+  {
+    title: 'IT-Services Wiki',
+    url: 'https://go.dhbw-loerrach.de/its'
   },
   {
     title: 'StuV',
     url: 'https://stuv-loerrach.de/'
   },
   {
+    title: 'SWFR (Kartenservice)',
+    url: 'https://www.swfr.de/kartenservice/'
+  },
+  {
     title: 'Handbuch DHBW-IT',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184'
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184'
   }
 ];
 
@@ -58,8 +65,7 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
-    url:
-      'https://www.swfr.de/beratung-soziales/beratungsstellen/info/'
+    url: 'https://www.swfr.de/beratung-soziales/beratungsstellen/info/'
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
@@ -78,13 +84,11 @@ export const linksEmergency = [
 export const linksFreetime = [
   {
     title: 'Sprachen',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124'
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124'
   },
   {
     title: 'Hochschulsport',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=5113'
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=5113'
   },
   {
     title: 'Wohnungsbörse',
@@ -95,8 +99,7 @@ export const linksFreetime = [
 export const linksStudy = [
   {
     title: 'Exkursionen',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=6065'
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=6065'
   },
   {
     title: 'Gebühren/Beiträge',
