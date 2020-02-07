@@ -4,10 +4,7 @@ import { DOMParser } from 'xmldom';
 
 export default function fetchNewsData(newsXMLData) {
   var domParser = new DOMParser();
-  var xmlDOM = domParser.parseFromString(
-    newsXMLData,
-    'application/xhtml'
-  );
+  var xmlDOM = domParser.parseFromString(newsXMLData, 'application/xhtml');
   var newsItems = xmlDOM.getElementsByTagName('item');
   var newsList = [];
   for (var i = 0; i < newsItems.length; i++) {
@@ -21,14 +18,12 @@ export default function fetchNewsData(newsXMLData) {
       .getElementsByTagName('content:encoded')
       .item(0);
 
-    let imageElement = newsItem
-      .getElementsByTagName('imageUri')
-      .item(0);
-    if (imageElement) {
-      const imgElem = imageElement.getElementsByTagName('img');
-      if (imgElem.length > 0) {
-        newsImage = imgElem.item(0).getAttribute('src');
-      }
+    let imageElement = newsItem.getElementsByTagName('enclosure').item(0);
+    if (
+      imageElement &&
+      imageElement.getAttribute('type').startsWith('image')
+    ) {
+      newsImage = imageElement.getAttribute('url');
     }
 
     // the content:encoded element has CDATA children
@@ -62,9 +57,7 @@ export default function fetchNewsData(newsXMLData) {
       .item(0)
       .childNodes.item(0);
 
-    let attachmentElements = newsItem.getElementsByTagName(
-      'attachment'
-    );
+    let attachmentElements = newsItem.getElementsByTagName('attachment');
     for (let i = 0; i < attachmentElements.length; i++) {
       let attachment = attachmentElements.item(i);
       const url = attachment
