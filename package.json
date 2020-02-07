@@ -25,7 +25,7 @@
     "react-navigation-hooks": "^1.1.0",
     "react-navigation-stack": "^1.10.3",
     "react-navigation-tabs": "^2.6.2",
-    "xmldom": "^0.1.27"
+    "xmldom": "^0.2.1"
   },
   "jest": {
     "preset": "react-native"
