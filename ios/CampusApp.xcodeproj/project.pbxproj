@@ -18,7 +18,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* CampusAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CampusAppTests.m */; };
 		38A1B6959E0CE776D3EFFEA0 /* libPods-CampusApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E7CB053D3A102A12AA534C6 /* libPods-CampusApp.a */; };
-		941E9931601CB7FC7FF167C6 /* libPods-CampusAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B12A555BD3BD985FF0705E0D /* libPods-CampusAppTests.a */; };
+		4D6734FC6B732DB9429DE89B /* libPods-CampusApp-CampusAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67DA434C808016739DCEEC95 /* libPods-CampusApp-CampusAppTests.a */; };
 		C09554888F2D6A6401C7710D /* libPods-CampusApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EDD40826DA45268F0B31CB /* libPods-CampusApp-tvOSTests.a */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
@@ -60,9 +60,11 @@
 		2D02E47B1E0B4A5D006451C7 /* CampusApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CampusApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* CampusApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CampusApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		46C825C92E1B4A9450CAA454 /* Pods-CampusApp-CampusAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusApp-CampusAppTests.debug.xcconfig"; path = "Target Support Files/Pods-CampusApp-CampusAppTests/Pods-CampusApp-CampusAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		67DA434C808016739DCEEC95 /* libPods-CampusApp-CampusAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusApp-CampusAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8714AF41BA7468366E743E68 /* libPods-CampusApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B12A555BD3BD985FF0705E0D /* libPods-CampusAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE296A19C0043C7C2202F554 /* Pods-CampusApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusApp.release.xcconfig"; path = "Target Support Files/Pods-CampusApp/Pods-CampusApp.release.xcconfig"; sourceTree = "<group>"; };
+		CA110E0A0C4E28C0CC12EDFF /* Pods-CampusApp-CampusAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusApp-CampusAppTests.release.xcconfig"; path = "Target Support Files/Pods-CampusApp-CampusAppTests/Pods-CampusApp-CampusAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		D11FBFB93B61CD63EE7DE28D /* Pods-CampusApp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusApp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-CampusApp-tvOS/Pods-CampusApp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D60BB4977FFE8EEF64051B41 /* Pods-CampusApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CampusApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-CampusApp-tvOSTests/Pods-CampusApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D9EDD40826DA45268F0B31CB /* libPods-CampusApp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusApp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				941E9931601CB7FC7FF167C6 /* libPods-CampusAppTests.a in Frameworks */,
+				4D6734FC6B732DB9429DE89B /* libPods-CampusApp-CampusAppTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,7 +161,7 @@
 				1E7CB053D3A102A12AA534C6 /* libPods-CampusApp.a */,
 				8714AF41BA7468366E743E68 /* libPods-CampusApp-tvOS.a */,
 				D9EDD40826DA45268F0B31CB /* libPods-CampusApp-tvOSTests.a */,
-				B12A555BD3BD985FF0705E0D /* libPods-CampusAppTests.a */,
+				67DA434C808016739DCEEC95 /* libPods-CampusApp-CampusAppTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -217,6 +219,8 @@
 				FD9A526BD82C5920DAB4A9A4 /* Pods-CampusApp-tvOSTests.release.xcconfig */,
 				0127211324546A96015F2AE4 /* Pods-CampusAppTests.debug.xcconfig */,
 				E413C2A6D832D4EF417EDA57 /* Pods-CampusAppTests.release.xcconfig */,
+				46C825C92E1B4A9450CAA454 /* Pods-CampusApp-CampusAppTests.debug.xcconfig */,
+				CA110E0A0C4E28C0CC12EDFF /* Pods-CampusApp-CampusAppTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -232,6 +236,7 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
+				C6E91B179042188877046711 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -473,11 +478,59 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CampusAppTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CampusApp-CampusAppTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C6E91B179042188877046711 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CampusApp-CampusAppTests/Pods-CampusApp-CampusAppTests-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CampusApp-CampusAppTests/Pods-CampusApp-CampusAppTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F5ADAD93ACCC48B9C3E31636 /* [CP] Copy Pods Resources */ = {
@@ -617,7 +670,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0127211324546A96015F2AE4 /* Pods-CampusAppTests.debug.xcconfig */;
+			baseConfigurationReference = 46C825C92E1B4A9450CAA454 /* Pods-CampusApp-CampusAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 54EE35UAFF;
@@ -642,7 +695,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E413C2A6D832D4EF417EDA57 /* Pods-CampusAppTests.release.xcconfig */;
+			baseConfigurationReference = CA110E0A0C4E28C0CC12EDFF /* Pods-CampusApp-CampusAppTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
