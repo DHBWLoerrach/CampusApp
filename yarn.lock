@@ -5286,13 +5286,14 @@ react-native-vector-icons@^6.6.0:
     prop-types "^15.6.2"
     yargs "^13.2.2"
 
-react-native-webview@^8.0.6:
-  version "8.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-8.0.6.tgz#247e6e16926e06105144bb33ec9d0429e01c8900"
-  integrity sha512-lvapBzV0Ymv39EpubaitF8RzkhYDb7uT9n230f5V+SpDU3BN03WnED7v3HHQDXoPwjDBNRWzDgoImnFn9WlSzw==
+react-native-webview@^9.1.4:
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-9.1.4.tgz#85eb4191adc092fcee68dacc87cef429fad78bc1"
+  integrity sha512-0wlVYhd9tz+61dI6/swS39au8W9xxqr4OdeHcFiIN0UjmYtRkaR2e9Xu8+miX2qGLzo5PZxoidGnUjA3HMlnig==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
+    uuid "^7.0.3"
 
 react-native@0.62.1:
   version "0.62.1"
@@ -6418,6 +6419,11 @@ uuid@^3.3.2:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
   integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
+
+uuid@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
+  integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
