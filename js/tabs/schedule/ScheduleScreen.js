@@ -4,12 +4,12 @@ import {
   Button,
   SectionList,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import {
   useFocusEffect,
   useNavigation,
-  useNavigationEvents
+  useNavigationEvents,
 } from 'react-navigation-hooks';
 
 import Colors from '../../util/Colors';
@@ -21,7 +21,7 @@ import LectureRow from './LectureRow';
 import {
   loadScheduleDataFromStore,
   fetchLecturesFromWeb,
-  saveLecturesToStore
+  saveLecturesToStore,
 } from './store';
 
 function ScheduleScreen() {
@@ -58,7 +58,7 @@ function ScheduleScreen() {
     }, [])
   );
 
-  useNavigationEvents(event => {
+  useNavigationEvents((event) => {
     // after focus, update navigation params to set header title to course (see bottom of file)
     async function loadCourseAndSetParam() {
       let { course } = await loadScheduleDataFromStore();
@@ -132,25 +132,25 @@ function ScheduleScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 ScheduleScreen.navigationOptions = ({ navigation }) => {
   let headerTitle = navigation.getParam('course', 'Vorlesungsplan');
   return {
-    headerRight: (
+    headerRight: () => (
       <HeaderIcon
         onPress={() => navigation.navigate('EditCourse')}
         icon="edit"
       />
     ),
-    headerTitle
+    headerTitle,
   };
 };
 

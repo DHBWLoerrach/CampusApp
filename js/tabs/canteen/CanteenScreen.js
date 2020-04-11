@@ -4,7 +4,7 @@ import {
   Alert,
   Platform,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import { useFocusEffect } from 'react-navigation-hooks';
 
@@ -20,7 +20,7 @@ import TabbedSwipeView from '../../util/TabbedSwipeView';
 import {
   fetchCanteenDataFromWeb,
   loadCanteenDataFromStore,
-  saveCanteenDataToStore
+  saveCanteenDataToStore,
 } from './store';
 import CanteenDayListView from './CanteenDayListView';
 
@@ -54,7 +54,7 @@ function getPages(dayPlans) {
             <CanteenDayListView meals={dayPlan.menus} role={role} />
           )}
         </RoleContext.Consumer>
-      )
+      ),
     };
   });
 }
@@ -111,7 +111,8 @@ function CanteenScreen() {
 
   const buttonText = 'Speiseplan laden';
   if (!dayPlans || dayPlans.length === 0) {
-    let infoText = 'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
+    let infoText =
+      'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
     if (hasNetworkError) infoText = null; // text set in ReloadView
     return (
       <ReloadView
@@ -135,17 +136,17 @@ function CanteenScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
 
 CanteenScreen.navigationOptions = ({ navigation }) => ({
-  headerRight: (
+  headerRight: () => (
     <HeaderIcon
       onPress={() => {
         let textBody = textCanteenInfo;
@@ -154,7 +155,7 @@ CanteenScreen.navigationOptions = ({ navigation }) => ({
       }}
       icon="help-outline"
     />
-  )
+  ),
 });
 
 export default CanteenScreen;
