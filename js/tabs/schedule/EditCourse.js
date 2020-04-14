@@ -66,7 +66,7 @@ export default function EditCourse() {
           defaultValue={course}
           maxLength={15}
           onChangeText={course =>
-            setCourse(course && course.trim().toUpperCase())
+            setCourse(course.trim().toUpperCase())
           }
         />
         <Button
