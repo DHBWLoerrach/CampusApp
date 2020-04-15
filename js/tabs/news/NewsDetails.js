@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -15,7 +16,7 @@ export default class NewsDetails extends Component {
       imgUrl,
       body,
       time,
-      attachments
+      attachments,
     } = this.props.navigation.getParam('news');
     let topic = this.props.navigation.getParam('topic');
     let timeHeading = '';
@@ -33,13 +34,12 @@ export default class NewsDetails extends Component {
     let attachmentFooter = '';
     if (attachments && attachments.length >= 1) {
       let attachmentsHTML = '';
-      attachments.forEach(attachment => {
+      attachments.forEach((attachment) => {
         let url = attachment.url;
         // on Android use embedded Google docs viewer for PDFs (WebView won't work)
         // see https://github.com/facebook/react-native/issues/6488
         if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
-          url =
-            'http://docs.google.com/gview?embedded=true&url=' + url;
+          url = 'http://docs.google.com/gview?embedded=true&url=' + url;
         attachmentsHTML += `${attachment.title} <br/> 
         <a href='${url}'>Herunterladen (${attachment.size})</a> 
         <br/>
