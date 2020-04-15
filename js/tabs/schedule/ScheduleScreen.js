@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
   SectionList,
   StyleSheet,
-  TextInput,
-  View
+  View,
 } from 'react-native';
 import {
   useFocusEffect,
@@ -17,6 +16,7 @@ import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
+import SearchBar from '../../util/SearchBar';
 
 import LectureRow from './LectureRow';
 import {
@@ -30,7 +30,7 @@ function ScheduleScreen() {
   const [hasNetworkError, setNetworkError] = useState(false);
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState(null);
-  const [searchString, setSearchString] = useState("");
+  const [searchString, setSearchString] = useState('');
 
   const { navigate, setParams } = useNavigation();
 
@@ -62,18 +62,20 @@ function ScheduleScreen() {
     searchString = searchString.toLowerCase();
     for (let i = 0; i < lectures.length; i++) {
       //Do not touch original data
-      let lecture = Object.assign({},lectures[i]);
-      lecture.data = lecture.data.filter(date => date.title.toLowerCase().includes(searchString));
+      let lecture = Object.assign({}, lectures[i]);
+      lecture.data = lecture.data.filter((date) =>
+        date.title.toLowerCase().includes(searchString)
+      );
       lectures[i] = lecture;
     }
-    return lectures.filter(lecture => lecture.data.length !== 0);
+    return lectures.filter((lecture) => lecture.data.length !== 0);
   }
 
   // when screen is focussed, load data
   useFocusEffect(
     useCallback(() => {
       //The user expects an empty search bar on re-navigation
-      setSearchString("");
+      setSearchString('');
       loadData();
     }, [])
   );
@@ -136,11 +138,9 @@ function ScheduleScreen() {
   // contenInset: needed for last item to be displayed above tab bar on iOS
   return (
     <View style={styles.container}>
-      <TextInput
-          autoCorrect={false}
-          inlineImageLeft="search_icon"
-          onChangeText={(text) => setSearchString(text)}
-          value={searchString}
+      <SearchBar
+        onSearch={(text) => setSearchString(text)}
+        searchString={searchString}
       />
       <SectionList
         sections={filterLectures(searchString, lectures)}
