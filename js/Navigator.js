@@ -29,10 +29,10 @@ const stackHeaderConfig = {
     ...Platform.select({
       android: {
         elevation: 0,
-        paddingTop: StatusBar.currentHeight
-      }
-    })
-  }
+        paddingTop: StatusBar.currentHeight,
+      },
+    }),
+  },
 };
 
 const NewsStack = createStackNavigator(
@@ -40,13 +40,13 @@ const NewsStack = createStackNavigator(
     Home: {
       screen: NewsScreen,
       navigationOptions: {
-        title: 'Neuigkeiten & Termine'
-      }
+        title: 'Neuigkeiten & Termine',
+      },
     },
-    NewsDetails: NewsDetails
+    NewsDetails: NewsDetails,
   },
   {
-    defaultNavigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig,
   }
 );
 
@@ -54,15 +54,15 @@ const ScheduleStack = createStackNavigator(
   {
     Home: {
       screen: ScheduleScreen,
-      navigationOptions: { title: 'Vorlesungsplan' }
+      navigationOptions: { title: 'Vorlesungsplan' },
     },
     EditCourse: {
       screen: EditCourse,
-      navigationOptions: { title: 'Kurs eingeben' }
-    }
+      navigationOptions: { title: 'Kurs eingeben' },
+    },
   },
   {
-    defaultNavigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig,
   }
 );
 
@@ -70,11 +70,11 @@ const CanteenStack = createStackNavigator(
   {
     Home: {
       screen: CanteenScreen,
-      navigationOptions: { title: 'Speiseplan' }
-    }
+      navigationOptions: { title: 'Speiseplan' },
+    },
   },
   {
-    defaultNavigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig,
   }
 );
 
@@ -82,67 +82,67 @@ const ServiceStack = createStackNavigator(
   {
     Home: {
       screen: ServiceScreen,
-      navigationOptions: { title: 'Services der DHBW Lörrach' }
+      navigationOptions: { title: 'Services der DHBW Lörrach' },
     },
     Accounts: {
       screen: LinksList,
-      navigationOptions: { title: 'Service-Zugänge' }
+      navigationOptions: { title: 'Service-Zugänge' },
     },
     Emergency: {
       screen: LinksList,
-      navigationOptions: { title: 'Hilfe im Notfall' }
+      navigationOptions: { title: 'Hilfe im Notfall' },
     },
     Study: {
       screen: LinksList,
-      navigationOptions: { title: 'Studium' }
+      navigationOptions: { title: 'Studium' },
     },
     KBC: {
       screen: LinksList,
-      navigationOptions: { title: 'Angebote KBC' }
+      navigationOptions: { title: 'Angebote KBC' },
     },
     Freetime: {
       screen: LinksList,
-      navigationOptions: { title: 'Freizeit' }
+      navigationOptions: { title: 'Freizeit' },
     },
     Feedback: {
       screen: Feedback,
-      navigationOptions: { title: 'Feedback' }
+      navigationOptions: { title: 'Feedback' },
     },
     Settings: {
       screen: Settings,
-      navigationOptions: { title: 'Einstellungen' }
+      navigationOptions: { title: 'Einstellungen' },
     },
     About: {
       screen: About,
-      navigationOptions: { title: 'Über' }
+      navigationOptions: { title: 'Über' },
     },
     Disclaimer: {
       screen: InfoText,
-      navigationOptions: { title: 'Haftung' }
+      navigationOptions: { title: 'Haftung' },
     },
     Imprint: {
       screen: InfoText,
-      navigationOptions: { title: 'Impressum' }
+      navigationOptions: { title: 'Impressum' },
     },
     Privacy: {
       screen: InfoText,
-      navigationOptions: { title: 'Datenschutz' }
+      navigationOptions: { title: 'Datenschutz' },
     },
     CafeteriaKKH: {
       screen: InfoText,
-      navigationOptions: { title: 'Cafeteria im KKH' }
+      navigationOptions: { title: 'Cafeteria im KKH' },
     },
     Hieber: {
       screen: InfoText,
-      navigationOptions: { title: "Hieber's Frische Center" }
+      navigationOptions: { title: "Hieber's Frische Center" },
     },
     CampusHangstr: {
       screen: InfoImage,
-      navigationOptions: { title: 'Campus Hangstraße' }
-    }
+      navigationOptions: { title: 'Campus Hangstraße' },
+    },
   },
   {
-    defaultNavigationOptions: stackHeaderConfig
+    defaultNavigationOptions: stackHeaderConfig,
   }
 );
 
@@ -152,16 +152,16 @@ const Tabs = createBottomTabNavigator(
     Schedule: {
       screen: ScheduleStack,
       navigationOptions: {
-        title: 'Vorlesungsplan'
-      }
+        title: 'Vorlesungsplan',
+      },
     },
     Canteen: {
       screen: CanteenStack,
       navigationOptions: {
-        title: 'Mensa'
-      }
+        title: 'Mensa',
+      },
     },
-    Services: ServiceStack
+    Services: ServiceStack,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -176,11 +176,11 @@ const Tabs = createBottomTabNavigator(
         return (
           <MaterialIcon name={iconName} size={32} color={tintColor} />
         );
-      }
+      },
     }),
     tabBarOptions: {
-      activeTintColor: Colors.dhbwRed
-    }
+      activeTintColor: Colors.dhbwRed,
+    },
   }
 );
 
