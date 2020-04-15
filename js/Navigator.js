@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StatusBar } from 'react-native';
+import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -29,7 +29,6 @@ const stackHeaderConfig = {
     ...Platform.select({
       android: {
         elevation: 0,
-        paddingTop: StatusBar.currentHeight,
       },
     }),
   },
