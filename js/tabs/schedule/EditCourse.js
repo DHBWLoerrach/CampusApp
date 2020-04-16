@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
 } from 'react-native';
 import { useFocusEffect, useNavigation } from 'react-navigation-hooks';
 
@@ -15,11 +15,11 @@ import { courseList } from '../../../env.js';
 import {
   loadCourseFromStore,
   clearLecturesFromStore,
-  saveCourseToStore
+  saveCourseToStore,
 } from './store';
 
 export default function EditCourse() {
-  const [course, setCourse] = useState(null);
+  const [course, setCourse] = useState('');
   const [currentCourse, setCurrentCourse] = useState(null);
   const { goBack } = useNavigation();
 
@@ -65,9 +65,7 @@ export default function EditCourse() {
           autoFocus={true}
           defaultValue={course}
           maxLength={15}
-          onChangeText={course =>
-            setCourse(course && course.trim().toUpperCase())
-          }
+          onChangeText={(course) => setCourse(course.trim().toUpperCase())}
         />
         <Button
           title="Kurs anzeigen"
@@ -87,18 +85,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 15
+    padding: 15,
   },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   input: {
     borderColor: '#CCC',
     borderWidth: StyleSheet.hairlineWidth,
     color: 'black',
     height: 40,
-    width: 140
-  }
+    width: 140,
+  },
 });
