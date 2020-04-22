@@ -735,7 +735,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = CampusApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.3.10;
 				OTHER_LDFLAGS = (
@@ -764,7 +764,7 @@
 				DEVELOPMENT_TEAM = 54EE35UAFF;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = CampusApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.3.10;
 				OTHER_LDFLAGS = (
