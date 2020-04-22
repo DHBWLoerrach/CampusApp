@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import { useNavigation } from 'react-navigation-hooks';
+import {useFocusEffect, useNavigation} from 'react-navigation-hooks';
 
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -108,6 +108,8 @@ function getPages(news, isLoading, refresh, navigate) {
   });
 }
 
+let lastDataFetch = 0;
+
 export default function NewsScreen() {
   const [isLoading, setLoading] = useState(true);
   const [hasNetworkError, setNetworkError] = useState(false);
@@ -123,15 +125,27 @@ export default function NewsScreen() {
       setNetworkError(true);
     } else {
       saveNewsToStore(data);
+      lastDataFetch = new Date().getTime();
       setNews(data);
     }
     setLoading(false);
   }
 
+  useFocusEffect(
+      useCallback(() => {
+        if (new Date().getTime() > lastDataFetch + 1000*60*60 ) {
+          setLoading(true);
+          loadData();
+        }
+      }, [])
+  );
+
   // load data from local store or from web if store is emtpy
   async function loadData() {
     let data = await loadNewsFromStore();
     if (data !== null) {
+      console.log("Loading data");
+      lastDataFetch = new Date().getTime();
       setNews(data);
       setLoading(false);
     } else refresh();
