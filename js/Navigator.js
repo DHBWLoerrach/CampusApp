@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Image } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -19,6 +19,7 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
+import StuVScreen from "./tabs/stuv/StuVScreen";
 
 const stackHeaderConfig = {
   headerBackTitle: 'Zurück',
@@ -148,6 +149,7 @@ const ServiceStack = createStackNavigator(
 const Tabs = createBottomTabNavigator(
   {
     News: NewsStack,
+    StuV: StuVScreen,
     Schedule: {
       screen: ScheduleStack,
       navigationOptions: {
@@ -171,7 +173,12 @@ const Tabs = createBottomTabNavigator(
         else if (routeName === 'Schedule') iconName = 'school';
         else if (routeName === 'Canteen') iconName = 'restaurant';
         else if (routeName === 'Services') iconName = 'info-outline';
-
+        else if (routeName === 'StuV') return (
+            <Image
+                source={require("../js/img/stuv/logo_4.png")}
+                size={32}
+                style={{tintColor: tintColor}}
+            />);
         return (
           <MaterialIcon name={iconName} size={32} color={tintColor} />
         );
