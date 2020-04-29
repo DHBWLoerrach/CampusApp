@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",
-    "@react-native-community/masked-view": "^0.1.8",
+    "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/viewpager": "^3.3.0",
     "date-fns": "^2.12.0",
     "ical.js": "^1.4.0",
@@ -20,13 +20,13 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
-    "react-native-screens": "^2.4.0",
+    "react-native-screens": "^2.7.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-webview": "^9.2.2",
-    "react-navigation": "^4.3.7",
+    "react-navigation": "^4.3.8",
     "react-navigation-hooks": "^1.1.0",
-    "react-navigation-stack": "^2.3.11",
-    "react-navigation-tabs": "^2.8.11",
+    "react-navigation-stack": "^2.3.13",
+    "react-navigation-tabs": "^2.8.12",
     "xmldom": "^0.3.0"
   },
   "jest": {
