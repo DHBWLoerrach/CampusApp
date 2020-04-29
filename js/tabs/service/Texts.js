@@ -15,7 +15,7 @@ export const textAbout =
   'Die Campus App soll kontinuierlich weiterentwickelt werden. Dafür freuen ' +
   'wir uns auf Euer Feedback und Eure Verbesserungsvorschläge:\n';
 
-export function textCafeteriaKKH() {
+export function TextCafeteriaKKH() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -85,7 +85,7 @@ export function textCafeteriaKKH() {
 export const disclaimerText =
   'Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Ich nehme zur Kenntnis, dass für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte keine Gewähr übernommen werden kann. Im Zweifelsfall ist insbesondere der Online-Stundenplan zu prüfen.';
 
-export function textAgreedDisclaimer() {
+export function TextAgreedDisclaimer() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -101,7 +101,7 @@ export function textAgreedDisclaimer() {
   );
 }
 
-export function textDisclaimer() {
+export function TextDisclaimer() {
   return (
     <View style={[styles.block, { marginBottom: 0 }]}>
       <Text style={styles.text}>{disclaimerText}</Text>
@@ -113,7 +113,7 @@ export const textFeedback =
   'Falls du Fehler oder Verbesserungsvorschläge melden möchtest, schicke uns ' +
   'bitte eine E-Mail. Wir freuen uns über dein Feedback.';
 
-export function textHieber() {
+export function TextHieber() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -166,7 +166,7 @@ export function textHieber() {
   );
 }
 
-export function textImprint() {
+export function TextImprint() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -277,7 +277,7 @@ export function textImprint() {
   );
 }
 
-export function textPrivacy() {
+export function TextPrivacy() {
   return (
     <View style={styles.container}>
       <View style={styles.block}>
@@ -334,15 +334,15 @@ export const textPersonCategory =
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15
+    padding: 15,
   },
   block: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   headline: {
-    fontSize: 20
+    fontSize: 20,
   },
   link: {
-    color: Colors.link
-  }
+    color: Colors.link,
+  },
 });

@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useFocusEffect } from 'react-navigation-hooks';
+import { useFocusEffect } from '@react-navigation/native';
 
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';

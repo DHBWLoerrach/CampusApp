@@ -16,8 +16,8 @@ export default class NewsDetails extends Component {
       body,
       time,
       attachments,
-    } = this.props.navigation.getParam('news');
-    let topic = this.props.navigation.getParam('topic');
+    } = this.props.route.params.news;
+    let topic = this.props.route.params.topic;
     let timeHeading = '';
     if (topic === 'events') {
       timeHeading = `<h3>${format(

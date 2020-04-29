@@ -7,7 +7,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useFocusEffect, useNavigation } from 'react-navigation-hooks';
+import {
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import { courseList } from '../../../env.js';
@@ -65,7 +68,9 @@ export default function EditCourse() {
           autoFocus={true}
           defaultValue={course}
           maxLength={15}
-          onChangeText={(course) => setCourse(course.trim().toUpperCase())}
+          onChangeText={(course) =>
+            setCourse(course.trim().toUpperCase())
+          }
         />
         <Button
           title="Kurs anzeigen"
@@ -74,8 +79,9 @@ export default function EditCourse() {
         />
       </View>
       <Text>
-        Nicht alle Kurse haben einen Online-Stundenplan. Falls ein Kalender
-        fehlt, dann teile uns dies bitte mit, siehe Service -- Feedback.
+        Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
+        Kalender fehlt, dann teile uns dies bitte mit, siehe Service
+        -- Feedback.
       </Text>
     </View>
   );

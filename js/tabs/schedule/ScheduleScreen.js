@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -6,15 +6,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-  useNavigationEvents,
-} from 'react-navigation-hooks';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
-import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';
 
@@ -25,14 +20,12 @@ import {
   saveLecturesToStore,
 } from './store';
 
-function ScheduleScreen() {
+function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [hasNetworkError, setNetworkError] = useState(false);
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState(null);
   const [searchString, setSearchString] = useState('');
-
-  const { navigate, setParams } = useNavigation();
 
   // load data: first from local store, then fetch latest data from web
   async function loadData() {
@@ -71,23 +64,19 @@ function ScheduleScreen() {
     return lectures.filter((lecture) => lecture.data.length !== 0);
   }
 
-  // when screen is focussed, load data
+  // when screen is focussed, load data and update header title
   useFocusEffect(
     useCallback(() => {
       //The user expects an empty search bar on re-navigation
       setSearchString('');
       loadData();
+      async function loadCourseAndSetParam() {
+        let { course } = await loadScheduleDataFromStore();
+        navigation.setParams({ course: course });
+      }
+      loadCourseAndSetParam();
     }, [])
   );
-
-  useNavigationEvents((event) => {
-    // after focus, update navigation params to set header title to course (see bottom of file)
-    async function loadCourseAndSetParam() {
-      let { course } = await loadScheduleDataFromStore();
-      setParams({ course: course });
-    }
-    if (event.type === 'didFocus') loadCourseAndSetParam();
-  });
 
   if (isLoading) {
     return (
@@ -103,7 +92,7 @@ function ScheduleScreen() {
         <Button
           title="Kurs eingeben"
           color={Colors.dhbwRed}
-          onPress={() => navigate('EditCourse')}
+          onPress={() => navigation.navigate('EditCourse')}
         />
       </View>
     );
@@ -166,18 +155,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-ScheduleScreen.navigationOptions = ({ navigation }) => {
-  let headerTitle = navigation.getParam('course', 'Vorlesungsplan');
-  return {
-    headerRight: () => (
-      <HeaderIcon
-        onPress={() => navigation.navigate('EditCourse')}
-        icon="edit"
-      />
-    ),
-    headerTitle,
-  };
-};
 
 export default ScheduleScreen;

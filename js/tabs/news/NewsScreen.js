@@ -4,9 +4,9 @@ import {
   FlatList,
   SectionList,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
-import { useNavigation } from 'react-navigation-hooks';
+import { useNavigation } from '@react-navigation/native';
 
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -21,19 +21,21 @@ import { feeds } from '../../util/Constants';
 import {
   fetchNewsFromWeb,
   loadNewsFromStore,
-  saveNewsToStore
+  saveNewsToStore,
 } from './store';
 
 function getSectionsForEvents(news) {
   if (!news || news.length === 0) return [];
 
   let sections = [];
-  news.forEach(item => {
+  news.forEach((item) => {
     month = format(new Date(item.time), 'MMMM yyyy', {
-      locale: de
+      locale: de,
     });
 
-    let index = sections.findIndex(section => section.title === month);
+    let index = sections.findIndex(
+      (section) => section.title === month
+    );
     if (index === -1) {
       sections.push({ title: month, data: [item] });
     } else {
@@ -54,7 +56,7 @@ function renderNewsItem(item, topic, navigate) {
 }
 
 function getPages(news, isLoading, refresh, navigate) {
-  return feeds.map(feed => {
+  return feeds.map((feed) => {
     let content = null;
     if (!news[feed.key]) {
       // this could occur if there's a server problem with a news page
@@ -77,7 +79,7 @@ function getPages(news, isLoading, refresh, navigate) {
       content = (
         <SectionList
           sections={getSectionsForEvents(news[feed.key])}
-          keyExtractor={item => 'item' + item.id}
+          keyExtractor={(item) => 'item' + item.id}
           onRefresh={refresh}
           refreshing={isLoading}
           renderItem={({ item }) =>
@@ -94,7 +96,7 @@ function getPages(news, isLoading, refresh, navigate) {
           data={news[feed.key]}
           onRefresh={refresh}
           refreshing={isLoading}
-          keyExtractor={item => 'item' + item.id}
+          keyExtractor={(item) => 'item' + item.id}
           renderItem={({ item }) =>
             renderNewsItem(item, feed.key, navigate)
           }
@@ -103,7 +105,7 @@ function getPages(news, isLoading, refresh, navigate) {
     }
     return {
       title: feed.name,
-      content
+      content,
     };
   });
 }
@@ -174,14 +176,14 @@ export default function NewsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   header: {
-    elevation: 0
-  }
+    elevation: 0,
+  },
 });

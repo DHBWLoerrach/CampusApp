@@ -12,7 +12,9 @@ export default class About extends Component {
         <Text>{textAbout}</Text>
         <Text
           style={styles.link}
-          onPress={() => Linking.openURL('mailto:apps@dhbw-loerrach.de')}
+          onPress={() =>
+            Linking.openURL('mailto:apps@dhbw-loerrach.de')
+          }
         >
           apps@dhbw-loerrach.de
         </Text>
@@ -22,7 +24,9 @@ export default class About extends Component {
         <Text
           style={[styles.margin, styles.link]}
           onPress={() =>
-            Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')
+            Linking.openURL(
+              'https://github.com/DHBWLoerrach/CampusApp'
+            )
           }
         >
           github.com/DHBWLoerrach/CampusApp
@@ -37,16 +41,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 20
+    padding: 20,
   },
   link: {
     fontSize: 15,
-    color: Colors.link
+    color: Colors.link,
   },
   marginBig: {
-    marginTop: 24
+    marginTop: 24,
   },
   margin: {
-    marginTop: 12
-  }
+    marginTop: 12,
+  },
 });
