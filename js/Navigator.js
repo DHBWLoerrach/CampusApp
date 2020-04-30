@@ -20,6 +20,8 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
+import StuVScreen from "./tabs/stuv/StuVScreen";
+import StuVEventDetails from "./tabs/stuv/StuVEventDetails";
 
 const stackHeaderConfig = {
   headerBackTitle: 'Zurück',
@@ -49,6 +51,30 @@ function NewsStack() {
       />
       <Stack.Screen name="NewsDetails" component={NewsDetails} />
     </Stack.Navigator>
+  );
+}
+
+function StuVStack() {
+  return (
+      <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+            name="Home"
+            component={StuVScreen}
+            options={{ title: 'Studierendenvertretung - StuV' }}
+        />
+        <Stack.Screen
+          name={"StuVEventDetails"}
+          component={StuVEventDetails}
+          options={
+              ({route}) => {
+                return { title: route.params.event.title };
+              }
+          }
+        />
+      </Stack.Navigator>
   );
 }
 
@@ -193,7 +219,7 @@ const tabsConfig = ({ route }) => ({
     else if (routeName === 'Schedule') iconName = 'school';
     else if (routeName === 'Canteen') iconName = 'restaurant';
     else if (routeName === 'Services') iconName = 'info-outline';
-
+    else if (routeName === 'StuV') iconName = 'group';
     return <MaterialIcon name={iconName} size={32} color={color} />;
   },
 });
@@ -210,6 +236,7 @@ export default function Navigator() {
         }}
       >
         <Tab.Screen name="News" component={NewsStack} />
+        <Tab.Screen name="StuV" component={StuVStack} />
         <Tab.Screen
           name="Schedule"
           component={ScheduleStack}
