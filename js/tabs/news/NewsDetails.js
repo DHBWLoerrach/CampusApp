@@ -1,4 +1,3 @@
-import 'react-native-get-random-values';
 import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -17,8 +16,8 @@ export default class NewsDetails extends Component {
       body,
       time,
       attachments,
-    } = this.props.navigation.getParam('news');
-    let topic = this.props.navigation.getParam('topic');
+    } = this.props.route.params.news;
+    let topic = this.props.route.params.topic;
     let timeHeading = '';
     if (topic === 'events') {
       timeHeading = `<h3>${format(
@@ -39,7 +38,8 @@ export default class NewsDetails extends Component {
         // on Android use embedded Google docs viewer for PDFs (WebView won't work)
         // see https://github.com/facebook/react-native/issues/6488
         if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
-          url = 'http://docs.google.com/gview?embedded=true&url=' + url;
+          url =
+            'http://docs.google.com/gview?embedded=true&url=' + url;
         attachmentsHTML += `${attachment.title} <br/> 
         <a href='${url}'>Herunterladen (${attachment.size})</a> 
         <br/>

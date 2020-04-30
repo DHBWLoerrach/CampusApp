@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   SectionList,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
-import { useNavigation } from 'react-navigation-hooks';
+import {
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -21,19 +24,21 @@ import { feeds } from '../../util/Constants';
 import {
   fetchNewsFromWeb,
   loadNewsFromStore,
-  saveNewsToStore
+  saveNewsToStore,
 } from './store';
 
 function getSectionsForEvents(news) {
   if (!news || news.length === 0) return [];
 
   let sections = [];
-  news.forEach(item => {
+  news.forEach((item) => {
     month = format(new Date(item.time), 'MMMM yyyy', {
-      locale: de
+      locale: de,
     });
 
-    let index = sections.findIndex(section => section.title === month);
+    let index = sections.findIndex(
+      (section) => section.title === month
+    );
     if (index === -1) {
       sections.push({ title: month, data: [item] });
     } else {
@@ -54,7 +59,7 @@ function renderNewsItem(item, topic, navigate) {
 }
 
 function getPages(news, isLoading, refresh, navigate) {
-  return feeds.map(feed => {
+  return feeds.map((feed) => {
     let content = null;
     if (!news[feed.key]) {
       // this could occur if there's a server problem with a news page
@@ -77,7 +82,7 @@ function getPages(news, isLoading, refresh, navigate) {
       content = (
         <SectionList
           sections={getSectionsForEvents(news[feed.key])}
-          keyExtractor={item => 'item' + item.id}
+          keyExtractor={(item) => 'item' + item.id}
           onRefresh={refresh}
           refreshing={isLoading}
           renderItem={({ item }) =>
@@ -94,7 +99,7 @@ function getPages(news, isLoading, refresh, navigate) {
           data={news[feed.key]}
           onRefresh={refresh}
           refreshing={isLoading}
-          keyExtractor={item => 'item' + item.id}
+          keyExtractor={(item) => 'item' + item.id}
           renderItem={({ item }) =>
             renderNewsItem(item, feed.key, navigate)
           }
@@ -103,10 +108,12 @@ function getPages(news, isLoading, refresh, navigate) {
     }
     return {
       title: feed.name,
-      content
+      content,
     };
   });
 }
+
+let lastDataFetch = 0;
 
 export default function NewsScreen() {
   const [isLoading, setLoading] = useState(true);
@@ -123,15 +130,26 @@ export default function NewsScreen() {
       setNetworkError(true);
     } else {
       saveNewsToStore(data);
+      lastDataFetch = new Date().getTime();
       setNews(data);
     }
     setLoading(false);
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      if (new Date().getTime() > lastDataFetch + 1000 * 60 * 60) {
+        setLoading(true);
+        loadData();
+      }
+    }, [])
+  );
+
   // load data from local store or from web if store is emtpy
   async function loadData() {
     let data = await loadNewsFromStore();
     if (data !== null) {
+      lastDataFetch = new Date().getTime();
       setNews(data);
       setLoading(false);
     } else refresh();
@@ -174,14 +192,14 @@ export default function NewsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   center: {
     flex: 2,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   header: {
-    elevation: 0
-  }
+    elevation: 0,
+  },
 });

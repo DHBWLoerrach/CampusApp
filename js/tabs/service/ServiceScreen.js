@@ -4,7 +4,7 @@ import {
   Linking,
   ScrollView,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,13 +17,13 @@ import {
   linksFreetime,
   linksKBC,
   linkOrientation,
-  linksStudy
+  linksStudy,
 } from './Links';
 import Submenu from './Submenu';
 import {
-  textPrivacy,
-  textAgreedDisclaimer,
-  textImprint
+  TextPrivacy,
+  TextAgreedDisclaimer,
+  TextImprint,
 } from './Texts';
 import Color from '../../util/Colors';
 
@@ -42,7 +42,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => Linking.openURL(linkOrientation)
+        onPress: () => Linking.openURL(linkOrientation),
       },
       {
         label: 'Gebäude Hangstraße',
@@ -53,7 +53,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('CampusHangstr')
+        onPress: () => navigate('CampusHangstr'),
       },
       {
         label: 'Service-Zugänge',
@@ -64,7 +64,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Accounts', { links: linksAccounts })
+        onPress: () => navigate('Accounts', { links: linksAccounts }),
       },
       {
         label: 'Hilfe im Notfall',
@@ -76,7 +76,7 @@ export default class ServiceScreen extends Component {
           />
         ),
         onPress: () =>
-          navigate('Emergency', { links: linksEmergency })
+          navigate('Emergency', { links: linksEmergency }),
       },
       {
         label: 'Studium',
@@ -87,7 +87,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Study', { links: linksStudy })
+        onPress: () => navigate('Study', { links: linksStudy }),
       },
       {
         label: 'Katalog Bibliothek',
@@ -98,12 +98,12 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => Linking.openURL(linkBib)
+        onPress: () => Linking.openURL(linkBib),
       },
       {
         label: 'Angebote bei der KBC',
         icon: <Image source={require('./img/kbc.png')} />,
-        onPress: () => navigate('KBC', { links: linksKBC })
+        onPress: () => navigate('KBC', { links: linksKBC }),
       },
       {
         label: 'Freizeit',
@@ -114,7 +114,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Freetime', { links: linksFreetime })
+        onPress: () => navigate('Freetime', { links: linksFreetime }),
       },
       {
         label: 'Feedback',
@@ -125,7 +125,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Feedback')
+        onPress: () => navigate('Feedback'),
       },
       {
         label: 'Einstellungen',
@@ -136,7 +136,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Settings')
+        onPress: () => navigate('Settings'),
       },
       {
         label: 'Über',
@@ -147,13 +147,13 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('About')
+        onPress: () => navigate('About'),
       },
       {
         label: 'Haftung',
         icon: <Image source={require('./img/disclaimer.png')} />,
         onPress: () =>
-          navigate('Disclaimer', { text: textAgreedDisclaimer() })
+          navigate('Disclaimer', { text: <TextAgreedDisclaimer /> }),
       },
       {
         label: 'Impressum',
@@ -164,7 +164,7 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Imprint', { text: textImprint() })
+        onPress: () => navigate('Imprint', { text: <TextImprint /> }),
       },
       {
         label: 'Datenschutz',
@@ -175,8 +175,8 @@ export default class ServiceScreen extends Component {
             color={Color.icon}
           />
         ),
-        onPress: () => navigate('Privacy', { text: textPrivacy() })
-      }
+        onPress: () => navigate('Privacy', { text: <TextPrivacy /> }),
+      },
     ];
     return submenuItems;
   }
@@ -195,6 +195,6 @@ export default class ServiceScreen extends Component {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: 'white'
-  }
+    backgroundColor: 'white',
+  },
 });

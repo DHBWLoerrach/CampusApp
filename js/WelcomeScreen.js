@@ -9,16 +9,21 @@ import {
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 import Colors from './util/Colors';
 
-import { textDisclaimer, textPersonCategory } from './tabs/service/Texts';
+import {
+  TextDisclaimer,
+  textPersonCategory,
+} from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
 
 const ButtonTouchable =
-  Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+  Platform.OS === 'android'
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
 
 export default function WelcomeScreen(props) {
   const [disclaimerChecked, checkDisclaimer] = useState(false);
@@ -41,7 +46,10 @@ export default function WelcomeScreen(props) {
           <Text style={[styles.heading, styles.welcome]}>
             Willkommen an der DHBW Lörrach
           </Text>
-          <Image style={styles.logo} source={require('./img/logo.png')} />
+          <Image
+            style={styles.logo}
+            source={require('./img/logo.png')}
+          />
         </View>
         <View>
           <Text>
@@ -55,15 +63,17 @@ export default function WelcomeScreen(props) {
           </View>
           <RoleSelection
             role={role}
-            onRoleChange={role => setRole(role)}
+            onRoleChange={(role) => setRole(role)}
           />
         </View>
-        <View style={styles.disclaimer}>{textDisclaimer()}</View>
+        <View style={styles.disclaimer}>
+          <TextDisclaimer />
+        </View>
         <View style={styles.footer}>
           <View style={styles.agreeDisclaimer}>
             <Text style={styles.disclaimerLabel}>Ich stimme zu:</Text>
             <Switch
-              onValueChange={value => checkDisclaimer(value)}
+              onValueChange={(value) => checkDisclaimer(value)}
               value={disclaimerChecked}
             />
           </View>
@@ -75,8 +85,8 @@ export default function WelcomeScreen(props) {
                   color:
                     disclaimerChecked && role
                       ? Colors.dhbwRed
-                      : Colors.dhbwGray
-                }
+                      : Colors.dhbwGray,
+                },
               ]}
             >
               {'Start >'}
@@ -90,59 +100,59 @@ export default function WelcomeScreen(props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
     backgroundColor: 'white',
     paddingHorizontal: 10,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   headerImage: {
     width: Dimensions.get('window').width,
-    height: 180
+    height: 180,
   },
   heading: {
     fontSize: 24,
     lineHeight: 27,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   logo: {
     marginLeft: 20,
     width: 60,
-    height: 60
+    height: 60,
   },
   welcome: {
     flex: 1,
     flexDirection: 'row',
-    color: Colors.dhbwRed
+    color: Colors.dhbwRed,
   },
   selection: {
-    marginTop: 15
+    marginTop: 15,
   },
   selectionText: {
     marginRight: 20,
-    marginBottom: 15
+    marginBottom: 15,
   },
   disclaimer: {
-    marginTop: 10
+    marginTop: 10,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20
+    marginBottom: 20,
   },
   agreeDisclaimer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   disclaimerLabel: {
     alignSelf: 'center',
-    marginRight: 5
+    marginRight: 5,
   },
   submit: {
-    fontSize: 24
-  }
+    fontSize: 24,
+  },
 });

@@ -12,21 +12,21 @@ export default class TabbedSwipeView extends Component {
       initialSelectedIndex: this.props.selectedIndex || 0,
       pageWidth: 0,
       pageHeight: 0,
-      scrollingTo: null
+      scrollingTo: null,
     };
   }
 
   // store width and height of a page (callback for layout of scrollview)
-  _getPageSize = event => {
+  _getPageSize = (event) => {
     this.setState({
       pageWidth: event.nativeEvent.layout.width,
-      pageHeight: event.nativeEvent.layout.height
+      pageHeight: event.nativeEvent.layout.height,
     });
   };
 
   // callback for scroll/swipe events, adopted from F8 sample app
   // https://github.com/fbsamples/f8app/blob/master/js/common/ViewPager.js
-  _handleHorizontalScroll = event => {
+  _handleHorizontalScroll = (event) => {
     // get current index we are currently scrolling/swaping to
     let selectedIndex = event.nativeEvent.position;
     if (selectedIndex === undefined) {
@@ -36,7 +36,8 @@ export default class TabbedSwipeView extends Component {
     }
 
     // do nothing if swiping gets out of range
-    if (selectedIndex < 0 || selectedIndex >= this.props.count) return;
+    if (selectedIndex < 0 || selectedIndex >= this.props.count)
+      return;
 
     // do nothing if requested scrolling position has not yet been reached
     if (
@@ -56,7 +57,7 @@ export default class TabbedSwipeView extends Component {
     if (index === this.state.selectedIndex) return;
     this._scrollView.scrollTo({
       x: index * this.state.pageWidth,
-      animated: true
+      animated: true,
     });
     this.setState({ scrollingTo: index });
   }
@@ -94,12 +95,12 @@ export default class TabbedSwipeView extends Component {
         <View style={styles.segmentsContainer}>{tabs}</View>
         <ScrollView
           style={styles.scrollview}
-          ref={scrollView => {
+          ref={(scrollView) => {
             this._scrollView = scrollView;
           }}
           contentOffset={{
             x: this.state.pageWidth * this.state.initialSelectedIndex,
-            y: 0
+            y: 0,
           }}
           horizontal={true}
           pagingEnabled={true}
@@ -123,19 +124,19 @@ export default class TabbedSwipeView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   segmentsContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.dhbwRed,
     paddingBottom: 6,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   scrollview: {
     flex: 1,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   card: {
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 });

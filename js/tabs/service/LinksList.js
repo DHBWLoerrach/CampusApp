@@ -5,61 +5,47 @@ import {
   Linking,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from '../../util/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
 
-export default class LinksList extends Component {
-  render() {
-    const content = this.props.navigation
-      .getParam('links')
-      .map((link, index) => (
-        <Row
-          link={link}
-          key={index}
-          navigate={this.props.navigation.navigate}
-        />
-      ));
-    return (
-      <View style={styles.container}>
-        <ItemsWithSeparator>{content}</ItemsWithSeparator>
-      </View>
-    );
-  }
+export default function LinksList({ navigation, route }) {
+  const content = route.params?.links.map((link, index) => (
+    <Row link={link} key={index} navigate={navigation.navigate} />
+  ));
+  return (
+    <View style={styles.container}>
+      <ItemsWithSeparator>{content}</ItemsWithSeparator>
+    </View>
+  );
 }
 
-class ItemsWithSeparator extends Component {
-  render() {
-    const children = [];
-    const length = React.Children.count(this.props.children);
-    React.Children.forEach(this.props.children, (child, ii) => {
-      children.push(child);
-      if (ii !== length - 1) {
-        children.push(
-          <View key={'separator-' + ii} style={styles.separator} />
-        );
-      }
-    });
-    return <View>{children}</View>;
-  }
+function ItemsWithSeparator(props) {
+  const children = [];
+  const length = React.Children.count(props.children);
+  React.Children.forEach(props.children, (child, ii) => {
+    children.push(child);
+    if (ii !== length - 1) {
+      children.push(
+        <View key={'separator-' + ii} style={styles.separator} />
+      );
+    }
+  });
+  return <View>{children}</View>;
 }
 
 class Row extends Component {
   render() {
-    const { title, url, tel } = this.props.link;
+    const { title, url, tel, onPress, screen } = this.props.link;
 
     let icon = null;
-    if (this.props.link.tel) {
+    if (tel) {
       icon = <MaterialIcon name="phone" size={36} />;
     }
-    if (
-      this.props.link.url ||
-      this.props.link.onPress ||
-      this.props.link.screen
-    ) {
+    if (url || onPress || screen) {
       icon = <MaterialIcon name="chevron-right" size={36} />;
     }
 
@@ -107,7 +93,7 @@ class Row extends Component {
       if (Platform.OS === 'ios') {
         Alert.alert('Nummer wählen?', tel, [
           { text: 'Nein' },
-          { text: 'Ja', onPress: () => this._openTelLink(telLink) }
+          { text: 'Ja', onPress: () => this._openTelLink(telLink) },
         ]);
       } else {
         this._openTelLink(telLink);
@@ -123,22 +109,22 @@ class Row extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   separator: {
     backgroundColor: Colors.cellBorder,
-    height: StyleSheet.hairlineWidth
+    height: StyleSheet.hairlineWidth,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 15,
-    height: 50
+    height: 50,
   },
   title: {
     flex: 1,
     fontSize: 17,
-    color: Colors.darkText
-  }
+    color: Colors.darkText,
+  },
 });

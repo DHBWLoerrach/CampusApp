@@ -1,23 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-export default class InfoText extends Component {
-  render() {
-    const { navigation } = this.props;
-    const text = navigation
-      ? navigation.getParam('text')
-      : this.props.text;
-    return (
-      <View style={styles.container}>
-        <ScrollView>{text}</ScrollView>
-      </View>
-    );
-  }
+export default function InfoText({ route }) {
+  return (
+    <View style={styles.container}>
+      <ScrollView>{route.params?.text}</ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
-  }
+    backgroundColor: 'white',
+  },
 });
