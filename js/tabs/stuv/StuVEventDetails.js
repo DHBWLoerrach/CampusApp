@@ -43,6 +43,7 @@ function StuVEventDetails({route}) {
                 style={styles.map}
             >
                 <MapMarker
+                 title={event.address.name}
                  coordinate={{
                      latitude: event.address.latitude,
                      longitude: event.address.longitude
