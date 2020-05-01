@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     entry: {
         backgroundColor: 'rgba(246,23,28, 0.3)',
         borderRadius: 10,
-        padding: 10
+        padding: 10,
+        marginBottom: 10
     },
     image: {
         flex: 1,
