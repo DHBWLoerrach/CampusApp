@@ -7,6 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from './util/Colors';
 import HeaderIcon from './util/HeaderIcon';
+import StuVIcon from './../assets/stuv_icon.svg';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -229,7 +230,7 @@ const tabsConfig = ({ route }) => ({
     else if (routeName === 'Schedule') iconName = 'school';
     else if (routeName === 'Canteen') iconName = 'restaurant';
     else if (routeName === 'Services') iconName = 'info-outline';
-    else if (routeName === 'StuV') iconName = 'group';
+    else if (routeName === 'StuV') return <StuVIcon width={32} height={32} color={color}/>;
     return <MaterialIcon name={iconName} size={32} color={color} />;
   },
 });

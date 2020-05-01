@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, FlatList, Image, Text, TouchableOpacity, View} from "react-native";
 import {useNavigation} from '@react-navigation/native'
 import ReloadView from "../../../util/ReloadView";
-import {loadNews, shortString, unixTimeToDateText, unixTimeToTimeText} from "../helper";
+import {loadNews, shortString} from "../helper";
 
 function StuVNews() {
 
