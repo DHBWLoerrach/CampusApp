@@ -1,10 +1,10 @@
 import React from "react";
 import {Alert, Button, Image, Linking, ScrollView, StyleSheet, Text, View} from "react-native";
-import {unixTimeToDateText, unixTimeToTimeText} from "./helper";
-import Colors from "../../util/Colors";
+import {unixTimeToDateText, unixTimeToTimeText} from "../helper";
+import Colors from "../../../util/Colors";
 import MapView from "react-native-maps";
 import MapMarker from "react-native-maps/lib/components/MapMarker";
-import ResponsiveImage from "../../util/ResponsiveImage";
+import ResponsiveImage from "../../../util/ResponsiveImage";
 
 function StuVEventDetails({route}) {
     const event = route.params.event;

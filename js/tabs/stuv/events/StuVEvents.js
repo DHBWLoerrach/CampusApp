@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {loadEvents, shortString, unixTimeToDateText, unixTimeToTimeText} from "./helper";
-import ReloadView from "../../util/ReloadView";
+import {loadEvents, shortString, unixTimeToDateText, unixTimeToTimeText} from "../helper";
+import ReloadView from "../../../util/ReloadView";
 import { useNavigation } from '@react-navigation/native';
 import {color} from "react-native-reanimated";
 
@@ -31,7 +31,7 @@ function StuVEvents() {
     }
 
     if (events == null) {
-        return <ReloadView buttonText="News laden" onPress={refresh} />;
+        return <ReloadView buttonText="Events laden" onPress={refresh} />;
     }
 
     return (

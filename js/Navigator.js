@@ -21,7 +21,8 @@ import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
 import StuVScreen from "./tabs/stuv/StuVScreen";
-import StuVEventDetails from "./tabs/stuv/StuVEventDetails";
+import StuVEventDetails from "./tabs/stuv/events/StuVEventDetails";
+import StuVNewsDetails from "./tabs/stuv/news/StuVNewsDetails";
 
 const stackHeaderConfig = {
   headerBackTitle: 'Zurück',
@@ -73,6 +74,15 @@ function StuVStack() {
                 return { title: route.params.event.title };
               }
           }
+        />
+        <Stack.Screen
+            name={"StuVNewsDetails"}
+            component={StuVNewsDetails}
+            options={
+              ({route}) => {
+                return { title: route.params.news.title };
+              }
+            }
         />
       </Stack.Navigator>
   );

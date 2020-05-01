@@ -1,14 +1,11 @@
-import React, {useState, useEffect} from "react";
-import {FlatList, SectionList, Image, StyleSheet, View, Text} from "react-native";
+import React from "react";
+import {StyleSheet, View} from "react-native";
 import TabbedSwipeView from "../../util/TabbedSwipeView.ios";
-import {feeds} from "../../util/Constants";
-import ReloadView from "../../util/ReloadView";
-import DayHeader from "../../util/DayHeader";
-import {loadEvents, loadNews} from "./helper";
-import StuVEvents from "./StuVEvents";
+import StuVEvents from "./events/StuVEvents";
+import StuVNews from "./news/StuVNews";
 
 function getPages() {
-    return [{title: "StuV-News", content: <View/>}, {title: "StuV-Events", content:  <StuVEvents/>}];
+    return [{title: "StuV-News", content: <StuVNews/>}, {title: "StuV-Events", content:  <StuVEvents/>}];
 }
 
 function StuVScreen() {
