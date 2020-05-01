@@ -1,9 +1,10 @@
 import React from "react";
-import {Alert, Button, Linking, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Button, Image, Linking, ScrollView, StyleSheet, Text, View} from "react-native";
 import {unixTimeToDateText, unixTimeToTimeText} from "./helper";
 import Colors from "../../util/Colors";
 import MapView from "react-native-maps";
 import MapMarker from "react-native-maps/lib/components/MapMarker";
+import ResponsiveImage from "../../util/ResponsiveImage";
 
 function StuVEventDetails({route}) {
     const event = route.params.event;
@@ -19,37 +20,41 @@ function StuVEventDetails({route}) {
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <Text style={styles.headline}>{event.title}</Text>
-            <Text style={styles.date}>{unixTimeToDateText(event.date.from)}</Text>
-            {event.date.to ? <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} bis {unixTimeToTimeText(event.date.to)} Uhr</Text> :
-                <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} Uhr</Text>
-            }
-            {event.price !== 0 ? <Text style={styles.date}>Preis: {event.price.toFixed(2)} €</Text> : null }
-            <Text style={styles.text}>{event.text}</Text>
-            {event.registerLink ?
-                <View style={styles.button}>
-                    <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
-                </View>
-                : null}
-            <MapView
+        <ScrollView>
+            {event.images.banner ? <ResponsiveImage image={event.images.banner}/> : null}
+            <View style={styles.container}>
+                <Text style={styles.headline}>{event.title}</Text>
+                <Text style={styles.date}>{unixTimeToDateText(event.date.from)}</Text>
+                {event.date.to ? <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} bis {unixTimeToTimeText(event.date.to)} Uhr</Text> :
+                    <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} Uhr</Text>
+                }
+                {event.price !== 0 ? <Text style={styles.date}>Preis: {event.price.toFixed(2)} €</Text> : null }
+                <Text style={styles.text}>{event.text}</Text>
+                {event.registerLink ?
+                    <View style={styles.button}>
+                        <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
+                    </View>
+                    : null}
+                <MapView
 
-                initialRegion={{
-                    latitude: event.address.latitude,
-                    longitude: event.address.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                }}
-                style={styles.map}
-            >
-                <MapMarker
-                 title={event.address.name}
-                 coordinate={{
-                     latitude: event.address.latitude,
-                     longitude: event.address.longitude
-                 }}
-                />
-            </MapView>
+                    initialRegion={{
+                        latitude: event.address.latitude,
+                        longitude: event.address.longitude,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                    }}
+                    style={styles.map}
+                >
+                    <MapMarker
+                        title={event.address.name}
+                        coordinate={{
+                            latitude: event.address.latitude,
+                            longitude: event.address.longitude
+                        }}
+                    />
+                </MapView>
+            </View>
+
         </ScrollView>
     )
 }

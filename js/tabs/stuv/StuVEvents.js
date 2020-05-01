@@ -40,7 +40,7 @@ function StuVEvents() {
             data={events}
             onRefresh={refresh}
             refreshing={loading}
-            keyExtractor={(item) => 'item' + item.id}
+            keyExtractor={(item) => 'item' + item.title}
             renderItem={({item}) =>
                 <TouchableOpacity  style={styles.entry} onPress={() => navigate(item, navigation)}>
                     <View style={{flex: 1, justifyContent: 'space-around', flexDirection: 'row'}}>
