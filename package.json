@@ -32,11 +32,11 @@
     "preset": "react-native"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/runtime": "^7.9.2",
+    "@babel/core": "^7.9.6",
+    "@babel/runtime": "^7.9.6",
     "@react-native-community/eslint-config": "^1.0.0",
-    "babel-jest": "^25.5.0",
-    "jest": "^25.5.0",
+    "babel-jest": "^26.0.1",
+    "jest": "^26.0.1",
     "metro-react-native-babel-preset": "^0.59.0",
     "react-test-renderer": "16.13.1"
   }
