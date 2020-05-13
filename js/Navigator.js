@@ -26,6 +26,7 @@ const stackHeaderConfig = {
   headerTintColor: 'white',
   headerStyle: {
     backgroundColor: Colors.dhbwRed,
+    shadowColor: 'transparent', // prevent line below header in iOS
     ...Platform.select({
       android: {
         elevation: 0,
