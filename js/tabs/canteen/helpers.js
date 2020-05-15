@@ -1,18 +1,18 @@
 import { DOMParser } from 'xmldom';
 
 export default function fetchCanteenData(canteenXMLData) {
-  var dayPlans = [];
-  var parser = new DOMParser();
-  var doc = parser.parseFromString(canteenXMLData, 'application/xml');
-  var plansByDay = doc.getElementsByTagName('tagesplan');
+  let dayPlans = [];
+  let parser = new DOMParser();
+  let doc = parser.parseFromString(canteenXMLData, 'application/xml');
+  let plansByDay = doc.getElementsByTagName('tagesplan');
 
-  for (var i = 0; i < plansByDay.length; i++) {
-    var menusOfTheDay = [];
-    var menus = plansByDay.item(i).getElementsByTagName('menue');
+  for (let i = 0; i < plansByDay.length; i++) {
+    let menusOfTheDay = [];
+    let menus = plansByDay.item(i).getElementsByTagName('menue');
 
-    for (var k = 0; k < menus.length; k++) {
-      var menuElement = menus.item(k);
-      var addition =
+    for (let k = 0; k < menus.length; k++) {
+      let menuElement = menus.item(k);
+      let addition =
         menuElement
           .getElementsByTagName('allergikerhinweise')
           .item(0)
@@ -29,7 +29,7 @@ export default function fetchCanteenData(canteenXMLData) {
         addition = addition.split(',');
       }
 
-      var addition2 =
+      let addition2 =
         menuElement
           .getElementsByTagName('kennzeichnungen')
           .item(0)
@@ -50,21 +50,21 @@ export default function fetchCanteenData(canteenXMLData) {
 
       addition = addition.concat(addition2);
 
-      var vegetarianAttribute = menuElement.attributes.getNamedItem(
+      let vegetarianAttribute = menuElement.attributes.getNamedItem(
         'zusatz'
       );
-      var vegetarian =
+      let vegetarian =
         vegetarianAttribute != null &&
         (vegetarianAttribute.nodeValue === 'vegetarisch' ||
           vegetarianAttribute.nodeValue === 'vegan');
-      var prices = [];
-      var pushPrices = function(customerType, variableName) {
-        var priceElement = menuElement
+      let prices = [];
+      let pushPrices = function (customerType, variableName) {
+        let priceElement = menuElement
           .getElementsByTagName(customerType)
           .item(0).childNodes;
         prices.push({
           price: priceElement.item(0).nodeValue,
-          type: variableName
+          type: variableName,
         });
       };
       pushPrices('studierende', 'student');
@@ -72,8 +72,8 @@ export default function fetchCanteenData(canteenXMLData) {
       pushPrices('gaeste', 'guest');
 
       // sometimes menus don't have a name, use category in that case (e.g. 'Buffet')
-      var menuName = menuElement.attributes.getNamedItem('art').nodeValue;
-      var nameElement = menuElement
+      let menuName = menuElement.attributes.getNamedItem('art').nodeValue;
+      let nameElement = menuElement
         .getElementsByTagName('name')
         .item(0)
         .childNodes.item(0);
@@ -85,13 +85,13 @@ export default function fetchCanteenData(canteenXMLData) {
         addition: addition,
         vegetarian: vegetarian,
         name: menuName,
-        prices: prices
+        prices: prices,
       });
     }
 
     dayPlans.push({
       date: plansByDay.item(i).attributes.getNamedItem('datum').nodeValue,
-      menus: menusOfTheDay
+      menus: menusOfTheDay,
     });
   }
   return dayPlans;
