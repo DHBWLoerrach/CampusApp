@@ -2,7 +2,7 @@ import React from "react";
 import {Alert, Button, Image, Linking, ScrollView, StyleSheet, Text, View} from "react-native";
 import {unixTimeToDateText, unixTimeToTimeText} from "../helper";
 import Colors from "../../../util/Colors";
-import MapView from "react-native-maps";
+import MapView, {UrlTile} from "react-native-maps";
 import MapMarker from "react-native-maps/lib/components/MapMarker";
 import ResponsiveImage from "../../../util/ResponsiveImage";
 
@@ -36,15 +36,20 @@ function StuVEventsDetails({route}) {
                     </View>
                     : null}
                 <MapView
-
+                    mapType={Platform.OS === 'android' ? "none": "standard"}
+                    provider={null}
                     initialRegion={{
                         latitude: event.address.latitude,
                         longitude: event.address.longitude,
                         latitudeDelta: 0.01,
                         longitudeDelta: 0.01,
                     }}
+                    loadingEnabled={true}
                     style={styles.map}
                 >
+                    <UrlTile
+                        urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
+                    />
                     <MapMarker
                         title={event.address.name}
                         coordinate={{
