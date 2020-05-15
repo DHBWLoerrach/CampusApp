@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -22,7 +22,7 @@ import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
 import StuVScreen from "./tabs/stuv/StuVScreen";
-import StuVEventDetails from "./tabs/stuv/events/StuVEventDetails";
+import StuVEventsDetails from "./tabs/stuv/events/StuVEventsDetails";
 import StuVNewsDetails from "./tabs/stuv/news/StuVNewsDetails";
 
 const stackHeaderConfig = {
@@ -68,8 +68,8 @@ function StuVStack() {
             options={{ title: 'Studierendenvertretung - StuV' }}
         />
         <Stack.Screen
-          name={"StuVEventDetails"}
-          component={StuVEventDetails}
+          name={"StuVEventsDetails"}
+          component={StuVEventsDetails}
           options={
               ({route}) => {
                 return { title: route.params.event.title };

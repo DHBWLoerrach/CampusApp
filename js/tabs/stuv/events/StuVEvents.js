@@ -4,6 +4,7 @@ import {loadEvents, shortString, unixTimeToDateText, unixTimeToTimeText} from ".
 import ReloadView from "../../../util/ReloadView";
 import { useNavigation } from '@react-navigation/native';
 import {color} from "react-native-reanimated";
+import CommonCell from "../../../util/CommonCell";
 
 function StuVEvents() {
     const [loading, setLoading] = useState(true);
@@ -36,56 +37,24 @@ function StuVEvents() {
 
     return (
         <FlatList
-            style={styles.container}
             data={events}
             onRefresh={refresh}
             refreshing={loading}
             keyExtractor={(item) => 'item' + item.title}
             renderItem={({item}) =>
-                <TouchableOpacity  style={styles.entry} onPress={() => navigate(item, navigation)}>
-                    <View style={{flex: 1, justifyContent: 'space-around', flexDirection: 'row'}}>
-                        <Image source={{uri: item.images.overview}} style={styles.image}/>
-                        <View style={{flex: 2}}>
-                            <Text style={styles.headline}>{item.title} {item.price === 0 ? '' : '(€)'}</Text>
-                            <Text style={styles.date}>{unixTimeToDateText(item.date.from)}</Text>
-                            {item.date.to ? <Text style={styles.date}>{unixTimeToTimeText(item.date.from)} bis {unixTimeToTimeText(item.date.to)} Uhr</Text> :
-                                <Text style={styles.date}>{unixTimeToTimeText(item.date.from)} Uhr</Text>
-                            }
-                            <Text style={styles.text}>{shortString(item.text, 90)}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+                <CommonCell
+                    imageSource={{uri: item.images.overview}}
+                    title={item.title}
+                    details={
+                        [unixTimeToDateText(item.date.from), item.date.to ?
+                            unixTimeToTimeText(item.date.from) + " bis " + unixTimeToTimeText(item.date.to) + " Uhr" :
+                            unixTimeToTimeText(item.date.from) + " Uhr"]
+                    }
+                    description={item.text}
+                    onPress={() => navigate(item, navigation)}
+                />
             }
         />
     )
 }
 export default StuVEvents;
-
-const styles = StyleSheet.create({
-    container: {
-        margin: 10
-    },
-    entry: {
-        backgroundColor: 'rgba(246,23,28, 0.3)',
-        borderRadius: 10,
-        padding: 10,
-        marginBottom: 10
-    },
-    image: {
-        flex: 1,
-        marginRight: 10,
-        resizeMode: 'contain',
-    },
-    headline: {
-        fontSize: 24,
-        color: "#000",
-        fontWeight: 'bold'
-    },
-    text: {
-        color: '#262626'
-    },
-    date: {
-        color: 'black',
-        fontWeight: 'bold'
-    }
-});

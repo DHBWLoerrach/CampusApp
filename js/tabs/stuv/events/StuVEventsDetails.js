@@ -6,7 +6,7 @@ import MapView from "react-native-maps";
 import MapMarker from "react-native-maps/lib/components/MapMarker";
 import ResponsiveImage from "../../../util/ResponsiveImage";
 
-function StuVEventDetails({route}) {
+function StuVEventsDetails({route}) {
     const event = route.params.event;
 
     function openRegisterLink() {
@@ -58,7 +58,7 @@ function StuVEventDetails({route}) {
         </ScrollView>
     )
 }
-export default StuVEventDetails;
+export default StuVEventsDetails;
 
 const styles = StyleSheet.create({
     container: {
