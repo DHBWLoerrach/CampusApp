@@ -28,7 +28,7 @@ function StuVEvents() {
     }
 
     function navigate(event, navigation) {
-        navigation.navigate("StuVEventDetails", {event})
+        navigation.navigate("StuVEventsDetails", {event})
     }
 
     if (events == null) {
