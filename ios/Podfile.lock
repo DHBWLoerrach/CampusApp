@@ -296,7 +296,7 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNCAsyncStorage (1.10.0):
+  - RNCAsyncStorage (1.10.1):
     - React
   - RNCMaskedView (0.1.10):
     - React
@@ -490,7 +490,7 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNCAsyncStorage: 6d99641f8e6f15d169d695d8ef184bf187903f11
+  RNCAsyncStorage: 39831e0dc5f547a1fb2669eb9e091d460a9be2be
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
