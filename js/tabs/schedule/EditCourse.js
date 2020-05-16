@@ -17,6 +17,7 @@ import { courseList } from '../../../env.js';
 
 import {
   loadCourseFromStore,
+  clearLecturesFromStore,
   saveCourseToStore,
 } from './store';
 
