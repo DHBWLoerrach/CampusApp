@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import getLecturesFromiCalData from './helpers';
+import FetchManager, {DHBW_COURSE} from "../../util/fetcher/FetchManager";
 
 export async function loadScheduleDataFromStore() {
   const lectures = await AsyncStorage.getItem('lectures');
@@ -26,14 +27,5 @@ export async function clearLecturesFromStore() {
 }
 
 export async function fetchLecturesFromWeb(course) {
-  let lectures = null;
-  try {
-    const scheduleUrl = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
-    const response = await fetch(scheduleUrl);
-    const responseBody = await response.text();
-    lectures = getLecturesFromiCalData(responseBody);
-  } catch (error) {
-    return 'networkError';
-  }
-  return lectures;
+  return await FetchManager.fetch(DHBW_COURSE, true, {course});
 }

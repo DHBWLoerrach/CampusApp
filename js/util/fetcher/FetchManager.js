@@ -1,8 +1,10 @@
 import RSSFetcher from "./RSSFetcher";
 import CacheFetcher from "./CacheFetcher";
+import ICalFetcher from "./ICalFetcher";
 
 export const DHBW_NEWS = "DHBW_NEWS";
 export const DHBW_EVENTS = "DHBW_EVENTS";
+export const DHBW_COURSE = "DHBW_COURSE";
 
 class FetchManager {
 
@@ -18,10 +20,12 @@ class FetchManager {
           new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
             DHBW_EVENTS
         );
+
+        this.fetcher[DHBW_COURSE] = new ICalFetcher();
     }
 
-    async fetch(dataSource, forceNewData = false) {
-        return this.fetcher[dataSource].getItems(forceNewData);
+    async fetch(dataSource, forceNewData = false, params) {
+        return this.fetcher[dataSource].getItems(forceNewData, params);
     }
 
 }
