@@ -2,15 +2,21 @@ package de.dhbwloe.loerrach.campusapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.view.ViewManager;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import java.util.List;
+
+import de.dhbwloe.loerrach.campusapp.mapview.AndroidMapView;
+import de.dhbwloe.loerrach.campusapp.mapview.AndroidMapViewPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -34,6 +40,7 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for example:
       packages.add(new RNCViewPagerPackage());
+      packages.add(new AndroidMapViewPackage());
       return packages;
     }
 

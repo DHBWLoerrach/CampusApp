@@ -1,13 +1,17 @@
 import React from "react";
-import {Alert, Button, Image, Linking, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Button, Image, Linking, ScrollView, StyleSheet, Text, View, requireNativeComponent} from "react-native";
 import {unixTimeToDateText, unixTimeToTimeText} from "../helper";
 import Colors from "../../../util/Colors";
 import MapView, {UrlTile} from "react-native-maps";
 import MapMarker from "react-native-maps/lib/components/MapMarker";
 import ResponsiveImage from "../../../util/ResponsiveImage";
+import AndroidMap from "../../../util/AndroidMap";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {add} from "react-native-reanimated";
 
 function StuVEventsDetails({route}) {
     const event = route.params.event;
+
 
     function openRegisterLink() {
         Linking.canOpenURL(event.registerLink).then(result => {
@@ -19,55 +23,85 @@ function StuVEventsDetails({route}) {
         })
     }
 
-    return (
-        <ScrollView>
-            {event.images.banner ? <ResponsiveImage image={event.images.banner}/> : null}
-            <View style={styles.container}>
-                <Text style={styles.headline}>{event.title}</Text>
-                <Text style={styles.date}>{unixTimeToDateText(event.date.from)}</Text>
-                {event.date.to ? <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} bis {unixTimeToTimeText(event.date.to)} Uhr</Text> :
-                    <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} Uhr</Text>
-                }
-                {event.price !== 0 ? <Text style={styles.date}>Preis: {event.price.toFixed(2)} €</Text> : null }
-                <Text style={styles.text}>{event.text}</Text>
-                {event.registerLink ?
-                    <View style={styles.button}>
-                        <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
-                    </View>
-                    : null}
+    function openGMaps(latitude, longitude, name) {
+        Linking.openURL("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude);
+    }
+
+    function displayMap(address) {
+        if (Platform.OS === 'android') {
+            return (
+                <View>
+                    <AndroidMap location={{longitude: address.longitude, latitude: address.latitude}} zoom={19} style={styles.map}/>
+                    <MaterialCommunityIcons
+                        name={"google-maps"}
+                        size={32}
+                        style={styles.mapButton}
+                        onPress={() => openGMaps(address.latitude, address.longitude, address.name)}
+                    />
+                    <Text style={styles.copyrightText}>© OpenStreetMap contributors</Text>
+                </View>
+            )
+        } else {
+            return (
                 <MapView
-                    mapType={Platform.OS === 'android' ? "none": "standard"}
-                    provider={null}
                     initialRegion={{
-                        latitude: event.address.latitude,
-                        longitude: event.address.longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
+                        latitude: address.latitude,
+                        longitude: address.longitude,
+                        latitudeDelta: 0.003,
+                        longitudeDelta: 0.003,
                     }}
-                    loadingEnabled={true}
                     style={styles.map}
                 >
-                    <UrlTile
-                        urlTemplate={"https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
-                    />
                     <MapMarker
-                        title={event.address.name}
+                        title={address.name}
                         coordinate={{
-                            latitude: event.address.latitude,
-                            longitude: event.address.longitude
+                            latitude: address.latitude,
+                            longitude: address.longitude
                         }}
                     />
                 </MapView>
-            </View>
+            );
+        }
+    }
 
-        </ScrollView>
+    return (
+        <View>
+            <ScrollView>
+                {event.images.banner ? <ResponsiveImage image={event.images.banner}/> : null}
+                <View style={styles.container}>
+                    <Text style={styles.headline}>{event.title}</Text>
+                    <Text style={styles.date}>{unixTimeToDateText(event.date.from)}</Text>
+                    {event.date.to ? <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} bis {unixTimeToTimeText(event.date.to)} Uhr</Text> :
+                        <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} Uhr</Text>
+                    }
+                    {event.price !== 0 ? <Text style={styles.date}>Preis: {event.price.toFixed(2)} €</Text> : null }
+                    <Text style={styles.text}>{event.text}</Text>
+                    {event.registerLink ?
+                        <View style={styles.button}>
+                            <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
+                        </View>
+                        : null}
+
+                </View>
+            </ScrollView>
+            {displayMap(event.address)}
+        </View>
     )
 }
 export default StuVEventsDetails;
 
 const styles = StyleSheet.create({
     container: {
-        margin: 10
+        padding: 10,
+        zIndex: 2,
+        backgroundColor: "white"
+    },
+    copyrightText: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        fontSize: 10,
+        margin: 3
     },
     button: {
       marginTop: 10
@@ -75,7 +109,14 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         height: 300,
-        marginTop: 10
+        marginTop: 10,
+        zIndex: -1
+    },
+    mapButton: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        margin: 3
     },
     headline: {
         fontSize: 24,

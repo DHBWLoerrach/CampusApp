@@ -44,7 +44,7 @@ function StuVNews() {
             renderItem={({item}) =>
                 <CommonCell
                     title={item.title}
-                    details={item.data ? [unixTimeToDateText(item.date)] : []}
+                    details={item.date ? [unixTimeToDateText(item.date)] : []}
                     imageSource={{uri: item.images.overview}}
                     description={item.text}
                     onPress={() => navigate(item, navigation)}
