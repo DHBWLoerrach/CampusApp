@@ -65,8 +65,8 @@ function StuVEventsDetails({route}) {
     }
 
     return (
-        <View>
-            <ScrollView>
+        <View style={{flex: 1}}>
+            <ScrollView style={styles.scrollView}>
                 {event.images.banner ? <ResponsiveImage image={event.images.banner}/> : null}
                 <View style={styles.container}>
                     <Text style={styles.headline}>{event.title}</Text>
@@ -91,10 +91,12 @@ function StuVEventsDetails({route}) {
 export default StuVEventsDetails;
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 10,
+    scrollView: {
         zIndex: 2,
         backgroundColor: "white"
+    },
+    container: {
+        padding: 10,
     },
     copyrightText: {
         position: 'absolute',
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     },
     map: {
         width: "100%",
-        height: 300,
+        height: 200,
         marginTop: 10,
         zIndex: -1
     },
