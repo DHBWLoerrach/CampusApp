@@ -30,7 +30,7 @@ function StuVEventsDetails({route}) {
     function displayMap(address) {
         if (Platform.OS === 'android') {
             return (
-                <View>
+                <View style={styles.mapContainer}>
                     <AndroidMap location={{longitude: address.longitude, latitude: address.latitude}} zoom={19} style={styles.map}/>
                     <MaterialCommunityIcons
                         name={"google-maps"}
@@ -65,7 +65,7 @@ function StuVEventsDetails({route}) {
     }
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, flexDirection: 'column'}}>
             <ScrollView style={styles.scrollView}>
                 {event.images.banner ? <ResponsiveImage image={event.images.banner}/> : null}
                 <View style={styles.container}>
@@ -93,6 +93,8 @@ export default StuVEventsDetails;
 const styles = StyleSheet.create({
     scrollView: {
         zIndex: 2,
+        flex: 1,
+        flexGrow: 1.5,
         backgroundColor: "white"
     },
     container: {
@@ -109,10 +111,12 @@ const styles = StyleSheet.create({
       marginTop: 10
     },
     map: {
-        width: "100%",
-        height: 200,
-        marginTop: 10,
-        zIndex: -1
+        flex: 1,
+        zIndex: -1,
+        //backgroundColor: 'green'
+    },
+    mapContainer: {
+        flex: 1,
     },
     mapButton: {
         position: 'absolute',
