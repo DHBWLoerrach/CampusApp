@@ -20,18 +20,14 @@ import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 import { feeds } from '../../util/Constants';
-
-import {
-  fetchNewsFromWeb,
-  loadNewsFromStore,
-  saveNewsToStore,
-} from './store';
+import FetchManager, {DHBW_EVENTS, DHBW_NEWS} from "../../util/fetcher/FetchManager";
 
 function getSectionsForEvents(news) {
   if (!news || news.length === 0) return [];
 
   let sections = [];
   news.forEach((item) => {
+    let month;
     month = format(new Date(item.time), 'MMMM yyyy', {
       locale: de,
     });
@@ -113,8 +109,6 @@ function getPages(news, isLoading, refresh, navigate) {
   });
 }
 
-let lastDataFetch = 0;
-
 export default function NewsScreen() {
   const [isLoading, setLoading] = useState(true);
   const [hasNetworkError, setNetworkError] = useState(false);
@@ -125,31 +119,24 @@ export default function NewsScreen() {
   async function refresh() {
     setLoading(true);
     setNetworkError(false);
-    const data = await fetchNewsFromWeb();
+    const data = [];
+    data["news"] = await FetchManager.fetch(DHBW_NEWS, true);
+    data["events"] = await FetchManager.fetch(DHBW_EVENTS, true);
     if (data === 'networkError') {
+      //TODO!!!
       setNetworkError(true);
     } else {
-      saveNewsToStore(data);
-      lastDataFetch = new Date().getTime();
       setNews(data);
     }
     setLoading(false);
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      if (new Date().getTime() > lastDataFetch + 1000 * 60 * 60) {
-        setLoading(true);
-        loadData();
-      }
-    }, [])
-  );
-
-  // load data from local store or from web if store is emtpy
   async function loadData() {
-    let data = await loadNewsFromStore();
+    const data = [];
+    data["news"] = await FetchManager.fetch(DHBW_NEWS);
+    data["events"] = await FetchManager.fetch(DHBW_EVENTS);
+    //TODO
     if (data !== null) {
-      lastDataFetch = new Date().getTime();
       setNews(data);
       setLoading(false);
     } else refresh();
