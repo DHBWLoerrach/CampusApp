@@ -28,6 +28,10 @@ class FetchManager {
         return this.fetcher[dataSource].getItems(forceNewData, params);
     }
 
+    async getNewData(dataSource) {
+        return this.fetcher[dataSource].getNewItems();
+    }
+
 }
 
 export default new FetchManager();

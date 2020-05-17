@@ -88,7 +88,8 @@ export default function fetchNewsData(newsXMLData) {
       time: time,
       imgUrl: newsImage,
       body: newsContent,
-      attachments: attachments
+      attachments: attachments,
+      equals: (otherItem) => otherItem.heading === this.heading && this.time === otherItem.time
     });
   }
 
