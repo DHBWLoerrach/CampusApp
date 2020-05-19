@@ -25,8 +25,8 @@ export default class CacheFetcher {
     async getNewItems() {
         const cached = await this.getCachedItems(false);
         const items = await this.fetcher.getItems();
-        const newItems = items.filter(item => cached.filter(cache => item.equals(cache)).length !== 0);
-        const removedItems = cached.filter(cache => items.filter(item => item.equals(cache)).length !== 0);
+        const newItems = items.filter(item => cached.filter(cache => item.equals(cache)).length === 0);
+        const removedItems = cached.filter(cache => items.filter(item => item.equals(cache)).length === 0);
         this.setCachedItems(items);
         return {newItems, removedItems};
     }

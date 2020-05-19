@@ -89,7 +89,13 @@ export default function fetchNewsData(newsXMLData) {
       imgUrl: newsImage,
       body: newsContent,
       attachments: attachments,
-      equals: (otherItem) => otherItem.heading === this.heading && this.time === otherItem.time
+      equals: (otherItem) => {
+        const heading = newsItem
+            .getElementsByTagName('title')
+            .item(0)
+            .childNodes.item(0).nodeValue;
+        return heading === otherItem.heading && time.toISOString() === otherItem.time;
+      }
     });
   }
 

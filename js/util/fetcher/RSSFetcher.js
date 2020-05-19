@@ -9,7 +9,7 @@ export default class RSSFetcher {
     }
 
     async getItems() {
-        const response = await fetch(this.feedUrl);
+        const response = await fetch(this.feedUrl, {cache: "no-store"});
         if (!response.ok) {
             // server problem
             return null;

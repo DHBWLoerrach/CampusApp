@@ -12,12 +12,14 @@ class FetchManager {
 
     constructor() {
         this.fetcher[DHBW_NEWS] = new CacheFetcher(
-            new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-aktuell"),
+            //new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-aktuell"),
+            new RSSFetcher("http://diskstation.mineyannik.de/campusApp/rss-campus-app-aktuell.xml"),
             DHBW_NEWS
         );
 
         this.fetcher[DHBW_EVENTS] = new CacheFetcher(
-          new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
+          //new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
+            new RSSFetcher("http://diskstation.mineyannik.de/campusApp/rss-campus-app-termine.xml"),
             DHBW_EVENTS
         );
 
