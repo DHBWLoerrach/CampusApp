@@ -23,7 +23,11 @@ class FetchManager {
             DHBW_EVENTS
         );
 
-        this.fetcher[DHBW_COURSE] = new ICalFetcher();
+        this.fetcher[DHBW_COURSE] = new CacheFetcher(
+            new ICalFetcher(),
+            DHBW_COURSE,
+            60
+        );
     }
 
     async fetch(dataSource, forceNewData = false, params) {

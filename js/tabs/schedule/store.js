@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
-
-import getLecturesFromiCalData from './helpers';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 import FetchManager, {DHBW_COURSE} from "../../util/fetcher/FetchManager";
 
 export async function loadScheduleDataFromStore() {
@@ -27,5 +27,30 @@ export async function clearLecturesFromStore() {
 }
 
 export async function fetchLecturesFromWeb(course) {
-  return await FetchManager.fetch(DHBW_COURSE, true, {course});
+  const result = await FetchManager.fetch(DHBW_COURSE, true, {course});
+
+  //Get all dates
+  const dates = [];
+  result.forEach(lecture => {
+    const day = getDay(lecture.startDate);
+    if (!dates.includes(day)) {
+      dates.push(day);
+    }
+  });
+
+  const schedule = [];
+  dates.forEach(date => {
+    schedule.push({
+      title: date,
+      data: result.filter(lecture => date === getDay(lecture.startDate))
+    });
+  });
+  return schedule;
+}
+
+
+export function getDay(startDate) {
+  return format(startDate, 'EEEE dd.MM.yy', {
+    locale: de
+  });
 }

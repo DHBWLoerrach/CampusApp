@@ -135,8 +135,7 @@ export default function NewsScreen() {
     const data = [];
     data["news"] = await FetchManager.fetch(DHBW_NEWS);
     data["events"] = await FetchManager.fetch(DHBW_EVENTS);
-    //TODO
-    if (data !== null) {
+    if (data.length === 2) {
       setNews(data);
       setLoading(false);
     } else refresh();

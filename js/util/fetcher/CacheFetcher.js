@@ -4,30 +4,32 @@ export default class CacheFetcher {
 
     fetcher;
     uniqueName: string;
+    maxCacheTime;
 
-    constructor(fetcher, uniqueName) {
+    constructor(fetcher, uniqueName, maxCacheTime = 60 * 60 * 1000) {
         this.fetcher = fetcher;
         this.uniqueName = uniqueName;
+        this.maxCacheTime = maxCacheTime;
     }
 
-    async getItems(forceNewData) {
+    async getItems(forceNewData, params) {
         if (!forceNewData) {
             const cached = this.getCachedItems();
             if (cached != null) {
-                return cached;
+                return cached.items;
             }
         }
-        const items = await this.fetcher.getItems();
-        this.setCachedItems(items);
+        const items = await this.fetcher.getItems(params);
+        this.setCachedItems(items, params);
         return items;
     }
 
     async getNewItems() {
         const cached = await this.getCachedItems(false);
-        const items = await this.fetcher.getItems();
-        const newItems = items.filter(item => cached.filter(cache => item.equals(cache)).length === 0);
-        const removedItems = cached.filter(cache => items.filter(item => item.equals(cache)).length === 0);
-        this.setCachedItems(items);
+        const items = await this.fetcher.getItems(cached.params);
+        const newItems = items.filter(item => cached.items.filter(cache => item.equals(cache)).length === 0);
+        const removedItems = cached.items.filter(cache => items.filter(item => item.equals(cache)).length === 0);
+        this.setCachedItems(items, cached.params);
         return {newItems, removedItems};
     }
 
@@ -35,22 +37,22 @@ export default class CacheFetcher {
         const cached = await AsyncStorage.getItem(this.uniqueName);
         if (cached != null) {
             const cacheObject = JSON.parse(cached);
-            if (!checkAge || !cacheTooOld(cacheObject.timeStamp)) {
-                return cacheObject.items;
+            if (!checkAge || !this.isCacheTooOld(cacheObject.timeStamp)) {
+                return {items: cacheObject.items, params: cacheObject.params};
             }
         }
         return null;
     }
 
-    async setCachedItems(items) {
-        await AsyncStorage.setItem(this.uniqueName, JSON.stringify({items, timestamp: currentTime()}));
+    async setCachedItems(items, params) {
+        await AsyncStorage.setItem(this.uniqueName, JSON.stringify({items, params, timestamp: currentTime()}));
+    }
+
+    isCacheTooOld(oldTime) {
+        return currentTime() > oldTime + this.maxCacheTime;
     }
 }
 
 function currentTime() {
     return new Date().getTime();
-}
-
-function cacheTooOld(oldTime) {
-    return currentTime() > oldTime + 60 * 60 * 1000;
 }

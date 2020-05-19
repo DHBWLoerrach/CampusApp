@@ -35,6 +35,7 @@ function ScheduleScreen({ navigation }) {
     setCourse(course);
     setLectures(lectures);
     const newLectures = await fetchLecturesFromWeb(course);
+    //TODO
     if (newLectures === 'networkError' && lectures === null) {
       // new lectures in store and server not reachable
       setNetworkError(true);
