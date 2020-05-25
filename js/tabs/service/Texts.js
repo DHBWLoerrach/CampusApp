@@ -72,7 +72,7 @@ export function TextCafeteriaKKH() {
         <Text
           style={styles.link}
           onPress={() =>
-            Linking.openURL('https://www.dhbw-loerrach.de/mensa')
+            Linking.openURL('https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach')
           }
         >
           Speisepläne anzeigen
