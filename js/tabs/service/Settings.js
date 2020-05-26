@@ -6,6 +6,7 @@ import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import { textPersonCategory } from './Texts';
 import {dhbwGray, dhbwRed} from "../../util/Colors";
+import {loadNotificationSettings, saveNotificationSettings} from "./SettingsHelper";
 
 export default class Settings extends React.Component {
 
@@ -18,23 +19,22 @@ export default class Settings extends React.Component {
   };
 
   componentDidMount(): void {
-    this.loadNotificationSettings();
+    this.loadSettings();
   }
 
   componentWillUnmount(): void {
-    this.saveNotificationSettings();
+    this.saveSettings();
   }
 
-  async loadNotificationSettings() {
+  async loadSettings() {
     console.log("Loading Notification Settings");
-    const settings = await AsyncStorage.getItem('notificationSettings');
+    const settings = await loadNotificationSettings();
     if (settings != null) {
-      const settingsObject = JSON.parse(settings);
       this.setState({
-        notificationEnabled: settingsObject['notificationEnabled'],
-        notificationdhbwNews: settingsObject['notificationdhbwNews'],
-        notificationdhbwEvents: settingsObject['notificationdhbwEvents'],
-        notificationschedule: settingsObject['notificationschedule'],
+        notificationEnabled: settings['notificationEnabled'],
+        notificationdhbwNews: settings['notificationdhbwNews'],
+        notificationdhbwEvents: settings['notificationdhbwEvents'],
+        notificationschedule: settings['notificationschedule'],
         loading: false
       });
     } else {
@@ -42,14 +42,14 @@ export default class Settings extends React.Component {
     }
   }
 
-  async saveNotificationSettings() {
+  async saveSettings() {
     console.log("Saving Notification Settings");
     const settingsObject = {};
     settingsObject['notificationsEnabled'] = this.state.notificationsEnabled;
     settingsObject['notificationdhbwNews'] = this.state.notificationdhbwNews;
     settingsObject['notificationdhbwEvents'] = this.state.notificationdhbwEvents;
     settingsObject['notificationschedule'] = this.state.notificationschedule;
-    AsyncStorage.setItem("notificationSettings", JSON.stringify(settingsObject));
+    saveNotificationSettings(settingsObject);
   }
 
   render() {
