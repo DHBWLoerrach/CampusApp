@@ -75,6 +75,9 @@ function StuVEventsDetails({route}) {
                     }
                     {event.price ? <Text style={styles.date}>Preis: {event.price}</Text> : null }
                     <Text style={styles.text}>{event.text}</Text>
+                    {event.date.registrationUntil ?
+                        <Text style={styles.date}>Anmeldefrist: {unixTimeToDateText(event.date.registrationUntil)} {unixTimeToTimeText(event.date.registrationUntil)}</Text>
+                        : null}
                     {event.registerLink ?
                         <View style={styles.button}>
                             <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
