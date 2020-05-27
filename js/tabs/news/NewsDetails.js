@@ -55,7 +55,7 @@ export default class NewsDetails extends Component {
         <html>
           <head>
             <style>
-              body {font-family: -apple-system; ${fontSize} }
+              body {font-family: -apple-system; ${fontSize}; padding: 0 20px; }
               h2 {color: ${Colors.dhbwRedWebView}}
             </style>
           </head>
