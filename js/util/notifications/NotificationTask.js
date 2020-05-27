@@ -29,7 +29,7 @@ async function NotificationTask() {
         const events = await FetchManager.getNewData(DHBW_EVENTS);
         events.newItems.forEach(newItem => PushNotification.localNotification({
             title: "Neuer DHBW Termin:",
-            message: newItem.heading,
+            message: newItem.heading + " am " + getDay(Date.parse(newItem.time)),
             smallIcon: "ic_launcher_foreground",
             color: dhbwRed})
         );
