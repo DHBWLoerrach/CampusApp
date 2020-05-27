@@ -88,7 +88,14 @@ export default function fetchNewsData(newsXMLData) {
       time: time,
       imgUrl: newsImage,
       body: newsContent,
-      attachments: attachments
+      attachments: attachments,
+      equals: (otherItem) => {
+        const heading = newsItem
+            .getElementsByTagName('title')
+            .item(0)
+            .childNodes.item(0).nodeValue;
+        return heading === otherItem.heading && time.toISOString() === otherItem.time;
+      }
     });
   }
 

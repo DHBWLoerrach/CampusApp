@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  AppRegistry,
   StatusBar,
   StyleSheet,
   View
@@ -9,8 +10,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
+import NotificationTaskScheduler from "./util/notifications/NotificationTaskScheduler";
 
 export const RoleContext = React.createContext(null);
+NotificationTaskScheduler();
 
 export default function CampusApp() {
   const [role, setRole] = useState(null);
