@@ -7,10 +7,12 @@ export default class ICalFetcher {
         try {
             //needed because of bad cache behavior
             const suffix = "?" + new Date().getTime();
-            //const scheduleUrl = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${params.course}@dhbw-loerrach.de/Kalender/calendar.ics`;
-            const scheduleUrl = `http://diskstation.mineyannik.de/campusApp/${params.course}/calendar.ics` + suffix;
+            const scheduleUrl = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${params.course}@dhbw-loerrach.de/Kalender/calendar.ics${suffix}`;
             console.log("Loading from " + scheduleUrl);
             const response = await fetch(scheduleUrl, {cache: "no-store"});
+            if (response.status !== 200) {
+                return null;
+            }
             const responseBody = await response.text();
             lectures = getLecturesFromiCalData(responseBody);
         } catch (error) {

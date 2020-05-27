@@ -28,7 +28,9 @@ export async function clearLecturesFromStore() {
 
 export async function fetchLecturesFromWeb(course) {
   const result = await FetchManager.fetch(DHBW_COURSE, true, {course});
-
+  if (result === null) {
+    return null;
+  }
   //Get all dates
   const dates = [];
   result.forEach(lecture => {
