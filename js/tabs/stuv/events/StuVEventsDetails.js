@@ -7,7 +7,6 @@ import MapMarker from "react-native-maps/lib/components/MapMarker";
 import ResponsiveImage from "../../../util/ResponsiveImage";
 import AndroidMap from "../../../util/AndroidMap";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import {add} from "react-native-reanimated";
 
 function StuVEventsDetails({route}) {
     const event = route.params.event;
@@ -74,7 +73,7 @@ function StuVEventsDetails({route}) {
                     {event.date.to ? <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} bis {unixTimeToTimeText(event.date.to)} Uhr</Text> :
                         <Text style={styles.date}>{unixTimeToTimeText(event.date.from)} Uhr</Text>
                     }
-                    {event.price !== 0 ? <Text style={styles.date}>Preis: {event.price.toFixed(2)} €</Text> : null }
+                    {event.price ? <Text style={styles.date}>Preis: {event.price}</Text> : null }
                     <Text style={styles.text}>{event.text}</Text>
                     {event.registerLink ?
                         <View style={styles.button}>
