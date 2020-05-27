@@ -64,7 +64,7 @@ public class AndroidMapView extends SimpleViewManager<MapView> {
     @NonNull
     @Override
     protected MapView createViewInstance(@NonNull ThemedReactContext reactContext) {
-        MapView map = new MapView(reactContext);
+        MapView map = new CustomMapView(reactContext);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         map.setMultiTouchControls(true);

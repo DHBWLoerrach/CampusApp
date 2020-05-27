@@ -81,10 +81,9 @@ function StuVEventsDetails({route}) {
                             <Button title="Anmelden" color={Colors.dhbwRed} onPress={openRegisterLink} />
                         </View>
                         : null}
-
                 </View>
+                {displayMap(event.address)}
             </ScrollView>
-            {displayMap(event.address)}
         </View>
     )
 }
@@ -92,13 +91,12 @@ export default StuVEventsDetails;
 
 const styles = StyleSheet.create({
     scrollView: {
-        zIndex: 2,
-        flex: 1,
-        flexGrow: 1.5,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     container: {
         padding: 10,
+        backgroundColor: "white",
+        zIndex: 2,
     },
     copyrightText: {
         position: 'absolute',
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
         //backgroundColor: 'green'
     },
     mapContainer: {
-        flex: 1,
+        height: 250
     },
     mapButton: {
         position: 'absolute',
