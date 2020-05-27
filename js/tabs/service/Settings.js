@@ -1,6 +1,5 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, Text, View, Switch } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
@@ -15,7 +14,7 @@ export default class Settings extends React.Component {
     notificationsEnabled: true,
     notificationdhbwNews: true,
     notificationdhbwEvents: true,
-    notificationschedule: true,
+    notificationschedule: false,
   };
 
   componentDidMount(): void {
@@ -94,7 +93,7 @@ export default class Settings extends React.Component {
                         value={this.state.notificationdhbwEvents}
                     />
                   </View>
-                  <View style={styles.toggleContainer}>
+                  {false ? <View style={styles.toggleContainer}>
                     <Text>Veränderungen im Vorlesungsplan</Text>
                     <Switch
                         trackColor={{false: dhbwGray, true: dhbwRed}}
@@ -102,7 +101,7 @@ export default class Settings extends React.Component {
                         onValueChange={(value) => this.setState({notificationschedule: value})}
                         value={this.state.notificationschedule}
                     />
-                  </View>
+                  </View>: null }
                 </View>
                 : null}
           </View>
