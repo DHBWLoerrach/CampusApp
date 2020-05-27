@@ -1,5 +1,5 @@
 import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, StyleSheet, ScrollView, Text, View } from 'react-native';
 
 import Colors from '../../util/Colors';
 
@@ -279,7 +279,7 @@ export function TextImprint() {
 
 export function TextPrivacy() {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.block}>
         <Text style={styles.text}>
           Die Inhalte unserer Seiten wurden mit größter Sorgfalt
@@ -307,17 +307,23 @@ export function TextPrivacy() {
       </View>
       <View style={styles.block}>
         <Text style={styles.text}>
-          Duale Hochschule Baden-Württemberg Lörrach
+          Duale Hochschule Baden-Württemberg
           {'\n'}
-          Hangstraße 46-50
+          Friedrichstraße 14
           {'\n'}
-          79539 Lörrach
+          70174 Stuttgart
           {'\n'}
-          Tel: +49 7621 2071 0{'\n'}
-          info@dhbw-loerrach.de
+          Telefon: +49 711 320 660-0{'\n'}
+          Telefax: +49 711 320 660-66{'\n'}
+          <Text style={styles.link} onPress={() => Linking.openURL("mailto:poststelle@dhbw.de")}>poststelle@dhbw.de</Text>{'\n'}
+          <Text style={styles.link} onPress={() => Linking.openURL("https://www.dhbw.de")}>www.dhbw.de</Text>{'\n'}
+        </Text>
+        <Text style={styles.text}>
+          Unseren Datenschutzbeauftragten erreichen Sie unter unserer Postadresse mit dem Zusatz "Datenschutzbeauftragte*r" oder unter <Text style={styles.link} onPress={() => Linking.openURL("mailto:datenschutz@dhbw.de")}>datenschutz@dhbw.de</Text>.{'\n'}
+          Die Verarbeitung dieser E-Mail-Adresse für Zwecke der Werbung oder der Markt- oder Meinungsforschung ist untersagt.
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
