@@ -76,18 +76,15 @@ function getPages(news, isLoading, refresh, navigate) {
       );
     } else if (feed.key === 'events') {
       content = (
-        <SectionList
-          sections={getSectionsForEvents(news[feed.key])}
-          keyExtractor={(item) => 'item' + item.id}
-          onRefresh={refresh}
-          refreshing={isLoading}
-          renderItem={({ item }) =>
-            renderNewsItem(item, feed.key, navigate)
-          }
-          renderSectionHeader={({ section }) => (
-            <DayHeader title={section.title} />
-          )}
-        />
+          <FlatList
+              data={news[feed.key]}
+              onRefresh={refresh}
+              refreshing={isLoading}
+              keyExtractor={(item) => 'item' + item.id}
+              renderItem={({ item }) =>
+                  renderNewsItem(item, feed.key, navigate)
+              }
+          />
       );
     } else {
       content = (
@@ -178,7 +175,6 @@ export default function NewsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   center: {
     flex: 2,
