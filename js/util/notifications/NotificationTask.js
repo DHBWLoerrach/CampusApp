@@ -16,7 +16,7 @@ async function NotificationTask() {
         const news = await FetchManager.getNewData(DHBW_NEWS);
         news.newItems.forEach(newItem =>
             PushNotification.localNotification({
-                title: "Neue DHBW News!",
+                title: "Neue DHBW News:",
                 message: newItem.heading,
                 smallIcon: "ic_launcher_foreground",
                 color: dhbwRed
@@ -28,7 +28,7 @@ async function NotificationTask() {
     if (settings['notificationdhbwEvents']) {
         const events = await FetchManager.getNewData(DHBW_EVENTS);
         events.newItems.forEach(newItem => PushNotification.localNotification({
-            title: "Neuer DHBW Termin!",
+            title: "Neuer DHBW Termin:",
             message: newItem.heading,
             smallIcon: "ic_launcher_foreground",
             color: dhbwRed})
@@ -43,7 +43,7 @@ async function NotificationTask() {
             //Do not notify of modifications in the past
             if (new Date(parsedStartDate) < new Date()) { return; }
             PushNotification.localNotification({
-                title: "Vorlesung hinzugefügt!",
+                title: "Vorlesung hinzugefügt:",
                 message: newItem.title + " am " + getDay(parsedStartDate),
                 smallIcon: "ic_launcher_foreground",
                 color: dhbwRed
@@ -54,7 +54,7 @@ async function NotificationTask() {
             //Do not notify of modifications in the past
             if (new Date(parsedStartDate) < new Date()) { return; }
             PushNotification.localNotification({
-                title: "Vorlesung entfernt!",
+                title: "Vorlesung entfernt:",
                 message: removedItem.title + " am " + getDay(parsedStartDate),
                 smallIcon: "ic_launcher_foreground",
                 color: dhbwRed
