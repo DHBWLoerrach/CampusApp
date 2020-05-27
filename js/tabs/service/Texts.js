@@ -72,7 +72,7 @@ export function TextCafeteriaKKH() {
         <Text
           style={styles.link}
           onPress={() =>
-            Linking.openURL('https://www.dhbw-loerrach.de/mensa')
+            Linking.openURL('https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach')
           }
         >
           Speisepläne anzeigen
@@ -298,23 +298,15 @@ export function TextPrivacy() {
         </Text>
       </View>
       <View style={styles.block}>
-        <Text style={styles.headline}>Ansprechpartner</Text>
         <Text style={styles.text}>
-          Zu Fragen bzgl. des Datenschutzes wenden Sie sich bitte an
-          den Datenschutzbeauftragten der DHBW Lörrach:
-          {'\n'}
-          {'\n'}
-          Prof. Dr. Lutz-Peter Kurdelski
-          {'\n'}
-          Professor für Lehraufgaben
-          {'\n'}
-          Tel: +49 7621 2071 423
-          {'\n'}
-          kurdelski@dhbw-loerrach.de
-          {'\n'}
-          {'\n'}
-          Anschrift
-          {'\n'}
+          Unsere Datenschutzerklärung finden Sie unter:
+        </Text>
+        <Text style={styles.link} onPress={() => Linking.openURL("https://dhbw-loerrach.de/datenschutz")}>
+          https://dhbw-loerrach.de/datenschutz
+        </Text>
+      </View>
+      <View style={styles.block}>
+        <Text style={styles.text}>
           Duale Hochschule Baden-Württemberg Lörrach
           {'\n'}
           Hangstraße 46-50
@@ -344,5 +336,5 @@ const styles = StyleSheet.create({
   },
   link: {
     color: Colors.link,
-  },
+  }
 });

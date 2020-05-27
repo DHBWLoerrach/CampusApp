@@ -67,8 +67,7 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
-    url:
-      'https://www.swfr.de/beratung-soziales/beratungsstellen/info/',
+    url: 'https://www.swfr.de/de/beratung-soziales/infoladen/',
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',

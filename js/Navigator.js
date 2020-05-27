@@ -48,7 +48,11 @@ function NewsStack() {
         component={NewsScreen}
         options={{ title: 'Neuigkeiten & Termine' }}
       />
-      <Stack.Screen name="NewsDetails" component={NewsDetails} />
+      <Stack.Screen
+        name="NewsDetails"
+        component={NewsDetails}
+        options={{headerTitle: "Neuigkeiten & Termine"}}
+      />
     </Stack.Navigator>
   );
 }
