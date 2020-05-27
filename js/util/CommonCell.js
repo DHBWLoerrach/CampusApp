@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     image: {
+        marginTop: 'auto',
+        marginBottom: 'auto',
+        height: "100%",
         flex: 1,
         marginRight: 10,
         resizeMode: 'contain',

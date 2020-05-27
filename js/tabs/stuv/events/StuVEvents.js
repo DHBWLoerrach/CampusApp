@@ -43,7 +43,7 @@ function StuVEvents() {
             keyExtractor={(item) => 'item' + item.title}
             renderItem={({item}) =>
                 <CommonCell
-                    imageSource={{uri: item.images.overview}}
+                    imageSource={item.images.overview ? {uri:item.images.overview} : require('../../../img/crowd.png')}
                     title={item.title}
                     details={
                         [unixTimeToDateText(item.date.from), item.date.to ?

@@ -45,7 +45,7 @@ function StuVNews() {
                 <CommonCell
                     title={item.title}
                     details={item.date ? [unixTimeToDateText(item.date)] : []}
-                    imageSource={{uri: item.images.overview}}
+                    imageSource={!item.images.overview ? {uri:item.images.overview} : require('../../../img/crowd.png')}
                     description={item.text}
                     onPress={() => navigate(item, navigation)}
                 />

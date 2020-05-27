@@ -11,7 +11,7 @@ import CommonCell from "../../util/CommonCell";
 
 export default class NewsCell extends Component {
   render() {
-    let image = require('./img/news-announcement.png');
+    let image = require('../../img/logo.png');
     // formatting for news items: relative date (e.g. "3 days ago")
     let time = formatDistanceToNow(new Date(this.props.news.time), {
       locale: de,
