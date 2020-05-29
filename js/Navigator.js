@@ -8,6 +8,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './util/Colors';
 import HeaderIcon from './util/HeaderIcon';
 import StuVIcon from './../assets/stuv_icon.svg';
+import { enableStuV } from './../env.js';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -252,7 +253,7 @@ export default function Navigator() {
         }}
       >
         <Tab.Screen name="News" component={NewsStack} />
-        <Tab.Screen name="StuV" component={StuVStack} />
+        {enableStuV ? <Tab.Screen name="StuV" component={StuVStack} />: null}
         <Tab.Screen
           name="Schedule"
           component={ScheduleStack}
