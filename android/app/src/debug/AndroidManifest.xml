@@ -6,10 +6,6 @@
 
     <application android:usesCleartextTraffic="true" tools:targetApi="28" tools:ignore="GoogleAppIndexingWarning"
     >
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDJ0iqEICXrY3JN3HunF4_nxKHjSE6yPPM"
-        />
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 </manifest>
