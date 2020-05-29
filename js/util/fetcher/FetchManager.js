@@ -17,7 +17,8 @@ class FetchManager {
         );
 
         this.fetcher[DHBW_EVENTS] = new CacheFetcher(
-            new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
+          //new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
+            new RSSFetcher("http://diskstation.mineyannik.de/campusApp/rss-campus-app-termine.xml"),
             DHBW_EVENTS
         );
 
