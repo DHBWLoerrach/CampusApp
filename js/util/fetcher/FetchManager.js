@@ -16,16 +16,15 @@ class FetchManager {
             DHBW_NEWS
         );
 
-        this.fetcher[DHBW_EVENTS] = new CacheFetcher(
-          //new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
-            new RSSFetcher("http://diskstation.mineyannik.de/campusApp/rss-campus-app-termine.xml"),
-            DHBW_EVENTS
-        );
-
         this.fetcher[DHBW_COURSE] = new CacheFetcher(
             new ICalFetcher(),
             DHBW_COURSE,
             60
+        );
+
+        this.fetcher[DHBW_EVENTS] = new CacheFetcher(
+            new RSSFetcher("https://dhbw-loerrach.de/rss-campus-app-termine"),
+            DHBW_EVENTS
         );
     }
 
