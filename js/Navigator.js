@@ -7,6 +7,8 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from './util/Colors';
 import HeaderIcon from './util/HeaderIcon';
+import StuVIcon from './../assets/stuv_icon.svg';
+import { enableStuV } from './../env.js';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -20,6 +22,9 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
+import StuVScreen from './tabs/stuv/StuVScreen';
+import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
+import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
 
 const stackHeaderConfig = {
   headerBackTitle: 'Zurück',
@@ -51,7 +56,36 @@ function NewsStack() {
       <Stack.Screen
         name="NewsDetails"
         component={NewsDetails}
-        options={{headerTitle: "Neuigkeiten & Termine"}}
+        options={{ headerTitle: 'Neuigkeiten & Termine' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function StuVStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={stackHeaderConfig}
+    >
+      <Stack.Screen
+        name="Home"
+        component={StuVScreen}
+        options={{ title: 'Studierendenvertretung - StuV' }}
+      />
+      <Stack.Screen
+        name={'StuVEventsDetails'}
+        component={StuVEventsDetails}
+        options={({ route }) => {
+          return { title: route.params.event.title };
+        }}
+      />
+      <Stack.Screen
+        name={'StuVNewsDetails'}
+        component={StuVNewsDetails}
+        options={({ route }) => {
+          return { title: route.params.news.title };
+        }}
       />
     </Stack.Navigator>
   );
@@ -198,7 +232,8 @@ const tabsConfig = ({ route }) => ({
     else if (routeName === 'Schedule') iconName = 'school';
     else if (routeName === 'Canteen') iconName = 'restaurant';
     else if (routeName === 'Services') iconName = 'info-outline';
-
+    else if (routeName === 'StuV')
+      return <StuVIcon width={32} height={32} color={color} />;
     return <MaterialIcon name={iconName} size={32} color={color} />;
   },
 });
@@ -215,6 +250,9 @@ export default function Navigator() {
         }}
       >
         <Tab.Screen name="News" component={NewsStack} />
+        {enableStuV ? (
+          <Tab.Screen name="StuV" component={StuVStack} />
+        ) : null}
         <Tab.Screen
           name="Schedule"
           component={ScheduleStack}

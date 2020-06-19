@@ -1,52 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SectionList,
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { useNavigation } from '@react-navigation/native';
 
 import NewsCell from './NewsCell';
 
-import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 import { feeds } from '../../util/Constants';
-
-import {
-  fetchNewsFromWeb,
-  loadNewsFromStore,
-  saveNewsToStore,
-} from './store';
-
-function getSectionsForEvents(news) {
-  if (!news || news.length === 0) return [];
-
-  let sections = [];
-  news.forEach((item) => {
-    month = format(new Date(item.time), 'MMMM yyyy', {
-      locale: de,
-    });
-
-    let index = sections.findIndex(
-      (section) => section.title === month
-    );
-    if (index === -1) {
-      sections.push({ title: month, data: [item] });
-    } else {
-      sections[index].data.push(item);
-    }
-  });
-  return sections;
-}
+import FetchManager, {
+  DHBW_EVENTS,
+  DHBW_NEWS,
+} from '../../util/fetcher/FetchManager';
 
 function renderNewsItem(item, topic, navigate) {
   return (
@@ -80,17 +49,14 @@ function getPages(news, isLoading, refresh, navigate) {
       );
     } else if (feed.key === 'events') {
       content = (
-        <SectionList
-          sections={getSectionsForEvents(news[feed.key])}
-          keyExtractor={(item) => 'item' + item.id}
+        <FlatList
+          data={news[feed.key]}
           onRefresh={refresh}
           refreshing={isLoading}
+          keyExtractor={(item) => 'item' + item.id}
           renderItem={({ item }) =>
             renderNewsItem(item, feed.key, navigate)
           }
-          renderSectionHeader={({ section }) => (
-            <DayHeader title={section.title} />
-          )}
         />
       );
     } else {
@@ -113,8 +79,6 @@ function getPages(news, isLoading, refresh, navigate) {
   });
 }
 
-let lastDataFetch = 0;
-
 export default function NewsScreen() {
   const [isLoading, setLoading] = useState(true);
   const [hasNetworkError, setNetworkError] = useState(false);
@@ -125,31 +89,23 @@ export default function NewsScreen() {
   async function refresh() {
     setLoading(true);
     setNetworkError(false);
-    const data = await fetchNewsFromWeb();
+    const data = [];
+    data['news'] = await FetchManager.fetch(DHBW_NEWS, true);
+    data['events'] = await FetchManager.fetch(DHBW_EVENTS, true);
     if (data === 'networkError') {
+      //TODO!!!
       setNetworkError(true);
     } else {
-      saveNewsToStore(data);
-      lastDataFetch = new Date().getTime();
       setNews(data);
     }
     setLoading(false);
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      if (new Date().getTime() > lastDataFetch + 1000 * 60 * 60) {
-        setLoading(true);
-        loadData();
-      }
-    }, [])
-  );
-
-  // load data from local store or from web if store is emtpy
   async function loadData() {
-    let data = await loadNewsFromStore();
-    if (data !== null) {
-      lastDataFetch = new Date().getTime();
+    const data = [];
+    data['news'] = await FetchManager.fetch(DHBW_NEWS);
+    data['events'] = await FetchManager.fetch(DHBW_EVENTS);
+    if (data.length === 2) {
       setNews(data);
       setLoading(false);
     } else refresh();
@@ -192,7 +148,6 @@ export default function NewsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   center: {
     flex: 2,

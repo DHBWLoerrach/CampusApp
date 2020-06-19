@@ -19,6 +19,7 @@ import {
   textPersonCategory,
 } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
+import NotificationSettings from './util/NotificationSettings';
 
 const ButtonTouchable =
   Platform.OS === 'android'
@@ -66,6 +67,15 @@ export default function WelcomeScreen(props) {
             onRoleChange={(role) => setRole(role)}
           />
         </View>
+        <View style={styles.notificationSettings}>
+          <Text>
+            Bitte wähle hier aus welche Benachrichtigungen du erhalten
+            möchtest:
+          </Text>
+        </View>
+
+        <NotificationSettings />
+
         <View style={styles.disclaimer}>
           <TextDisclaimer />
         </View>
@@ -136,6 +146,9 @@ const styles = StyleSheet.create({
   selectionText: {
     marginRight: 20,
     marginBottom: 15,
+  },
+  notificationSettings: {
+    marginTop: 10,
   },
   disclaimer: {
     marginTop: 10,
