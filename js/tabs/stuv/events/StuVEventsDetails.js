@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Alert,
   Button,
-  Image,
   Linking,
   ScrollView,
   StyleSheet,
@@ -12,11 +11,8 @@ import {
 } from 'react-native';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import Colors from '../../../util/Colors';
-import MapView, { UrlTile } from 'react-native-maps';
-import MapMarker from 'react-native-maps/lib/components/MapMarker';
 import ResponsiveImage from '../../../util/ResponsiveImage';
-import AndroidMap from '../../../util/AndroidMap';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import StuVEventMap from './StuVEventMap';
 
 function StuVEventsDetails({ route }) {
   const event = route.params.event;
@@ -32,71 +28,6 @@ function StuVEventsDetails({ route }) {
       }
       Linking.openURL(event.registerLink);
     });
-  }
-
-  function openGMaps(latitude, longitude, name) {
-    Linking.openURL(
-      'geo:' +
-        latitude +
-        ',' +
-        longitude +
-        '?q=' +
-        latitude +
-        ',' +
-        longitude
-    );
-  }
-
-  function displayMap(address) {
-    if (Platform.OS === 'android') {
-      return (
-        <View style={styles.mapContainer}>
-          <AndroidMap
-            location={{
-              longitude: address.longitude,
-              latitude: address.latitude,
-            }}
-            zoom={19}
-            style={styles.map}
-          />
-          <MaterialCommunityIcons
-            name={'google-maps'}
-            size={32}
-            style={styles.mapButton}
-            onPress={() =>
-              openGMaps(
-                address.latitude,
-                address.longitude,
-                address.name
-              )
-            }
-          />
-          <Text style={styles.copyrightText}>
-            © OpenStreetMap contributors
-          </Text>
-        </View>
-      );
-    } else {
-      return (
-        <MapView
-          initialRegion={{
-            latitude: address.latitude,
-            longitude: address.longitude,
-            latitudeDelta: 0.003,
-            longitudeDelta: 0.003,
-          }}
-          style={styles.map}
-        >
-          <MapMarker
-            title={address.name}
-            coordinate={{
-              latitude: address.latitude,
-              longitude: address.longitude,
-            }}
-          />
-        </MapView>
-      );
-    }
   }
 
   return (
@@ -141,7 +72,11 @@ function StuVEventsDetails({ route }) {
             </View>
           ) : null}
         </View>
-        {displayMap(event.address)}
+        <StuVEventMap
+          latitude={event.address.latitude}
+          longitude={event.address.longitude}
+          venue={event.address.name}
+        />
       </ScrollView>
     </View>
   );
@@ -157,29 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     zIndex: 2,
   },
-  copyrightText: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    fontSize: 10,
-    margin: 3,
-  },
   button: {
     marginTop: 10,
-  },
-  map: {
-    flex: 1,
-    zIndex: -1,
-    //backgroundColor: 'green'
-  },
-  mapContainer: {
-    height: 250,
-  },
-  mapButton: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    margin: 3,
   },
   headline: {
     fontSize: 24,
