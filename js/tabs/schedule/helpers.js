@@ -14,7 +14,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
   var tzid = timezoneComp.getFirstPropertyValue('tzid');
   var timezone = new ICAL.Timezone({
     component: timezoneComp,
-    tzid
+    tzid,
   });
   ICAL.TimezoneService.register(tzid, timezone);
 
@@ -62,7 +62,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
             startTime: next.toJSDate().getTime(),
             endDate: next.toJSDate(),
             endTime: recurrenceEvent.endDate.toJSDate().getTime(),
-            location: recurrenceEvent.location
+            location: recurrenceEvent.location,
           });
         }
       } else {
@@ -72,7 +72,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
           startTime: event.startDate.toJSDate().getTime(),
           endDate: event.endDate.toJSDate(),
           endTime: event.endDate.toJSDate().getTime(),
-          location: event.location
+          location: event.location,
         });
         // if event lasts longer than one day add an extra event for each day
         for (var day = 1; day < event.duration.days; day++) {
@@ -84,7 +84,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
             startTime: event.startDate.toJSDate().getTime(),
             endDate: event.endDate.toJSDate(),
             endTime: event.endDate.toJSDate().getTime(),
-            location: event.location
+            location: event.location,
           });
         }
       }
@@ -95,14 +95,14 @@ export default function getLecturesFromiCalData(iCalendarData) {
   var rangeStart = startOfToday();
   var rangeEnd = new Date().setDate(rangeStart.getDate() + range);
 
-  var filteredEvents = events.filter(function(filterEvent) {
+  var filteredEvents = events.filter(function (filterEvent) {
     return (
       filterEvent.startTime >= rangeStart.getTime() &&
       filterEvent.endDate <= rangeEnd
     );
   });
 
-  filteredEvents.sort(function(event1, event2) {
+  filteredEvents.sort(function (event1, event2) {
     if (event1.startDate < event2.startDate) {
       return -1;
     }
@@ -123,12 +123,12 @@ export default function getLecturesFromiCalData(iCalendarData) {
       startTime: startTime,
       endTime: endTime,
       location: event.location,
-      equals: (otherItem) => event.description === otherItem.title &&
+      equals: (otherItem) =>
+        event.description === otherItem.title &&
         startTime === otherItem.startTime &&
-        endTime === otherItem.endTime
+        endTime === otherItem.endTime,
     };
-  })
-
+  });
 }
 
 function _getRecurrenceExceptions(vevents) {
@@ -141,7 +141,9 @@ function _getRecurrenceExceptions(vevents) {
       if (!result[event.uid]) {
         result[event.uid] = [];
       }
-      result[event.uid].push(event.recurrenceId.toJSDate().toDateString());
+      result[event.uid].push(
+        event.recurrenceId.toJSDate().toDateString()
+      );
     }
   }
   return result;

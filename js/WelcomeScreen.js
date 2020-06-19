@@ -19,7 +19,7 @@ import {
   textPersonCategory,
 } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
-import NotificationSettings from "./util/NotificationSettings";
+import NotificationSettings from './util/NotificationSettings';
 
 const ButtonTouchable =
   Platform.OS === 'android'
@@ -68,10 +68,13 @@ export default function WelcomeScreen(props) {
           />
         </View>
         <View style={styles.notificationSettings}>
-          <Text>Bitte wähle hier aus welche Benachrichtigungen du erhalten möchtest:</Text>
+          <Text>
+            Bitte wähle hier aus welche Benachrichtigungen du erhalten
+            möchtest:
+          </Text>
         </View>
 
-        <NotificationSettings/>
+        <NotificationSettings />
 
         <View style={styles.disclaimer}>
           <TextDisclaimer />
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   notificationSettings: {
-    marginTop: 10
+    marginTop: 10,
   },
   disclaimer: {
     marginTop: 10,

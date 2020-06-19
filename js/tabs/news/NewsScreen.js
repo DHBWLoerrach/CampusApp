@@ -1,48 +1,21 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  SectionList,
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { useNavigation } from '@react-navigation/native';
 
 import NewsCell from './NewsCell';
 
-import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import TabbedSwipeView from '../../util/TabbedSwipeView';
 import { feeds } from '../../util/Constants';
-import FetchManager, {DHBW_EVENTS, DHBW_NEWS} from "../../util/fetcher/FetchManager";
-
-function getSectionsForEvents(news) {
-  if (!news || news.length === 0) return [];
-
-  let sections = [];
-  news.forEach((item) => {
-    let month;
-    month = format(new Date(item.time), 'MMMM yyyy', {
-      locale: de,
-    });
-
-    let index = sections.findIndex(
-      (section) => section.title === month
-    );
-    if (index === -1) {
-      sections.push({ title: month, data: [item] });
-    } else {
-      sections[index].data.push(item);
-    }
-  });
-  return sections;
-}
+import FetchManager, {
+  DHBW_EVENTS,
+  DHBW_NEWS,
+} from '../../util/fetcher/FetchManager';
 
 function renderNewsItem(item, topic, navigate) {
   return (
@@ -76,15 +49,15 @@ function getPages(news, isLoading, refresh, navigate) {
       );
     } else if (feed.key === 'events') {
       content = (
-          <FlatList
-              data={news[feed.key]}
-              onRefresh={refresh}
-              refreshing={isLoading}
-              keyExtractor={(item) => 'item' + item.id}
-              renderItem={({ item }) =>
-                  renderNewsItem(item, feed.key, navigate)
-              }
-          />
+        <FlatList
+          data={news[feed.key]}
+          onRefresh={refresh}
+          refreshing={isLoading}
+          keyExtractor={(item) => 'item' + item.id}
+          renderItem={({ item }) =>
+            renderNewsItem(item, feed.key, navigate)
+          }
+        />
       );
     } else {
       content = (
@@ -117,8 +90,8 @@ export default function NewsScreen() {
     setLoading(true);
     setNetworkError(false);
     const data = [];
-    data["news"] = await FetchManager.fetch(DHBW_NEWS, true);
-    data["events"] = await FetchManager.fetch(DHBW_EVENTS, true);
+    data['news'] = await FetchManager.fetch(DHBW_NEWS, true);
+    data['events'] = await FetchManager.fetch(DHBW_EVENTS, true);
     if (data === 'networkError') {
       //TODO!!!
       setNetworkError(true);
@@ -130,8 +103,8 @@ export default function NewsScreen() {
 
   async function loadData() {
     const data = [];
-    data["news"] = await FetchManager.fetch(DHBW_NEWS);
-    data["events"] = await FetchManager.fetch(DHBW_EVENTS);
+    data['news'] = await FetchManager.fetch(DHBW_NEWS);
+    data['events'] = await FetchManager.fetch(DHBW_EVENTS);
     if (data.length === 2) {
       setNews(data);
       setLoading(false);

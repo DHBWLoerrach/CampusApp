@@ -1,5 +1,11 @@
 import React from 'react';
-import { Linking, StyleSheet, ScrollView, Text, View } from 'react-native';
+import {
+  Linking,
+  StyleSheet,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import Colors from '../../util/Colors';
 
@@ -72,7 +78,9 @@ export function TextCafeteriaKKH() {
         <Text
           style={styles.link}
           onPress={() =>
-            Linking.openURL('https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach')
+            Linking.openURL(
+              'https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach'
+            )
           }
         >
           Speisepläne anzeigen
@@ -301,7 +309,12 @@ export function TextPrivacy() {
         <Text style={styles.text}>
           Unsere Datenschutzerklärung finden Sie unter:
         </Text>
-        <Text style={styles.link} onPress={() => Linking.openURL("https://dhbw-loerrach.de/datenschutz")}>
+        <Text
+          style={styles.link}
+          onPress={() =>
+            Linking.openURL('https://dhbw-loerrach.de/datenschutz')
+          }
+        >
           https://dhbw-loerrach.de/datenschutz
         </Text>
       </View>
@@ -315,12 +328,39 @@ export function TextPrivacy() {
           {'\n'}
           Telefon: +49 711 320 660-0{'\n'}
           Telefax: +49 711 320 660-66{'\n'}
-          <Text style={styles.link} onPress={() => Linking.openURL("mailto:poststelle@dhbw.de")}>poststelle@dhbw.de</Text>{'\n'}
-          <Text style={styles.link} onPress={() => Linking.openURL("https://www.dhbw.de")}>www.dhbw.de</Text>{'\n'}
+          <Text
+            style={styles.link}
+            onPress={() =>
+              Linking.openURL('mailto:poststelle@dhbw.de')
+            }
+          >
+            poststelle@dhbw.de
+          </Text>
+          {'\n'}
+          <Text
+            style={styles.link}
+            onPress={() => Linking.openURL('https://www.dhbw.de')}
+          >
+            www.dhbw.de
+          </Text>
+          {'\n'}
         </Text>
         <Text style={styles.text}>
-          Unseren Datenschutzbeauftragten erreichen Sie unter unserer Postadresse mit dem Zusatz "Datenschutzbeauftragte*r" oder unter <Text style={styles.link} onPress={() => Linking.openURL("mailto:datenschutz@dhbw.de")}>datenschutz@dhbw.de</Text>.{'\n'}
-          Die Verarbeitung dieser E-Mail-Adresse für Zwecke der Werbung oder der Markt- oder Meinungsforschung ist untersagt.
+          Unseren Datenschutzbeauftragten erreichen Sie unter unserer
+          Postadresse mit dem Zusatz "Datenschutzbeauftragte*r" oder
+          unter{' '}
+          <Text
+            style={styles.link}
+            onPress={() =>
+              Linking.openURL('mailto:datenschutz@dhbw.de')
+            }
+          >
+            datenschutz@dhbw.de
+          </Text>
+          .{'\n'}
+          Die Verarbeitung dieser E-Mail-Adresse für Zwecke der
+          Werbung oder der Markt- oder Meinungsforschung ist
+          untersagt.
         </Text>
       </View>
     </ScrollView>
@@ -342,5 +382,5 @@ const styles = StyleSheet.create({
   },
   link: {
     color: Colors.link,
-  }
+  },
 });
