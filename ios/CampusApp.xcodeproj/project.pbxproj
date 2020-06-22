@@ -728,7 +728,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CampusApp/CampusApp.entitlements;
-				CURRENT_PROJECT_VERSION = 2.4.1;
+				CURRENT_PROJECT_VERSION = 2.4.2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 54EE35UAFF;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -740,7 +740,7 @@
 				INFOPLIST_FILE = CampusApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -764,13 +764,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CampusApp/CampusApp.entitlements;
-				CURRENT_PROJECT_VERSION = 2.4.1;
+				CURRENT_PROJECT_VERSION = 2.4.2;
 				DEVELOPMENT_TEAM = 54EE35UAFF;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = CampusApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
