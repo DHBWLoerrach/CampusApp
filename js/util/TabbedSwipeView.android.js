@@ -11,7 +11,7 @@ export default class TabbedSwipeView extends Component {
     this.state = { selectedIndex: this.props.selectedIndex || 0 };
   }
 
-  _onPageSelected = event => {
+  _onPageSelected = (event) => {
     const selectedIndex = event.nativeEvent.position;
     this.setState({ selectedIndex });
   };
@@ -51,7 +51,7 @@ export default class TabbedSwipeView extends Component {
           style={styles.container}
           initialPage={this.props.selectedIndex}
           onPageSelected={this._onPageSelected}
-          ref={viewPager => {
+          ref={(viewPager) => {
             this._viewPager = viewPager;
           }}
         >
@@ -64,11 +64,12 @@ export default class TabbedSwipeView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   segmentsContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
     backgroundColor: Colors.dhbwRed,
-    paddingLeft: 16
-  }
+    paddingLeft: 16,
+  },
 });
