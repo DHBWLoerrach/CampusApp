@@ -4,27 +4,23 @@ import { de } from 'date-fns/locale';
 
 import CommonCell from '../../util/CommonCell';
 
-export default ({
-  news: { time, imgUrl, heading, subheading },
-  topic,
-  onPress,
-}) => {
+export default ({ news, topic, onPress }) => {
   let image = require('../../img/logo.png');
   // formatting for news items: relative date (e.g. "3 days ago")
-  let formattedTime = formatDistanceToNow(new Date(time), {
+  let formattedTime = formatDistanceToNow(new Date(news.time), {
     locale: de,
     addSuffix: true,
   });
   // special formatting for events: absolute date in red
   if (topic === 'events') {
-    formattedTime = format(new Date(time), 'dd.MM.yyyy');
+    formattedTime = format(new Date(news.time), 'dd.MM.yyyy');
   }
-  if (imgUrl) image = { uri: imgUrl };
+  if (news.imgUrl) image = { uri: news.imgUrl };
   return (
     <CommonCell
-      title={heading}
+      title={news.heading}
       details={[formattedTime]}
-      description={subheading}
+      description={news.subheading}
       imageSource={image}
       onPress={() => onPress({ news: news })}
     />
