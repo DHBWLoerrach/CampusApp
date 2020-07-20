@@ -28,6 +28,8 @@ Open terminal and cd into CampusApp directory.
 `cd ios` and install dependencies with `pod install` (for this you'll need
 [CocoaPods](https://cocoapods.org/)) 
 
+Start the React Native Packager: `react-native start`
+
 Now launch Campus App in an iOS simulator: `react-native run-ios`
 
 ## Launch app in Android emulator
@@ -46,7 +48,10 @@ To access the development server from the Android device you need to use 'adb re
 
 Open terminal/console, cd into CampusApp directory and run
 
-`react-native run-android`
+Start the React Native Packager: `react-native start`
+
+Now launch Campus App in an Android emulator: `react-native run-android`
+
 
 ## Live Reload and Debugging
 
