@@ -9,7 +9,7 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
 ## Setup
 
-Assuming that React Native is already installed (see http://facebook.github.io/react-native/docs/getting-started.html), follow these steps:
+Assuming that React Native is already installed (see [React Native Docs](https://reactnative.dev/docs/environment-setup)), follow these steps:
 
 1. clone project with git (`git clone git@github.com:DHBWLoerrach/CampusApp.git`)
 2. in terminal, change to CampusApp directory (`cd CampusApp`)
