@@ -13,14 +13,22 @@ Assuming that React Native is already installed (see http://facebook.github.io/r
 
 1. clone project with git (`git clone git@github.com:DHBWLoerrach/CampusApp.git`)
 2. in terminal, change to CampusApp directory (`cd CampusApp`)
-3. install npm packages (`npm install`)
-4. copy env.example.js to env.js (here you might need to fill in some data)
+3. install npm packages (preferably by executing `yarn` &mdash; `npm install`
+   might also work)
+4. copy env.example.js to env.js (here you might need to fill in some data to
+   get enable all features &mdash; get in contact with the maintainer of this
+   repository)
 
 ## Launch app in iOS simulator (Mac only)
 
 XCode needs to be installed.
 
-Open terminal, cd into CampusApp directory and open iOS project in XCode:
+Open terminal and cd into CampusApp directory. 
+
+`cd ios` and install dependencies with `pod install` (for this you'll need
+[CocoaPods](https://cocoapods.org/)) 
+
+`podopen iOS project in XCode:
 
 `open ios/CampusApp.xcodeproj`
 
