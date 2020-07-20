@@ -9,7 +9,7 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
 ## Setup
 
-Assuming that React Native is already installed (see [React Native Docs](https://reactnative.dev/docs/environment-setup)), follow these steps:
+Assuming that a full React Native environment (Campus App does is not Expo based) is already installed (see the _React Native CLI_ section in the [React Native Docs](https://reactnative.dev/docs/environment-setup)), follow these steps:
 
 1. clone project with git (`git clone git@github.com:DHBWLoerrach/CampusApp.git`)
 2. in terminal, change to CampusApp directory (`cd CampusApp`)
@@ -28,23 +28,15 @@ Open terminal and cd into CampusApp directory.
 `cd ios` and install dependencies with `pod install` (for this you'll need
 [CocoaPods](https://cocoapods.org/)) 
 
-`podopen iOS project in XCode:
+Now launch Campus App in an iOS simulator: `react-native run-ios`
 
-`open ios/CampusApp.xcodeproj`
+## Launch app in Android emulator
 
-In XCode, build the project (`Product > Build` oder `CMD-B`). Once finished, XCode can be quit. This has to be done only once.
-
-Now switch back to the terminal and run
-
-`react-native run-ios`
-
-## Launch app in Android simulator
-
-Please refer to https://facebook.github.io/react-native/docs/getting-started
+Please refer to the _React Native CLI_ section in the [React Native Docs](https://reactnative.dev/docs/environment-setup)
 
 ## Launch app on Android device
 
-See also https://facebook.github.io/react-native/docs/running-on-device
+See also [React Native Docs](https://reactnative.dev/docs/running-on-device)
 
 Make sure Android device is in debug mode (enable developer options) and connect device via USB.
 
@@ -59,7 +51,7 @@ Open terminal/console, cd into CampusApp directory and run
 ## Live Reload and Debugging
 
 Please refer to the React Native documentation to learn about live/hot reloading
-and debugging options (http://facebook.github.io/react-native/docs/debugging.html)
+and debugging options (https://reactnative.dev/docs/debugging.html)
 
 ## License
 
