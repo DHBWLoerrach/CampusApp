@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { format } from 'date-fns';
@@ -13,9 +14,9 @@ import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
+import Colors from '../../util/Colors';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
-import TabbedSwipeView from '../../util/TabbedSwipeView';
 
 import {
   fetchCanteenDataFromWeb,
@@ -38,24 +39,27 @@ const textNfcInfo =
   'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
   'zu halten.';
 
+const Tab = createMaterialTopTabNavigator();
+
 function getDateObject(date) {
   const dateParts = date.split('.').reverse();
   return new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
 }
 
+function DayPage({ menus }) {
+  return (
+    <RoleContext.Consumer>
+      {({ role }) => <CanteenDayListView meals={menus} role={role} />}
+    </RoleContext.Consumer>
+  );
+}
+
 function getPages(dayPlans) {
   return dayPlans.slice(0, 5).map((dayPlan, _) => {
     const date = getDateObject(dayPlan.date);
-    return {
-      title: format(date, 'EE dd.MM.', { locale: de }),
-      content: (
-        <RoleContext.Consumer>
-          {({ role }) => (
-            <CanteenDayListView meals={dayPlan.menus} role={role} />
-          )}
-        </RoleContext.Consumer>
-      ),
-    };
+    const title = format(date, 'EE dd.MM.', { locale: de });
+    const dayPage = <DayPage menus={dayPlan.menus} />;
+    return <Tab.Screen name={title} component={dayPage} />;
   });
 }
 
@@ -124,12 +128,15 @@ function CanteenScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <TabbedSwipeView
-        count={dayPlans.length}
-        pages={getPages(dayPlans)}
-      />
-    </View>
+    <Tab.Navigator
+      tabBarOptions={{
+        indicatorStyle: { backgroundColor: 'white' },
+        labelStyle: { color: 'white' },
+        style: { backgroundColor: Colors.dhbwRed },
+      }}
+    >
+      {getPages(dayPlans)}
+    </Tab.Navigator>
   );
 }
 
