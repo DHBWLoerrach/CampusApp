@@ -1,56 +1,55 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { format } from 'date-fns';
 
 import Colors from '../../util/Colors';
+import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
 
-export default class NewsDetails extends Component {
-  render() {
-    const fontSize = 'font-size: 42px;';
-    let {
-      heading,
-      subheading,
-      imgUrl,
-      body,
-      time,
-      attachments,
-    } = this.props.route.params.news;
-    let topic = this.props.route.params.topic;
-    let timeHeading = '';
-    if (topic === 'events') {
-      timeHeading = `<h3>${format(
-        new Date(time),
-        'dd.MM.yyyy HH:mm'
-      )} Uhr</h3>`;
-    }
-    if (body === subheading) subheading = '';
-    // HACK/TODO: prevent changes in font size (affects iOS)
-    body = body.replace(/font-size:/g, 'fs');
-    // Remove target="_blank" in URLs (otherwise they won't work on iOS)
-    body = body.replace(/target="_blank"/g, '');
-    let attachmentFooter = '';
-    if (attachments && attachments.length >= 1) {
-      let attachmentsHTML = '';
-      attachments.forEach((attachment) => {
-        let url = attachment.url;
-        // on Android use embedded Google docs viewer for PDFs (WebView won't work)
-        // see https://github.com/facebook/react-native/issues/6488
-        if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
-          url =
-            'http://docs.google.com/gview?embedded=true&url=' + url;
-        attachmentsHTML += `${attachment.title} <br/> 
+export default ({ route }) => {
+  const fontSize = 'font-size: 42px;';
+  let {
+    heading,
+    subheading,
+    imgUrl,
+    body,
+    time,
+    attachments,
+  } = route.params.news;
+  let topic = route.params.topic;
+  let timeHeading = '';
+  if (topic === DHBW_EVENTS) {
+    timeHeading = `<h3>${format(
+      new Date(time),
+      'dd.MM.yyyy HH:mm'
+    )} Uhr</h3>`;
+  }
+  if (body === subheading) subheading = '';
+  // HACK/TODO: prevent changes in font size (affects iOS)
+  body = body.replace(/font-size:/g, 'fs');
+  // Remove target="_blank" in URLs (otherwise they won't work on iOS)
+  body = body.replace(/target="_blank"/g, '');
+  let attachmentFooter = '';
+  if (attachments && attachments.length >= 1) {
+    let attachmentsHTML = '';
+    attachments.forEach((attachment) => {
+      let url = attachment.url;
+      // on Android use embedded Google docs viewer for PDFs (WebView won't work)
+      // see https://github.com/facebook/react-native/issues/6488
+      if (url.slice(-4) === '.pdf' && Platform.OS === 'android')
+        url = 'http://docs.google.com/gview?embedded=true&url=' + url;
+      attachmentsHTML += `${attachment.title} <br/> 
         <a href='${url}'>Herunterladen (${attachment.size})</a> 
         <br/>
         <br/>`;
-      });
-      attachmentFooter = `<p>
+    });
+    attachmentFooter = `<p>
         <b>Anhänge</b> <br/> <br/>
         ${attachmentsHTML}        
         </p>`;
-    }
-    const HTML = `
+  }
+  const HTML = `
         <!DOCTYPE html>
         <html>
           <head>
@@ -70,12 +69,11 @@ export default class NewsDetails extends Component {
         </html>
     `;
 
-    return (
-      <WebView
-        originWhitelist={['*']}
-        source={{ html: HTML }}
-        bounces={false}
-      />
-    );
-  }
-}
+  return (
+    <WebView
+      originWhitelist={['*']}
+      source={{ html: HTML }}
+      bounces={false}
+    />
+  );
+};

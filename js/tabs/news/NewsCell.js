@@ -3,6 +3,7 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
 import CommonCell from '../../util/CommonCell';
+import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
 
 export default ({ news, topic, onPress }) => {
   let image = require('../../img/logo.png');
@@ -12,7 +13,7 @@ export default ({ news, topic, onPress }) => {
     addSuffix: true,
   });
   // special formatting for events: absolute date in red
-  if (topic === 'events') {
+  if (topic === DHBW_EVENTS) {
     formattedTime = format(new Date(news.time), 'dd.MM.yyyy');
   }
   if (news.imgUrl) image = { uri: news.imgUrl };
