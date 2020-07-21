@@ -15,6 +15,7 @@
     "@react-native-community/push-notification-ios": "^1.2.2",
     "@react-native-community/viewpager": "^4.0.1",
     "@react-navigation/bottom-tabs": "^5.5.2",
+    "@react-navigation/material-top-tabs": "^5.2.12",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.5.1",
     "date-fns": "^2.13.0",
@@ -29,6 +30,7 @@
     "react-native-safe-area-context": "^3.0.5",
     "react-native-screens": "^2.9.0",
     "react-native-svg": "^12.1.0",
+    "react-native-tab-view": "^2.14.4",
     "react-native-vector-icons": "^6.6.0",
     "react-native-webview": "^10.3.1",
     "xmldom": "^0.3.0"
