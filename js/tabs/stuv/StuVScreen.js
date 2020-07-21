@@ -1,28 +1,21 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import TabbedSwipeView from '../../util/TabbedSwipeView.ios';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+import Colors from '../../util/Colors';
 import StuVEvents from './events/StuVEvents';
 import StuVNews from './news/StuVNews';
 
-function getPages() {
-  return [
-    { title: 'StuV-News', content: <StuVNews /> },
-    { title: 'StuV-Events', content: <StuVEvents /> },
-  ];
-}
+const Tab = createMaterialTopTabNavigator();
 
-function StuVScreen() {
-  return (
-    <View style={styles.container}>
-      <TabbedSwipeView pages={getPages()} />
-    </View>
-  );
-}
-
-export default StuVScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default () => (
+  <Tab.Navigator
+    tabBarOptions={{
+      indicatorStyle: { backgroundColor: 'white' },
+      labelStyle: { color: 'white' },
+      style: { backgroundColor: Colors.dhbwRed },
+    }}
+  >
+    <Tab.Screen name="StuV-News" component={StuVNews} />
+    <Tab.Screen name="StuV-Events" component={StuVEvents} />
+  </Tab.Navigator>
+);
