@@ -9,38 +9,34 @@ import {
 import Colors from '../util/Colors';
 import { shortString } from '../tabs/stuv/helper';
 
-function CommonCell({
+export default ({
   imageSource,
   title,
   details = [],
   description,
   onPress,
-}) {
-  return (
-    <TouchableOpacity style={styles.entry} onPress={onPress}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'space-around',
-          flexDirection: 'row',
-        }}
-      >
-        <Image source={imageSource} style={styles.image} />
-        <View style={{ flex: 2 }}>
-          <Text style={styles.headline}>{title}</Text>
-          {details.map((detail) => (
-            <Text style={styles.details}>{detail}</Text>
-          ))}
-          <Text style={styles.text}>
-            {shortString(description, 90)}
-          </Text>
-        </View>
+}) => (
+  <TouchableOpacity style={styles.entry} onPress={onPress}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'space-around',
+        flexDirection: 'row',
+      }}
+    >
+      <Image source={imageSource} style={styles.image} />
+      <View style={{ flex: 2 }}>
+        <Text style={styles.headline}>{title}</Text>
+        {details.map((detail) => (
+          <Text style={styles.details}>{detail}</Text>
+        ))}
+        <Text style={styles.text}>
+          {shortString(description, 90)}
+        </Text>
       </View>
-    </TouchableOpacity>
-  );
-}
-
-export default CommonCell;
+    </View>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   entry: {
