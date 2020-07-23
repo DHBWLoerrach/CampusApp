@@ -27,8 +27,10 @@ export default ({
       <Image source={imageSource} style={styles.image} />
       <View style={{ flex: 2 }}>
         <Text style={styles.headline}>{title}</Text>
-        {details.map((detail) => (
-          <Text style={styles.details}>{detail}</Text>
+        {details.map((detail, index) => (
+          <Text style={styles.details} key={index}>
+            {detail}
+          </Text>
         ))}
         <Text style={styles.text}>
           {shortString(description, 90)}
