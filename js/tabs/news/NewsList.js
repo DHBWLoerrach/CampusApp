@@ -42,9 +42,14 @@ function getContent(data, type, refresh, isLoading, navigate) {
           <NewsCell
             news={item}
             topic={type}
-            onPress={() =>
-              navigate('NewsDetails', { news: item, topic: type })
-            }
+            onPress={() => {
+              // news item: remove equals function and convert time to string value
+              // this will keep news item serializable (otherwise a warning will pop up)
+              // --> TODO: cleanup design ?
+              item.equals = undefined;
+              item.time = `${item.time}`;
+              navigate('NewsDetails', { news: item, topic: type });
+            }}
           />
         )}
       />
