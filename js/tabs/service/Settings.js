@@ -5,6 +5,7 @@ import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import { textPersonCategory } from './Texts';
 import NotificationSettings from '../../util/NotificationSettings';
+import { enableNotifications } from '../../../env.js';
 
 export default function () {
   return (
@@ -15,7 +16,7 @@ export default function () {
           <RoleSelection role={role} onRoleChange={changeRole} />
         )}
       </RoleContext.Consumer>
-      <NotificationSettings />
+      {enableNotifications ? <NotificationSettings /> : null}
     </View>
   );
 }
