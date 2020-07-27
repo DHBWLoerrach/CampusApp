@@ -53,8 +53,11 @@ function getPages(dayPlans) {
   return dayPlans.slice(0, 5).map((dayPlan, _) => {
     const date = getDateObject(dayPlan.date);
     const title = format(date, 'EE dd.MM.', { locale: de });
-    const dayPage = <DayPage menus={dayPlan.menus} />;
-    return <Tab.Screen name={title} component={dayPage} />;
+    return (
+      <Tab.Screen name={title}>
+        {() => <DayPage menus={dayPlan.menus} />}
+      </Tab.Screen>
+    );
   });
 }
 
