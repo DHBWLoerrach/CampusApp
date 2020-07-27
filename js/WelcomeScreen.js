@@ -31,7 +31,7 @@ const renderNotifications = () => (
   <>
     <View style={styles.notificationSettings}>
       <Text>
-        Bitte wähle hier aus welche Benachrichtigungen du erhalten
+        Bitte wähle hier aus, welche Benachrichtigungen Du erhalten
         möchtest:
       </Text>
     </View>
