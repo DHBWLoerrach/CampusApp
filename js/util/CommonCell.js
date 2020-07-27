@@ -11,6 +11,7 @@ import { shortString } from '../tabs/stuv/helper';
 
 export default ({
   imageSource,
+  imageStyle,
   title,
   details = [],
   description,
@@ -18,7 +19,10 @@ export default ({
 }) => (
   <TouchableOpacity style={styles.entry} onPress={onPress}>
     <View style={styles.container}>
-      <Image source={imageSource} style={styles.image} />
+      <Image
+        source={imageSource}
+        style={[styles.image, imageStyle]}
+      />
       <View style={styles.textContainer}>
         <Text style={styles.headline}>{title}</Text>
         {details.map((detail, index) => (
@@ -40,8 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    marginHorizontal: 10,
   },
   container: {
     flex: 1,
@@ -51,7 +54,6 @@ const styles = StyleSheet.create({
   image: {
     marginTop: 'auto',
     marginBottom: 'auto',
-    height: '100%',
     flex: 1,
     marginRight: 10,
     resizeMode: 'contain',
