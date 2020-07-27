@@ -1,17 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Button,
-  SectionList,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Button, SectionList, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';
+import ActivityIndicator from '../../util/DHBWActivityIndicator';
 
 import LectureRow from './LectureRow';
 import {
@@ -82,7 +77,7 @@ function ScheduleScreen({ navigation }) {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator animating={true} />
+        <ActivityIndicator />
       </View>
     );
   }

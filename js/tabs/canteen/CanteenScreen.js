@@ -1,11 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -15,6 +9,7 @@ import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
 import Colors from '../../util/Colors';
+import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
 
@@ -108,7 +103,7 @@ function CanteenScreen() {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator animating={true} />
+        <ActivityIndicator />
       </View>
     );
   }

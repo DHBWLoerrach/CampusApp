@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-} from 'react-native';
+import { Alert, StyleSheet, Switch, Text, View } from 'react-native';
 import { dhbwGray, dhbwRed } from './Colors';
+import ActivityIndicator from './DHBWActivityIndicator';
 import {
   loadNotificationSettings,
   saveNotificationSettings,

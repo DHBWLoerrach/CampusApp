@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import NewsCell from './NewsCell';
 import ReloadView from '../../util/ReloadView';
+import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import FetchManager from '../../util/fetcher/FetchManager';
 
 function getContent(data, type, refresh, isLoading, navigate) {
@@ -94,7 +90,7 @@ export default ({ type }) => {
   if (isLoading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator animating={true} />
+        <ActivityIndicator />
       </View>
     );
   }

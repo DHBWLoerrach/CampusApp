@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
 import NotificationTaskScheduler from './util/notifications/NotificationTaskScheduler';
+import ActivityIndicator from './util/DHBWActivityIndicator';
 import { enableNotifications } from './../env.js';
 
 export const RoleContext = React.createContext(null);
@@ -36,7 +32,7 @@ export default function CampusApp() {
   if (loading) {
     content = (
       <View style={styles.center}>
-        <ActivityIndicator animating={true} />
+        <ActivityIndicator />
       </View>
     );
   } else if (!role) {
