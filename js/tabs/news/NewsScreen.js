@@ -19,7 +19,7 @@ function Events() {
 }
 
 export default () => (
-  <Tab.Navigator tabBarOptions={Styles.topTabBarStyles}>
+  <Tab.Navigator tabBarOptions={Styles.topTabBar}>
     <Tab.Screen name="DHBW-News" component={News} />
     <Tab.Screen name="DHBW-Termine" component={Events} />
   </Tab.Navigator>

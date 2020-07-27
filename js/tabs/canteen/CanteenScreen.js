@@ -124,7 +124,7 @@ function CanteenScreen() {
   }
 
   return (
-    <Tab.Navigator tabBarOptions={Styles.topTabBarStyles}>
+    <Tab.Navigator tabBarOptions={Styles.topTabBar}>
       {getPages(dayPlans)}
     </Tab.Navigator>
   );
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
 });
 
-CanteenScreen.navigationOptions = ({ navigation }) => ({
+CanteenScreen.navigationOptions = () => ({
   headerRight: () => (
     <HeaderIcon
       onPress={() => {
