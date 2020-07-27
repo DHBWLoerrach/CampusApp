@@ -8,7 +8,6 @@ import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
-import Colors from '../../util/Colors';
 import Styles from '../../util/Styles';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import HeaderIcon from '../../util/HeaderIcon';
