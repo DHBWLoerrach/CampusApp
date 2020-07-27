@@ -17,15 +17,9 @@ export default ({
   onPress,
 }) => (
   <TouchableOpacity style={styles.entry} onPress={onPress}>
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-      }}
-    >
+    <View style={styles.container}>
       <Image source={imageSource} style={styles.image} />
-      <View style={{ flex: 2 }}>
+      <View style={styles.textContainer}>
         <Text style={styles.headline}>{title}</Text>
         {details.map((detail, index) => (
           <Text style={styles.details} key={index}>
@@ -42,12 +36,17 @@ export default ({
 
 const styles = StyleSheet.create({
   entry: {
-    backgroundColor: Colors.veryLightGray, //'rgba(246,23,28, 0.3)',
+    backgroundColor: Colors.veryLightGray,
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
     marginLeft: 10,
     marginRight: 10,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-around',
+    flexDirection: 'row',
   },
   image: {
     marginTop: 'auto',
@@ -56,6 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
     resizeMode: 'contain',
+  },
+  textContainer: {
+    flex: 2,
   },
   headline: {
     fontSize: 18,
