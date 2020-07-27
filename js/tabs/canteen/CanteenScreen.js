@@ -9,6 +9,7 @@ import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
 import Colors from '../../util/Colors';
+import Styles from '../../util/Styles';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import HeaderIcon from '../../util/HeaderIcon';
 import ReloadView from '../../util/ReloadView';
@@ -123,13 +124,7 @@ function CanteenScreen() {
   }
 
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        indicatorStyle: { backgroundColor: 'white' },
-        labelStyle: { color: 'white' },
-        style: { backgroundColor: Colors.dhbwRed },
-      }}
-    >
+    <Tab.Navigator tabBarOptions={Styles.topTabBarStyles}>
       {getPages(dayPlans)}
     </Tab.Navigator>
   );

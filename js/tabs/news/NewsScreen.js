@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Colors from '../../util/Colors';
+import Styles from '../../util/Styles';
 import NewsList from './NewsList';
 import {
   DHBW_EVENTS,
@@ -19,13 +19,7 @@ function Events() {
 }
 
 export default () => (
-  <Tab.Navigator
-    tabBarOptions={{
-      indicatorStyle: { backgroundColor: 'white' },
-      labelStyle: { color: 'white' },
-      style: { backgroundColor: Colors.dhbwRed },
-    }}
-  >
+  <Tab.Navigator tabBarOptions={Styles.topTabBarStyles}>
     <Tab.Screen name="DHBW-News" component={News} />
     <Tab.Screen name="DHBW-Termine" component={Events} />
   </Tab.Navigator>
