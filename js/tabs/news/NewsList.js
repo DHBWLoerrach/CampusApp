@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+  useScrollToTop,
+} from '@react-navigation/native';
 
 import NewsCell from './NewsCell';
 import ReloadView from '../../util/ReloadView';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import FetchManager from '../../util/fetcher/FetchManager';
 
-function getContent(data, type, refresh, isLoading, navigate) {
+function getContent(data, type, refresh, isLoading, navigate, ref) {
   let content = null;
   if (!data) {
     // this could occur if there's a server problem with a news page
@@ -30,6 +33,7 @@ function getContent(data, type, refresh, isLoading, navigate) {
     content = (
       <FlatList
         style={styles.container}
+        ref={ref}
         data={data}
         onRefresh={refresh}
         refreshing={isLoading}
@@ -59,6 +63,8 @@ export default ({ type }) => {
   const [hasNetworkError, setNetworkError] = useState(false);
   const [data, setData] = useState(null);
   const { navigate } = useNavigation();
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
 
   // load fresh data from web and store it locally
   async function refresh() {
@@ -103,7 +109,7 @@ export default ({ type }) => {
     );
   }
 
-  return getContent(data, type, refresh, isLoading, navigate);
+  return getContent(data, type, refresh, isLoading, navigate, ref);
 };
 
 const styles = StyleSheet.create({

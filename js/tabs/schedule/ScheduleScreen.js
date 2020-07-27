@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Button, SectionList, StyleSheet, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useScrollToTop,
+} from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -21,6 +24,8 @@ function ScheduleScreen({ navigation }) {
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState(null);
   const [searchString, setSearchString] = useState('');
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
 
   // load data: first from local store, then fetch latest data from web
   async function loadData() {
@@ -129,6 +134,7 @@ function ScheduleScreen({ navigation }) {
       />
       <SectionList
         sections={filterLectures(searchString, lectures)}
+        ref={ref}
         onRefresh={loadData}
         refreshing={isLoading}
         renderItem={({ item }) => <LectureRow lecture={item} />}
