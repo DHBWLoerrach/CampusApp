@@ -4,8 +4,9 @@ import Colors from './Colors';
 
 export default {
   topTabBar: {
-    indicatorStyle: { backgroundColor: 'white' },
-    labelStyle: { color: 'white' },
+    indicatorStyle: { backgroundColor: 'white', height: 3 },
+    activeTintColor: 'white',
+    inactiveTintColor: 'white',
     style: { backgroundColor: Colors.dhbwRed },
   },
 };
