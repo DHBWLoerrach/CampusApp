@@ -7,7 +7,7 @@ import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
 
 export default ({ news, topic, onPress }) => {
   let image = require('../../img/logo.png');
-  let imageStyle = { width: '100%' };
+  let imageStyle = {};
   // formatting for news items: relative date (e.g. "3 days ago")
   let formattedTime = formatDistanceToNow(new Date(news.time), {
     locale: de,
@@ -19,7 +19,7 @@ export default ({ news, topic, onPress }) => {
   }
   if (news.imgUrl) {
     image = { uri: news.imgUrl };
-    imageStyle = { height: '100%' };
+    imageStyle = { resizeMode: 'cover', height: '100%' };
   }
   return (
     <CommonCell
