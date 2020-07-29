@@ -17,7 +17,11 @@ export default ({
   description,
   onPress,
 }) => (
-  <TouchableOpacity style={styles.entry} onPress={onPress}>
+  <TouchableOpacity
+    style={styles.entry}
+    activeOpacity={0.7}
+    onPress={onPress}
+  >
     <View style={styles.container}>
       <Image
         source={imageSource}
