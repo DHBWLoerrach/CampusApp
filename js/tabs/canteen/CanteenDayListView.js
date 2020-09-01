@@ -70,25 +70,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: 'white',
     borderColor: Colors.cellBorder,
-    borderBottomWidth: StyleSheet.hairlineWidth
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   name: {
     flex: 1,
-    fontSize: 17
+    fontSize: 17,
   },
   price: {
     color: Colors.dhbwRed,
     fontSize: 17,
     paddingBottom: 4,
     textAlign: 'right',
-    width: 50
+    width: 50,
   },
   right: {
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   vegetarian: {
     backgroundColor: 'transparent',
     height: 28,
-    width: 28
-  }
+    width: 28,
+  },
 });
