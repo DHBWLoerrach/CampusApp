@@ -19,7 +19,6 @@ export default class RSSFetcher {
     } else {
       const responseBody = await response.text();
       const news = fetchNewsData(responseBody);
-      console.log('Loading from ' + this.feedUrl + suffix);
       return news;
     }
   }

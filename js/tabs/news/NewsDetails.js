@@ -9,7 +9,8 @@ import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
 
 export default ({ route }) => {
   const fontSize = 'font-size: 42px;';
-  const googleDocsPDF = "https://docs.google.com/gview?embedded=true&url="
+  const googleDocsPDF =
+    'https://docs.google.com/gview?embedded=true&url=';
   let {
     heading,
     subheading,
@@ -31,13 +32,14 @@ export default ({ route }) => {
   body = body.replace(/font-size:/g, 'fs');
   // Remove target="_blank" in URLs (otherwise they won't work on iOS)
   body = body.replace(/target="_blank"/g, '');
-  if(Platform.OS === 'android') {
+  if (Platform.OS === 'android') {
     // on Android use embedded Google docs viewer for PDF (WebView won't work)
     // see https://github.com/facebook/react-native/issues/6488
     // route all PDF links through Google docs viewer
-    body = body.replace(/(href=")(.+\.pdf)"/g,`href="${googleDocsPDF}$2"`)
-    console.log('XXXX');
-    console.log(body);
+    body = body.replace(
+      /(href=")(.+\.pdf)"/g,
+      `href="${googleDocsPDF}$2"`
+    );
   }
   let attachmentFooter = '';
   if (attachments && attachments.length >= 1) {

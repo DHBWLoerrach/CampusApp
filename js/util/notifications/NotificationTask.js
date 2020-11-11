@@ -10,9 +10,7 @@ import { loadNotificationSettings } from '../../tabs/service/SettingsHelper';
 const PushNotification = require('react-native-push-notification');
 
 async function NotificationTask() {
-  console.log('Running Notification Task!');
   const settings = await loadNotificationSettings();
-  console.log(settings);
   if (settings == null) {
     return;
   }
@@ -30,7 +28,6 @@ async function NotificationTask() {
         color: dhbwRed,
       })
     );
-    console.log('news', news);
   }
 
   if (settings['notificationdhbwEvents']) {
@@ -44,7 +41,6 @@ async function NotificationTask() {
         color: dhbwRed,
       })
     );
-    console.log('events', events);
   }
 
   if (settings['notificationschedule']) {
@@ -75,7 +71,6 @@ async function NotificationTask() {
         color: dhbwRed,
       });
     });
-    console.log('lectures', lectures);
   }
 }
 export default NotificationTask;
