@@ -1,10 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import NotificationSettings from '../../util/NotificationSettings';
 import { enableNotifications } from '../../../env.js';
+
+function HintNotificationsIOS() {
+  return (
+    <Text style={{ fontStyle: 'italic' }}>
+      Die ausgewählten Benachrichtigungen werden Dir nur dann
+      angezeigt, wenn Du dies zusätzlich in den iPhone-Einstellungen
+      für die Campus App erlaubst!
+    </Text>
+  );
+}
 
 function Notifications() {
   if (!enableNotifications) return null;
@@ -15,6 +25,7 @@ function Notifications() {
         erhalten möchtest:
       </Text>
       <NotificationSettings />
+      {Platform.OS === 'ios' ? <HintNotificationsIOS /> : null}
     </View>
   );
 }
