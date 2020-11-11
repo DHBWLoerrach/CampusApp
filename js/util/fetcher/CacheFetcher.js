@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default class CacheFetcher {
   fetcher;
-  uniqueName: string;
+  uniqueName;
   maxCacheTime;
 
   constructor(fetcher, uniqueName, maxCacheTime = 60 * 60 * 1000) {

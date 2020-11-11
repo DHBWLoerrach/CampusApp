@@ -18,7 +18,7 @@ export default class NotificationSettings extends React.Component {
     notificationschedule: false,
   };
 
-  componentDidMount(): void {
+  componentDidMount() {
     this.loadSettings();
   }
 
