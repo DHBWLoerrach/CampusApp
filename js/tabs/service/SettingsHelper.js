@@ -8,8 +8,8 @@ export async function loadNotificationSettings() {
   return null;
 }
 
-export async function saveNotificationSettings(settingsObject) {
-  await AsyncStorage.setItem(
+export function saveNotificationSettings(settingsObject) {
+  AsyncStorage.setItem(
     'notificationSettings',
     JSON.stringify(settingsObject)
   );
