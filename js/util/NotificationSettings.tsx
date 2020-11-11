@@ -7,17 +7,16 @@ import {
   Text,
   View,
 } from 'react-native';
+import PushNotification from 'react-native-push-notification';
 import { dhbwGray, dhbwRed } from './Colors';
 import {
   loadNotificationSettings,
   saveNotificationSettings,
 } from '../tabs/service/SettingsHelper';
 
-const PushNotification = require('react-native-push-notification');
-
 export default function () {
-  const [notifyNews, setNotifyNews] = useState(true);
-  const [notifyEvents, setNotifyEvents] = useState(true);
+  const [notifyNews, setNotifyNews] = useState(false);
+  const [notifyEvents, setNotifyEvents] = useState(false);
 
   // load settings only once after mount ([] empty dependency list)
   useEffect(() => {
@@ -31,19 +30,25 @@ export default function () {
       notificationdhbwEvents: notifyEvents,
     };
     saveNotificationSettings(settingsObject);
-    if (notifyNews || notifyEvents) {
+    // iOS: check if permission for notifications are granted
+    if ((notifyNews || notifyEvents) && Platform.OS === 'ios') {
       PushNotification.checkPermissions(
-        ({ alert }: { alert: boolean }) => {
-          if (!alert) {
-            if (Platform.OS === 'ios') {
-              //Request for permissions on ios
-              PushNotification.requestPermissions();
-            } else {
-              Alert.alert(
-                'Benachrichtigungen einschalten',
-                'Du musst in den Einstellungen den Versand von Benachrichtigungen erlauben.'
-              );
-            }
+        ({
+          alert,
+          badge,
+          sound,
+        }: {
+          alert: boolean;
+          badge: boolean;
+          sound: boolean;
+        }) => {
+          if (!alert && !badge && !sound) {
+            Alert.alert(
+              'Benachrichtigungen einschalten',
+              'Bitte erteile der Campus App in den Einstellungen des iPhones die Erlaubnis für den Versand von Benachrichtigungen.'
+            );
+            setNotifyEvents(false);
+            setNotifyNews(false);
           }
         }
       );
@@ -52,7 +57,8 @@ export default function () {
 
   async function loadSettings() {
     const settings = await loadNotificationSettings();
-    if (settings != null) {
+    console.log(settings);
+    if (settings !== null) {
       setNotifyNews(settings.notificationdhbwNews);
       setNotifyEvents(settings.notificationdhbwEvents);
     }
