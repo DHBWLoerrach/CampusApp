@@ -3,20 +3,43 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
-import { textPersonCategory } from './Texts';
 import NotificationSettings from '../../util/NotificationSettings';
 import { enableNotifications } from '../../../env.js';
 
-export default function () {
+function Notifications() {
+  if (!enableNotifications) return null;
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{textPersonCategory}</Text>
+    <View style={styles.configBlock}>
+      <Text>
+        Hier kannst Du auswählen, welche Benachrichtigungen Du
+        erhalten möchtest:
+      </Text>
+      <NotificationSettings />
+    </View>
+  );
+}
+
+function Category() {
+  return (
+    <View style={styles.configBlock}>
+      <Text>
+        Hiermit legst Du fest, für welche Personengruppe Du die
+        Mensapreise angezeigt bekommen möchtest:
+      </Text>
       <RoleContext.Consumer>
         {({ role, changeRole }) => (
           <RoleSelection role={role} onRoleChange={changeRole} />
         )}
       </RoleContext.Consumer>
-      {enableNotifications ? <NotificationSettings /> : null}
+    </View>
+  );
+}
+
+export default function () {
+  return (
+    <View style={styles.container}>
+      <Category />
+      <Notifications />
     </View>
   );
 }
@@ -26,5 +49,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 15,
+  },
+  configBlock: {
+    marginBottom: 20,
   },
 });

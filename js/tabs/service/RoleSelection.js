@@ -5,22 +5,28 @@ import {
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 import { roles } from '../../util/Constants';
 
 const RadioButtonTouchable =
-  Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+  Platform.OS === 'android'
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
 
 function RadioButton(props) {
   return (
     <RadioButtonTouchable onPress={props.onPress}>
       <View style={styles.radioButton}>
         <View style={styles.outerCircle}>
-          {props.selected ? <View style={styles.innerCircle} /> : null}
+          {props.selected ? (
+            <View style={styles.innerCircle} />
+          ) : null}
         </View>
-        <Text style={[styles.label, props.selected ? styles.bold : null]}>
+        <Text
+          style={[styles.label, props.selected ? styles.bold : null]}
+        >
           {props.label}
         </Text>
       </View>
@@ -30,7 +36,7 @@ function RadioButton(props) {
 
 export default function RoleSelection(props) {
   return (
-    <View>
+    <View style={styles.radioGroup}>
       {roles.map((role, index) => (
         <RadioButton
           key={index}
@@ -44,9 +50,12 @@ export default function RoleSelection(props) {
 }
 
 const styles = StyleSheet.create({
+  radioGroup: {
+    marginTop: 10,
+  },
   radioButton: {
     flexDirection: 'row',
-    marginBottom: 5
+    marginBottom: 5,
   },
   outerCircle: {
     height: 20,
@@ -55,18 +64,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   innerCircle: {
     height: 10,
     width: 10,
     borderRadius: 5,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
   label: {
-    marginLeft: 5
+    marginLeft: 5,
   },
   bold: {
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
