@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, Switch, Text, View } from 'react-native';
+import { Alert, Platform, StyleSheet, Switch, Text, View } from 'react-native';
 import { dhbwGray, dhbwRed } from './Colors';
 import ActivityIndicator from './DHBWActivityIndicator';
 import {
@@ -23,7 +23,6 @@ export default class NotificationSettings extends React.Component {
   }
 
   async loadSettings() {
-    console.log('Loading Notification Settings');
     const settings = await loadNotificationSettings();
     if (settings != null) {
       this.setState({
@@ -39,29 +38,21 @@ export default class NotificationSettings extends React.Component {
   }
 
   async saveSettings() {
-    console.log('Saving Notification Settings');
-    const settingsObject = {};
-    settingsObject[
-      'notificationsEnabled'
-    ] = this.state.notificationsEnabled;
-    settingsObject[
-      'notificationdhbwNews'
-    ] = this.state.notificationdhbwNews;
-    settingsObject[
-      'notificationdhbwEvents'
-    ] = this.state.notificationdhbwEvents;
-    settingsObject[
-      'notificationschedule'
-    ] = this.state.notificationschedule;
+    const settingsObject = {
+      notificationsEnabled: this.state.notificationsEnabled,
+      notificationdhbwNews: this.state.notificationdhbwNews,
+      notificationdhbwEvents: this.state.notificationdhbwEvents,
+      notificationschedule: this.state.notificationschedule
+    };
     saveNotificationSettings(settingsObject);
   }
 
-  changeSettings(change) {
+  changeSettings(change: any) {
     this.setState(change);
     this.saveSettings();
     if (this.state.notificationsEnabled) {
-      PushNotification.checkPermissions((result) => {
-        if (!result.alert) {
+      PushNotification.checkPermissions(({alert}: {alert: boolean}) => {
+        if (!alert) {
           if (Platform.OS === 'ios') {
             //Request for permissions on ios
             PushNotification.requestPermissions();
@@ -97,7 +88,7 @@ export default class NotificationSettings extends React.Component {
         </View>
 
         {this.state.notificationsEnabled ? (
-          <View style={styles.switches}>
+          <View>
             <View style={styles.toggleContainer}>
               <Text>DHBW-News</Text>
               <Switch
@@ -147,9 +138,6 @@ export default class NotificationSettings extends React.Component {
 const styles = StyleSheet.create({
   settingsNotifications: {
     fontSize: 18,
-  },
-  switches: {
-    fontSize: 16,
   },
   toggleContainer: {
     flexDirection: 'row',
