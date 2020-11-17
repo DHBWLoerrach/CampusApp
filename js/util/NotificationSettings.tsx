@@ -57,7 +57,6 @@ export default function () {
 
   async function loadSettings() {
     const settings = await loadNotificationSettings();
-    console.log(settings);
     if (settings !== null) {
       setNotifyNews(settings.notificationdhbwNews);
       setNotifyEvents(settings.notificationdhbwEvents);

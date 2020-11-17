@@ -6,4 +6,8 @@ import CampusApp from './js/CampusApp';
 PushNotification.configure({
   requestPermissions: Platform.OS === 'ios',
 });
+PushNotification.createChannel({
+  channelId: 'dhbw-channel', // required on Android
+  channelName: `DHBW Channel`, // required on Android
+});
 AppRegistry.registerComponent('CampusApp', () => CampusApp);
