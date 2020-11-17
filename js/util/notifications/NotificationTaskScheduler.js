@@ -4,7 +4,7 @@ import NotificationTask from './NotificationTask';
 export default function () {
   BackgroundFetch.configure(
     {
-      minimumFetchInterval: 15,
+      minimumFetchInterval: 24 * 60, // once a day = 24 * 60 minutes
       stopOnTerminate: false,
       startOnBoot: true,
       requiredNetworkType: BackgroundFetch.NETWORK_TYPE_UNMETERED,
