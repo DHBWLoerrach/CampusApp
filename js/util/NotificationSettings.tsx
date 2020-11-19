@@ -14,9 +14,9 @@ import {
   saveNotificationSettings,
 } from '../tabs/service/SettingsHelper';
 
-export default function () {
-  const [notifyNews, setNotifyNews] = useState(false);
-  const [notifyEvents, setNotifyEvents] = useState(false);
+export default function ({ enabled = false }) {
+  const [notifyNews, setNotifyNews] = useState(enabled);
+  const [notifyEvents, setNotifyEvents] = useState(enabled);
 
   // load settings only once after mount ([] empty dependency list)
   useEffect(() => {

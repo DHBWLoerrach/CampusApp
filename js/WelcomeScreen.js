@@ -36,7 +36,7 @@ const renderNotifications = () => (
       </Text>
     </View>
 
-    <NotificationSettings />
+    <NotificationSettings enabled={true} />
   </>
 );
 
