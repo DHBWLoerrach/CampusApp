@@ -13,8 +13,8 @@ export default class CacheFetcher {
 
   async getItems(forceNewData, params) {
     if (!forceNewData) {
-      const cached = this.getCachedItems();
-      if (cached != null) {
+      const cached = await this.getCachedItems();
+      if (cached !== null) {
         return cached.items;
       }
     }
@@ -43,7 +43,7 @@ export default class CacheFetcher {
     const cached = await AsyncStorage.getItem(this.uniqueName);
     if (cached != null) {
       const cacheObject = JSON.parse(cached);
-      if (!checkAge || !this.isCacheTooOld(cacheObject.timeStamp)) {
+      if (!checkAge || !this.isCacheTooOld(cacheObject.timestamp)) {
         return {
           items: cacheObject.items,
           params: cacheObject.params,
@@ -53,8 +53,8 @@ export default class CacheFetcher {
     return null;
   }
 
-  async setCachedItems(items, params) {
-    await AsyncStorage.setItem(
+  setCachedItems(items, params) {
+    AsyncStorage.setItem(
       this.uniqueName,
       JSON.stringify({ items, params, timestamp: currentTime() })
     );
