@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import {
+  useFocusEffect,
   useNavigation,
   useScrollToTop,
 } from '@react-navigation/native';
@@ -81,17 +82,22 @@ export default ({ type }) => {
   }
 
   async function loadData() {
+    setLoading(true);
     const items = await FetchManager.fetch(type);
     if (items) {
       setData(items);
       setLoading(false);
-    } else refresh();
+    } else {
+      refresh();
+    }
   }
 
-  // load data when this component is mounted
-  useEffect(() => {
-    if (data === null) loadData();
-  }, []);
+  // when screen is focussed, load data and update header title
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   if (isLoading) {
     return (
