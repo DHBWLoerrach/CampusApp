@@ -14,18 +14,32 @@ if (enableNotifications) NotificationTaskScheduler();
 export default function CampusApp() {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [didUpgrade, setDidUpgrade] = useState(null);
   useEffect(() => {
-    const fetchRole = async () => {
+    const fetchSetupData = async () => {
       const role = await AsyncStorage.getItem('role');
+      const upgrade = await AsyncStorage.getItem('didUpgrade');
+      setDidUpgrade(upgrade);
       setRole(role);
       setLoading(false);
     };
-    fetchRole();
+    fetchSetupData();
   }, []);
 
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
     setRole(role);
+  };
+
+  // TODO remove didUpgrade flag from AsyncStorage (in fetchSetupData above)
+  // and remove this code in next version:
+  // WelcomeScreen onSubmit should use changeRole
+  // finishSetup method can be removed
+  // didUpgrade in else if below
+  const finishSetup = (role) => {
+    AsyncStorage.setItem('didUpgrade', '2.5');
+    setDidUpgrade('2.5');
+    changeRole(role);
   };
 
   let content = <Navigator />;
@@ -35,8 +49,8 @@ export default function CampusApp() {
         <ActivityIndicator />
       </View>
     );
-  } else if (!role) {
-    content = <WelcomeScreen onSubmit={changeRole} />;
+  } else if (!role || !didUpgrade) {
+    content = <WelcomeScreen onSubmit={finishSetup} />;
   }
 
   return (
