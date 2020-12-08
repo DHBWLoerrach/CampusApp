@@ -31,8 +31,8 @@ const renderNotifications = () => (
   <>
     <View style={styles.notificationSettings}>
       <Text>
-        Bitte wähle hier aus, welche Benachrichtigungen Du erhalten
-        möchtest:
+        Hier kannst Du auswählen, welche Benachrichtigungen Du
+        erhalten möchtest. Dies geschieht höchstens einmal am Tag.
       </Text>
     </View>
 
