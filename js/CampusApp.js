@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { AppState, StatusBar, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import PushNotification from 'react-native-push-notification';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
@@ -12,9 +13,11 @@ export const RoleContext = React.createContext(null);
 if (enableNotifications) NotificationTaskScheduler();
 
 export default function CampusApp() {
+  const appState = useRef(AppState.currentState);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [didUpgrade, setDidUpgrade] = useState(null);
+
   useEffect(() => {
     const fetchSetupData = async () => {
       const role = await AsyncStorage.getItem('role');
@@ -25,6 +28,25 @@ export default function CampusApp() {
     };
     fetchSetupData();
   }, []);
+
+  useEffect(() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, []);
+
+  // Remove all push notifications when app becomes active
+  const _handleAppStateChange = (nextAppState) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      PushNotification.removeAllDeliveredNotifications();
+    }
+    appState.current = nextAppState;
+  };
 
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
