@@ -112,7 +112,9 @@ function CanteenScreen() {
   }
 
   const buttonText = 'Speiseplan laden';
-  if (!dayPlans || dayPlans.length === 0) {
+  // TODO: switch back when SWFR API key is renewed and works
+  // if (!dayPlans || dayPlans.length === 0) {
+  if (true) {
     let infoText =
       'Zur Zeit gibt es für die Mensa keinen Speiseplan.';
     if (hasNetworkError) infoText = null; // text set in ReloadView
