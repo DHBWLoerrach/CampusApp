@@ -22,20 +22,51 @@ async function NotificationTask() {
   const settings = await loadNotificationSettings();
   if (settings == null) return;
 
+  const newsNotifications = [];
+  const eventsNotifications = [];
+
   if (settings.notificationdhbwNews) {
     const news = await FetchManager.getNewData(DHBW_NEWS);
     news.newItems.forEach((newItem) =>
-      localPush('Neue DHBW News', newItem.heading)
+      newsNotifications.push({
+        title: 'Neue DHBW News',
+        message: newItem.heading,
+      })
     );
   }
 
   if (settings.notificationdhbwEvents) {
     const events = await FetchManager.getNewData(DHBW_EVENTS);
     events.newItems.forEach((newItem) =>
-      localPush(
-        'Neuer DHBW Termin',
-        newItem.heading + ' am ' + getDay(Date.parse(newItem.time))
-      )
+      eventsNotifications.push({
+        title: 'Neue DHBW Termin',
+        message:
+          newItem.heading + ' am ' + getDay(Date.parse(newItem.time)),
+      })
+    );
+  }
+
+  if (
+    newsNotifications.length > 0 &&
+    eventsNotifications.length > 0
+  ) {
+    localPush(
+      'DHBW Lörrach Campus App',
+      'Es gibt News und neue Termine'
+    );
+  } else if (newsNotifications.length > 1) {
+    localPush('DHBW Lörrach Campus App', 'Es gibt neue DHBW News');
+  } else if (newsNotifications.length === 1) {
+    localPush(
+      newsNotifications[0].title,
+      newsNotifications[0].message
+    );
+  } else if (eventsNotifications.length > 1) {
+    localPush('DHBW Lörrach Campus App', 'Es gibt neue DHBW Termine');
+  } else if (eventsNotifications.length === 1) {
+    localPush(
+      eventsNotifications[0].title,
+      eventsNotifications[0].message
     );
   }
 
