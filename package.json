@@ -31,7 +31,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-tab-view": "^2.15.2",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-webview": "^11.0.2",
+    "react-native-webview": "^11.0.3",
     "xmldom": "^0.4.0"
   },
   "jest": {
