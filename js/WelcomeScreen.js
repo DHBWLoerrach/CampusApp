@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -20,25 +20,11 @@ import {
 } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
 import NotificationSettings from './util/NotificationSettings';
-import { enableNotifications } from './../env.js';
 
 const ButtonTouchable =
   Platform.OS === 'android'
     ? TouchableNativeFeedback
     : TouchableOpacity;
-
-const renderNotifications = () => (
-  <>
-    <View style={styles.notificationSettings}>
-      <Text>
-        Hier kannst Du auswählen, welche Benachrichtigungen Du
-        erhalten möchtest. Dies geschieht höchstens einmal am Tag.
-      </Text>
-    </View>
-
-    <NotificationSettings enabled={true} />
-  </>
-);
 
 export default function WelcomeScreen(props) {
   const [disclaimerChecked, checkDisclaimer] = useState(false);
@@ -82,7 +68,14 @@ export default function WelcomeScreen(props) {
           />
         </View>
 
-        {enableNotifications ? renderNotifications() : null}
+        <View style={styles.notificationSettings}>
+          <Text>
+            Hier kannst Du auswählen, welche Benachrichtigungen Du
+            erhalten möchtest. Dies geschieht höchstens einmal am Tag.
+          </Text>
+        </View>
+
+        <NotificationSettings enabled={true} />
 
         <View style={styles.disclaimer}>
           <TextDisclaimer />

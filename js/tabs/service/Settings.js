@@ -4,7 +4,6 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import NotificationSettings from '../../util/NotificationSettings';
-import { enableNotifications } from '../../../env.js';
 
 function HintNotificationsIOS() {
   return (
@@ -17,7 +16,6 @@ function HintNotificationsIOS() {
 }
 
 function Notifications() {
-  if (!enableNotifications) return null;
   return (
     <View style={styles.configBlock}>
       <Text>

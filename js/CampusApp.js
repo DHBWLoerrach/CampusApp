@@ -7,10 +7,9 @@ import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
 import NotificationTaskScheduler from './util/notifications/NotificationTaskScheduler';
 import ActivityIndicator from './util/DHBWActivityIndicator';
-import { enableNotifications } from './../env.js';
 
 export const RoleContext = React.createContext(null);
-if (enableNotifications) NotificationTaskScheduler();
+NotificationTaskScheduler();
 
 export default function CampusApp() {
   const appState = useRef(AppState.currentState);
