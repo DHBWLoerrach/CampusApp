@@ -6073,10 +6073,10 @@ react-native-maps@0.27.1:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.27.1.tgz#2f10cd417bb2fd938c9e015b1c9b6d9b1a44b97f"
   integrity sha512-HygBkZBecTnIVRYrSiLRAvu4OmXOYso/A7c6Cy73HkOh9CgGV8Ap5eBea24tvmFGptjj5Hg8AJ94/YbmWK1Okw==
 
-react-native-push-notification@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-7.1.0.tgz#6f277db1421b5220cb8a435a267468a96034d7a8"
-  integrity sha512-CW5mrpFufxJzXnX/dYP9WARR1nob5qjAYb2j+8lZYI6pusju4DrS1/MezOo+oe0gwHObNGatIHRDResRc1Sbxw==
+react-native-push-notification@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-7.1.1.tgz#af1357f5208a64239bdf02ff9ebbfae82db325aa"
+  integrity sha512-WkkRJFAX6jfgWRv3ZrTigXes5CAtOIam/JBHc/FwyuGDzzYbT/F2hoUqp5a0hX1aVd4HCWohne2is6hHX+CBaA==
 
 react-native-reanimated@^1.13.2:
   version "1.13.2"
