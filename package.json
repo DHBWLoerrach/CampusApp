@@ -1,6 +1,6 @@
 {
   "name": "CampusApp",
-  "version": "2.4.13",
+  "version": "2.4.14",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -24,7 +24,7 @@
     "react-native-background-fetch": "^3.1.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "0.27.1",
-    "react-native-push-notification": "^7.1.0",
+    "react-native-push-notification": "^7.1.1",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",
