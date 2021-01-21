@@ -13,6 +13,7 @@ import { enableStuV } from './../env.js';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
+import HeaderHelpIcon from './tabs/canteen/HeaderHelpIcon';
 import ServiceScreen from './tabs/service/ServiceScreen';
 import NewsDetails from './tabs/news/NewsDetails';
 import EditCourse from './tabs/schedule/EditCourse';
@@ -133,7 +134,7 @@ function CanteenStack() {
       <Stack.Screen
         name="Home"
         component={CanteenScreen}
-        options={{ title: 'Speiseplan' }}
+        options={{ title: 'Speiseplan', headerRight: HeaderHelpIcon }}
       />
     </Stack.Navigator>
   );
