@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
@@ -89,15 +89,15 @@ function CanteenScreen() {
     } else refresh();
   }
 
-  // load data when this component is mounted
-  useEffect(() => {
-    if (dayPlans === null) loadData();
-  }, []);
-
-  // when screen is focussed, load new data if empty or if today > dayPlans.first
+  // when screen is focussed, load data resp. refresh if empty or today > dayPlans.first
   useFocusEffect(
     useCallback(() => {
-      if (!dayPlans || !isToday(getDateObject(dayPlans[0].date))) {
+      if (dayPlans === null) {
+        loadData();
+      } else if (
+        dayPlans.length === 0 ||
+        !isToday(getDateObject(dayPlans[0].date))
+      ) {
         refresh();
       }
     }, [])
