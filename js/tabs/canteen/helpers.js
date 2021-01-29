@@ -4,7 +4,9 @@ export default function fetchCanteenData(canteenXMLData) {
   let dayPlans = [];
   let parser = new DOMParser();
   let doc = parser.parseFromString(canteenXMLData, 'application/xml');
-  let plansByDay = doc.getElementsByTagName('tagesplan');
+  let loerrach = doc.getElementById('677');
+  if (loerrach === null || loerrach === undefined) return dayPlans;
+  let plansByDay = loerrach.getElementsByTagName('tagesplan');
 
   for (let i = 0; i < plansByDay.length; i++) {
     let menusOfTheDay = [];
@@ -72,7 +74,8 @@ export default function fetchCanteenData(canteenXMLData) {
       pushPrices('gaeste', 'guest');
 
       // sometimes menus don't have a name, use category in that case (e.g. 'Buffet')
-      let menuName = menuElement.attributes.getNamedItem('art').nodeValue;
+      let menuName = menuElement.attributes.getNamedItem('art')
+        .nodeValue;
       let nameElement = menuElement
         .getElementsByTagName('name')
         .item(0)
@@ -90,7 +93,8 @@ export default function fetchCanteenData(canteenXMLData) {
     }
 
     dayPlans.push({
-      date: plansByDay.item(i).attributes.getNamedItem('datum').nodeValue,
+      date: plansByDay.item(i).attributes.getNamedItem('datum')
+        .nodeValue,
       menus: menusOfTheDay,
     });
   }

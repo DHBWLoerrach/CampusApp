@@ -68,23 +68,22 @@ function CanteenScreen() {
   // load data from local store or from web if store is emtpy
   async function loadData() {
     let data = await loadCanteenDataFromStore();
-    if (data !== null) {
+    if (
+      !data ||
+      data.length === 0 ||
+      !isToday(getDateObject(data[0].date))
+    ) {
+      refresh();
+    } else {
       setDayPlans(data);
       setLoading(false);
-    } else refresh();
+    }
   }
 
   // when screen is focussed, load data resp. refresh if empty or today > dayPlans.first
   useFocusEffect(
     useCallback(() => {
-      if (dayPlans === null) {
-        loadData();
-      } else if (
-        dayPlans.length === 0 ||
-        !isToday(getDateObject(dayPlans[0].date))
-      ) {
-        refresh();
-      }
+      loadData();
     }, [])
   );
 
