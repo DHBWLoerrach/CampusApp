@@ -20,7 +20,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="zF0-VS-bxZ" firstAttribute="trailing" secondItem="Bcu-3y-fUS" secondAttribute="trailing" id="AKb-52-ZZr"/>
                             <constraint firstItem="zF0-VS-bxZ" firstAttribute="bottom" secondItem="Bcu-3y-fUS" secondAttribute="bottom" id="GaJ-HV-VqH"/>
