@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Button, SectionList, StyleSheet, View } from 'react-native';
-import {
-  useFocusEffect,
-  useScrollToTop,
-} from '@react-navigation/native';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -48,7 +45,7 @@ function ScheduleScreen({ navigation }) {
   }
 
   function filterLectures(searchString, rawLectures) {
-    if (searchString.length === 0) {
+    if (searchString.length === 0 || !rawLectures) {
       return rawLectures;
     }
     //Do not touch downloaded lectures
