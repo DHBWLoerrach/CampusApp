@@ -7,7 +7,6 @@ export default class ICalFetcher {
       //needed because of bad cache behavior
       const suffix = '?' + new Date().getTime();
       const scheduleUrl = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${params.course}@dhbw-loerrach.de/Kalender/calendar.ics${suffix}`;
-      console.log(`--> ${scheduleUrl}`);
       const response = await fetch(scheduleUrl, {
         cache: 'no-store',
       });
