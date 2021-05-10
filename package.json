@@ -20,7 +20,7 @@
     "date-fns": "^2.19.0",
     "ical.js": "^1.4.0",
     "react": "17.0.1",
-    "react-native": "0.64.0",
+    "react-native": "0.64.1",
     "react-native-background-fetch": "^4.0.1",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-maps": "0.27.1",
