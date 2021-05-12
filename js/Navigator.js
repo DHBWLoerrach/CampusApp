@@ -243,7 +243,7 @@ const Tab = createBottomTabNavigator();
 
 export default function Navigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent={true}>
       <Tab.Navigator
         screenOptions={tabsConfig}
         tabBarOptions={{

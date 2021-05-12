@@ -7,9 +7,13 @@ import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
 import NotificationTaskScheduler from './util/notifications/NotificationTaskScheduler';
 import ActivityIndicator from './util/DHBWActivityIndicator';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 export const RoleContext = React.createContext(null);
 NotificationTaskScheduler();
+
+const Drawer = createDrawerNavigator();
 
 export default function CampusApp() {
   const appState = useRef(AppState.currentState);
@@ -63,7 +67,12 @@ export default function CampusApp() {
     changeRole(role);
   };
 
-  let content = <Navigator />;
+  let content = <NavigationContainer independent={true}>
+                  <Drawer.Navigator>
+                    <Drawer.Screen name="DHBW Campus" component={Navigator} /> 
+                  </Drawer.Navigator> 
+                </NavigationContainer>;
+
   if (loading) {
     content = (
       <View style={styles.center}>
