@@ -5601,10 +5601,10 @@ react-native-maps@0.28.0:
   dependencies:
     "@types/geojson" "^7946.0.7"
 
-react-native-push-notification@^7.2.3:
-  version "7.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-7.2.3.tgz#e5efa0d48bfa27ad0cab538ba859b5f2cd21b684"
-  integrity sha512-MWwzGXGD22vQ35roDWBQ4EJl1jS4kuuAAdxqe2C88gULgzT6rQkR9wszl5b5K+hIWqve50qg4zJoSgarr//2KA==
+react-native-push-notification@7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-7.3.0.tgz#cfe3941b2b83775e2910aecfc46528886e73f05e"
+  integrity sha512-Ofy8dYAhIkFJKxQDvAn7BnXxwtun1SMnqLjZUhRTRzhPEqN0tW7TmIjfyYanNf/lnggRYZqFO+b14Ul3nhlMGw==
 
 react-native-reanimated@^2.1.0:
   version "2.1.0"
