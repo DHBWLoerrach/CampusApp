@@ -27,221 +27,227 @@ import StuVScreen from './tabs/stuv/StuVScreen';
 import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
 
-const stackHeaderConfig = {
-  headerBackTitle: 'Zurück',
-  headerTintColor: 'white',
-  headerStyle: {
-    backgroundColor: Colors.dhbwRed,
-    shadowColor: 'transparent', // prevent line below header in iOS
-    ...Platform.select({
-      android: {
-        elevation: 0,
-      },
-    }),
-  },
-};
+export default function Navigator({navigation}) {
 
-const Stack = createStackNavigator();
-
-function NewsStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={stackHeaderConfig}
-    >
-      <Stack.Screen
-        name="Home"
-        component={NewsScreen}
-        options={{ title: 'Neuigkeiten & Termine' }}
-      />
-      <Stack.Screen
-        name="NewsDetails"
-        component={NewsDetails}
-        options={{ headerTitle: 'Neuigkeiten & Termine' }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function StuVStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={stackHeaderConfig}
-    >
-      <Stack.Screen
-        name="Home"
-        component={StuVScreen}
-        options={{ title: 'Studierendenvertretung - StuV' }}
-      />
-      <Stack.Screen
-        name={'StuVEventsDetails'}
-        component={StuVEventsDetails}
-        options={({ route }) => {
-          return { title: route.params.event.title };
-        }}
-      />
-      <Stack.Screen
-        name={'StuVNewsDetails'}
-        component={StuVNewsDetails}
-        options={({ route }) => {
-          return { title: route.params.news.title };
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-const scheduleOptions = ({ navigation, route }) => {
-  const headerTitle = route.params?.course ?? 'Vorlesungsplan';
-  return {
-    headerRight: () => (
-      <HeaderIcon
-        onPress={() => navigation.navigate('EditCourse')}
-        icon="edit"
-      />
-    ),
-    headerTitle,
+  const stackHeaderConfig = {
+    headerBackTitle: 'Zurück',
+    headerTintColor: 'white',
+    headerLeft: () => <MaterialIcon
+      style={{ paddingLeft: 10 }}
+      onPress={() => navigation.openDrawer()}
+      name="menu"
+      size={30}
+    />,
+    headerStyle: {
+      backgroundColor: Colors.dhbwRed,
+      shadowColor: 'transparent', // prevent line below header in iOS
+      ...Platform.select({
+        android: {
+          elevation: 0,
+        },
+      }),
+    },
   };
-};
-
-function ScheduleStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={stackHeaderConfig}
-    >
-      <Stack.Screen
-        name="Home"
-        component={ScheduleScreen}
-        options={scheduleOptions}
-      />
-      <Stack.Screen
-        name="EditCourse"
-        component={EditCourse}
-        options={{ title: 'Kurs eingeben' }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function CanteenStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={stackHeaderConfig}
-    >
-      <Stack.Screen
-        name="Home"
-        component={CanteenScreen}
-        options={{ title: 'Speiseplan', headerRight: HeaderHelpIcon }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ServicesStack() {
-  return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={stackHeaderConfig}
-    >
-      <Stack.Screen
-        name="Home"
-        component={ServiceScreen}
-        options={{ title: 'Services der DHBW Lörrach' }}
-      />
-      <Stack.Screen
-        name="Accounts"
-        component={LinksList}
-        options={{ title: 'Service-Zugänge' }}
-      />
-      <Stack.Screen
-        name="Emergency"
-        component={LinksList}
-        options={{ title: 'Hilfe im Notfall' }}
-      />
-      <Stack.Screen
-        name="Study"
-        component={LinksList}
-        options={{ title: 'Studium' }}
-      />
-      <Stack.Screen
-        name="KBC"
-        component={LinksList}
-        options={{ title: 'Angebote KBC' }}
-      />
-      <Stack.Screen
-        name="Freetime"
-        component={LinksList}
-        options={{ title: 'Freizeit' }}
-      />
-      <Stack.Screen
-        name="Feedback"
-        component={Feedback}
-        options={{ title: 'Feedback' }}
-      />
-      <Stack.Screen
-        name="Settings"
-        component={Settings}
-        options={{ title: 'Einstellungen' }}
-      />
-      <Stack.Screen
-        name="About"
-        component={About}
-        options={{ title: 'Über' }}
-      />
-      <Stack.Screen
-        name="Disclaimer"
-        component={InfoText}
-        options={{ title: 'Haftung' }}
-      />
-      <Stack.Screen
-        name="Imprint"
-        component={InfoText}
-        options={{ title: 'Impressum' }}
-      />
-      <Stack.Screen
-        name="Privacy"
-        component={InfoText}
-        options={{ title: 'Datenschutz' }}
-      />
-      <Stack.Screen
-        name="CafeteriaKKH"
-        component={InfoText}
-        options={{ title: 'Cafeteria im KKH' }}
-      />
-      <Stack.Screen
-        name="Hieber"
-        component={InfoText}
-        options={{ title: "Hieber's Frische Center" }}
-      />
-      <Stack.Screen
-        name="CampusHangstr"
-        component={InfoImage}
-        options={{ title: 'Campus Hangstraße' }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-const tabsConfig = ({ route }) => ({
-  tabBarIcon: ({ color }) => {
-    const routeName = route.name;
-    let iconName;
-    if (routeName === 'News') iconName = 'rss-feed';
-    else if (routeName === 'Schedule') iconName = 'school';
-    else if (routeName === 'Canteen') iconName = 'restaurant';
-    else if (routeName === 'Services') iconName = 'info-outline';
-    else if (routeName === 'StuV')
-      return <StuVIcon width={32} height={32} color={color} />;
-    return <MaterialIcon name={iconName} size={32} color={color} />;
-  },
-});
-
-const Tab = createBottomTabNavigator();
-
-export default function Navigator() {
+  
+  const Stack = createStackNavigator();
+  
+  function NewsStack() {
+    return (
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+          name="Home"
+          component={NewsScreen}
+          options={{ title: 'Neuigkeiten & Termine' }}
+        />
+        <Stack.Screen
+          name="NewsDetails"
+          component={NewsDetails}
+          options={{ headerTitle: 'Neuigkeiten & Termine' }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  
+  function StuVStack() {
+    return (
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+          name="Home"
+          component={StuVScreen}
+          options={{ title: 'Studierendenvertretung - StuV' }}
+        />
+        <Stack.Screen
+          name={'StuVEventsDetails'}
+          component={StuVEventsDetails}
+          options={({ route }) => {
+            return { title: route.params.event.title };
+          }}
+        />
+        <Stack.Screen
+          name={'StuVNewsDetails'}
+          component={StuVNewsDetails}
+          options={({ route }) => {
+            return { title: route.params.news.title };
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  
+  const scheduleOptions = ({ navigation, route }) => {
+    const headerTitle = route.params?.course ?? 'Vorlesungsplan';
+    return {
+      headerRight: () => (
+        <HeaderIcon
+          onPress={() => navigation.navigate('EditCourse')}
+          icon="edit"
+        />
+      ),
+      headerTitle,
+    };
+  };
+  
+  function ScheduleStack() {
+    return (
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+          name="Home"
+          component={ScheduleScreen}
+          options={scheduleOptions}
+        />
+        <Stack.Screen
+          name="EditCourse"
+          component={EditCourse}
+          options={{ title: 'Kurs eingeben' }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  
+  function CanteenStack() {
+    return (
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+          name="Home"
+          component={CanteenScreen}
+          options={{ title: 'Speiseplan', headerRight: HeaderHelpIcon }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  
+  function ServicesStack() {
+    return (
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={stackHeaderConfig}
+      >
+        <Stack.Screen
+          name="Home"
+          component={ServiceScreen}
+          options={{ title: 'Services der DHBW Lörrach' }}
+        />
+        <Stack.Screen
+          name="Accounts"
+          component={LinksList}
+          options={{ title: 'Service-Zugänge' }}
+        />
+        <Stack.Screen
+          name="Emergency"
+          component={LinksList}
+          options={{ title: 'Hilfe im Notfall' }}
+        />
+        <Stack.Screen
+          name="Study"
+          component={LinksList}
+          options={{ title: 'Studium' }}
+        />
+        <Stack.Screen
+          name="KBC"
+          component={LinksList}
+          options={{ title: 'Angebote KBC' }}
+        />
+        <Stack.Screen
+          name="Freetime"
+          component={LinksList}
+          options={{ title: 'Freizeit' }}
+        />
+        <Stack.Screen
+          name="Feedback"
+          component={Feedback}
+          options={{ title: 'Feedback' }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{ title: 'Einstellungen' }}
+        />
+        <Stack.Screen
+          name="About"
+          component={About}
+          options={{ title: 'Über' }}
+        />
+        <Stack.Screen
+          name="Disclaimer"
+          component={InfoText}
+          options={{ title: 'Haftung' }}
+        />
+        <Stack.Screen
+          name="Imprint"
+          component={InfoText}
+          options={{ title: 'Impressum' }}
+        />
+        <Stack.Screen
+          name="Privacy"
+          component={InfoText}
+          options={{ title: 'Datenschutz' }}
+        />
+        <Stack.Screen
+          name="CafeteriaKKH"
+          component={InfoText}
+          options={{ title: 'Cafeteria im KKH' }}
+        />
+        <Stack.Screen
+          name="Hieber"
+          component={InfoText}
+          options={{ title: "Hieber's Frische Center" }}
+        />
+        <Stack.Screen
+          name="CampusHangstr"
+          component={InfoImage}
+          options={{ title: 'Campus Hangstraße' }}
+        />
+      </Stack.Navigator>
+    );
+  }
+  
+  const tabsConfig = ({ route }) => ({
+    tabBarIcon: ({ color }) => {
+      const routeName = route.name;
+      let iconName;
+      if (routeName === 'News') iconName = 'rss-feed';
+      else if (routeName === 'Schedule') iconName = 'school';
+      else if (routeName === 'Canteen') iconName = 'restaurant';
+      else if (routeName === 'Services') iconName = 'info-outline';
+      else if (routeName === 'StuV')
+        return <StuVIcon width={32} height={32} color={color} />;
+      return <MaterialIcon name={iconName} size={32} color={color} />;
+    },
+  });
+  
+  const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator

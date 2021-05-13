@@ -9,6 +9,7 @@ import NotificationTaskScheduler from './util/notifications/NotificationTaskSche
 import ActivityIndicator from './util/DHBWActivityIndicator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerContent } from './util/DrawerContent';
 
 export const RoleContext = React.createContext(null);
 NotificationTaskScheduler();
@@ -68,9 +69,9 @@ export default function CampusApp() {
   };
 
   let content = <NavigationContainer independent={true}>
-                  <Drawer.Navigator>
-                    <Drawer.Screen name="DHBW Campus" component={Navigator} /> 
-                  </Drawer.Navigator> 
+                  <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+                    <Drawer.Screen name="DHBW Campus" component={Navigator} />
+                  </Drawer.Navigator>
                 </NavigationContainer>;
 
   if (loading) {
