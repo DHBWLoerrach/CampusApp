@@ -21,6 +21,7 @@ export default class HeaderIcon extends Component {
       >
         <View>
           <MaterialIcon
+            style={{ marginRight: 10 }}
             name={this.props.icon}
             size={this.props.size || 24}
             color="white"

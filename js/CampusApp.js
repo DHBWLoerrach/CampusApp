@@ -10,6 +10,7 @@ import ActivityIndicator from './util/DHBWActivityIndicator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './util/DrawerContent';
+import DualisLogin from './drawer-screens/dualis/DualisLogin';
 
 export const RoleContext = React.createContext(null);
 NotificationTaskScheduler();
@@ -70,7 +71,7 @@ export default function CampusApp() {
 
   let content = <NavigationContainer independent={true}>
                   <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                    <Drawer.Screen name="DHBW Campus" component={Navigator} />
+                    <Drawer.Screen name="Home" component={Navigator} />
                   </Drawer.Navigator>
                 </NavigationContainer>;
 
