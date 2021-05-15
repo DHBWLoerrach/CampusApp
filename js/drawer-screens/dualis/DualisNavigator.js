@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../util/Colors';
+import DualisIntro from './DualisIntro';
 import DualisLogin from './DualisLogin';
 import DualisMain from './DualisMain';
 
@@ -37,6 +38,11 @@ const DualisNavigator = ({navigation}) => {
                 initialRouteName="Home"
                 screenOptions={stackHeaderConfig}
             >
+                <Stack.Screen
+                    name="DualisIntro"
+                    component={DualisIntro}
+                    options={{ title: 'Campus App Dualis' }}
+                />
                 <Stack.Screen
                     name="DualisLogin"
                     component={DualisLogin}
