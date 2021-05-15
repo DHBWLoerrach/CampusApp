@@ -1,14 +1,12 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StatusBar, Platform, StyleSheet } from 'react-native';
+import Colors from '../../util/Colors';
+
 
 const DualisLogin = () => {
     return (
         <View style={styles.container}>
-            <Text>Dualis Login</Text>
-            <Button
-                title="Anmelden"
-                onPress={() => {}}
-            />
+            <Text>DualisLogin</Text>
         </View>
     );
 };

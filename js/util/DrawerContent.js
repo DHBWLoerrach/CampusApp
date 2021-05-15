@@ -44,7 +44,7 @@ export function DrawerContent(props) {
                             />
                         )}
                         label="Startseite"
-                        onPress={() => {}}
+                        onPress={() => {props.navigation.navigate("Home")}}
                       />
                       <DrawerItem
                         icon={({color, size}) => (
@@ -55,7 +55,7 @@ export function DrawerContent(props) {
                             />
                         )}
                         label="Dualis"
-                        onPress={() => {props.navigation.navigate("DualisLogin")}}
+                        onPress={() => {props.navigation.navigate("Dualis")}}
                       />
                       <DrawerItem
                         icon={({color, size}) => (
@@ -68,7 +68,7 @@ export function DrawerContent(props) {
                         label="Raumreservierung"
                         onPress={() => {}}
                       />
-                      <DrawerItem
+                      {/*<DrawerItem
                         icon={({color, size}) => (
                             <Icon
                             name="dip-switch"
@@ -77,8 +77,8 @@ export function DrawerContent(props) {
                             />
                         )}
                         label="Einstellungen"
-                        onPress={() => {props.navigation.navigate('TabNavigator', { screen: 'Services' })}}
-                      />
+                        onPress={() => {props.navigation.navigate("Screen")}}
+                        />*/}
                     </Drawer.Section>
                     <Drawer.Section>
                       <TouchableRipple onPress={() => {toggleSwitch()}}>
