@@ -21,14 +21,15 @@ class DualisLogin extends React.Component {
         try{
         fetch('http://134.255.237.241/login/', {
             method: 'POST',
-            header: {
-                'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
+            header: new Headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }),
+            mode: "cors",
             body: JSON.stringify({
-                "login": {
-                    "email": this.state.email,
-                    "password": this.state.password
+                login: {
+                    email: this.state.email,
+                    password: this.state.password
                 },
             })
         }).then((resp) => resp.json()).then((respJson) => {
