@@ -25,7 +25,7 @@ class DualisLogin extends React.Component {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }),
-            mode: "cors",
+            mode: 'cors',
             body: JSON.stringify({
                 login: {
                     email: this.state.email,
