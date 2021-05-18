@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Button, Image, StatusBar, Platform, StyleSheet, TouchableOpacity } from 'react-native';
-import { Caption, Paragraph, Drawer, Text, TextInput } from 'react-native-paper';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Paragraph, Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../util/Colors';
 
 class DualisLogin extends React.Component {
@@ -10,48 +12,61 @@ class DualisLogin extends React.Component {
         this.state = {
           email: "",
           password: "",
-          response: "Default response"
+          loading: false,
+          loginFailed: false,
+          error: null
         }
 
         this.login = this.login.bind(this);
     }
 
     login() {
-        //this.setState({response: "Hello"});
-        try{
-        fetch('http://134.255.237.241/login/', {
-            method: 'POST',
-            header: new Headers({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }),
-            mode: 'cors',
-            body: JSON.stringify({
-                login: {
+        this.setState({loading: true});
+        try {
+            fetch('http://134.255.237.241/login/', {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }),
+                mode: 'cors',
+                body: JSON.stringify({
                     email: this.state.email,
                     password: this.state.password
-                },
-            })
-        }).then((resp) => resp.json()).then((respJson) => {
-            this.setState({response: JSON.stringify(respJson)});
-        });
-    } catch (ex) {
-        this.setState({response: ex});
-    }
+                })
+            }).then((resp) => resp.json()).then((respJson) => {
+                if(respJson.jwt != "" && respJson.jwt != null) {
+                    AsyncStorage.setItem('dualisToken', respJson.jwt);
+                    this.setState({loginFailed: false});
+                } else {
+                    this.setState({loginFailed: true});
+                }
+
+                this.setState({loading: false});
+            });
+        } catch (ex) {
+            this.setState({error: ex});
+        }
+
     }
 
     render() {
 
+        let textInputTheme = this.state.loginFailed ? failureTheme : standardTheme;
+
         return (
             <View style={styles.container}>
-                <TextInput style={{ marginTop: 40 }} theme={{ colors: { primary: Colors.dhbwRed }}} onChangeText={value=>{this.setState({email:value})}} placeholder="DHBW E-Mail" />
-                <TextInput style={{ marginTop: 40 }} theme={{ colors: { primary: Colors.dhbwRed }}} onChangeText={value=>{this.setState({password:value})}} placeholder="Passwort" />
+                <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({email:value})}} placeholder="DHBW E-Mail" />
+                <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({password:value})}} placeholder="Passwort" />
                 <TouchableOpacity style={styles.dhbwButton} onPress={this.login}>
                     <Text style={{ color: "white", margin: 20 }}>Anmelden</Text>
+                    {this.state.loading &&
+                        <ActivityIndicator size="large" color={Colors.lightGray} />
+                    }
                 </TouchableOpacity>
-                <Text>{this.state.email}</Text>
-                <Text>{this.state.password}</Text>
-                <Text>{this.state.response}</Text>
+                {this.state.error &&
+                    <Text>{this.state.error}</Text>
+                }
                 <Paragraph style={styles.paragraph}>Bitte denke daran, dass keine Gewähr für die Richtigkeit der hier bereitgestellten Informationen übernommen werden kann. Im Zweifelsfall ist das Sekretariat oder die entsprechende Lehrkraft zu befragen.</Paragraph>
                 <Paragraph style={styles.paragraph}>Aus Sicherheitsgründen wirst Du nach 20 Minuten automatisch abgemeldet.</Paragraph>
             </View>
@@ -61,6 +76,9 @@ class DualisLogin extends React.Component {
 
 
 export default DualisLogin;
+
+const standardTheme = { colors: { primary: Colors.dhbwRed, text: "black", background: Colors.lightGray }};
+const failureTheme = { colors: { primary: Colors.dhbwRed, text: "white", background: Colors.dhbwRed }};
 
 const styles = StyleSheet.create({
     container: {
@@ -77,7 +95,9 @@ const styles = StyleSheet.create({
     dhbwButton: {
         width: "100%",
         backgroundColor: Colors.dhbwRed,
+        flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         marginTop: 20
     }
 });

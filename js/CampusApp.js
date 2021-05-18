@@ -9,7 +9,7 @@ import NotificationTaskScheduler from './util/notifications/NotificationTaskSche
 import ActivityIndicator from './util/DHBWActivityIndicator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { DrawerContent } from './util/DrawerContent';
+import DrawerContent from './util/DrawerContent';
 import DualisNavigator from './drawer-screens/dualis/DualisNavigator';
 
 export const RoleContext = React.createContext(null);

@@ -12,102 +12,135 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-community/async-storage';
 import Colors from './Colors';
 
-export function DrawerContent(props) {
+class DrawerContent extends React.Component {
 
-    const [darkThemeSet, setDarkTheme] = React.useState(false);
-    const toggleSwitch = () => {
-      setDarkTheme(!darkThemeSet);
+  constructor(props){
+      super(props)
+  
+      this.state = {
+        darkThemeOn: false
+      }
+
+      this.toggleSwitch = this.toggleSwitch.bind(this);
+      this.isAuthenticated = this.isAuthenticated.bind(this);
+  }
+
+  toggleSwitch() {
+    this.state.darkThemeOn ? this.setState({darkThemeOn: false}) : this.setState({darkThemeOn: true});
+  }
+
+  isAuthenticated() {
+    const token = AsyncStorage.getItem('dualisToken');
+    try {
+      decode(token);
+      const { exp } = decode(token);
+      if (Date.now() >= exp * 1000) {
+        return false;
+      }
+    } catch (err) {
+      return false;
     }
+    return true;
+  }
 
+  render() {
     return (
-        <View style={{ flex: 1 }}>
-            <DrawerContentScrollView {...props}>
-                <View style={styles.drawerContent}>
-                    <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: "row", marginTop: 15}}>
-                            <Avatar.Icon style={{backgroundColor: Colors.dhbwRed}} size={62} icon="face" color={"white"} />
-                            <View style={{ flexDirection: "column", marginLeft: 5}}>
-                              <Title style={styles.title}>Eingeloggt als:</Title>
-                              <Caption style={styles.caption}>kaiseand@dhbw-loerrach.de</Caption>
-                            </View>
-                        </View>
-                    </View>
-                    <Drawer.Section style={styles.drawerSection}>
-                      <DrawerItem
-                        icon={({color, size}) => (
-                            <Icon
-                            name="home-outline"
-                            color={color}
-                            size={size}
-                            />
-                        )}
-                        label="Startseite"
-                        onPress={() => {props.navigation.navigate("Home")}}
-                      />
-                      <DrawerItem
-                        icon={({color, size}) => (
-                            <Icon
-                            name="chart-areaspline"
-                            color={color}
-                            size={size}
-                            />
-                        )}
-                        label="Dualis"
-                        onPress={() => {props.navigation.navigate("Dualis")}}
-                      />
-                      <DrawerItem
-                        icon={({color, size}) => (
-                            <Icon
-                            name="google-classroom"
-                            color={color}
-                            size={size}
-                            />
-                        )}
-                        label="Raumreservierung"
-                        onPress={() => {}}
-                      />
-                      {/*<DrawerItem
-                        icon={({color, size}) => (
-                            <Icon
-                            name="dip-switch"
-                            color={color}
-                            size={size}
-                            />
-                        )}
-                        label="Einstellungen"
-                        onPress={() => {props.navigation.navigate("Screen")}}
-                        />*/}
-                    </Drawer.Section>
-                    <Drawer.Section>
-                      <TouchableRipple onPress={() => {toggleSwitch()}}>
-                        <View style={styles.darkMode}>                       
-                          <Text>Dunkelmodus</Text>
-                          <View pointerEvents="none">
-                            <Switch trackColor={{true: Colors.dhbwRed, false: Colors.dhbwGray}} thumbColor="white" value={darkThemeSet} />
+      <View style={{ flex: 1 }}>
+          <DrawerContentScrollView {...this.props.navigation}>
+              <View style={styles.drawerContent}>
+                  <View style={styles.userInfoSection}>
+                    {this.isAuthenticated() &&
+                      <View style={{flexDirection: "row", marginTop: 15}}>
+                          <Avatar.Icon style={{backgroundColor: Colors.dhbwRed}} size={62} icon="face" color={"white"} />
+                          <View style={{ flexDirection: "column", marginLeft: 5}}>
+                            <Title style={styles.title}>Eingeloggt als:</Title>
+                            <Caption style={styles.caption}>kaiseand@dhbw-loerrach.de</Caption>
                           </View>
+                      </View>
+                    }
+                  </View>
+                  <Drawer.Section style={styles.drawerSection}>
+                    <DrawerItem
+                      icon={({color, size}) => (
+                          <Icon
+                          name="home-outline"
+                          color={color}
+                          size={size}
+                          />
+                      )}
+                      label="Startseite"
+                      onPress={() => {this.props.navigation.navigate("Home")}}
+                    />
+                    <DrawerItem
+                      icon={({color, size}) => (
+                          <Icon
+                          name="chart-areaspline"
+                          color={color}
+                          size={size}
+                          />
+                      )}
+                      label="Dualis"
+                      onPress={() => {this.props.navigation.navigate("Dualis")}}
+                    />
+                    <DrawerItem
+                      icon={({color, size}) => (
+                          <Icon
+                          name="google-classroom"
+                          color={color}
+                          size={size}
+                          />
+                      )}
+                      label="Raumreservierung"
+                      onPress={() => {}}
+                    />
+                    {/*<DrawerItem
+                      icon={({color, size}) => (
+                          <Icon
+                          name="dip-switch"
+                          color={color}
+                          size={size}
+                          />
+                      )}
+                      label="Einstellungen"
+                      onPress={() => {this.props.navigation.navigate("Screen")}}
+                      />*/}
+                  </Drawer.Section>
+                  <Drawer.Section>
+                    <TouchableRipple onPress={this.toggleSwitch}>
+                      <View style={styles.darkMode}>
+                        <Text>Dunkelmodus</Text>
+                        <View pointerEvents="none">
+                          <Switch trackColor={{true: Colors.dhbwRed, false: Colors.dhbwGray}} thumbColor="white" value={this.state.darkThemeOn} />
                         </View>
-                      </TouchableRipple>
-                    </Drawer.Section>
-                </View>
-            </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem
-                    icon={({color, size}) => (
-                        <Icon
-                        name="exit-run"
-                        color={color}
-                        size={size}
-                        />
-                    )}
-                    label="Abmelden"
-                    onPress={() => {}}
-                />
-            </Drawer.Section>
-        </View>
+                      </View>
+                    </TouchableRipple>
+                  </Drawer.Section>
+              </View>
+          </DrawerContentScrollView>
+          <Drawer.Section style={styles.bottomDrawerSection}>
+              <DrawerItem
+                  icon={({color, size}) => (
+                      <Icon
+                      name="exit-run"
+                      color={color}
+                      size={size}
+                      />
+                  )}
+                  label="Abmelden"
+                  onPress={() => {}}
+              />
+          </Drawer.Section>
+      </View>
     );
+  }
+
+
 }
+
+export default DrawerContent;
 
 const styles = StyleSheet.create({
     drawerContent: {
@@ -153,5 +186,5 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       paddingVertical: 12,
       paddingHorizontal: 16,
-    },
+    }
 });
