@@ -3,6 +3,8 @@ import { View, Text, Button, StatusBar, Platform, SafeAreaView, StyleSheet } fro
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+import jwt_decode from 'jwt-decode';
 import Colors from '../../util/Colors';
 import DualisIntro from './DualisIntro';
 import DualisLogin from './DualisLogin';
@@ -15,7 +17,7 @@ const DualisNavigator = ({navigation}) => {
         headerTintColor: 'white',
         headerLeft: () => <MaterialIcon
           style={{ paddingLeft: 10 }}
-          onPress={() => navigation.openDrawer()}
+          onPress={() => {navigation.toggleDrawer()}}
           name="menu"
           size={30}
         />,

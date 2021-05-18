@@ -13,6 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
+import jwt_decode from 'jwt-decode';
 import Colors from './Colors';
 
 class DrawerContent extends React.Component {
@@ -21,29 +22,38 @@ class DrawerContent extends React.Component {
       super(props)
   
       this.state = {
-        darkThemeOn: false
+        darkThemeOn: false,
+        authenticated: false,
+        email: ""
       }
 
       this.toggleSwitch = this.toggleSwitch.bind(this);
       this.isAuthenticated = this.isAuthenticated.bind(this);
   }
 
-  toggleSwitch() {
-    this.state.darkThemeOn ? this.setState({darkThemeOn: false}) : this.setState({darkThemeOn: true});
+  componentDidMount() {
+    setInterval(() => {this.isAuthenticated()}, 5000);
   }
 
-  isAuthenticated() {
-    const token = AsyncStorage.getItem('dualisToken');
+  toggleSwitch() {
+    this.setState({darkThemeOn: this.state.darkThemeOn ? false : true});
+  }
+
+  async isAuthenticated() {
+    const token = await AsyncStorage.getItem('dualisToken');
+    let tokenDecoded;
     try {
-      decode(token);
-      const { exp } = decode(token);
-      if (Date.now() >= exp * 1000) {
-        return false;
+      tokenDecoded = jwt_decode(token);
+      if (Date.now() >= (tokenDecoded.standardclaims.exp * 1000)) {
+        this.setState({authenticated: false});
+        return;
       }
     } catch (err) {
-      return false;
+      this.setState({authenticated: false});
+      return;
     }
-    return true;
+    this.setState({authenticated: true, email: tokenDecoded.standardclaims.sub});
+    return;
   }
 
   render() {
@@ -52,12 +62,21 @@ class DrawerContent extends React.Component {
           <DrawerContentScrollView {...this.props.navigation}>
               <View style={styles.drawerContent}>
                   <View style={styles.userInfoSection}>
-                    {this.isAuthenticated() &&
+                    {this.state.authenticated &&
                       <View style={{flexDirection: "row", marginTop: 15}}>
                           <Avatar.Icon style={{backgroundColor: Colors.dhbwRed}} size={62} icon="face" color={"white"} />
                           <View style={{ flexDirection: "column", marginLeft: 5}}>
                             <Title style={styles.title}>Eingeloggt als:</Title>
-                            <Caption style={styles.caption}>kaiseand@dhbw-loerrach.de</Caption>
+                            <Caption style={styles.caption}>{this.state.email}</Caption>
+                          </View>
+                      </View>
+                    }
+                    {!this.state.authenticated &&
+                      <View style={{flexDirection: "row", marginTop: 15}}>
+                          <Avatar.Icon style={{backgroundColor: Colors.dhbwGray}} size={62} icon="face" color={"white"} />
+                          <View style={{ flexDirection: "column", marginLeft: 5}}>
+                            <Title style={styles.title}>Eingeloggt als:</Title>
+                            <Caption style={styles.caption}>Gast</Caption>
                           </View>
                       </View>
                     }
