@@ -58,7 +58,7 @@ class DualisLogin extends React.Component {
         return (
             <View style={styles.container}>
                 <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({email:value})}} placeholder="DHBW E-Mail" />
-                <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({password:value})}} placeholder="Passwort" />
+                <TextInput ref={ref => ref && ref.setNativeProps({ style: { fontFamily: 'system font' } })} style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({password:value})}} secureTextEntry={true} placeholder="Passwort" />
                 <TouchableOpacity style={styles.dhbwButton} onPress={this.login}>
                     <Text style={{ color: "white", margin: 20 }}>Anmelden</Text>
                     {this.state.loading &&

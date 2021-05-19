@@ -69,32 +69,35 @@ class DualisMain extends React.Component {
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization' : `Bearer ${token}`
+                    'x-api-key' : `${token}`
                 }),
                 mode: 'cors'
             }).then((response) => {
 
-                if (response.status == 500) {
-                    if (response.json().message != "Invalid token") {
-                        this.setState({error: response.json().message});
-                    } else {
-                        AsyncStorage.setItem('dualisToken', null);
-                        this.props.navigation.navigate("DualisLogin");
+                response.json().then(json => {
+                    if (response.status == 500) {
+                        if (json.message != "Invalid token") {
+                            this.setState({error: json.message});
+                        } else {
+                            AsyncStorage.setItem('dualisToken', null);
+                            this.props.navigation.navigate("DualisLogin");
+                        }
                     }
-                }
-
-                if (response.status == 204) {
-                    this.setState({noContent: true});
-                }
-
-                if(response.status == 200 && response.json().enrollments != "" && response.json().enrollments != null) {
-                    this.setState({enrollments: response.json().enrollments});
-                }
-
-                this.setState({loading: false});
+    
+                    if (response.status == 204) {
+                        this.setState({noContent: true});
+                    }
+    
+                    if(response.status == 200 && json.enrollments != "" && json.enrollments != null) {
+                        this.setState({enrollments: JSON.stringify(json.enrollments)});
+                    }
+    
+                    this.setState({loading: false});
+                })
             });
         } catch (ex) {
             this.setState({error: ex});
+            this.setState({loading: false});
         }
     }
 

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
+import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import jwt_decode from 'jwt-decode';
 import Colors from '../../util/Colors';
 import DualisIntro from './DualisIntro';
@@ -16,7 +17,8 @@ class DualisNavigator extends React.Component {
         super(props)
 
         this.state = {
-            dualisTokenPresent: false
+            dualisTokenPresent: false,
+            loading: true
         }
 
         this.dualisTokenPresent = this.dualisTokenPresent.bind(this);
@@ -24,9 +26,6 @@ class DualisNavigator extends React.Component {
 
     componentDidMount() {
         this.dualisTokenPresent();
-        setInterval(() => {
-            this.dualisTokenPresent()
-        }, 5000);
     }
 
     async dualisTokenPresent() {
@@ -36,6 +35,7 @@ class DualisNavigator extends React.Component {
         } else {
             this.setState({dualisTokenPresent: false});
         }
+        this.setState({loading: false})
     }
 
     render() {
@@ -61,6 +61,12 @@ class DualisNavigator extends React.Component {
         };
 
         const Stack = createStackNavigator();
+
+        if (this.state.loading) {
+            return (
+                <ActivityIndicator />
+            );
+        }
 
         return (
             <NavigationContainer independent={true}>
