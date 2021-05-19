@@ -38,6 +38,7 @@ class DualisLogin extends React.Component {
                 if(respJson.jwt != "" && respJson.jwt != null) {
                     AsyncStorage.setItem('dualisToken', respJson.jwt);
                     this.setState({loginFailed: false});
+                    this.props.navigation.navigate("DualisMain");
                 } else {
                     this.setState({loginFailed: true});
                 }

@@ -32,7 +32,9 @@ class DrawerContent extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(() => {this.isAuthenticated()}, 5000);
+    setInterval(() => {
+      this.isAuthenticated()
+    }, 5000);
   }
 
   toggleSwitch() {
@@ -46,10 +48,12 @@ class DrawerContent extends React.Component {
       tokenDecoded = jwt_decode(token);
       if (Date.now() >= (tokenDecoded.standardclaims.exp * 1000)) {
         this.setState({authenticated: false});
+        AsyncStorage.setItem('dualisToken', null);
         return;
       }
     } catch (err) {
       this.setState({authenticated: false});
+      AsyncStorage.setItem('dualisToken', null);
       return;
     }
     this.setState({authenticated: true, email: tokenDecoded.standardclaims.sub});
