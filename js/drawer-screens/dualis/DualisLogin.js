@@ -69,7 +69,7 @@ class DualisLogin extends React.Component {
                     <Text>{this.state.error}</Text>
                 }
                 <Paragraph style={styles.paragraph}>Bitte denke daran, dass keine Gewähr für die Richtigkeit der hier bereitgestellten Informationen übernommen werden kann. Im Zweifelsfall ist das Sekretariat oder die entsprechende Lehrkraft zu befragen.</Paragraph>
-                <Paragraph style={styles.paragraph}>Aus Sicherheitsgründen wirst Du nach 20 Minuten automatisch abgemeldet.</Paragraph>
+                <Paragraph style={styles.paragraph}>Aus Sicherheitsgründen wirst Du nach 10 Minuten automatisch abgemeldet.</Paragraph>
             </View>
         );
     }
