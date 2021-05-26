@@ -29,6 +29,7 @@ class DrawerContent extends React.Component {
 
       this.toggleSwitch = this.toggleSwitch.bind(this);
       this.isAuthenticated = this.isAuthenticated.bind(this);
+      this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +61,10 @@ class DrawerContent extends React.Component {
     return;
   }
 
+  logout() {
+    AsyncStorage.setItem('dualisToken', null);
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -69,7 +74,7 @@ class DrawerContent extends React.Component {
                     {this.state.authenticated &&
                       <View style={{flexDirection: "row", marginTop: 15}}>
                           <Avatar.Icon style={{backgroundColor: Colors.dhbwRed}} size={62} icon="face" color={"white"} />
-                          <View style={{ flexDirection: "column", marginLeft: 5}}>
+                          <View style={{flexDirection: "column", marginLeft: 5}}>
                             <Title style={styles.title}>Eingeloggt als:</Title>
                             <Caption style={styles.caption}>{this.state.email}</Caption>
                           </View>
@@ -78,7 +83,7 @@ class DrawerContent extends React.Component {
                     {!this.state.authenticated &&
                       <View style={{flexDirection: "row", marginTop: 15}}>
                           <Avatar.Icon style={{backgroundColor: Colors.dhbwGray}} size={62} icon="face" color={"white"} />
-                          <View style={{ flexDirection: "column", marginLeft: 5}}>
+                          <View style={{flexDirection: "column", marginLeft: 5}}>
                             <Title style={styles.title}>Eingeloggt als:</Title>
                             <Caption style={styles.caption}>Gast</Caption>
                           </View>

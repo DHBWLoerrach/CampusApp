@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, StyleSheet } from 'react-native';
+import { View, Text, Button, StatusBar, Platform, ScrollView, StyleSheet } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Colors from '../../util/Colors';
+import EnrollmentItem from './EnrollmentItem';
 
 
 class DualisMain extends React.Component {
@@ -13,7 +14,7 @@ class DualisMain extends React.Component {
         this.state = {
           loading: false,
           loginFailed: false,
-          enrollments: null,
+          enrollments: [],
           noContent: false,
           error: null,
           open: false,
@@ -56,11 +57,11 @@ class DualisMain extends React.Component {
         let url = "http://134.255.237.241/student/performance/?";
 
         if(isWintersemester != null) {
-            url = url + "&isWintersemester=" + isWintersemester;
+            url += "&isWintersemester=" + isWintersemester;
         }
 
         if(year != null) {
-            url = url + "&year=" + year;
+            url += "&year=" + year;
         }
 
         try {
@@ -77,7 +78,7 @@ class DualisMain extends React.Component {
                 response.json().then(json => {
                     if (response.status == 500) {
                         if (json.message != "Invalid token") {
-                            this.setState({error: json.message});
+                            this.setState({error: json.message, noContent: true, enrollments: []});
                         } else {
                             AsyncStorage.setItem('dualisToken', null);
                             this.props.navigation.navigate("DualisLogin");
@@ -85,11 +86,11 @@ class DualisMain extends React.Component {
                     }
     
                     if (response.status == 204) {
-                        this.setState({noContent: true});
+                        this.setState({noContent: true, error: null, enrollments: []});
                     }
     
                     if(response.status == 200 && json.enrollments != "" && json.enrollments != null) {
-                        this.setState({enrollments: JSON.stringify(json.enrollments)});
+                        this.setState({enrollments: json.enrollments, noContent: false, error: null});
                     }
     
                     this.setState({loading: false});
@@ -109,20 +110,27 @@ class DualisMain extends React.Component {
             );
         }
 
+        let enrollmentItems = <></>;
+        this.state.enrollments.forEach(enrollment => {
+            enrollmentItems += <EnrollmentItem enrollment={enrollment} />
+        });
+
         return (
             <View style={styles.container}>
-                <DropDownPicker
-                    open={this.state.open}
-                    value={this.state.value}
-                    items={this.state.items}
-                    setOpen={this.setOpen}
-                    setValue={this.setValue}
-                    setItems={this.setItems}
-                />
+                <ScrollView style={styles.scrollView}>
+                    <DropDownPicker
+                        open={this.state.open}
+                        value={this.state.value}
+                        items={this.state.items}
+                        setOpen={this.setOpen}
+                        setValue={this.setValue}
+                        setItems={this.setItems}
+                    />
 
-                <Text>{this.state.enrollments}</Text>
-                <Text>{this.state.error}</Text>
-                <Text>{this.state.noContent}</Text>
+                    <>{enrollmentItems}</>
+                    <Text>{this.state.error}</Text>
+                    <Text>{this.state.noContent}</Text>
+                </ScrollView>
             </View>
         );
     }
@@ -133,5 +141,8 @@ export default DualisMain;
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    scrollView: {
+        marginHorizontal: 20
     }
 });

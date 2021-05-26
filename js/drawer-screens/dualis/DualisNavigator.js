@@ -26,6 +26,9 @@ class DualisNavigator extends React.Component {
 
     componentDidMount() {
         this.dualisTokenPresent();
+        setInterval(() => {
+            this.dualisTokenPresent()
+        }, 5000);
     }
 
     async dualisTokenPresent() {
