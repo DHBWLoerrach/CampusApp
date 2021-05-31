@@ -106,13 +106,16 @@ class DualisMain extends React.Component {
 
         if (this.state.loading) {
             return (
-                <ActivityIndicator />
+                <View style={styles.center}>
+                    <ActivityIndicator />
+                </View>   
             );
         }
 
-        let enrollmentItems = <></>;
+        let enrollmentItems = [];
+
         this.state.enrollments.forEach(enrollment => {
-            enrollmentItems += <EnrollmentItem enrollment={enrollment} />
+            enrollmentItems.push(<EnrollmentItem enrollment={enrollment} navigation={this.props.navigation} />);
         });
 
         return (
@@ -141,6 +144,11 @@ export default DualisMain;
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    center: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
     },
     scrollView: {
         marginHorizontal: 20

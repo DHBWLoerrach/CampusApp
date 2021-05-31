@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import { View, Text, StyleSheet } from 'react-native';
 import Colors from '../../util/Colors';
 
 
@@ -17,15 +16,13 @@ class LectureItem extends React.Component {
         }
 
         return(
-            <View>
-                <div style={{ whiteSpace: 'pre-line' }}>
-                    Vorlesung: {this.props.lecture.name} \n
-                    Vorlesungsnummer: {this.props.lecture.name} \n
-                    Leistungsart: {this.props.lecture.examType} \n
-                    Note: {this.props.lecture.grade} \n
-                    Gewichtung: {this.props.lecture.weighting} \n
-                    Anwesenheitskontrolle: {presence}
-                </div>
+            <View style={styles.container}>
+                <Text style={{ fontSize: 20 }}>{this.props.lecture.name}</Text>
+                <Text>Vorlesungsnummer: {this.props.lecture.name}</Text>
+                <Text>Leistungsart: {this.props.lecture.examType}</Text>
+                <Text>Note: {this.props.lecture.grade}</Text>
+                <Text>Gewichtung: {this.props.lecture.weighting}</Text>
+                <Text>Anwesenheitskontrolle: {presence}</Text>
             </View>
         );
     }
@@ -33,3 +30,14 @@ class LectureItem extends React.Component {
 }
 
 export default LectureItem;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.lightGray,
+        marginBottom: 10,
+        marginTop: 20,
+        padding: 10,
+        borderRadius: 10
+    }
+});

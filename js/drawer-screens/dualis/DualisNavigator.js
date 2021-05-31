@@ -10,6 +10,7 @@ import Colors from '../../util/Colors';
 import DualisIntro from './DualisIntro';
 import DualisLogin from './DualisLogin';
 import DualisMain from './DualisMain';
+import DualisDetail from './DualisDetail';
 
 class DualisNavigator extends React.Component {
 
@@ -109,6 +110,11 @@ class DualisNavigator extends React.Component {
                         name="DualisLogin"
                         component={DualisLogin}
                         options={{ title: 'Dualis Login' }}
+                    />
+                    <Stack.Screen
+                        name="DualisDetail"
+                        component={DualisDetail}
+                        options={{ title: 'Dualis Vorlesungsdetails' }}
                     />
     
                 </Stack.Navigator>
