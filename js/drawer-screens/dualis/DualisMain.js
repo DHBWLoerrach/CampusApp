@@ -30,16 +30,12 @@ class DualisMain extends React.Component {
         this.getPerformances = this.getPerformances.bind(this);
     }
 
-    /*componentDidMount() {
+    componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => this.load())
     }
 
     componentWillUnmount() {
         this.focusListener.remove();
-    }*/
-
-    componentDidUpdate() {
-        this.load();
     }
 
     load() {

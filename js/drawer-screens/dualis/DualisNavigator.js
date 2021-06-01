@@ -72,7 +72,7 @@ class DualisNavigator extends React.Component {
         return (
             <NavigationContainer independent={true}>
                 <Stack.Navigator
-                    initialRouteName="Home"
+                    initialRouteName="DualisIntro"
                     screenOptions={stackHeaderConfig}
                 >
                     {this.state.dualisTokenPresent ? (
