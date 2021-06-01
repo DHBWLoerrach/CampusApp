@@ -44,6 +44,12 @@ class DrawerContent extends React.Component {
 
   async isAuthenticated() {
     const token = await AsyncStorage.getItem('dualisToken');
+
+    if (token == null) {
+      this.setState({authenticated: false});
+      return;
+    }
+
     let tokenDecoded;
     try {
       tokenDecoded = jwt_decode(token);
@@ -61,8 +67,9 @@ class DrawerContent extends React.Component {
     return;
   }
 
-  logout() {
-    AsyncStorage.setItem('dualisToken', null);
+  async logout() {
+    console.log("Test");
+    await AsyncStorage.setItem('dualisToken', null);
   }
 
   render() {
@@ -158,7 +165,7 @@ class DrawerContent extends React.Component {
                       />
                   )}
                   label="Abmelden"
-                  onPress={() => {}}
+                  onPress={() => this.logout()}
               />
           </Drawer.Section>
       </View>

@@ -10,10 +10,7 @@ class LectureItem extends React.Component {
 
     render() {
 
-        let presence = "bestanden";
-        if (!this.props.lecture.presence) {
-            presence = "nicht bestanden";
-        }
+        let presence = this.props.lecture.presence ? "bestanden" : "nicht bestanden";
 
         return(
             <View style={styles.container}>

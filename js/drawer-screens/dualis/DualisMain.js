@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Colors from '../../util/Colors';
 import EnrollmentItem from './EnrollmentItem';
+import jwt_decode from 'jwt-decode';
 
 
 class DualisMain extends React.Component {
@@ -25,12 +26,58 @@ class DualisMain extends React.Component {
           ]
         }
 
+        this.load = this.load.bind(this);
         this.getPerformances = this.getPerformances.bind(this);
     }
 
-    componentDidMount() {
-        this.getPerformances(null, null);
+    /*componentDidMount() {
+        this.focusListener = this.props.navigation.addListener('focus', () => this.load())
     }
+
+    componentWillUnmount() {
+        this.focusListener.remove();
+    }*/
+
+    componentDidUpdate() {
+        this.load();
+    }
+
+    load() {
+        if (this.isAuthenticated()) {
+            console.log("Authenticated!!!!!!!!!!!!");
+            this.getPerformances(null, null);
+        } else {
+            console.log("Not authhh!!!");
+            this.props.navigation.navigate("DualisLogin");
+        }
+    }
+
+    async isAuthenticated() {
+        const token = await AsyncStorage.getItem('dualisToken');
+    
+        if (token == null) {
+            console.log("Token null");
+            return false;
+        }
+    
+        let tokenDecoded;
+        try {
+            tokenDecoded = jwt_decode(token);
+            console.log(Date.now());
+            console.log(tokenDecoded.standardclaims.exp * 1000)
+            if (Date.now() >= (tokenDecoded.standardclaims.exp * 1000)) {
+                console.log("Abgelaufen");
+                return false;
+            }
+        } catch (err) {
+            console.log("Error " + err);
+            return false;
+        }
+
+        console.log("Return true");
+        
+        return true;
+      }
 
     setOpen(open) {
         this.setState({
@@ -115,13 +162,14 @@ class DualisMain extends React.Component {
         let enrollmentItems = [];
 
         this.state.enrollments.forEach(enrollment => {
-            enrollmentItems.push(<EnrollmentItem enrollment={enrollment} navigation={this.props.navigation} />);
+            enrollmentItems.push(<EnrollmentItem key={enrollment.id} enrollment={enrollment} navigation={this.props.navigation} />);
         });
 
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     <DropDownPicker
+                        style={{ marginTop: 5 }}
                         open={this.state.open}
                         value={this.state.value}
                         items={this.state.items}
