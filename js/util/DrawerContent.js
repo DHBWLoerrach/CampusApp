@@ -152,6 +152,7 @@ class DrawerContent extends React.Component {
               </View>
           </DrawerContentScrollView>
           <Drawer.Section style={styles.bottomDrawerSection}>
+            {this.state.authenticated &&
               <DrawerItem
                   icon={({color, size}) => (
                       <Icon
@@ -163,6 +164,7 @@ class DrawerContent extends React.Component {
                   label="Abmelden"
                   onPress={() => this.logout()}
               />
+            }
           </Drawer.Section>
       </View>
     );
