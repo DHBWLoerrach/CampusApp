@@ -46,7 +46,6 @@ class DualisStatistics extends React.Component {
             }).then((response) => {
 
                 if (response.status == 204) {
-                    console.log("NOO Content");
                     this.setState({noContent: true, error: null});
                 }
 
@@ -60,7 +59,7 @@ class DualisStatistics extends React.Component {
 
                 if(response.status == 200) {
                     response.json().then(json => {                   
-                        this.setState({better: json.better, equal: json.equal, worse: json.worse, failureRate: json.failureRate, noContent: false, error: null});
+                        this.setState({better: json.better.replace('.', ','), equal: json.equal.replace('.', ','), worse: json.worse.replace('.', ','), failureRate: json.failureRate.replace('.', ','), noContent: false, error: null});
                     })
                 }
 
@@ -92,18 +91,35 @@ class DualisStatistics extends React.Component {
 
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Besser als du abgeschnitten haben</Text>
-                <Text>{this.state.better.replace(/./g, ',')}%</Text>
+                <View>
+                    <Text style={{ fontSize: 22, textAlign: "center" }}>{this.props.route.params.name}</Text>
+                    <View style={styles.percentageBlock}>
+                        <Text style={styles.text}>Besser als du abgeschnitten haben...</Text>
+                        <Text style={styles.percentage}>{this.state.better}%</Text>
+                    </View>
 
-                <Text style={styles.title}>Gleich gut wie Du abgeschnitten haben</Text>
-                <Text>{this.state.equal.replace(/./g, ',')}%</Text>
+                    <View style={styles.percentageBlock}>
+                        <Text style={styles.text}>Gleich gut wie Du abgeschnitten haben...</Text>
+                        <Text style={styles.percentage}>{this.state.equal}%</Text>
+                    </View>
 
-                <Text style={styles.title}>Schlechter als Du abgeschnitten haben</Text>
-                <Text>{this.state.worse.replace(/./g, ',')}%</Text>
+                    <View style={styles.percentageBlock}>
+                        <Text style={styles.text}>Schlechter als Du abgeschnitten haben...</Text>
+                        <Text style={styles.percentage}>{this.state.worse}%</Text>
+                    </View>
 
-                <Text style={styles.title}>der Studenten Deines Kurses.</Text>
+                    <View style={styles.percentageBlock}>
+                        <Text style={styles.text}>...der Studenten Deines Kurses.*</Text>
+                    </View>
 
-                <Text style={styles.title}>Durchfallquote: {this.state.failureRate.replace(/./g, ',')}%</Text>
+                    <View style={styles.percentageBlock}>
+                        <Text style={styles.text}>Durchfallquote:</Text>
+                        <Text style={styles.percentage}>{this.state.failureRate}%</Text>
+                    </View>
+                </View>
+                <View>
+                    <Text style={{ fontSize: 10, textAlign: "center" }}>* bei kursübergreifenden Modulen wirst Du natürlich nur mit Studenten verglichen, die dieses Modul ebenfalls gewählt haben.</Text>
+                </View>
             </View>
         );
     }
@@ -115,8 +131,10 @@ export default DualisStatistics;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
+        flexDirection: "column",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: 30
     },
     center: {
         flex: 1,
@@ -128,10 +146,18 @@ const styles = StyleSheet.create({
         color: Colors.dhbwRed,
         textAlign: "center"
     },
-    title: {
-        fontSize: 14,
+    text: {
+        fontSize: 16,
         color: Colors.dhbwGray,
         textAlign: "center"
+    },
+    percentageBlock: {
+        alignItems: "center",
+        marginTop: 20
+    },
+    percentage: {
+        fontSize: 26,
+        color: Colors.dhbwRed,
     },
     scrollView: {
         marginHorizontal: 20

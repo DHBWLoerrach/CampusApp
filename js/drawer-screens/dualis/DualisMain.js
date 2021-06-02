@@ -2,10 +2,9 @@ import React from 'react';
 import { View, Text, Button, StatusBar, Platform, ScrollView, StyleSheet } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
-import DropDownPicker from 'react-native-dropdown-picker';
 import Colors from '../../util/Colors';
 import EnrollmentItem from './EnrollmentItem';
-import jwt_decode from 'jwt-decode';
+import {Picker} from '@react-native-picker/picker';
 
 
 class DualisMain extends React.Component {
@@ -13,16 +12,11 @@ class DualisMain extends React.Component {
         super(props)
 
         this.state = {
-          loading: false,
-          enrollments: [],
-          noContent: false,
-          error: null,
-          open: false,
-          value: null,
-          items: [
-            {label: 'Apple', value: 'apple'},
-            {label: 'Banana', value: 'banana'}
-          ]
+            loading: false,
+            enrollments: [],
+            noContent: false,
+            error: null,
+            selectedLanguage: "java"
         }
 
         this.getPerformances = this.getPerformances.bind(this);
@@ -30,24 +24,6 @@ class DualisMain extends React.Component {
 
     componentDidMount() {
         this.getPerformances(null, null);
-    }
-
-    setOpen(open) {
-        this.setState({
-            open
-        });
-    }
-    
-    setValue(callback) {
-        this.setState(state => ({
-            value: callback(state.value)
-        }));
-    }
-
-    setItems(callback) {
-        this.setState(state => ({
-            items: callback(state.items)
-        }));
     }
     
     async getPerformances(isWintersemester, year) {
@@ -106,7 +82,7 @@ class DualisMain extends React.Component {
             return (
                 <View style={styles.center}>
                     <ActivityIndicator />
-                </View>   
+                </View>
             );
         }
 
@@ -119,21 +95,27 @@ class DualisMain extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
-                    <DropDownPicker
-                        style={{ marginTop: 5 }}
-                        open={this.state.open}
-                        value={this.state.value}
-                        items={this.state.items}
-                        setOpen={this.setOpen}
-                        setValue={this.setValue}
-                        setItems={this.setItems}
-                    />
+                    <Picker
+                        selectedValue={this.state.selectedLanguage}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setSelectedLanguage(itemValue)
+                        }>
+                        <Picker.Item label="Java" value="java" />
+                        <Picker.Item label="JavaScript" value="js" />
+                    </Picker>
 
                     <>{enrollmentItems}</>
-                    <Text>{this.state.error}</Text>
+
+                    {this.state.error &&
+                        <View style={styles.center}>
+                            <Text style={styles.message}>{this.state.error}</Text>
+                        </View>
+                    }
 
                     {this.state.noContent &&
-                        <Text>Kein Inhalt vorhanden</Text>
+                        <View style={styles.center}>
+                            <Text style={styles.message}>Kein Inhalt vorhanden</Text>
+                        </View>
                     }
                 </ScrollView>
             </View>
@@ -151,6 +133,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
+    },
+    message: {
+        fontSize: 18,
+        color: Colors.dhbwRed,
+        textAlign: "center"
     },
     scrollView: {
         marginHorizontal: 20
