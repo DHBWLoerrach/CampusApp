@@ -4,7 +4,6 @@ import {
     Avatar,
     Title,
     Caption,
-    Paragraph,
     Drawer,
     Text,
     TouchableRipple,
@@ -116,7 +115,7 @@ class DrawerContent extends React.Component {
                       label="Dualis"
                       onPress={() => {this.props.navigation.navigate("Dualis")}}
                     />
-                    <DrawerItem
+                    {/*<DrawerItem
                       icon={({color, size}) => (
                           <Icon
                           name="google-classroom"
@@ -126,7 +125,7 @@ class DrawerContent extends React.Component {
                       )}
                       label="Raumreservierung"
                       onPress={() => {}}
-                    />
+                    />*/}
                     {/*<DrawerItem
                       icon={({color, size}) => (
                           <Icon
