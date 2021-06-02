@@ -36,11 +36,13 @@ class EnrollmentItem extends React.Component {
                             size={50}
                         />
                     </TouchableOpacity>
-                    <Icon
-                        name="chart-areaspline"
-                        color={Colors.dhbwRed}
-                        size={50}
-                    />
+                    <TouchableOpacity onPress={() => {this.props.navigation.navigate("DualisStatistics", {id: this.props.enrollment.id, name: this.props.enrollment.moduleResult[0].name})}}>
+                        <Icon
+                            name="chart-areaspline"
+                            color={Colors.dhbwRed}
+                            size={50}
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
         );

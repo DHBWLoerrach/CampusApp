@@ -12,10 +12,11 @@ class DualisDetail extends React.Component {
     }
 
     render() {
+
         let lectureItems = [];
-        
+
         this.props.route.params.details.forEach(lecture => {
-            lectureItems.push(<LectureItem lecture={lecture} />);
+            lectureItems.push(<LectureItem key={lecture.number} lecture={lecture} />);
         });
 
         return (

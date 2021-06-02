@@ -9,7 +9,7 @@ const DualisIntro = ({navigation}) => {
         <View style={styles.container}>
             <Image
                 style={styles.dualisImage}
-                source={require('../../img/dualis-login.png')}
+                source={require('../../img/dualis-intro.png')}
             />
             <Caption style={styles.caption}>Alle Deine Noten an einem Ort!</Caption>
             <Paragraph style={styles.paragraph}>Die neue Dualis-Funktion in der DHBW Campus App erlaubt es Dir jederzeit, auch unterwegs, einfach Deine Noten abzurufen.</Paragraph>

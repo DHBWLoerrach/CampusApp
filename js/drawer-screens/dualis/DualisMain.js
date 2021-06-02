@@ -14,7 +14,6 @@ class DualisMain extends React.Component {
 
         this.state = {
           loading: false,
-          loginFailed: false,
           enrollments: [],
           noContent: false,
           error: null,
@@ -26,54 +25,12 @@ class DualisMain extends React.Component {
           ]
         }
 
-        this.load = this.load.bind(this);
         this.getPerformances = this.getPerformances.bind(this);
     }
 
     componentDidMount() {
-        this.focusListener = this.props.navigation.addListener('focus', () => this.load())
+        this.getPerformances(null, null);
     }
-
-    componentWillUnmount() {
-        this.focusListener.remove();
-    }
-
-    load() {
-        if (this.isAuthenticated()) {
-            console.log("Authenticated!!!!!!!!!!!!");
-            this.getPerformances(null, null);
-        } else {
-            console.log("Not authhh!!!");
-            this.props.navigation.navigate("DualisLogin");
-        }
-    }
-
-    async isAuthenticated() {
-        const token = await AsyncStorage.getItem('dualisToken');
-    
-        if (token == null) {
-            console.log("Token null");
-            return false;
-        }
-    
-        let tokenDecoded;
-        try {
-            tokenDecoded = jwt_decode(token);
-            console.log(Date.now());
-            console.log(tokenDecoded.standardclaims.exp * 1000)
-            if (Date.now() >= (tokenDecoded.standardclaims.exp * 1000)) {
-                console.log("Abgelaufen");
-                return false;
-            }
-        } catch (err) {
-            console.log("Error " + err);
-            return false;
-        }
-
-        console.log("Return true");
-        
-        return true;
-      }
 
     setOpen(open) {
         this.setState({
@@ -123,7 +80,6 @@ class DualisMain extends React.Component {
                         if (json.message != "Invalid token") {
                             this.setState({error: json.message, noContent: true, enrollments: []});
                         } else {
-                            AsyncStorage.setItem('dualisToken', null);
                             this.props.navigation.navigate("DualisLogin");
                         }
                     }
@@ -140,8 +96,7 @@ class DualisMain extends React.Component {
                 })
             });
         } catch (ex) {
-            this.setState({error: ex});
-            this.setState({loading: false});
+            this.setState({error: ex, loading: false});
         }
     }
 
@@ -176,7 +131,10 @@ class DualisMain extends React.Component {
 
                     <>{enrollmentItems}</>
                     <Text>{this.state.error}</Text>
-                    <Text>{this.state.noContent}</Text>
+
+                    {this.state.noContent &&
+                        <Text>Kein Inhalt vorhanden</Text>
+                    }
                 </ScrollView>
             </View>
         );
