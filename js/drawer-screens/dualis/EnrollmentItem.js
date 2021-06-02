@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../../util/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import LectureItem from './LectureItem';
 
 
 class EnrollmentItem extends React.Component {
@@ -12,11 +10,6 @@ class EnrollmentItem extends React.Component {
     }
 
     render() {
-
-        {/*let lectureItems = <></>;
-        this.props.enrollment.moduleResult.lectureResults.forEach(lecture => {
-            lectureItems += <LectureItem lecture={lecture} />
-        });*/}
 
         return (
             <View style={styles.container}>

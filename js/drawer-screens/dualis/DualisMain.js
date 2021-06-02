@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../util/Colors';
@@ -16,14 +16,35 @@ class DualisMain extends React.Component {
             enrollments: [],
             noContent: false,
             error: null,
-            selectedLanguage: "java"
+            selectedSemester: "Alle",
+            selectableOptions: []
         }
 
         this.getPerformances = this.getPerformances.bind(this);
     }
 
     componentDidMount() {
+
+        let year = new Date().getFullYear();
+
+        for (let i = 0; i < 4; i++) {
+            this.state.selectableOptions.push("WiSe " + (year - i));
+            this.state.selectableOptions.push("SoSe " + (year - i));
+        }
+
         this.getPerformances(null, null);
+    }
+
+    getSelectedSemester(value) {
+
+        if (value != "Alle") {
+            this.state.selectedSemester = value;
+            var num = value.match(/\d/g);
+            this.getPerformances(value.includes("WiSe"), num.join(""));
+        } else {
+            this.state.selectedSemester = "Alle";
+            this.getPerformances(null, null);
+        }
     }
     
     async getPerformances(isWintersemester, year) {
@@ -51,7 +72,12 @@ class DualisMain extends React.Component {
                 mode: 'cors'
             }).then((response) => {
 
+                if (response.status == 204) {
+                    this.setState({noContent: true, error: null, enrollments: []});
+                }
+  
                 response.json().then(json => {
+
                     if (response.status == 500) {
                         if (json.message != "Invalid token") {
                             this.setState({error: json.message, noContent: true, enrollments: []});
@@ -59,17 +85,14 @@ class DualisMain extends React.Component {
                             this.props.navigation.navigate("DualisLogin");
                         }
                     }
-    
-                    if (response.status == 204) {
-                        this.setState({noContent: true, error: null, enrollments: []});
+
+                    if(response.status == 200) {                  
+                        this.setState({enrollments: json.enrollments, noContent: false, error: null});               
                     }
-    
-                    if(response.status == 200 && json.enrollments != "" && json.enrollments != null) {
-                        this.setState({enrollments: json.enrollments, noContent: false, error: null});
-                    }
-    
-                    this.setState({loading: false});
-                })
+                });
+
+                this.setState({loading: false});
+
             });
         } catch (ex) {
             this.setState({error: ex, loading: false});
@@ -96,12 +119,16 @@ class DualisMain extends React.Component {
             <View style={styles.container}>
                 <ScrollView style={styles.scrollView}>
                     <Picker
-                        selectedValue={this.state.selectedLanguage}
+                        selectedValue={this.state.selectedSemester}
                         onValueChange={(itemValue, itemIndex) =>
-                            setSelectedLanguage(itemValue)
+                            this.getSelectedSemester(itemValue)
                         }>
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
+
+                        {this.state.selectableOptions.map((opt, i) => (
+                            <Picker.Item label={opt} value={opt} />
+                        ))}
+
+                        <Picker.Item label="Alle" value="Alle" />
                     </Picker>
 
                     <>{enrollmentItems}</>

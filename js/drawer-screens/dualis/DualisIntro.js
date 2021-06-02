@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Button, Image, StatusBar, Platform, StyleSheet, TouchableOpacity } from 'react-native';
-import { Caption, Paragraph, Drawer, Text} from 'react-native-paper';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Caption, Paragraph, Text} from 'react-native-paper';
 import Colors from '../../util/Colors';
 
 

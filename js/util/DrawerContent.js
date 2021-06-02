@@ -29,7 +29,6 @@ class DrawerContent extends React.Component {
 
       this.toggleSwitch = this.toggleSwitch.bind(this);
       this.isAuthenticated = this.isAuthenticated.bind(this);
-      this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
@@ -66,8 +65,7 @@ class DrawerContent extends React.Component {
   }
 
   logout() {
-    console.log("Test");
-    AsyncStorage.setItem('dualisToken', null);
+    AsyncStorage.setItem('dualisToken', "");
   }
 
   render() {

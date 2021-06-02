@@ -1,8 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import Colors from '../../util/Colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import LectureItem from './LectureItem';
 
 

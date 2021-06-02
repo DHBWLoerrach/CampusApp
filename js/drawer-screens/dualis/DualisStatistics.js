@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Text, Button, StatusBar, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../util/Colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import LectureItem from './LectureItem';
 
 
 class DualisStatistics extends React.Component {
@@ -49,19 +47,20 @@ class DualisStatistics extends React.Component {
                     this.setState({noContent: true, error: null});
                 }
 
-                if (response.status == 500) {
-                    if (json.message != "Invalid token") {
-                        this.setState({error: json.message, noContent: true});
-                    } else {
-                        this.props.navigation.navigate("DualisLogin");
-                    }
-                }
+                response.json().then(json => {
 
-                if(response.status == 200) {
-                    response.json().then(json => {                   
+                    if (response.status == 500) {
+                        if (json.message != "Invalid token") {
+                            this.setState({error: json.message, noContent: true});
+                        } else {
+                            this.props.navigation.navigate("DualisLogin");
+                        }
+                    }
+
+                    if(response.status == 200) {                  
                         this.setState({better: json.better.replace('.', ','), equal: json.equal.replace('.', ','), worse: json.worse.replace('.', ','), failureRate: json.failureRate.replace('.', ','), noContent: false, error: null});
-                    })
-                }
+                    }
+                });
 
                 this.setState({loading: false});
 
@@ -85,6 +84,14 @@ class DualisStatistics extends React.Component {
             return (
                 <View style={styles.center}>
                     <Text style={styles.message}>Die Statistiken zu diesem Modul können nicht erfasst werden!</Text>
+                </View>
+            );
+        }
+
+        if (this.state.error) {
+            return (
+                <View style={styles.center}>
+                    <Text style={styles.message}>{this.state.error}</Text>
                 </View>
             );
         }
