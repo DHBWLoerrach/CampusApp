@@ -125,7 +125,7 @@ class DualisStatistics extends React.Component {
                     </View>
                 </View>
                 <View>
-                    <Text style={{ fontSize: 10, textAlign: "center" }}>* bei kursübergreifenden Modulen wirst Du natürlich nur mit Studenten verglichen, die dieses Modul ebenfalls gewählt haben.</Text>
+                    <Text style={{ fontSize: 10, paddingBottom: 5, textAlign: "center" }}>* bei kursübergreifenden Modulen wirst Du natürlich nur mit Studenten verglichen, die dieses Modul ebenfalls gewählt haben.</Text>
                 </View>
             </View>
         );
