@@ -125,10 +125,10 @@ class DualisMain extends React.Component {
                         }>
 
                         {this.state.selectableOptions.map((opt, i) => (
-                            <Picker.Item label={opt} value={opt} />
+                            <Picker.Item key={opt} label={opt} value={opt} />
                         ))}
 
-                        <Picker.Item label="Alle" value="Alle" />
+                        <Picker.Item key="Alle" label="Alle" value="Alle" />
                     </Picker>
 
                     <>{enrollmentItems}</>
