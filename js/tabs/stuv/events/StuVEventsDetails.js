@@ -56,7 +56,7 @@ function StuVEventsDetails({ route }) {
           {event.price ? (
             <Text style={styles.date}>Preis: {event.price}</Text>
           ) : null}
-          {<Text style={styles.date}>Anzahl Teilnehmer*innen: { event.registered?.length}</Text>}
+          {<Text style={styles.date}>Anzahl Teilnehmer*innen: { event.registered}</Text>}
           {<Text style={styles.date}>Maximale Plätze: { event.max_limit}</Text>}
           <Text style={styles.text}>{event.text}</Text>
           {event.date.registrationUntil ? (
