@@ -37,7 +37,7 @@ class DualisLogin extends React.Component {
             }).then((resp) => resp.json()).then((respJson) => {
                 if(respJson.jwt != "" && respJson.jwt != null) {
                     AsyncStorage.setItem('dualisToken', respJson.jwt);
-                    this.setState({loginFailed: false});
+                    this.setState({email: "", password: "", loginFailed: false});
                     this.props.navigation.navigate("DualisMain");
                 } else {
                     this.setState({loginFailed: true});
@@ -57,8 +57,8 @@ class DualisLogin extends React.Component {
 
         return (
             <View style={styles.container}>
-                <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({email:value})}} placeholder="DHBW E-Mail" />
-                <TextInput ref={ref => ref && ref.setNativeProps({ style: { fontFamily: 'system font' } })} style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({password:value})}} secureTextEntry={true} placeholder="Passwort" />
+                <TextInput style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({email:value})}} value={this.state.email} placeholder="DHBW E-Mail" />
+                <TextInput ref={ref => ref && ref.setNativeProps({ style: { fontFamily: 'system font' } })} style={{ marginTop: 40 }} theme={textInputTheme} onChangeText={value=>{this.setState({password:value})}} secureTextEntry={true} value={this.state.password} placeholder="Passwort" />
                 <TouchableOpacity style={styles.dhbwButton} onPress={this.login}>
                     <Text style={{ color: "white", margin: 20 }}>Anmelden</Text>
                     {this.state.loading &&

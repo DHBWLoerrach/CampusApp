@@ -43,7 +43,7 @@ class DrawerContent extends React.Component {
   async isAuthenticated() {
     const token = await AsyncStorage.getItem('dualisToken');
 
-    if (token == null) {
+    if (token == null || token == "logout") {
       this.setState({authenticated: false});
       return;
     }
@@ -64,7 +64,7 @@ class DrawerContent extends React.Component {
   }
 
   logout() {
-    AsyncStorage.setItem('dualisToken', "");
+    AsyncStorage.setItem('dualisToken', 'logout');
   }
 
   render() {

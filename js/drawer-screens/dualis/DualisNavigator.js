@@ -153,11 +153,6 @@ class DualisNavigator extends React.Component {
                             screenOptions={stackHeaderConfig}
                         >
                             <Stack.Screen
-                                name="DualisIntro"
-                                component={DualisIntro}
-                                options={{ title: 'Campus App Dualis' }}
-                            />
-                            <Stack.Screen
                                 name="DualisLogin"
                                 component={DualisLogin}
                                 options={{ title: 'Dualis Login' }}
