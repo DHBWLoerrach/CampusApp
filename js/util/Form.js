@@ -12,18 +12,18 @@ export default class Form extends Component {
     state = { fields: this.props.fields };
 
     validateAll(fields) {
-        let problems = false;
+        let hasProblems = false;
         Object.entries(fields).forEach(([k, e]) => {
-            e.validaded = true;
+            e.validated = true;
             if (this.validateInput(e))
-                problems = true
+                hasProblems = true;
         });
-        return problems;
+        return hasProblems;
     }
 
     validateInput(field) {
 
-        if (field.validaded && (!field.value || field.value.trim() === "")) {
+        if (field.validated && field.required && (!field.value || field.value.trim() === "")) {
             return <Text style={styles.errText}>{field.name + " "}darf nicht leer sein</Text>;
         }
 
@@ -46,12 +46,12 @@ export default class Form extends Component {
                                         onChangeText={(input) => {
                                             const newField = field;
                                             newField.value = input;
-                                            newField.validaded = true;
+                                            newField.validated = true;
                                             this.setState(this.state.fields[key] = newField);
                                         }}
                                         value={field.value}>
                                     </TextInput>
-                                    { field.required ? this.validateInput(field) : null}
+                                    { this.validateInput(field)}
                                 </View>);
                         })
                     }
@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         height: 35,
-        marginBottom:8
+        marginBottom: 8
     },
     errText: {
         color: "red"
     },
     container: {
         flexGrow: 1,
-        marginBottom:4
+        marginBottom: 4
     }
 
 });

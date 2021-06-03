@@ -12,6 +12,7 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState, useRef } from 'react';
 import { id } from 'date-fns/locale';
+import PropertyDefinition from '../../../util/PropertyDefinition';
 
 function StuVEventsRegister({ route }) {
     const navigation = useNavigation();
@@ -21,21 +22,9 @@ function StuVEventsRegister({ route }) {
 
     const fields =
     {
-        "Email": {
-            name: "Email",
-            required: true,
-            value: ""
-        },
-        "Vorname": {
-            name: "Vorname",
-            required: true,
-            value: ""
-        },
-        "Nachname": {
-            name: "Nachname",
-            required: true,
-            value: ""
-        }
+        "Email": new PropertyDefinition("Email").isRequired(),
+        "Vorname": new PropertyDefinition("Vorname").isRequired(),
+        "Nachname": new PropertyDefinition("Nachname").isRequired(),
     }
 
 

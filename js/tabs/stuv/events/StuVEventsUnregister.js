@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useEffect, useState } from 'react';
 import { unregisterUserEvent } from '../helper';
 import Form from '../../../util/Form';
+import PropertyDefinition from '../../../util/PropertyDefinition';
 
 function StuVEventsUnregister({ route }) {
     const navigation = useNavigation();
@@ -13,11 +14,7 @@ function StuVEventsUnregister({ route }) {
     const [errText, setErrText] = React.useState(null);
 
     const fields = {
-        "email": {
-            name: "Email",
-            value: "",
-            required: true
-        }
+        "email": new PropertyDefinition("Email").isRequired()
     }
 
     return (
