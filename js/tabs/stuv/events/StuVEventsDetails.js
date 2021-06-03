@@ -69,7 +69,7 @@ function StuVEventsDetails({ route }) {
           {event.registerLink ? (
             <View style={[styles.button,{flexGrow:1, flex:1,flexDirection: "row", justifyContent: "space-evenly", alignItems: "baseline" }]}>
               <Button
-                disabled={event.max_limit < event.registered?.length}
+                disabled={event.max_limit < event.registered}
                 title="Anmelden"
                 color={Colors.dhbwRed}
                 onPress={()=>navigation.navigate('StuVEventsRegister',{event:event})}
