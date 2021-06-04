@@ -31,32 +31,77 @@ export default class Form extends Component {
 
     }
 
+    createForm =
+        (fields) => {
+            let res = [];
+            let tmp = [];
+            let lastItem = undefined;
+            Object.entries(fields).forEach(([key, field], i) => {
+
+                lastItem = field;
+
+                let body = <View key={i} style={{ flex: 1 }}>
+                    <Text>{field.name}:</Text>
+                    <TextInput style={styles.input}
+                        onChangeText={(input) => {
+                            const newField = field;
+                            newField.value = input;
+                            newField.validated = true;
+                            this.setState(this.state.fields[key] = newField);
+                        }}
+                        value={field.value}>
+                    </TextInput>
+                    {this.validateInput(field)}
+                </View>
+
+
+                if (tmp.length !== 0 && !field.isSplitted) {
+
+                    if (tmp.length === 1) {
+                        res.push(tmp[0]);
+                    }
+                    else {
+                        res.push(<View style={styles.row}>{tmp.slice()}</View>);
+                    }
+                    tmp = [];
+                }
+
+                if (!field.isSplitted) {
+                    res.push(body);
+                    return;
+                }
+                else {
+                    tmp.push(body);
+                }
+
+            });
+
+            // check last item if it should placed next to neighbour
+            if (tmp.length != 0 && lastItem.isSplitted) {
+                if (tmp.length === 1) {
+                    res.push(tmp[0]);
+                }
+                else {
+                    res.push(<View style={styles.row}>{tmp.slice()}</View>);
+                }
+                tmp = [];
+            }
+
+            return res;
+        }
+
     render() {
 
         const fields = this.state.fields;
         return (
-            <View>
-                <ScrollView style={styles.container}>
+            <View  style={styles.container}>
+                <ScrollView persistentScrollbar={true}>
                     {
-                        Object.entries(fields).map(([key, field], i) => {
-                            return (
-                                <View key={i}>
-                                    <Text>{field.name}:</Text>
-                                    <TextInput style={styles.input}
-                                        onChangeText={(input) => {
-                                            const newField = field;
-                                            newField.value = input;
-                                            newField.validated = true;
-                                            this.setState(this.state.fields[key] = newField);
-                                        }}
-                                        value={field.value}>
-                                    </TextInput>
-                                    { this.validateInput(field)}
-                                </View>);
-                        })
+                        this.createForm(fields)
                     }
+
                 </ScrollView>
-                {this.props.btnLabel ? <Button color="red" title={this.props.btnLabel}
+                {this.props.btnLabel ? <Button color="red" style={{margin:6}} title={this.props.btnLabel}
                     onPress={() => {
 
                         if (this.validateAll(this.state.fields)) {
@@ -76,14 +121,19 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         height: 35,
-        marginBottom: 8
+        margin: 3
     },
     errText: {
-        color: "red"
+        color: "red",
+        padding: 4
     },
     container: {
-        flexGrow: 1,
-        marginBottom: 4
+        marginBottom: 4,
+        flex:1
+    },
+    row: {
+        flexDirection: "row",
+        flex: 1
     }
 
 });

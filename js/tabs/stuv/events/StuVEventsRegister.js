@@ -23,8 +23,8 @@ function StuVEventsRegister({ route }) {
     const fields =
     {
         "Email": new PropertyDefinition("Email").isRequired(),
-        "Vorname": new PropertyDefinition("Vorname").isRequired(),
-        "Nachname": new PropertyDefinition("Nachname").isRequired(),
+        "Vorname": new PropertyDefinition("Vorname").isRequired().splitWithNeighbour(),
+        "Nachname": new PropertyDefinition("Nachname").isRequired().splitWithNeighbour()
     }
 
 
@@ -41,7 +41,7 @@ function StuVEventsRegister({ route }) {
                         .catch(err => setErrText("Netzwerkfehler oder Email/Event existiert nicht oder ist nicht gültig"))
             }
                 fields={fields}></Form>
-            <Text style={{ color: "red", padding: 10, marginBottom: 8, fontSize: 16 }}>{errText}</Text>
+            <Text style={{ color: "red", padding: 10, marginBottom: 8, fontSize: 17 }}>{errText}</Text>
         </View>
     );
 }

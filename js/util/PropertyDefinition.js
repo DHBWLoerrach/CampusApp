@@ -4,13 +4,18 @@ export default class PropertyDefinition {
     value = "";
     name = null;
     validated = false;
-
+    isSplitted = false;
     constructor(name) {
         this.name = name;
     }
 
     shouldInstantBeValidated() {
         this.validated = true;
+        return this;
+    }
+
+    splitWithNeighbour() {
+        this.isSplitted = true;
         return this;
     }
 
