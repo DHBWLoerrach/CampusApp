@@ -33,7 +33,7 @@ export async function inviteUserEvent(email,firstName,lastName,event){
   return body.response.ok;
 }
 
-export async function unregisterUserEvent(email,event_id){
+export async function unregisterUserEvent(email,event){
   const body = await fetch("http://localhost:8080/events/confirm-unregister",
   {
     method: 'GET',
@@ -43,7 +43,8 @@ export async function unregisterUserEvent(email,event_id){
     },
     body:JSON.stringify({
       email:email,
-      event_id:event_id
+      event_id:event.event_id,
+      title:event.title
     })
 });
   return body.response.ok;

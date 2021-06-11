@@ -10,7 +10,6 @@ import PropertyDefinition from '../../../util/PropertyDefinition';
 function StuVEventsUnregister({ route }) {
     const navigation = useNavigation();
     const event = route.params.event;
-    const [email, onChangeText] = React.useState(null);
     const [errText, setErrText] = React.useState(null);
 
     const fields = {
@@ -24,7 +23,7 @@ function StuVEventsUnregister({ route }) {
             <Text>Geben Sie Ihre Email ein. Sie bekommen eine Bestätigung per Email.</Text>
             </View>
             <Form btnLabel="Abmeldung senden"
-                btnFunc={(field) => unregisterUserEvent(field.email, event.event_id)
+                btnFunc={(field) => unregisterUserEvent(field.email, event)
                     .then(r => navigation.goBack(null))
                     .catch(err => setErrText("Netzwerkfehler oder Email/Event existiert nicht oder ist nicht gültig"))}
                 fields={fields}
