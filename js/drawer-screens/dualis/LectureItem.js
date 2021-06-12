@@ -15,7 +15,7 @@ class LectureItem extends React.Component {
         return(
             <View style={styles.container}>
                 <Text style={{ fontSize: 20 }}>{this.props.lecture.name}</Text>
-                <Text>Vorlesungsnummer: {this.props.lecture.name}</Text>
+                <Text>Vorlesungsnummer: {this.props.lecture.number}</Text>
                 <Text>Leistungsart: {this.props.lecture.examType}</Text>
                 <Text>Note: {this.props.lecture.grade}</Text>
                 <Text>Gewichtung: {this.props.lecture.weighting}</Text>
