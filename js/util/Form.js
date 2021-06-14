@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 export default class Form extends Component {
-
+// fields sind alle Felder, die über dem textfeld erscheinen sollen.
+// außerdem enthalten sie informationen, ob sie validiert werden sollen oder nebeneinander platziert werden sollen
     state = { fields: this.props.fields };
 
     validateAll(fields) {
@@ -54,7 +55,8 @@ export default class Form extends Component {
                     {this.validateInput(field)}
                 </View>
 
-
+                // wenn das nächste element nicht mit dem nachbar nebeneinander platziert werden soll,
+                // dann füge alle vorherigen elemente zusammen, die nebeneinander platziert werden müssen
                 if (tmp.length !== 0 && !field.isSplitted) {
 
                     if (tmp.length === 1) {
@@ -65,11 +67,13 @@ export default class Form extends Component {
                     }
                     tmp = [];
                 }
-
+                // wenn das element nicht einen nachbar besitzen soll, dann füge das element in der view ein,
+                // um das element alleine in der UI steht
                 if (!field.isSplitted) {
                     res.push(body);
                     return;
                 }
+                // anonsten füg es zu den nachbarn ein, die nebeneinander platziert werden sollen
                 else {
                     tmp.push(body);
                 }
