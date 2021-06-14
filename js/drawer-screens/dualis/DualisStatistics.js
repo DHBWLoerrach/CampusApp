@@ -101,7 +101,7 @@ class DualisStatistics extends React.Component {
                 <View>
                     <Text style={{ fontSize: 22, textAlign: "center" }}>{this.props.route.params.name}</Text>
                     <View style={styles.percentageBlock}>
-                        <Text style={styles.text}>Besser als du abgeschnitten haben...</Text>
+                        <Text style={styles.text}>Besser als Du abgeschnitten haben...</Text>
                         <Text style={styles.percentage}>{this.state.better}%</Text>
                     </View>
 
