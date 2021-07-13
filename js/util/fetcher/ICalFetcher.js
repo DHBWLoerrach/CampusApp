@@ -2,7 +2,8 @@ import getLecturesFromiCalData from '../../tabs/schedule/helpers';
 
 export default class ICalFetcher {
   async getItems(params) {
-    let lectures = null;
+    let lectures = null,
+      status = 'ok';
     try {
       //needed because of bad cache behavior
       const suffix = '?' + new Date().getTime();
@@ -10,15 +11,17 @@ export default class ICalFetcher {
       const response = await fetch(scheduleUrl, {
         cache: 'no-store',
       });
-      if (response.status !== 200) {
-        return null;
+      if (response.status === 503) {
+        status = 'serviceUnavailable';
+      } else if (response.status !== 200) {
+        status = 'not ok';
+      } else {
+        const responseBody = await response.text();
+        lectures = getLecturesFromiCalData(responseBody);
       }
-      const responseBody = await response.text();
-      lectures = getLecturesFromiCalData(responseBody);
     } catch (error) {
-      console.log(error);
-      return 'networkError';
+      return { lectures: null, status: 'networkError' };
     }
-    return lectures;
+    return { lectures, status };
   }
 }

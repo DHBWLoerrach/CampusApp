@@ -35,9 +35,10 @@ export async function fetchLecturesFromWeb(course) {
   const result = await FetchManager.fetch(DHBW_COURSE, true, {
     course,
   });
-  if (result === null) {
-    return null;
+  if (result.status !== 'ok') {
+    return result;
   }
+
   //Get all dates
   const dates = [];
   result.forEach((lecture) => {
@@ -56,7 +57,7 @@ export async function fetchLecturesFromWeb(course) {
       ),
     });
   });
-  return schedule;
+  return { lectures: schedule, status: result.status };
 }
 
 export function getDay(startDate) {
