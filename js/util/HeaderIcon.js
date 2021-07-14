@@ -1,38 +1,40 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Platform,
   TouchableOpacity,
   TouchableNativeFeedback,
-  View
+  View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const Touchable =
   Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
 
-export default class HeaderIcon extends Component {
-  render() {
-    return (
-      <Touchable
-        onPress={this.props.onPress}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-        style={styles.icon}
-      >
-        <View>
-          <MaterialIcon
-            name={this.props.icon}
-            size={this.props.size || 24}
-            color="white"
-          />
-        </View>
-      </Touchable>
-    );
-  }
+export default function HeaderIcon({ icon, size, onPress }) {
+  return (
+    <Touchable
+      onPress={onPress}
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      style={styles.touchable}
+    >
+      <View>
+        <MaterialIcon
+          style={styles.icon}
+          name={icon}
+          size={size || 24}
+          color="white"
+        />
+      </View>
+    </Touchable>
+  );
 }
 
 const styles = StyleSheet.create({
+  touchable: {
+    paddingHorizontal: 8,
+  },
   icon: {
-    paddingHorizontal: 8
-  }
+    marginRight: 10,
+  },
 });
