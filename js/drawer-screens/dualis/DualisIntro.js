@@ -8,7 +8,7 @@ import {
 import { Caption, Paragraph, Text } from 'react-native-paper';
 import Colors from '../../util/Colors';
 
-const DualisIntro = ({ navigation }) => {
+export default function DualisIntro({ navigation }) {
   return (
     <View style={styles.container}>
       <Image
@@ -32,17 +32,13 @@ const DualisIntro = ({ navigation }) => {
       </Paragraph>
       <TouchableOpacity
         style={styles.dhbwButton}
-        onPress={() => {
-          navigation.navigate('DualisLogin');
-        }}
+        onPress={() => navigation.navigate('DualisLogin')}
       >
-        <Text style={{ color: 'white', margin: 20 }}>Anmelden</Text>
+        <Text style={styles.textMargin}>Anmelden</Text>
       </TouchableOpacity>
     </View>
   );
-};
-
-export default DualisIntro;
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -72,5 +68,9 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: Colors.dhbwRed,
     alignItems: 'center',
+  },
+  textMargin: {
+    color: 'white',
+    margin: 20,
   },
 });
