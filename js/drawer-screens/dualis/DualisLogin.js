@@ -1,27 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Paragraph, Text, TextInput } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../util/Colors';
 
-class DualisLogin extends React.Component {
-  constructor(props) {
-    super(props);
+export default function DualisLogin({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [error, setError] = useState(null);
 
-    this.state = {
-      email: '',
-      password: '',
-      loading: false,
-      loginFailed: false,
-      error: null,
-    };
-
-    this.login = this.login.bind(this);
-  }
-
-  login() {
-    this.setState({ loading: true });
+  function login() {
+    setLoading(true);
     try {
       fetch('http://134.255.237.241/login/', {
         method: 'POST',
@@ -30,87 +22,65 @@ class DualisLogin extends React.Component {
           Accept: 'application/json',
         }),
         mode: 'cors',
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-        }),
+        body: JSON.stringify({ email, password }),
       })
         .then((resp) => resp.json())
         .then((respJson) => {
           if (respJson.jwt != '' && respJson.jwt != null) {
             AsyncStorage.setItem('dualisToken', respJson.jwt);
-            this.setState({
-              email: '',
-              password: '',
-              loginFailed: false,
-            });
-            this.props.navigation.navigate('DualisMain');
+            setEmail('');
+            setPassword('');
+            setLoginFailed(false);
+            navigation.navigate('DualisMain');
           } else {
-            this.setState({ loginFailed: true });
+            setLoginFailed(true);
           }
-
-          this.setState({ loading: false });
+          setLoading(false);
         });
     } catch (ex) {
-      this.setState({ error: ex });
+      setError(ex);
     }
   }
 
-  render() {
-    let textInputTheme = this.state.loginFailed
-      ? failureTheme
-      : standardTheme;
+  let textInputTheme = loginFailed ? failureTheme : standardTheme;
 
-    return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.textInput}
-          theme={textInputTheme}
-          onChangeText={(value) => {
-            this.setState({ email: value });
-          }}
-          value={this.state.email}
-          placeholder="DHBW E-Mail"
-        />
-        <TextInput
-          style={styles.textInput}
-          theme={textInputTheme}
-          onChangeText={(value) => {
-            this.setState({ password: value });
-          }}
-          secureTextEntry={true}
-          value={this.state.password}
-          placeholder="Passwort"
-        />
-        <TouchableOpacity
-          style={styles.dhbwButton}
-          onPress={this.login}
-        >
-          <Text style={styles.buttonText}>Anmelden</Text>
-          {this.state.loading && (
-            <ActivityIndicator
-              size="large"
-              color={Colors.lightGray}
-            />
-          )}
-        </TouchableOpacity>
-        {this.state.error && <Text>{this.state.error}</Text>}
-        <Paragraph style={styles.paragraph}>
-          Bitte denke daran, dass keine Gewähr für die Richtigkeit der
-          hier bereitgestellten Informationen übernommen werden kann.
-          Im Zweifelsfall ist das Sekretariat oder die entsprechende
-          Lehrkraft zu befragen.
-        </Paragraph>
-        <Paragraph style={styles.paragraph}>
-          Aus Sicherheitsgründen wirst Du nach 10 Minuten automatisch
-          abgemeldet.
-        </Paragraph>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.textInput}
+        theme={textInputTheme}
+        onChangeText={(value) => setEmail(value)}
+        value={email}
+        placeholder="DHBW E-Mail"
+      />
+      <TextInput
+        style={styles.textInput}
+        theme={textInputTheme}
+        onChangeText={(value) => setPassword(value)}
+        secureTextEntry={true}
+        value={password}
+        placeholder="Passwort"
+      />
+      <TouchableOpacity style={styles.dhbwButton} onPress={login}>
+        <Text style={styles.buttonText}>Anmelden</Text>
+        {loading && (
+          <ActivityIndicator size="large" color={Colors.lightGray} />
+        )}
+      </TouchableOpacity>
+      {error && <Text>{error}</Text>}
+      <Paragraph style={styles.paragraph}>
+        Bitte denke daran, dass keine Gewähr für die Richtigkeit der
+        hier bereitgestellten Informationen übernommen werden kann. Im
+        Zweifelsfall ist das Sekretariat oder die entsprechende
+        Lehrkraft zu befragen.
+      </Paragraph>
+      <Paragraph style={styles.paragraph}>
+        Aus Sicherheitsgründen wirst Du nach 10 Minuten automatisch
+        abgemeldet.
+      </Paragraph>
+    </View>
+  );
 }
-
-export default DualisLogin;
 
 const standardTheme = {
   colors: {
