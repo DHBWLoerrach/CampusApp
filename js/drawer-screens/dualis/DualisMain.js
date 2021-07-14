@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -6,46 +6,39 @@ import Colors from '../../util/Colors';
 import EnrollmentItem from './EnrollmentItem';
 import { Picker } from '@react-native-picker/picker';
 
-class DualisMain extends React.Component {
-  constructor(props) {
-    super(props);
+export default function DualisMain({ navigation }) {
+  const [loading, setLoading] = useState(false);
+  const [enrollments, setEnrollments] = useState([]);
+  const [noContent, setNoContent] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedSemester, setSelectedSemester] = useState('Alle');
+  const [selectableOptions, setSelectableOptions] = useState([]);
 
-    this.state = {
-      loading: false,
-      enrollments: [],
-      noContent: false,
-      error: null,
-      selectedSemester: 'Alle',
-      selectableOptions: [],
-    };
-
-    this.getPerformances = this.getPerformances.bind(this);
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     let year = new Date().getFullYear();
-
+    const options = [];
     for (let i = 0; i < 4; i++) {
-      this.state.selectableOptions.push('WiSe ' + (year - i));
-      this.state.selectableOptions.push('SoSe ' + (year - i));
+      options.push('WiSe ' + (year - i));
+      options.push('SoSe ' + (year - i));
     }
+    setSelectableOptions(options);
 
-    this.getPerformances(null, null);
-  }
+    getPerformances(null, null);
+  }, []);
 
-  getSelectedSemester(value) {
+  function getSelectedSemester(value) {
     if (value != 'Alle') {
-      this.state.selectedSemester = value;
+      setSelectedSemester(value);
       var num = value.match(/\d/g);
-      this.getPerformances(value.includes('WiSe'), num.join(''));
+      getPerformances(value.includes('WiSe'), num.join(''));
     } else {
-      this.state.selectedSemester = 'Alle';
-      this.getPerformances(null, null);
+      setSelectedSemester('Alle');
+      getPerformances(null, null);
     }
   }
 
-  async getPerformances(isWintersemester, year) {
-    this.setState({ loading: true });
+  async function getPerformances(isWintersemester, year) {
+    setLoading(true);
 
     const token = await AsyncStorage.getItem('dualisToken');
     let url = 'http://134.255.237.241/student/performance/?';
@@ -69,101 +62,88 @@ class DualisMain extends React.Component {
         mode: 'cors',
       }).then((response) => {
         if (response.status == 204) {
-          this.setState({
-            noContent: true,
-            error: null,
-            enrollments: [],
-          });
+          setNoContent(true);
+          setError(null);
+          setEnrollments([]);
         }
 
         response.json().then((json) => {
           if (response.status == 500) {
             if (json.message != 'Invalid token') {
-              this.setState({
-                error: json.message,
-                noContent: true,
-                enrollments: [],
-              });
+              setNoContent(true);
+              setError(json.message);
+              setEnrollments([]);
             } else {
-              this.props.navigation.navigate('DualisLogin');
+              navigation.navigate('DualisLogin');
             }
           }
 
           if (response.status == 200) {
-            this.setState({
-              enrollments: json.enrollments,
-              noContent: false,
-              error: null,
-            });
+            setNoContent(false);
+            setError(null);
+            setEnrollments(json.enrollments);
           }
         });
-
-        this.setState({ loading: false });
       });
     } catch (ex) {
-      this.setState({ error: ex, loading: false });
+      setError(ex);
     }
+    setLoading(false);
   }
 
-  render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.center}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
-    let enrollmentItems = [];
-
-    this.state.enrollments.forEach((enrollment) => {
-      enrollmentItems.push(
-        <EnrollmentItem
-          key={enrollment.id}
-          enrollment={enrollment}
-          navigation={this.props.navigation}
-        />
-      );
-    });
-
+  if (loading) {
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          <Picker
-            selectedValue={this.state.selectedSemester}
-            onValueChange={(itemValue, itemIndex) =>
-              this.getSelectedSemester(itemValue)
-            }
-          >
-            {this.state.selectableOptions.map((opt, i) => (
-              <Picker.Item key={opt} label={opt} value={opt} />
-            ))}
-
-            <Picker.Item key="Alle" label="Alle" value="Alle" />
-          </Picker>
-
-          <>{enrollmentItems}</>
-
-          {this.state.error && (
-            <View style={styles.center}>
-              <Text style={styles.message}>{this.state.error}</Text>
-            </View>
-          )}
-
-          {this.state.noContent && (
-            <View style={styles.center}>
-              <Text style={styles.message}>
-                Kein Inhalt vorhanden
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+      <View style={styles.center}>
+        <ActivityIndicator />
       </View>
     );
   }
-}
 
-export default DualisMain;
+  let enrollmentItems = [];
+
+  enrollments.forEach((enrollment) => {
+    enrollmentItems.push(
+      <EnrollmentItem
+        key={enrollment.id}
+        enrollment={enrollment}
+        navigation={navigation}
+      />
+    );
+  });
+
+  return (
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <Picker
+          selectedValue={selectedSemester}
+          onValueChange={(itemValue) =>
+            getSelectedSemester(itemValue)
+          }
+        >
+          {selectableOptions.map((opt) => (
+            <Picker.Item key={opt} label={opt} value={opt} />
+          ))}
+
+          <Picker.Item key="Alle" label="Alle" value="Alle" />
+        </Picker>
+
+        <>{enrollmentItems}</>
+
+        {error && (
+          <View style={styles.center}>
+            <Text style={styles.message}>{error}</Text>
+          </View>
+        )}
+
+        {noContent && (
+          <View style={styles.center}>
+            <Text style={styles.message}>Kein Inhalt vorhanden</Text>
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
