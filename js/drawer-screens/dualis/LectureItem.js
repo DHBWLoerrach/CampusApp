@@ -2,32 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Colors from '../../util/Colors';
 
-class LectureItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+export default function LectureItem({
+  lecture: { name, number, examType, presence, weighting, grade },
+}) {
+  let thePresence = presence ? 'bestanden' : 'nicht bestanden';
 
-  render() {
-    let presence = this.props.lecture.presence
-      ? 'bestanden'
-      : 'nicht bestanden';
-
-    return (
-      <View style={styles.container}>
-        <Text style={{ fontSize: 20 }}>
-          {this.props.lecture.name}
-        </Text>
-        <Text>Vorlesungsnummer: {this.props.lecture.number}</Text>
-        <Text>Leistungsart: {this.props.lecture.examType}</Text>
-        <Text>Note: {this.props.lecture.grade}</Text>
-        <Text>Gewichtung: {this.props.lecture.weighting}</Text>
-        <Text>Anwesenheitskontrolle: {presence}</Text>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <Text style={styles.name}>{name}</Text>
+      <Text>Vorlesungsnummer: {number}</Text>
+      <Text>Leistungsart: {examType}</Text>
+      <Text>Note: {grade}</Text>
+      <Text>Gewichtung: {weighting}</Text>
+      <Text>Anwesenheitskontrolle: {thePresence}</Text>
+    </View>
+  );
 }
-
-export default LectureItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -37,5 +27,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     borderRadius: 10,
+  },
+  name: {
+    fontSize: 20,
   },
 });
