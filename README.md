@@ -1,6 +1,6 @@
 # CampusApp
 
-Offizielle Campus App der [Dualen Hochschule Baden-Württemberg Lörrach](https://www.dhbw-loerrach.de)
+Offizielle Campus App der [Dualen Hochschule Baden-Württemberg Lörrach](https://www.dhbw-loerrach.de) (DHBW Lörrach).
 
 Die App wird plattformübergreifend mit [React Native](https://www.reactnative.dev) entwickelt und ist für Android-Geräte und das iPhone im PlayStore bzw. AppStore erhältlich.
 
@@ -12,12 +12,14 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
 ## Setup des Projekts für Entwickler
 
-Es wird vorausgesetzt, dass eine vollständige Entwicklungsumgebung für React Native environment installiert wurde (die Campus App basiert nicht auf Expo). Weitere Informationen dazu finden sich im Abschnitt _React Native CLI_ in der [React Native Dokumentation](https://reactnative.dev/docs/environment-setup)).
+Es wird vorausgesetzt, dass eine vollständige Entwicklungsumgebung für React Native environment installiert wurde (die Campus App basiert nicht auf Expo). Weitere Informationen dazu finden sich im Abschnitt _React Native CLI Quickstart_ in der [React Native Dokumentation](https://reactnative.dev/docs/environment-setup).
 
 Danach sind folgende Schritte durchzuführen:
 
 1. Das Projekt mit git klonen:
+
    `git clone git@github.com:DHBWLoerrach/CampusApp.git`
+
 2. In der Kommandozeilenumgebung in das Projektverzeichnis `CampusApp` wechseln:
    `cd CampusApp`
 3. Die Abhängigkeiten bzw. npm-Pakete in NodeJS installieren, idealerweise mit `yarn`:
