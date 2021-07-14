@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,30 +10,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import Colors from './Colors';
 
-class DrawerContent extends React.Component {
-  constructor(props) {
-    super(props);
+export default function DrawerContent({ navigation }) {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
 
-    this.state = {
-      authenticated: false,
-      email: '',
-    };
+  useEffect(() => setInterval(() => isAuthenticated(), 5000), []);
 
-    this.isAuthenticated = this.isAuthenticated.bind(this);
-    this.logout = this.logout.bind(this);
-  }
-
-  componentDidMount() {
-    setInterval(() => {
-      this.isAuthenticated();
-    }, 5000);
-  }
-
-  async isAuthenticated() {
+  async function isAuthenticated() {
     const token = await AsyncStorage.getItem('dualisToken');
 
     if (token == null || token == 'logout') {
-      this.setState({ authenticated: false });
+      setAuthenticated(false);
       return;
     }
 
@@ -41,113 +28,92 @@ class DrawerContent extends React.Component {
     try {
       tokenDecoded = jwt_decode(token);
       if (Date.now() >= tokenDecoded.standardclaims.exp * 1000) {
-        this.setState({ authenticated: false });
+        setAuthenticated(false);
         return;
       }
     } catch (err) {
-      this.setState({ authenticated: false });
+      setAuthenticated(false);
       return;
     }
-    this.setState({
-      authenticated: true,
-      email: tokenDecoded.standardclaims.sub,
-    });
-    return;
+    setAuthenticated(true);
+    setEmail(tokenDecoded.standardclaims.sub);
   }
 
-  logout() {
+  function logout() {
     AsyncStorage.setItem('dualisToken', 'logout');
-    this.props.navigation.navigate('Home');
+    navigation.navigate('Home');
   }
 
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <DrawerContentScrollView {...this.props.navigation}>
-          <View style={styles.drawerContent}>
-            <View style={styles.userInfoSection}>
-              {this.state.authenticated && (
-                <View style={styles.avatar}>
-                  <Avatar.Icon
-                    style={{ backgroundColor: Colors.dhbwRed }}
-                    size={62}
-                    icon="face"
-                    color={'white'}
-                  />
-                  <View style={styles.loggedIn}>
-                    <Title style={styles.title}>
-                      Eingeloggt als:
-                    </Title>
-                    <Caption style={styles.caption}>
-                      {this.state.email}
-                    </Caption>
-                  </View>
+  return (
+    <View style={{ flex: 1 }}>
+      <DrawerContentScrollView {...navigation}>
+        <View style={styles.drawerContent}>
+          <View style={styles.userInfoSection}>
+            {authenticated && (
+              <View style={styles.avatar}>
+                <Avatar.Icon
+                  style={{ backgroundColor: Colors.dhbwRed }}
+                  size={62}
+                  icon="face"
+                  color={'white'}
+                />
+                <View style={styles.loggedIn}>
+                  <Title style={styles.title}>Eingeloggt als:</Title>
+                  <Caption style={styles.caption}>{email}</Caption>
                 </View>
-              )}
-              {!this.state.authenticated && (
-                <View style={styles.avatar}>
-                  <Avatar.Icon
-                    style={{ backgroundColor: Colors.dhbwGray }}
-                    size={62}
-                    icon="face"
-                    color={'white'}
-                  />
-                  <View style={styles.loggedIn}>
-                    <Title style={styles.title}>
-                      Eingeloggt als:
-                    </Title>
-                    <Caption style={styles.caption}>Gast</Caption>
-                  </View>
+              </View>
+            )}
+            {!authenticated && (
+              <View style={styles.avatar}>
+                <Avatar.Icon
+                  style={{ backgroundColor: Colors.dhbwGray }}
+                  size={62}
+                  icon="face"
+                  color={'white'}
+                />
+                <View style={styles.loggedIn}>
+                  <Title style={styles.title}>Eingeloggt als:</Title>
+                  <Caption style={styles.caption}>Gast</Caption>
                 </View>
-              )}
-            </View>
-            <Drawer.Section style={styles.drawerSection}>
-              <DrawerItem
-                icon={({ color, size }) => (
-                  <Icon
-                    name="home-outline"
-                    color={color}
-                    size={size}
-                  />
-                )}
-                label="Startseite"
-                onPress={() => {
-                  this.props.navigation.navigate('Home');
-                }}
-              />
-              <DrawerItem
-                icon={({ color, size }) => (
-                  <Icon
-                    name="chart-areaspline"
-                    color={color}
-                    size={size}
-                  />
-                )}
-                label="Dualis"
-                onPress={() => {
-                  this.props.navigation.navigate('Dualis');
-                }}
-              />
-            </Drawer.Section>
+              </View>
+            )}
           </View>
-        </DrawerContentScrollView>
-        <Drawer.Section style={styles.bottomDrawerSection}>
-          {this.state.authenticated && (
+          <Drawer.Section style={styles.drawerSection}>
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="exit-run" color={color} size={size} />
+                <Icon name="home-outline" color={color} size={size} />
               )}
-              label="Abmelden"
-              onPress={() => this.logout()}
+              label="Startseite"
+              onPress={() => navigation.navigate('Home')}
             />
-          )}
-        </Drawer.Section>
-      </View>
-    );
-  }
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon
+                  name="chart-areaspline"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Dualis"
+              onPress={() => navigation.navigate('Dualis')}
+            />
+          </Drawer.Section>
+        </View>
+      </DrawerContentScrollView>
+      <Drawer.Section style={styles.bottomDrawerSection}>
+        {authenticated && (
+          <DrawerItem
+            icon={({ color, size }) => (
+              <Icon name="exit-run" color={color} size={size} />
+            )}
+            label="Abmelden"
+            onPress={() => logout()}
+          />
+        )}
+      </Drawer.Section>
+    </View>
+  );
 }
-
-export default DrawerContent;
 
 const styles = StyleSheet.create({
   drawerContent: {
