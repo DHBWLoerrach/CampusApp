@@ -69,12 +69,16 @@ export default function CampusApp() {
     changeRole(role);
   };
 
-  let content = <NavigationContainer independent={true}>
-                  <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                    <Drawer.Screen name="Home" component={Navigator} />
-                    <Drawer.Screen name="Dualis" component={DualisNavigator} />
-                  </Drawer.Navigator>
-                </NavigationContainer>;
+  let content = (
+    <NavigationContainer independent={true}>
+      <Drawer.Navigator
+        drawerContent={(props) => <DrawerContent {...props} />}
+      >
+        <Drawer.Screen name="Home" component={Navigator} />
+        <Drawer.Screen name="Dualis" component={DualisNavigator} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
 
   if (loading) {
     content = (

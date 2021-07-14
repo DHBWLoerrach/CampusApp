@@ -4,7 +4,7 @@ import {
   Platform,
   TouchableOpacity,
   TouchableNativeFeedback,
-  View
+  View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -34,6 +34,6 @@ export default class HeaderIcon extends Component {
 
 const styles = StyleSheet.create({
   icon: {
-    paddingHorizontal: 8
-  }
+    paddingHorizontal: 8,
+  },
 });

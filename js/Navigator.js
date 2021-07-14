@@ -27,17 +27,18 @@ import StuVScreen from './tabs/stuv/StuVScreen';
 import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
 
-export default function Navigator({navigation}) {
-
+export default function Navigator({ navigation }) {
   const stackHeaderConfig = {
     headerBackTitle: 'Zurück',
     headerTintColor: 'white',
-    headerLeft: () => <MaterialIcon
-      style={{ paddingLeft: 10 }}
-      onPress={() => navigation.openDrawer()}
-      name="menu"
-      size={30}
-    />,
+    headerLeft: () => (
+      <MaterialIcon
+        style={{ paddingLeft: 10 }}
+        onPress={() => navigation.openDrawer()}
+        name="menu"
+        size={30}
+      />
+    ),
     headerStyle: {
       backgroundColor: Colors.dhbwRed,
       shadowColor: 'transparent', // prevent line below header in iOS
@@ -48,9 +49,9 @@ export default function Navigator({navigation}) {
       }),
     },
   };
-  
+
   const Stack = createStackNavigator();
-  
+
   function NewsStack() {
     return (
       <Stack.Navigator
@@ -70,7 +71,7 @@ export default function Navigator({navigation}) {
       </Stack.Navigator>
     );
   }
-  
+
   function StuVStack() {
     return (
       <Stack.Navigator
@@ -99,7 +100,7 @@ export default function Navigator({navigation}) {
       </Stack.Navigator>
     );
   }
-  
+
   const scheduleOptions = ({ navigation, route }) => {
     const headerTitle = route.params?.course ?? 'Vorlesungsplan';
     return {
@@ -112,7 +113,7 @@ export default function Navigator({navigation}) {
       headerTitle,
     };
   };
-  
+
   function ScheduleStack() {
     return (
       <Stack.Navigator
@@ -132,7 +133,7 @@ export default function Navigator({navigation}) {
       </Stack.Navigator>
     );
   }
-  
+
   function CanteenStack() {
     return (
       <Stack.Navigator
@@ -142,12 +143,15 @@ export default function Navigator({navigation}) {
         <Stack.Screen
           name="Home"
           component={CanteenScreen}
-          options={{ title: 'Speiseplan', headerRight: HeaderHelpIcon }}
+          options={{
+            title: 'Speiseplan',
+            headerRight: HeaderHelpIcon,
+          }}
         />
       </Stack.Navigator>
     );
   }
-  
+
   function ServicesStack() {
     return (
       <Stack.Navigator
@@ -232,7 +236,7 @@ export default function Navigator({navigation}) {
       </Stack.Navigator>
     );
   }
-  
+
   const tabsConfig = ({ route }) => ({
     tabBarIcon: ({ color }) => {
       const routeName = route.name;
@@ -246,7 +250,7 @@ export default function Navigator({navigation}) {
       return <MaterialIcon name={iconName} size={32} color={color} />;
     },
   });
-  
+
   const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer independent={true}>
