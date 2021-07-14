@@ -35,12 +35,15 @@ export async function fetchLecturesFromWeb(course) {
   const result = await FetchManager.fetch(DHBW_COURSE, true, {
     course,
   });
-  if (result === null) {
-    return null;
+  if (result.status !== 'ok') {
+    return result;
   }
+
+  const { lectures } = result;
+
   //Get all dates
   const dates = [];
-  result.forEach((lecture) => {
+  lectures.forEach((lecture) => {
     const day = getDay(lecture.startDate);
     if (!dates.includes(day)) {
       dates.push(day);
@@ -51,12 +54,12 @@ export async function fetchLecturesFromWeb(course) {
   dates.forEach((date) => {
     schedule.push({
       title: date,
-      data: result.filter(
+      data: lectures.filter(
         (lecture) => date === getDay(lecture.startDate)
       ),
     });
   });
-  return schedule;
+  return { lectures: schedule, status: result.status };
 }
 
 export function getDay(startDate) {
