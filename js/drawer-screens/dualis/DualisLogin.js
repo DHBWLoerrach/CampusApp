@@ -64,7 +64,7 @@ class DualisLogin extends React.Component {
     return (
       <View style={styles.container}>
         <TextInput
-          style={{ marginTop: 40 }}
+          style={styles.textInput}
           theme={textInputTheme}
           onChangeText={(value) => {
             this.setState({ email: value });
@@ -73,13 +73,7 @@ class DualisLogin extends React.Component {
           placeholder="DHBW E-Mail"
         />
         <TextInput
-          ref={(ref) =>
-            ref &&
-            ref.setNativeProps({
-              style: { fontFamily: 'system font' },
-            })
-          }
-          style={{ marginTop: 40 }}
+          style={styles.textInput}
           theme={textInputTheme}
           onChangeText={(value) => {
             this.setState({ password: value });
@@ -92,7 +86,7 @@ class DualisLogin extends React.Component {
           style={styles.dhbwButton}
           onPress={this.login}
         >
-          <Text style={{ color: 'white', margin: 20 }}>Anmelden</Text>
+          <Text style={styles.buttonText}>Anmelden</Text>
           {this.state.loading && (
             <ActivityIndicator
               size="large"
@@ -152,5 +146,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    margin: 20,
+  },
+  textInput: {
+    marginTop: 40,
   },
 });
