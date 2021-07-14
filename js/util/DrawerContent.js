@@ -1,14 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import {
-  Avatar,
-  Title,
-  Caption,
-  Drawer,
-  Text,
-  TouchableRipple,
-  Switch,
-} from 'react-native-paper';
+import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   DrawerContentScrollView,
@@ -23,12 +15,10 @@ class DrawerContent extends React.Component {
     super(props);
 
     this.state = {
-      darkThemeOn: false,
       authenticated: false,
       email: '',
     };
 
-    this.toggleSwitch = this.toggleSwitch.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.logout = this.logout.bind(this);
   }
@@ -37,12 +27,6 @@ class DrawerContent extends React.Component {
     setInterval(() => {
       this.isAuthenticated();
     }, 5000);
-  }
-
-  toggleSwitch() {
-    this.setState({
-      darkThemeOn: this.state.darkThemeOn ? false : true,
-    });
   }
 
   async isAuthenticated() {
@@ -83,16 +67,14 @@ class DrawerContent extends React.Component {
           <View style={styles.drawerContent}>
             <View style={styles.userInfoSection}>
               {this.state.authenticated && (
-                <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                <View style={styles.avatar}>
                   <Avatar.Icon
                     style={{ backgroundColor: Colors.dhbwRed }}
                     size={62}
                     icon="face"
                     color={'white'}
                   />
-                  <View
-                    style={{ flexDirection: 'column', marginLeft: 5 }}
-                  >
+                  <View style={styles.loggedIn}>
                     <Title style={styles.title}>
                       Eingeloggt als:
                     </Title>
@@ -103,16 +85,14 @@ class DrawerContent extends React.Component {
                 </View>
               )}
               {!this.state.authenticated && (
-                <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                <View style={styles.avatar}>
                   <Avatar.Icon
                     style={{ backgroundColor: Colors.dhbwGray }}
                     size={62}
                     icon="face"
                     color={'white'}
                   />
-                  <View
-                    style={{ flexDirection: 'column', marginLeft: 5 }}
-                  >
+                  <View style={styles.loggedIn}>
                     <Title style={styles.title}>
                       Eingeloggt als:
                     </Title>
@@ -148,45 +128,6 @@ class DrawerContent extends React.Component {
                   this.props.navigation.navigate('Dualis');
                 }}
               />
-              {/*<DrawerItem
-                      icon={({color, size}) => (
-                          <Icon
-                          name="google-classroom"
-                          color={color}
-                          size={size}
-                          />
-                      )}
-                      label="Raumreservierung"
-                      onPress={() => {}}
-                    />*/}
-              {/*<DrawerItem
-                      icon={({color, size}) => (
-                          <Icon
-                          name="dip-switch"
-                          color={color}
-                          size={size}
-                          />
-                      )}
-                      label="Einstellungen"
-                      onPress={() => {this.props.navigation.navigate("Screen")}}
-                      />*/}
-            </Drawer.Section>
-            <Drawer.Section>
-              <TouchableRipple onPress={this.toggleSwitch}>
-                <View style={styles.darkMode}>
-                  <Text>Dunkelmodus</Text>
-                  <View pointerEvents="none">
-                    <Switch
-                      trackColor={{
-                        true: Colors.dhbwRed,
-                        false: Colors.dhbwGray,
-                      }}
-                      thumbColor="white"
-                      value={this.state.darkThemeOn}
-                    />
-                  </View>
-                </View>
-              </TouchableRipple>
             </Drawer.Section>
           </View>
         </DrawerContentScrollView>
@@ -224,6 +165,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 14,
   },
+  avatar: {
+    flexDirection: 'row',
+    marginTop: 15,
+  },
+  loggedIn: {
+    flexDirection: 'column',
+    marginLeft: 5,
+  },
   row: {
     marginTop: 20,
     flexDirection: 'row',
@@ -245,12 +194,5 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderTopColor: '#f4f4f4',
     borderTopWidth: 1,
-  },
-  darkMode: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
   },
 });
