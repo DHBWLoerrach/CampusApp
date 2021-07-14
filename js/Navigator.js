@@ -26,19 +26,21 @@ import Settings from './tabs/service/Settings';
 import StuVScreen from './tabs/stuv/StuVScreen';
 import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
+import { enableDualis } from './../env.js';
 
 export default function Navigator({ navigation }) {
   const stackHeaderConfig = {
     headerBackTitle: 'Zurück',
     headerTintColor: 'white',
-    headerLeft: () => (
-      <MaterialIcon
-        style={{ paddingLeft: 10 }}
-        onPress={() => navigation.openDrawer()}
-        name="menu"
-        size={30}
-      />
-    ),
+    headerLeft: () =>
+      enableDualis ? (
+        <MaterialIcon
+          style={{ paddingLeft: 10 }}
+          onPress={() => navigation.openDrawer()}
+          name="menu"
+          size={30}
+        />
+      ) : null,
     headerStyle: {
       backgroundColor: Colors.dhbwRed,
       shadowColor: 'transparent', // prevent line below header in iOS
