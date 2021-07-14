@@ -21,35 +21,45 @@ Danach sind folgende Schritte durchzuführen:
    `git clone git@github.com:DHBWLoerrach/CampusApp.git`
 
 2. In der Kommandozeilenumgebung in das Projektverzeichnis `CampusApp` wechseln:
+
    `cd CampusApp`
+
 3. Die Abhängigkeiten bzw. npm-Pakete in NodeJS installieren, idealerweise mit `yarn`:
+
    `yarn`
+
    (`npm install` funktioniert wohl auch)
+
 4. Kopiere `env.example.js` als neue Datei `env.js`:
+
    `cp env.example.js env.js`
-5. Die Datei `env.js` muss mit zusätzlichen Infos wie API-Keys befüllt werden &mdash; diese sind vom `Project Owner` erhältlich.
+
+5. Die Datei `env.js` muss mit zusätzlichen Infos wie API-Keys befüllt werden &mdash; diese sind vom _Project Owner_ erhältlich.
 
 ## Projekt starten
 
 Mit dem Befehl
 
 `react-native start`
+
 (oder `yarn start`)
 
-wird der Metro-Bundler für das Projekt gestartet mit dem sich die App vom Emulator/Simulator oder Smartphones verbindet (siehe folgende Abschnitte).
+wird der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet mit dem sich die App vom Emulator/Simulator oder von einem Smartphone verbindet (siehe folgende Abschnitte).
 
 ## App im Android-Emulator ausführen
 
-Dies wird beschrieben im Abschnitt _React Native CLI_ in der [React Native Dokumentation](https://reactnative.dev/docs/environment-setup). Unter anderem muss hierzu Android Studio installiert werden.
+Dies wird beschrieben im Abschnitt _React Native CLI Quickstart_ in der [React Native Dokumentation](https://reactnative.dev/docs/environment-setup). Unter anderem muss hierzu Android Studio installiert werden.
 
 Campus App auf dem Android-Emulator starten:
+
 `react-native run-android`
 
 ## App mit Android-Geräten nutzen
 
-Siehe dazu die [React Native Dokumentation](https://reactnative.dev/docs/running-on-device)
+Siehe dazu die [React Native Dokumentation](https://reactnative.dev/docs/running-on-device).
 
 Campus App auf dem Android-Gerät starten:
+
 `react-native run-android`
 
 ## App im iOS-Simulator starten (funktioniert nur auf macOS)
@@ -59,11 +69,15 @@ XCode muss installiert werden (z.B. aus dem AppStore). Zusätzlich wird [CocoaPo
 Terminal öffnen und in das Projektverzeichnis `CampusApp` wechseln. Dort müssen weitere Abhängigkeiten installiert werden:
 
 1. Ins Unterverzeichnis `ios` wechseln:
+
    `cd ios`
+
 2. Abhängigkeiten via CocoaPods installieren:
+
    `pod install`
 
 Campus App im iOS simulator starten:
+
 `react-native run-ios`
 
 ## Lizenz
