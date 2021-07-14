@@ -2,31 +2,23 @@ import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import LectureItem from './LectureItem';
 
-class DualisDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+export default function DualisDetail({ route }) {
+  let lectureItems = [];
 
-  render() {
-    let lectureItems = [];
-
-    this.props.route.params.details.forEach((lecture) => {
-      lectureItems.push(
-        <LectureItem key={lecture.number} lecture={lecture} />
-      );
-    });
-
-    return (
-      <View style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          <>{lectureItems}</>
-        </ScrollView>
-      </View>
+  route.params.details.forEach((lecture) => {
+    lectureItems.push(
+      <LectureItem key={lecture.number} lecture={lecture} />
     );
-  }
-}
+  });
 
-export default DualisDetail;
+  return (
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <>{lectureItems}</>
+      </ScrollView>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
