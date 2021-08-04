@@ -254,7 +254,7 @@ PODS:
   - React-jsinspector (0.64.2)
   - react-native-maps (0.28.0):
     - React-Core
-  - react-native-pager-view (5.2.1):
+  - react-native-pager-view (5.4.0):
     - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
@@ -330,7 +330,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNCPicker (1.16.3):
+  - RNCPicker (1.16.4):
     - React-Core
   - RNCPushNotificationIOS (1.8.0):
     - React-Core
@@ -365,7 +365,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.4.0):
+  - RNScreens (3.5.0):
     - React-Core
     - React-RCTImage
   - RNSVG (12.1.1):
@@ -570,7 +570,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
   react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
-  react-native-pager-view: 2864530d861ab2970beb2cd0b4cf2292cd30cd84
+  react-native-pager-view: 54970cc27fdef14db2dcfedadb091d711e88065d
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-webview: 2e8fe70dc32b50d3231c23043f8e8b5a5525d346
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
@@ -588,11 +588,11 @@ SPEC CHECKSUMS:
   RNBackgroundFetch: 182d0ff90747bacbb3d4e168ecc2194442d0a2d3
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNCPicker: 6724ab5fcca83c34fe1f18a89baa13e9885f0393
+  RNCPicker: c620feabdfb8b131fc1be42b407be5bacc147fea
   RNCPushNotificationIOS: 61a7c72bd1ebad3568025957d001e0f0e7b32191
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
-  RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
+  RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
@@ -600,4 +600,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 9d8c0ed8a6b995e9ceac5552266d3808fc88db20
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2

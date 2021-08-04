@@ -187,5 +187,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     paddingLeft: 10,
+    color: 'white',
   },
 });

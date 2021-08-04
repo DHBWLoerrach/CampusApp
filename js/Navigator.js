@@ -28,19 +28,27 @@ import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
 import { enableDualis } from './../env.js';
 
+function getDualisOptions(navigation) {
+  if (!enableDualis) return {};
+  return {
+    headerLeft: () => (
+      <MaterialIcon
+        style={{ paddingLeft: 10, color: 'white' }}
+        onPress={() => navigation.openDrawer()}
+        name="menu"
+        size={30}
+      />
+    ),
+  };
+}
+
 export default function Navigator({ navigation }) {
+  const dualisOptions = getDualisOptions(navigation);
+
   const stackHeaderConfig = {
+    ...dualisOptions,
     headerBackTitle: 'Zurück',
     headerTintColor: 'white',
-    headerLeft: () =>
-      enableDualis ? (
-        <MaterialIcon
-          style={{ paddingLeft: 10 }}
-          onPress={() => navigation.openDrawer()}
-          name="menu"
-          size={30}
-        />
-      ) : null,
     headerStyle: {
       backgroundColor: Colors.dhbwRed,
       shadowColor: 'transparent', // prevent line below header in iOS
@@ -56,10 +64,7 @@ export default function Navigator({ navigation }) {
 
   function NewsStack() {
     return (
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={stackHeaderConfig}
-      >
+      <Stack.Navigator screenOptions={stackHeaderConfig}>
         <Stack.Screen
           name="Home"
           component={NewsScreen}
@@ -240,6 +245,7 @@ export default function Navigator({ navigation }) {
   }
 
   const tabsConfig = ({ route }) => ({
+    headerShown: false,
     tabBarIcon: ({ color }) => {
       const routeName = route.name;
       let iconName;
@@ -251,17 +257,13 @@ export default function Navigator({ navigation }) {
         return <StuVIcon width={32} height={32} color={color} />;
       return <MaterialIcon name={iconName} size={32} color={color} />;
     },
+    tabBarActiveTintColor: Colors.dhbwRed,
   });
 
   const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer independent={true}>
-      <Tab.Navigator
-        screenOptions={tabsConfig}
-        tabBarOptions={{
-          activeTintColor: Colors.dhbwRed,
-        }}
-      >
+      <Tab.Navigator screenOptions={tabsConfig}>
         <Tab.Screen name="News" component={NewsStack} />
         {enableStuV ? (
           <Tab.Screen name="StuV" component={StuVStack} />

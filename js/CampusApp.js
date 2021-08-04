@@ -76,6 +76,7 @@ export default function CampusApp() {
     content = (
       <NavigationContainer independent={true}>
         <Drawer.Navigator
+          screenOptions={{ headerShown: false }}
           drawerContent={(props) => <DrawerContent {...props} />}
         >
           <Drawer.Screen name="Home" component={Navigator} />
