@@ -106,6 +106,20 @@ export default function Navigator({ navigation }) {
             return { title: route.params.news.title };
           }}
         />
+        <Stack.Screen
+          name={'StuVEventsRegister'}
+          component={StuVEventsRegister}
+          options={({ route }) => {
+            return { title: route.params.title };
+          }}
+        />
+        <Stack.Screen
+          name={'StuVEventsUnregister'}
+          component={StuVEventsUnregister}
+          options={({ route }) => {
+            return { title: route.params.title };
+          }}
+        />
       </Stack.Navigator>
     );
   }
