@@ -4,11 +4,11 @@ import Colors from './Colors';
 
 export default {
   topTabBar: {
-    indicatorStyle: { backgroundColor: 'white', height: 3 },
-    activeTintColor: 'white',
-    inactiveTintColor: 'white',
-    pressColor: 'darkred', // Color for material ripple (Android >= 5.0 only)
-    pressOpacity: 0.75, // Opacity for pressed tab (iOS and Android < 5.0 only)
-    style: { backgroundColor: Colors.dhbwRed },
+    tabBarActiveTintColor: 'white',
+    tabBarInactiveTintColor: 'white',
+    tabBarIndicatorStyle: { backgroundColor: 'white', height: 3 },
+    tabBarStyle: { backgroundColor: Colors.dhbwRed },
+    tabBarPressColor: 'darkred', // Color for material ripple (Android >= 5.0 only)
+    tabBarPressOpacity: 0.75, // Opacity for pressed tab (iOS and Android < 5.0 only)
   },
 };
