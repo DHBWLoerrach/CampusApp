@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Button, SectionList, StyleSheet, View } from 'react-native';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useScrollToTop,
+} from '@react-navigation/native';
 
 import Colors from '../../util/Colors';
 import DayHeader from '../../util/DayHeader';
@@ -17,7 +20,7 @@ import {
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
-  const [hasNetworkError, setNetworkError] = useState(false);
+  const [status, setStatus] = useState('ok');
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState(null);
   const [searchString, setSearchString] = useState('');
@@ -27,19 +30,22 @@ function ScheduleScreen({ navigation }) {
   // load data: first from local store, then fetch latest data from web
   async function loadData() {
     setLoading(true);
-    setNetworkError(false);
-    let { course, lectures } = await loadScheduleDataFromStore();
-    setCourse(course);
-    setLectures(lectures);
-    const newLectures = await fetchLecturesFromWeb(course);
-    //TODO
-    if (newLectures === 'networkError' && lectures === null) {
-      // new lectures in store and server not reachable
-      setNetworkError(true);
-    } else if (newLectures !== 'networkError') {
+    const dataFromStore = await loadScheduleDataFromStore();
+    const courseFromStore = dataFromStore.course;
+    const lecturesFromStore = dataFromStore.lectures;
+    setCourse(courseFromStore);
+    setLectures(lecturesFromStore);
+    const fetchResult = await fetchLecturesFromWeb(course);
+    const newLectures = fetchResult.lectures;
+    const fetchStatus = fetchResult.status;
+
+    if (fetchStatus === 'ok') {
       // use new lecture data from server and store locally
       setLectures(newLectures);
       saveLecturesToStore(newLectures);
+    } else if (!Array.isArray(lectures)) {
+      // no lectures in cache and data fetch unsuccessful
+      setStatus(fetchStatus);
     }
     setLoading(false);
   }
@@ -97,7 +103,10 @@ function ScheduleScreen({ navigation }) {
   }
 
   const buttonText = 'Vorlesungsplan laden';
-  if (!lectures && hasNetworkError) {
+  if (
+    !Array.isArray(lectures) &&
+    (status === 'networkError' || status === 'not ok')
+  ) {
     return (
       <View style={styles.container}>
         <ReloadView buttonText={buttonText} onPress={loadData} />
@@ -105,7 +114,21 @@ function ScheduleScreen({ navigation }) {
     );
   }
 
-  if (lectures && !lectures.length) {
+  if (!Array.isArray(lectures) && status === 'serviceUnavailable') {
+    const text =
+      'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
+    return (
+      <View style={styles.container}>
+        <ReloadView
+          message={text}
+          buttonText={buttonText}
+          onPress={loadData}
+        />
+      </View>
+    );
+  }
+
+  if (!Array.isArray(lectures) || !lectures.length) {
     const text =
       'Aktuell sind für Kurs ' +
       course +

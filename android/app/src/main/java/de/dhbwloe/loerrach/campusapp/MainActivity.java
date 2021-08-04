@@ -3,11 +3,12 @@ package de.dhbwloe.loerrach.campusapp;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.google.android.material.snackbar.Snackbar;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 
 import java.text.DecimalFormat;
@@ -37,7 +38,12 @@ public class MainActivity extends ReactActivity {
                 double lastTransactionValue = -lastTransaction / 100.0;
                 String msg = "Guthaben: " + euroFormat.format(badgeBalance) + "\n"
                         + "Letzte Transaktion: " + euroFormat.format(lastTransactionValue);
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                Snackbar snackbar =
+                        Snackbar.make(findViewById(android.R.id.content).getRootView(), msg, Snackbar.LENGTH_LONG);
+                TextView snackbarTextView =
+                        snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
+                snackbarTextView.setTextSize(24);
+                snackbar.show();
             }
         });
       nfcBadgeListener.startNfcListener();
@@ -58,6 +64,7 @@ public class MainActivity extends ReactActivity {
 
     @Override
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             nfcBadgeListener.handleNfcEvent(intent);
         }

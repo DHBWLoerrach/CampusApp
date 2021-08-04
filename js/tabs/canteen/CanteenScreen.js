@@ -110,7 +110,7 @@ function CanteenScreen() {
   }
 
   return (
-    <Tab.Navigator tabBarOptions={Styles.topTabBar}>
+    <Tab.Navigator screenOptions={Styles.topTabBar}>
       {getPages(dayPlans)}
     </Tab.Navigator>
   );
