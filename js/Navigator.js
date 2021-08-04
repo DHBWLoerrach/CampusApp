@@ -26,6 +26,8 @@ import Settings from './tabs/service/Settings';
 import StuVScreen from './tabs/stuv/StuVScreen';
 import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
+import StuVEventsRegister from './tabs/stuv/events/StuVEventsRegister';
+import StuVEventsUnregister from './tabs/stuv/events/StuVEventsUnregister';
 import { enableDualis } from './../env.js';
 
 function getDualisOptions(navigation) {
@@ -102,6 +104,20 @@ export default function Navigator({ navigation }) {
           component={StuVNewsDetails}
           options={({ route }) => {
             return { title: route.params.news.title };
+          }}
+        />
+        <Stack.Screen
+          name={'StuVEventsRegister'}
+          component={StuVEventsRegister}
+          options={({ route }) => {
+            return { title: route.params.title };
+          }}
+        />
+        <Stack.Screen
+          name={'StuVEventsUnregister'}
+          component={StuVEventsUnregister}
+          options={({ route }) => {
+            return { title: route.params.title };
           }}
         />
       </Stack.Navigator>

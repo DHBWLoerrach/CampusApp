@@ -7,16 +7,16 @@ import {
   StyleSheet,
   Text,
   View,
-  requireNativeComponent,
 } from 'react-native';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import Colors from '../../../util/Colors';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
+import { useNavigation } from '@react-navigation/core';
 
-function StuVEventsDetails({ route }) {
+export default function StuVEventsDetails({ route }) {
   const event = route.params.event;
-
+  const navigation = useNavigation();
   function openRegisterLink() {
     Linking.canOpenURL(event.registerLink).then((result) => {
       if (!result) {
@@ -54,6 +54,16 @@ function StuVEventsDetails({ route }) {
           {event.price ? (
             <Text style={styles.date}>Preis: {event.price}</Text>
           ) : null}
+          {
+            <Text style={styles.date}>
+              Anzahl Teilnehmer*innen: {event.registered}
+            </Text>
+          }
+          {
+            <Text style={styles.date}>
+              Maximale Plätze: {event.max_limit}
+            </Text>
+          }
           <Text style={styles.text}>{event.text}</Text>
           {event.date.registrationUntil ? (
             <Text style={styles.date}>
@@ -63,11 +73,36 @@ function StuVEventsDetails({ route }) {
             </Text>
           ) : null}
           {event.registerLink ? (
-            <View style={styles.button}>
+            <View
+              style={[
+                styles.button,
+                {
+                  flexGrow: 1,
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  alignItems: 'baseline',
+                },
+              ]}
+            >
               <Button
+                disabled={event.max_limit < event.registered}
                 title="Anmelden"
                 color={Colors.dhbwRed}
-                onPress={openRegisterLink}
+                onPress={() =>
+                  navigation.navigate('StuVEventsRegister', {
+                    event: event,
+                  })
+                }
+              />
+              <Button
+                title="Abmelden"
+                color={Colors.lightGray}
+                onPress={() =>
+                  navigation.navigate('StuVEventsUnregister', {
+                    event: event,
+                  })
+                }
               />
             </View>
           ) : null}
@@ -81,7 +116,6 @@ function StuVEventsDetails({ route }) {
     </View>
   );
 }
-export default StuVEventsDetails;
 
 const styles = StyleSheet.create({
   scrollView: {

@@ -15,6 +15,48 @@ export async function loadNews() {
   return body.response;
 }
 
+export async function inviteUserEvent(
+  email,
+  firstName,
+  lastName,
+  event
+) {
+  const body = await fetch('http://localhost:8080/events/invite', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      first_name: firstName,
+      last_name: lastName,
+      title: event.title,
+      event_id: event_id,
+    }),
+  });
+  return body.response.ok;
+}
+
+export async function unregisterUserEvent(email, event) {
+  const body = await fetch(
+    'http://localhost:8080/events/confirm-unregister',
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        event_id: event.event_id,
+        title: event.title,
+      }),
+    }
+  );
+  return body.response.ok;
+}
+
 async function load(url) {
   const response = await fetch(url);
   if (!response.ok) {
