@@ -6,13 +6,13 @@ function StuVNewsDetails({ route }) {
   const { news } = route.params;
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollView}>
       {news.images.banner ? (
         <ResponsiveImage image={news.images.banner} />
       ) : null}
       <View style={styles.container}>
         <Text style={styles.headline}>{news.title}</Text>
-        <Text style={styles.text}>{news.text}</Text>
+        <Text>{news.text}</Text>
       </View>
     </ScrollView>
   );
@@ -20,15 +20,15 @@ function StuVNewsDetails({ route }) {
 export default StuVNewsDetails;
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   container: {
     margin: 10,
   },
   headline: {
     fontSize: 24,
-    color: '#000',
     fontWeight: 'bold',
-  },
-  text: {
-    color: '#262626',
   },
 });

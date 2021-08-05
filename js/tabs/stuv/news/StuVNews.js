@@ -1,18 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import {
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import ReloadView from '../../../util/ReloadView';
+import ActivityIndicator from '../../../util/DHBWActivityIndicator';
 import { loadNews, unixTimeToDateText } from '../helper';
 import CommonCell from '../../../util/CommonCell';
 
-function StuVNews() {
+export default function StuVNews() {
   const [news, setNews] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  // when screen is focussed, load data
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   function refresh() {
     setLoading(true);
@@ -20,6 +27,7 @@ function StuVNews() {
   }
 
   function loadData() {
+    setLoading(true);
     loadNews().then((news) => {
       setNews(news);
       setLoading(false);
@@ -30,15 +38,24 @@ function StuVNews() {
     navigation.navigate('StuVNewsDetails', { news });
   }
 
-  if (news == null) {
+  if (news === null) {
     return <ReloadView buttonText="News laden" onPress={refresh} />;
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (
     <FlatList
+      style={styles.container}
       data={news}
       onRefresh={refresh}
-      refreshing={loading}
+      refreshing={isLoading}
       keyExtractor={(item) => 'item' + item.title}
       renderItem={({ item }) => (
         <CommonCell
@@ -56,4 +73,16 @@ function StuVNews() {
     />
   );
 }
-export default StuVNews;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  center: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+});
