@@ -7,19 +7,13 @@ export default ({ latitude, longitude, venue }) => (
     <MapView
       style={styles.map}
       region={{
-        latitude: latitude,
-        longitude: longitude,
+        latitude,
+        longitude,
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121,
       }}
     >
-      <Marker
-        coordinate={{
-          latitude: latitude,
-          longitude: longitude,
-        }}
-        title={venue}
-      />
+      <Marker coordinate={{ latitude, longitude }} title={venue} />
     </MapView>
   </View>
 );

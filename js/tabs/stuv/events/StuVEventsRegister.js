@@ -1,14 +1,14 @@
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { inviteUserEvent } from '../helper';
 import Form from '../../../util/Form';
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
 import PropertyDefinition from '../../../util/PropertyDefinition';
 
 export default function StuVEventsRegister({ route }) {
   const navigation = useNavigation();
   const event = route.params.event;
-  const [errText, setErrText] = React.useState(null);
+  const [errText, setErrText] = useState(null);
 
   const fields = {
     Email: new PropertyDefinition('Email').isRequired(),
@@ -22,12 +22,12 @@ export default function StuVEventsRegister({ route }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 10, marginTop: 4 }}>
+      <View style={styles.heading}>
         <Text style={styles.text}>
-          Anmeldung für das Event: {' ' + event.title}{' '}
+          {`Anmeldung für das Event: ${event.title}`}
         </Text>
         <Text style={styles.text}>
-          Bitte geben Sie die folgenden Daten ein.
+          Bitte trage die folgenden Daten ein:
         </Text>
       </View>
       <Form
@@ -47,26 +47,28 @@ export default function StuVEventsRegister({ route }) {
             )
         }
         fields={fields}
-      ></Form>
-      <Text
-        style={{
-          color: 'red',
-          padding: 10,
-          marginBottom: 8,
-          fontSize: 17,
-        }}
-      >
-        {errText}
-      </Text>
+      />
+      <Text style={styles.error}>{errText}</Text>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  heading: {
+    marginBottom: 10,
+    marginTop: 4,
+  },
   text: {
     fontWeight: 'bold',
     fontSize: 15,
   },
-  container: {
-    flex: 1,
+  error: {
+    color: 'red',
+    padding: 10,
+    marginBottom: 8,
+    fontSize: 17,
   },
 });

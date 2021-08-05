@@ -8,11 +8,11 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import Colors from '../../../util/Colors';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
-import { useNavigation } from '@react-navigation/core';
 
 export default function StuVEventsDetails({ route }) {
   const event = route.params.event;
@@ -31,89 +31,77 @@ export default function StuVEventsDetails({ route }) {
   }
 
   return (
-    <View style={{ flex: 1, flexDirection: 'column' }}>
-      <ScrollView style={styles.scrollView}>
-        {event.images.banner ? (
-          <ResponsiveImage image={event.images.banner} />
-        ) : null}
-        <View style={styles.container}>
-          <Text style={styles.headline}>{event.title}</Text>
+    <ScrollView style={styles.scrollView}>
+      {event.images.banner ? (
+        <ResponsiveImage image={event.images.banner} />
+      ) : null}
+      <View style={styles.container}>
+        <Text style={styles.headline}>{event.title}</Text>
+        <Text style={styles.date}>
+          {unixTimeToDateText(event.date.from)}
+        </Text>
+        {event.date.to ? (
           <Text style={styles.date}>
-            {unixTimeToDateText(event.date.from)}
+            {`${unixTimeToTimeText(
+              event.date.from
+            )} bis ${unixTimeToTimeText(event.date.to)} Uhr`}
           </Text>
-          {event.date.to ? (
-            <Text style={styles.date}>
-              {unixTimeToTimeText(event.date.from)} bis{' '}
-              {unixTimeToTimeText(event.date.to)} Uhr
-            </Text>
-          ) : (
-            <Text style={styles.date}>
-              {unixTimeToTimeText(event.date.from)} Uhr
-            </Text>
-          )}
-          {event.price ? (
-            <Text style={styles.date}>Preis: {event.price}</Text>
-          ) : null}
-          {
-            <Text style={styles.date}>
-              Anzahl Teilnehmer*innen: {event.registered}
-            </Text>
-          }
-          {
-            <Text style={styles.date}>
-              Maximale Plätze: {event.max_limit}
-            </Text>
-          }
-          <Text style={styles.text}>{event.text}</Text>
-          {event.date.registrationUntil ? (
-            <Text style={styles.date}>
-              Anmeldefrist:{' '}
-              {unixTimeToDateText(event.date.registrationUntil)}{' '}
-              {unixTimeToTimeText(event.date.registrationUntil)}
-            </Text>
-          ) : null}
-          {event.registerLink ? (
-            <View
-              style={[
-                styles.button,
-                {
-                  flexGrow: 1,
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  alignItems: 'baseline',
-                },
-              ]}
-            >
-              <Button
-                disabled={event.max_limit < event.registered}
-                title="Anmelden"
-                color={Colors.dhbwRed}
-                onPress={() =>
-                  navigation.navigate('StuVEventsRegister', {
-                    event: event,
-                  })
-                }
-              />
-              <Button
-                title="Abmelden"
-                color={Colors.lightGray}
-                onPress={() =>
-                  navigation.navigate('StuVEventsUnregister', {
-                    event: event,
-                  })
-                }
-              />
-            </View>
-          ) : null}
-        </View>
-        <StuVEventMap
-          latitude={event.address.latitude}
-          longitude={event.address.longitude}
-          venue={event.address.name}
-        />
-      </ScrollView>
-    </View>
+        ) : (
+          <Text style={styles.date}>
+            {unixTimeToTimeText(event.date.from)} Uhr
+          </Text>
+        )}
+        {event.price ? (
+          <Text style={styles.date}>Preis: {event.price}</Text>
+        ) : null}
+        {
+          <Text style={styles.date}>
+            Anzahl Teilnehmer*innen: {event.registered}
+          </Text>
+        }
+        {
+          <Text style={styles.date}>
+            Maximale Plätze: {event.max_limit}
+          </Text>
+        }
+        <Text style={styles.text}>{event.text}</Text>
+        {event.date.registrationUntil ? (
+          <Text style={styles.date}>
+            Anmeldefrist:{' '}
+            {unixTimeToDateText(event.date.registrationUntil)}{' '}
+            {unixTimeToTimeText(event.date.registrationUntil)}
+          </Text>
+        ) : null}
+        {event.registerLink ? (
+          <View style={styles.button}>
+            <Button
+              disabled={event.max_limit < event.registered}
+              title="Anmelden"
+              color={Colors.dhbwRed}
+              onPress={() =>
+                navigation.navigate('StuVEventsRegister', {
+                  event: event,
+                })
+              }
+            />
+            <Button
+              title="Abmelden"
+              color={Colors.lightGray}
+              onPress={() =>
+                navigation.navigate('StuVEventsUnregister', {
+                  event: event,
+                })
+              }
+            />
+          </View>
+        ) : null}
+      </View>
+      <StuVEventMap
+        latitude={event.address.latitude}
+        longitude={event.address.longitude}
+        venue={event.address.name}
+      />
+    </ScrollView>
   );
 }
 
@@ -128,6 +116,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+    flexGrow: 1,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'baseline',
   },
   headline: {
     fontSize: 24,

@@ -1,39 +1,21 @@
 import React from 'react';
-import {
-  Linking,
-  StyleSheet,
-  Text,
-  View,
-  requireNativeComponent,
-} from 'react-native';
+import { Linking, StyleSheet, Text, View } from 'react-native';
 import AndroidMap from '../../../util/AndroidMap';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function openGMaps(latitude, longitude) {
-  Linking.openURL(
-    'geo:' +
-      latitude +
-      ',' +
-      longitude +
-      '?q=' +
-      latitude +
-      ',' +
-      longitude
-  );
+function openGMaps(lat, long) {
+  Linking.openURL(`geo:${lat},${long}?q=${lat},${long}`);
 }
 
 export default ({ latitude, longitude }) => (
   <View style={styles.mapContainer}>
     <AndroidMap
-      location={{
-        latitude: latitude,
-        longitude: longitude,
-      }}
+      location={{ latitude, longitude }}
       zoom={19}
       style={styles.map}
     />
     <MaterialCommunityIcons
-      name={'google-maps'}
+      name="google-maps"
       size={32}
       style={styles.mapButton}
       onPress={() => openGMaps(latitude, longitude)}
