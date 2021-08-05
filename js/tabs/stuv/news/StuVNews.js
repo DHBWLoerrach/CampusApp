@@ -62,7 +62,7 @@ export default function StuVNews() {
           title={item.title}
           details={item.date ? [unixTimeToDateText(item.date)] : []}
           imageSource={
-            !item.images.overview
+            item.images.overview
               ? { uri: item.images.overview }
               : require('../../../img/crowd.png')
           }
