@@ -93,28 +93,28 @@ export default function Navigator({ navigation }) {
           options={{ title: 'Studierendenvertretung - StuV' }}
         />
         <Stack.Screen
-          name={'StuVEventsDetails'}
+          name="StuVEventsDetails"
           component={StuVEventsDetails}
           options={({ route }) => {
             return { title: route.params.event.title };
           }}
         />
         <Stack.Screen
-          name={'StuVNewsDetails'}
+          name="StuVNewsDetails"
           component={StuVNewsDetails}
           options={({ route }) => {
             return { title: route.params.news.title };
           }}
         />
         <Stack.Screen
-          name={'StuVEventsRegister'}
+          name="StuVEventsRegister"
           component={StuVEventsRegister}
           options={({ route }) => {
             return { title: route.params.title };
           }}
         />
         <Stack.Screen
-          name={'StuVEventsUnregister'}
+          name="StuVEventsUnregister"
           component={StuVEventsUnregister}
           options={({ route }) => {
             return { title: route.params.title };
