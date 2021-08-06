@@ -13,11 +13,6 @@ import {
 } from '@react-navigation/native';
 import CommonCell from '../../../util/CommonCell';
 
-const user = {
-  name: "John Doe",
-  age: 30,
-};
-
 export default function StuVEvents() {
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState(null);
