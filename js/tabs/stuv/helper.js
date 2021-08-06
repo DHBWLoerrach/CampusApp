@@ -1,18 +1,26 @@
 import { format } from 'date-fns';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
+const stuvServer = 'http://admin.stuv-loerrach.de:3000';
+const stuvEvents = `${stuvServer}/event`;
+const stuvNews = `${stuvServer}/news`;
+
+async function load(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    return null;
+  }
+  return await response.json();
+}
+
 export async function loadEvents() {
-  const body = await load(
-    'https://storage.googleapis.com/stuv-data/serverResponseEvents.json'
-  );
-  return body.response;
+  const data = await load(stuvEvents);
+  return data.events;
 }
 
 export async function loadNews() {
-  const body = await load(
-    'https://storage.googleapis.com/stuv-data/serverResponseNews.json'
-  );
-  return body.response;
+  const data = await load(stuvNews);
+  return data.news;
 }
 
 export async function inviteUserEvent(
@@ -21,7 +29,7 @@ export async function inviteUserEvent(
   lastName,
   event
 ) {
-  const body = await fetch('http://localhost:8080/events/invite', {
+  const body = await fetch(`${stuvEvents}/invite`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -39,8 +47,7 @@ export async function inviteUserEvent(
 }
 
 export async function unregisterUserEvent(email, event) {
-  const body = await fetch(
-    'http://localhost:8080/events/confirm-unregister',
+  const body = await fetch(`${stuvServer}/event/confirm-unregister`,
     {
       method: 'GET',
       headers: {
@@ -55,14 +62,6 @@ export async function unregisterUserEvent(email, event) {
     }
   );
   return body.response.ok;
-}
-
-async function load(url) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    return null;
-  }
-  return await response.json();
 }
 
 export function shortString(text, maxLength) {

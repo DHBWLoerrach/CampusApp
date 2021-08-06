@@ -38,16 +38,19 @@ export default function StuVNews() {
     navigation.navigate('StuVNewsDetails', { news });
   }
 
-  if (news === null) {
-    return <ReloadView buttonText="News laden" onPress={refresh} />;
-  }
-
   if (isLoading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator />
       </View>
     );
+  }
+
+  if (news === null || news.length === 0) {
+    return <ReloadView
+      message="Keine Einträge"
+      buttonText="News laden"
+      onPress={refresh} />;
   }
 
   return (

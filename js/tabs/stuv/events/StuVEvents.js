@@ -13,6 +13,11 @@ import {
 } from '@react-navigation/native';
 import CommonCell from '../../../util/CommonCell';
 
+const user = {
+  name: "John Doe",
+  age: 30,
+};
+
 export default function StuVEvents() {
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState(null);
@@ -42,16 +47,19 @@ export default function StuVEvents() {
     navigation.navigate('StuVEventsDetails', { event });
   }
 
-  if (events === null) {
-    return <ReloadView buttonText="Events laden" onPress={refresh} />;
-  }
-
   if (isLoading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator />
       </View>
     );
+  }
+
+  if (events === null || events.length === 0) {
+    return <ReloadView
+      message="Keine Einträge"
+      buttonText="Events laden"
+      onPress={refresh} />;
   }
 
   return (
@@ -75,9 +83,9 @@ export default function StuVEvents() {
               unixTimeToDateText(item.date.from),
               item.date.to
                 ? unixTimeToTimeText(item.date.from) +
-                  ' bis ' +
-                  unixTimeToTimeText(item.date.to) +
-                  ' Uhr'
+                ' bis ' +
+                unixTimeToTimeText(item.date.to) +
+                ' Uhr'
                 : unixTimeToTimeText(item.date.from) + ' Uhr',
             ]}
             description={item.text}
