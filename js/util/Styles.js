@@ -1,4 +1,13 @@
+import { PixelRatio } from 'react-native';
 import Colors from './Colors';
+
+var FONT_TAB_BAR_LABEL = 13;
+
+// tabBarLabel font for smaller displays (e.g. iPhoneSE)
+// this makes sure that dates like 22.10. fit in tab
+if (PixelRatio.get() <= 2) {
+  FONT_TAB_BAR_LABEL = 10;
+}
 
 // Remark: use StyleSheet API whenever possible (not for react-navigation)
 
@@ -7,6 +16,7 @@ export default {
     tabBarActiveTintColor: 'white',
     tabBarInactiveTintColor: 'white',
     tabBarIndicatorStyle: { backgroundColor: 'white', height: 3 },
+    tabBarLabelStyle: { fontSize: FONT_TAB_BAR_LABEL },
     tabBarStyle: { backgroundColor: Colors.dhbwRed },
     tabBarPressColor: 'darkred', // Color for material ripple (Android >= 5.0 only)
     tabBarPressOpacity: 0.75, // Opacity for pressed tab (iOS and Android < 5.0 only)
