@@ -35,7 +35,7 @@ function ScheduleScreen({ navigation }) {
     const lecturesFromStore = dataFromStore.lectures;
     setCourse(courseFromStore);
     setLectures(lecturesFromStore);
-    const fetchResult = await fetchLecturesFromWeb(course);
+    const fetchResult = await fetchLecturesFromWeb(courseFromStore);
     const newLectures = fetchResult.lectures;
     const fetchStatus = fetchResult.status;
 
