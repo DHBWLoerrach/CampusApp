@@ -54,25 +54,24 @@ export default function StuVEventsDetails({ route }) {
         {event.price ? (
           <Text style={styles.date}>Preis: {event.price}</Text>
         ) : null}
-        {
+        {event.registration.required ? (
           <Text style={styles.date}>
             Anzahl Teilnehmer*innen: {event.registered}
           </Text>
-        }
+        ) : null}
         {
           <Text style={styles.date}>
-            Maximale Plätze: {event.max_limit}
+            Maximale Plätze: {event.registration.hasLimit ? event.registration.limit : "unbegrenzt"}
           </Text>
         }
         <Text style={styles.text}>{event.text}</Text>
-        {event.date.registrationUntil ? (
+        {event.registration.required ? (
           <Text style={styles.date}>
             Anmeldefrist:{' '}
-            {unixTimeToDateText(event.date.registrationUntil)}{' '}
-            {unixTimeToTimeText(event.date.registrationUntil)}
+            {unixTimeToDateText(event.registration.until)}
           </Text>
         ) : null}
-        {event.registerLink ? (
+        {/* {event.registerLink ? (
           <View style={styles.button}>
             <Button
               disabled={event.max_limit < event.registered}
@@ -94,13 +93,16 @@ export default function StuVEventsDetails({ route }) {
               }
             />
           </View>
-        ) : null}
+        ) : null} */}
+        {event.address.type === "ONLINE" ?
+          (<Text style={styles.date}>Online-Link: {event.address.link}</Text>) : null}
       </View>
-      <StuVEventMap
-        latitude={event.address.latitude}
-        longitude={event.address.longitude}
-        venue={event.address.name}
-      />
+      {event.address.type === "PRESENCE" ?
+        (<StuVEventMap
+          latitude={event.address.latitude}
+          longitude={event.address.longitude}
+          venue={event.address.name}
+        />) : null}
     </ScrollView>
   );
 }
