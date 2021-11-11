@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import fromUnixTime from 'date-fns/fromUnixTime';
 
-const stuvServer = 'http://admin.stuv-loerrach.de:3000';
-const stuvEvents = `${stuvServer}/event`;
+const stuvServer = 'https://admin.stuv-loerrach.de:3131';
+const stuvEvents = `${stuvServer}/events`;
 const stuvNews = `${stuvServer}/news`;
 
 async function load(url) {

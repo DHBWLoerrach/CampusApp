@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
     resizeMode: 'contain',
+    height: 100,
+    width: 100
   },
   textContainer: {
     flex: 2,

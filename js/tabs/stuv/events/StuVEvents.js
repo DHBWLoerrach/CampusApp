@@ -63,17 +63,16 @@ export default function StuVEvents() {
       data={events}
       onRefresh={refresh}
       refreshing={isLoading}
-      keyExtractor={(item) => 'item' + item.title}
+      keyExtractor={(item) => 'item' + item._id}
       renderItem={({ item }) => {
-        console.log(item);
         return (
           <CommonCell
             imageSource={
               item.images.overview
-                ? { uri: item.images.overview }
+                ? { uri: item.images.overview.src }
                 : require('../../../img/crowd.png')
             }
-            title={item.title}
+            title={item.name}
             details={[
               unixTimeToDateText(item.date.from),
               item.date.to
@@ -83,7 +82,7 @@ export default function StuVEvents() {
                 ' Uhr'
                 : unixTimeToTimeText(item.date.from) + ' Uhr',
             ]}
-            description={item.text}
+            description={item.description}
             onPress={() => navigate(item, navigation)}
           />
         );
