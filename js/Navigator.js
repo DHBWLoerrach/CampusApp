@@ -96,7 +96,7 @@ export default function Navigator({ navigation }) {
           name="StuVEventsDetails"
           component={StuVEventsDetails}
           options={({ route }) => {
-            return { title: route.params.event.title };
+            return { title: route.params.event.name };
           }}
         />
         <Stack.Screen
