@@ -10,12 +10,23 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
-import Colors from '../../../util/Colors';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
 
 export default function StuVEventsDetails({ route }) {
   const event = route.params.event;
+  const {
+    name,
+    description,
+    address,
+    images,
+    price,
+    registration,
+    registered,
+    registerLink,
+    max_limit,
+    date: { from, to },
+  } = event;
   const navigation = useNavigation();
   function openRegisterLink() {
     Linking.canOpenURL(event.registerLink).then((result) => {
@@ -30,79 +41,83 @@ export default function StuVEventsDetails({ route }) {
     });
   }
 
+  let responsiveImage = null;
+  if (images.banner) {
+    responsiveImage = <ResponsiveImage image={images.banner.src} />;
+  }
+
+  const formattedTime = to
+    ? `${unixTimeToTimeText(from)} bis ${unixTimeToTimeText(to)} Uhr`
+    : `${unixTimeToTimeText(from)} Uhr`;
+  const priceInfo = price ? <Text>Preis: {price}</Text> : null;
+  const registrationInfo = registration.required ? (
+    <Text>Anzahl Teilnehmer*innen: {registered}</Text>
+  ) : null;
+  const limitInfo = registration.hasLimit
+    ? registration.limit
+    : 'unbegrenzt';
+  let registrationUntil = null;
+  if (registration.required) {
+    registrationUntil = (
+      <Text>
+        Anmeldefrist: {unixTimeToDateText(registration.until)}
+      </Text>
+    );
+  }
+  let registrationView = null;
+  if (registerLink) {
+    registrationView = (
+      <View style={styles.button}>
+        <Button
+          disabled={max_limit < registered}
+          title="Anmelden"
+          color={Colors.dhbwRed}
+          onPress={() =>
+            navigation.navigate('StuVEventsRegister', {
+              event: event,
+            })
+          }
+        />
+        <Button
+          title="Abmelden"
+          color={Colors.lightGray}
+          onPress={() =>
+            navigation.navigate('StuVEventsUnregister', {
+              event: event,
+            })
+          }
+        />
+      </View>
+    );
+  }
+  const onlineLink =
+    address.type === 'ONLINE' ? (
+      <Text>Online-Link: {address.link}</Text>
+    ) : null;
+  const mapView =
+    address.type === 'PRESENCE' ? (
+      <StuVEventMap
+        latitude={address.latitude}
+        longitude={address.longitude}
+        venue={address.name}
+      />
+    ) : null;
   return (
     <ScrollView style={styles.scrollView}>
-      {event.images.banner ? (
-        <ResponsiveImage image={event.images.banner} />
-      ) : null}
+      {responsiveImage}
       <View style={styles.container}>
-        <Text style={styles.headline}>{event.title}</Text>
-        <Text style={styles.date}>
-          {unixTimeToDateText(event.date.from)}
-        </Text>
-        {event.date.to ? (
-          <Text style={styles.date}>
-            {`${unixTimeToTimeText(
-              event.date.from
-            )} bis ${unixTimeToTimeText(event.date.to)} Uhr`}
-          </Text>
-        ) : (
-          <Text style={styles.date}>
-            {unixTimeToTimeText(event.date.from)} Uhr
-          </Text>
-        )}
-        {event.price ? (
-          <Text style={styles.date}>Preis: {event.price}</Text>
-        ) : null}
-        {event.registration.required ? (
-          <Text style={styles.date}>
-            Anzahl Teilnehmer*innen: {event.registered}
-          </Text>
-        ) : null}
-        {
-          <Text style={styles.date}>
-            Maximale Plätze: {event.registration.hasLimit ? event.registration.limit : "unbegrenzt"}
-          </Text>
-        }
-        <Text style={styles.text}>{event.text}</Text>
-        {event.registration.required ? (
-          <Text style={styles.date}>
-            Anmeldefrist:{' '}
-            {unixTimeToDateText(event.registration.until)}
-          </Text>
-        ) : null}
-        {/* {event.registerLink ? (
-          <View style={styles.button}>
-            <Button
-              disabled={event.max_limit < event.registered}
-              title="Anmelden"
-              color={Colors.dhbwRed}
-              onPress={() =>
-                navigation.navigate('StuVEventsRegister', {
-                  event: event,
-                })
-              }
-            />
-            <Button
-              title="Abmelden"
-              color={Colors.lightGray}
-              onPress={() =>
-                navigation.navigate('StuVEventsUnregister', {
-                  event: event,
-                })
-              }
-            />
-          </View>
-        ) : null} */}
-        {event.address.type === "ONLINE" ?
-          (<Text style={styles.date}>Online-Link: {event.address.link}</Text>) : null}
+        <Text style={styles.headline}>{name}</Text>
+        <Text>{description}</Text>
+        <Text>{unixTimeToDateText(from)}</Text>
+        <Text>{formattedTime}</Text>
+        {priceInfo}
+        {registrationInfo}
+        <Text>Maximale Plätze: {limitInfo}</Text>
+        {registrationUntil}
+        {registrationView}
+        {onlineLink}
       </View>
-      {event.address.type === "PRESENCE" ?
-        (<StuVEventMap
-          latitude={event.address.latitude}
-          longitude={event.address.longitude}
-          venue={event.address.name}
-        />) : null}
+      {mapView}
     </ScrollView>
   );
 }
@@ -126,14 +141,6 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 24,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  text: {
-    color: '#262626',
-  },
-  date: {
-    color: 'black',
     fontWeight: 'bold',
   },
 });
