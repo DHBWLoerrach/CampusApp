@@ -73,6 +73,7 @@ export default function StuVEvents() {
                 : require('../../../img/crowd.png')
             }
             title={item.name}
+            imageStyle={{ resizeMode: 'cover', height: '100%' }}
             details={[
               unixTimeToDateText(item.date.from),
               item.date.to
