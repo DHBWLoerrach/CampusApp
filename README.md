@@ -58,6 +58,25 @@ Campus App auf dem Android-Emulator starten:
 
 Siehe dazu die [React Native Dokumentation](https://reactnative.dev/docs/running-on-device).
 
+Terminal öffnen und in das Projektverzeichnis `CampusApp` wechseln. Dort müssen weitere Abhängigkeiten installiert werden:
+
+1. Ins Unterverzeichnis `android` wechseln:
+
+   `cd ios`
+   
+2. Ein Textfile mit dem Namen `local.properties` erstellen
+
+   `nano local.properties`
+   
+3. Dort je nach Betriebsystem einfügen:
+
+   Windows: `sdk.dir = C:\\Users\\USERNAME\\AppData\\Local\\Android\\sdk`
+   Mac: `sdk.dir = /Users/USERNAME/Library/Android/sdk`
+   Linux: `sdk.dir = /home/USERNAME/Android/Sdk`
+   
+   (USERNAME mit PC Username austauschen)
+
+
 Campus App auf dem Android-Gerät starten:
 
 `react-native run-android`
