@@ -15,12 +15,12 @@ async function load(url) {
 
 export async function loadEvents() {
   const data = await load(stuvEvents);
-  return data.events;
+  return data === null ? [] : data.events;
 }
 
 export async function loadNews() {
   const data = await load(stuvNews);
-  return data.news;
+  return data === null ? [] : data.news;
 }
 
 export async function inviteUserEvent(
