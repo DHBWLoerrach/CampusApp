@@ -1,17 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import {
-  loadEvents,
-  unixTimeToDateText,
-  unixTimeToTimeText,
-} from '../helper';
+import { loadEvents } from '../helper';
 import ReloadView from '../../../util/ReloadView';
 import ActivityIndicator from '../../../util/DHBWActivityIndicator';
-import {
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native';
-import CommonCell from '../../../util/CommonCell';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import StuvEventCell from './StuVEventCell';
 
 export default function StuVEvents() {
   const [isLoading, setLoading] = useState(true);
@@ -66,26 +59,7 @@ export default function StuVEvents() {
       keyExtractor={(item) => 'item' + item._id}
       renderItem={({ item }) => {
         return (
-          <CommonCell
-            imageSource={
-              item.images.overview
-                ? { uri: item.images.overview.src }
-                : require('../../../img/crowd.png')
-            }
-            title={item.name}
-            imageStyle={{ resizeMode: 'cover', height: '100%' }}
-            details={[
-              unixTimeToDateText(item.date.from),
-              item.date.to
-                ? unixTimeToTimeText(item.date.from) +
-                ' bis ' +
-                unixTimeToTimeText(item.date.to) +
-                ' Uhr'
-                : unixTimeToTimeText(item.date.from) + ' Uhr',
-            ]}
-            description={item.description}
-            onPress={() => navigate(item, navigation)}
-          />
+          <StuvEventCell event={item} onPress={() => navigate(item, navigation)} />
         );
       }}
     />
