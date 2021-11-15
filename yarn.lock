@@ -5756,9 +5756,9 @@ react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1:
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
 react-native-background-fetch@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.0.3.tgz#b9a8a918f90e8df8486ff6ec04607406e1cb57cc"
-  integrity sha512-Rh/xmlLJwt7dtbXBm2jv0WS+KNBG9di/Vd1qut7Mi88Ap2C+8Yv3UOcEacs3VUSauw3moWtnMtDBaoK9ZgYOIQ==
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-background-fetch/-/react-native-background-fetch-4.0.4.tgz#2a7a29bc24ec1e740f9457ccf7108766957d9f24"
+  integrity sha512-vGcsIbv5TXblIqBonsMw1dbh/x/1np1NTMArLVz5rjdgUu330pc4o7X6VTxCWtzadajz0Fe1Y71xqXylpmBekA==
 
 react-native-codegen@^0.0.7:
   version "0.0.7"

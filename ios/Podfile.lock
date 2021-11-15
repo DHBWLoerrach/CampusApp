@@ -345,7 +345,7 @@ PODS:
     - React-jsi (= 0.66.0)
     - React-logger (= 0.66.0)
     - React-perflogger (= 0.66.0)
-  - RNBackgroundFetch (4.0.3):
+  - RNBackgroundFetch (4.0.4):
     - React-Core
   - RNCAsyncStorage (1.12.1):
     - React-Core
@@ -620,7 +620,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 53b92d54b923283638cb0186da7a5c2d2b70a49b
   React-runtimeexecutor: 4bb657a97aa74568d9ed634c8bd478299bb8a3a6
   ReactCommon: eb059748e842a1a86025ebbd4ac9d99e74492f88
-  RNBackgroundFetch: 182d0ff90747bacbb3d4e168ecc2194442d0a2d3
+  RNBackgroundFetch: 4ba650701219cf06fdc08336cc0b010242d2d024
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: f7a40b21b915b7a187624d52f52b7bc2f73ea413
