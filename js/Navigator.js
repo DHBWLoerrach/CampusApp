@@ -265,7 +265,7 @@ export default function Navigator({ navigation }) {
     tabBarIcon: ({ color }) => {
       const routeName = route.name;
       let iconName;
-      if (routeName === 'News') iconName = 'rss-feed';
+      if (routeName === 'DHBW') iconName = 'rss-feed';
       else if (routeName === 'Schedule') iconName = 'school';
       else if (routeName === 'Canteen') iconName = 'restaurant';
       else if (routeName === 'Services') iconName = 'info-outline';
@@ -280,7 +280,7 @@ export default function Navigator({ navigation }) {
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator screenOptions={tabsConfig}>
-        <Tab.Screen name="News" component={NewsStack} />
+        <Tab.Screen name="DHBW" component={NewsStack} />
         {enableStuV ? (
           <Tab.Screen name="StuV" component={StuVStack} />
         ) : null}
