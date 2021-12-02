@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from '../../util/Colors';
 
@@ -98,12 +99,25 @@ export function TextAgreedDisclaimer() {
     <View style={styles.container}>
       <View style={styles.block}>
         <Text style={styles.text}>
-          Mit dem ersten Start der Campus App der DHBW Lörrach wurde
+          Mit dem ersten Start der DHBW Lörrach Campus App wurde
           folgender Regelung zugestimmt:
         </Text>
       </View>
+      <View style={[styles.block, { flexDirection: 'row' }]}>
+        <MaterialIcon
+          name="check"
+          size={24}
+          color={Colors.dhbwGray}
+        />
+        <Text style={[styles.text, styles.quote]}>
+          {disclaimerText}
+        </Text>
+      </View>
       <View style={styles.block}>
-        <Text style={styles.text}>{disclaimerText}</Text>
+        <Text style={styles.text}>
+          Um diese Zustimmung zurückzuziehen, muss die DHBW Lörrach
+          Campus App auf dem Smartphone deinstalliert werden.
+        </Text>
       </View>
     </View>
   );
@@ -376,6 +390,10 @@ const styles = StyleSheet.create({
   },
   block: {
     marginBottom: 20,
+  },
+  quote: {
+    fontStyle: 'italic',
+    marginHorizontal: 15,
   },
   headline: {
     fontSize: 20,
