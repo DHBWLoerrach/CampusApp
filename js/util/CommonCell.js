@@ -49,6 +49,15 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
     marginHorizontal: 10,
+    shadowColor: 'black', // iOS and Android API-Level >= 28
+    shadowOffset: {
+      // effects iOS only!
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25, // effects iOS only!
+    shadowRadius: 2.5, // effects iOS only!
+    elevation: 4, // needed only for Android
   },
   container: {
     flex: 1,
