@@ -28,8 +28,8 @@ export default {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25, // effects iOS only!
-    shadowRadius: 2.5, // effects iOS only!
+    shadowOpacity: 0.2, // effects iOS only!
+    shadowRadius: 4, // effects iOS only!
     elevation: 4, // needed only for Android
   },
 };
