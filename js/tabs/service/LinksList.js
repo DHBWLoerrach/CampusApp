@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Colors from '../../util/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
@@ -43,10 +44,13 @@ class Row extends Component {
 
     let icon = null;
     if (tel) {
-      icon = <MaterialIcon name="phone" size={36} />;
+      icon = <MaterialIcon name="phone" size={16} />;
     }
-    if (url || onPress || screen) {
-      icon = <MaterialIcon name="chevron-right" size={36} />;
+    if (url) {
+      icon = <FontAwesome name="external-link" size={16} />;
+    }
+    if (onPress || screen) {
+      icon = <MaterialIcon name="chevron-right" size={24} />;
     }
 
     return (

@@ -34,7 +34,7 @@ export default class ServiceScreen extends Component {
     const { navigate } = this.props.navigation;
     var submenuItems = [
       {
-        label: 'Anreise',
+        label: 'Anreise ➚',
         icon: (
           <FontAwesome
             name="map-marker"
@@ -90,7 +90,7 @@ export default class ServiceScreen extends Component {
         onPress: () => navigate('Study', { links: linksStudy }),
       },
       {
-        label: 'Katalog Bibliothek',
+        label: 'Katalog Bibliothek ➚',
         icon: (
           <MaterialCommunityIcon
             name="book-open-variant"

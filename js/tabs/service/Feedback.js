@@ -21,7 +21,7 @@ export default class Feedback extends Component {
             <Text style={styles.title} numberOfLines={2}>
               Feedback senden
             </Text>
-            <MaterialIcon name="chevron-right" size={36} />
+            <MaterialIcon name="chevron-right" size={24} />
           </View>
         </ListCellTouchable>
       </View>
@@ -33,18 +33,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 15
+    padding: 15,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 15,
-    height: 50
+    height: 50,
   },
   title: {
     flex: 1,
     fontSize: 17,
-    color: Colors.darkText
-  }
+    color: Colors.darkText,
+  },
 });
