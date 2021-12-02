@@ -6,60 +6,61 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {shortString, unixTimeToDateText, unixTimeToTimeText} from '../helper';
-import Colors from "../../../util/Colors";
+import {
+  shortString,
+  unixTimeToDateText,
+  unixTimeToTimeText,
+} from '../helper';
+import Colors from '../../../util/Colors';
 
 export default function StuvEventCell({ event, onPress }) {
-  const { name, description, images, date: { from, to }} = event;
+  const {
+    name,
+    description,
+    images,
+    date: { from, to },
+  } = event;
 
   const formattedDate = unixTimeToDateText(from);
   const formattedTime = to
     ? `${unixTimeToTimeText(from)} bis ${unixTimeToTimeText(to)} Uhr`
     : `${unixTimeToTimeText(from)} Uhr`;
 
-  const registrationRequired = "Anmeldung: " + (event.registration.required ? "Ja" : "Nein");
+  const registrationRequired =
+    'Anmeldung: ' + (event.registration.required ? 'Ja' : 'Nein');
 
   const image = images.overview
     ? { uri: images.overview.src }
     : require('../../../img/crowd.png');
 
-  return (<TouchableOpacity
+  return (
+    <TouchableOpacity
       style={styles.entry}
       activeOpacity={0.7}
-      onPress={onPress}>
+      onPress={onPress}
+    >
+      <View style={styles.container}>
+        <Image source={image} style={styles.imageContainer} />
 
-    <View style={styles.container}>
-      <Image
-          source={image}
-          style={styles.imageContainer}/>
+        <View style={styles.textContainer}>
+          <Text style={styles.headline}>{name}</Text>
 
-      <View style={styles.textContainer}>
+          <Text style={styles.details}>{formattedDate}</Text>
+          <Text style={styles.details}>{formattedTime}</Text>
+          <Text style={styles.details}>{registrationRequired}</Text>
 
-        <Text style={styles.headline}>{name}</Text>
+          <Text style={styles.text}>
+            {shortString(description, 120)}
+          </Text>
 
-        <Text style={styles.details}>
-          {formattedDate}
-        </Text>
-        <Text style={styles.details}>
-          {formattedTime}
-        </Text>
-        <Text style={styles.details}>
-          {registrationRequired}
-        </Text>
-
-        <Text style={styles.text}>
-          {shortString(description, 120)}
-        </Text>
-
-        {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
+          {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
             <Text style={{fontSize: 15, color: 'white'}}>Mehr Details</Text>
           </View>*/}
-
-
+        </View>
       </View>
-    </View>
-  </TouchableOpacity>
-)};
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
   entry: {
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   imageContainer: {
-    width: "100%",
+    width: '100%',
     aspectRatio: 1,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   textContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
   headline: {
     fontSize: 28,
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     lineHeight: 21,
-    color: '#262626'
+    color: '#262626',
   },
   details: {
     marginTop: 8,
@@ -105,6 +106,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignSelf: 'flex-end',
-    color: 'white'
+    color: 'white',
   },
 });
