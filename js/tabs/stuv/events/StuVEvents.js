@@ -3,7 +3,10 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { loadEvents } from '../helper';
 import ReloadView from '../../../util/ReloadView';
 import ActivityIndicator from '../../../util/DHBWActivityIndicator';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import StuvEventCell from './StuVEventCell';
 
 export default function StuVEvents() {
@@ -44,10 +47,13 @@ export default function StuVEvents() {
   }
 
   if (events === null || events.length === 0) {
-    return <ReloadView
-      message="Keine Einträge"
-      buttonText="Events laden"
-      onPress={refresh} />;
+    return (
+      <ReloadView
+        message="Keine Einträge"
+        buttonText="Events laden"
+        onPress={refresh}
+      />
+    );
   }
 
   return (
@@ -59,7 +65,10 @@ export default function StuVEvents() {
       keyExtractor={(item) => 'item' + item._id}
       renderItem={({ item }) => {
         return (
-          <StuvEventCell event={item} onPress={() => navigate(item, navigation)} />
+          <StuvEventCell
+            event={item}
+            onPress={() => navigate(item, navigation)}
+          />
         );
       }}
     />
