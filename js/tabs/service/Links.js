@@ -4,7 +4,7 @@ import { TextCafeteriaKKH, TextHieber } from './Texts';
 export const linksAccounts = [
   {
     title: 'Homepage',
-    url: 'https://www.dhbw-loerrach.de/',
+    url: 'https://dhbw-loerrach.de/',
   },
   {
     title: 'Moodle',
@@ -20,7 +20,7 @@ export const linksAccounts = [
   },
   {
     title: 'Bibliothek',
-    url: 'https://www.dhbw-loerrach.de/bibliothek/',
+    url: 'https://dhbw-loerrach.de/bibliothek/',
   },
   {
     title: 'IT-Services Wiki',
@@ -36,8 +36,7 @@ export const linksAccounts = [
   },
   {
     title: 'Handbuch DHBW-IT',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
   },
 ];
 
@@ -47,7 +46,7 @@ export const linkBib =
 export const linksEmergency = [
   {
     title: 'Ansprechpartner Studiengänge und Serviceeinrichtungen',
-    url: 'https://www.dhbw-loerrach.de/ansprechpersonen',
+    url: 'https://dhbw-loerrach.de/ansprechpersonen',
   },
   {
     title: 'Polizei',
@@ -63,7 +62,7 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle DHBW Lörrach',
-    url: 'https://www.dhbw-loerrach.de/studienberatung',
+    url: 'https://dhbw-loerrach.de/studienberatung',
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
@@ -86,33 +85,30 @@ export const linksEmergency = [
 export const linksFreetime = [
   {
     title: 'Sprachen',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
   },
   {
     title: 'Hochschulsport',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=5113',
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=5113',
   },
   {
     title: 'Wohnungsbörse',
-    url: 'https://www.dhbw-loerrach.de/wohnungen',
+    url: 'https://dhbw-loerrach.de/wohnungen',
   },
 ];
 
 export const linksStudy = [
   {
     title: 'Exkursionen',
-    url:
-      'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=6065',
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=6065',
   },
   {
     title: 'Gebühren/Beiträge',
-    url: 'https://www.dhbw-loerrach.de/studienkosten',
+    url: 'https://dhbw-loerrach.de/studienkosten',
   },
   {
     title: 'Ausland/Internationales',
-    url: 'https://www.dhbw-loerrach.de/studieren-im-ausland',
+    url: 'https://dhbw-loerrach.de/studieren-im-ausland',
   },
 ];
 
@@ -129,4 +125,4 @@ export const linksKBC = [
   },
 ];
 
-export const linkOrientation = 'https://www.dhbw-loerrach.de/anfahrt';
+export const linkOrientation = 'https://dhbw-loerrach.de/anfahrt';
