@@ -53,7 +53,7 @@ export function TextCafeteriaKKH() {
       <View style={styles.block}>
         <Text style={styles.headline}>Mittagstisch</Text>
         <Text style={styles.text}>
-          Montag bis Freitag: 11:30 – 13:45 Uhr
+          Montag bis Freitag: 11:30 – 14:00 Uhr
         </Text>
       </View>
       <View style={styles.block}>
