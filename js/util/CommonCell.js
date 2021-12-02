@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.veryLightGray,
     borderRadius: 10,
     padding: 10,
-    marginTop: 10,
+    marginBottom: 10,
     marginHorizontal: 10,
     shadowColor: 'black', // iOS and Android API-Level >= 28
     shadowOffset: {

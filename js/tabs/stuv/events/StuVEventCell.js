@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   entry: {
     backgroundColor: Colors.veryLightGray,
     borderRadius: 5,
-    marginTop: 10,
+    marginBottom: 10,
     marginHorizontal: 10,
   },
   container: {
