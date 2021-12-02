@@ -65,7 +65,7 @@ export default function StuvEventCell({ event, onPress }) {
 
 const styles = StyleSheet.create({
   entry: {
-    backgroundColor: Colors.veryLightGray,
+    backgroundColor: "white",
     borderRadius: 5,
     marginBottom: 10,
     marginHorizontal: 10,
