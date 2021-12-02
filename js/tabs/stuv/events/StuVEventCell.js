@@ -12,6 +12,7 @@ import {
   unixTimeToTimeText,
 } from '../helper';
 import Colors from '../../../util/Colors';
+import Styles from '../../../util/Styles';
 
 export default function StuvEventCell({ event, onPress }) {
   const {
@@ -35,7 +36,7 @@ export default function StuvEventCell({ event, onPress }) {
 
   return (
     <TouchableOpacity
-      style={styles.entry}
+      style={[Styles.cardShadow, styles.entry]}
       activeOpacity={0.7}
       onPress={onPress}
     >
@@ -68,15 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     marginHorizontal: 10,
-    shadowColor: 'black', // iOS and Android API-Level >= 28
-    shadowOffset: {
-      // effects iOS only!
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25, // effects iOS only!
-    shadowRadius: 2.5, // effects iOS only!
-    elevation: 4, // needed only for Android
   },
   container: {
     flex: 1,

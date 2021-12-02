@@ -21,4 +21,15 @@ export default {
     tabBarPressColor: 'darkred', // Color for material ripple (Android >= 5.0 only)
     tabBarPressOpacity: 0.75, // Opacity for pressed tab (iOS and Android < 5.0 only)
   },
+  cardShadow: {
+    shadowColor: 'black', // iOS and Android API-Level >= 28
+    shadowOffset: {
+      // effects iOS only!
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25, // effects iOS only!
+    shadowRadius: 2.5, // effects iOS only!
+    elevation: 4, // needed only for Android
+  },
 };

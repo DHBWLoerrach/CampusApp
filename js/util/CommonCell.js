@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import Colors from '../util/Colors';
+import Styles from '../util/Styles';
 import { shortString } from '../tabs/stuv/helper';
 
 export default ({
@@ -18,7 +19,7 @@ export default ({
   onPress,
 }) => (
   <TouchableOpacity
-    style={styles.entry}
+    style={[Styles.cardShadow, styles.entry]}
     activeOpacity={0.7}
     onPress={onPress}
   >
@@ -49,15 +50,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     marginHorizontal: 10,
-    shadowColor: 'black', // iOS and Android API-Level >= 28
-    shadowOffset: {
-      // effects iOS only!
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25, // effects iOS only!
-    shadowRadius: 2.5, // effects iOS only!
-    elevation: 4, // needed only for Android
   },
   container: {
     flex: 1,
