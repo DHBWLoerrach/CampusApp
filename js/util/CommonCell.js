@@ -45,7 +45,7 @@ export default ({
 
 const styles = StyleSheet.create({
   entry: {
-    backgroundColor: Colors.veryLightGray,
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
