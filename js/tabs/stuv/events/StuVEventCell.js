@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     color: Colors.dhbwRed,
     fontWeight: '700',
   },
-
   text: {
     marginTop: 8,
     fontSize: 16,
