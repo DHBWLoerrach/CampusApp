@@ -39,18 +39,19 @@ export default function EditCourse() {
   );
 
   async function onPressClicked() {
-    if (!course) {
+    const newCourse = course && course.toUpperCase();
+    if (!newCourse) {
       Alert.alert('Bitte Kursnamen eingeben');
-    } else if (courseList.indexOf(course) >= 0) {
-      if (course !== currentCourse) {
-        await saveCourseToStore(course);
+    } else if (courseList.indexOf(newCourse) >= 0) {
+      if (newCourse !== currentCourse) {
+        await saveCourseToStore(newCourse);
         await clearLecturesFromStore();
       }
       goBack();
     } else {
       Alert.alert(
         'Kurs nicht vorhanden',
-        `Es gibt keinen Online-Stundenplan für den Kurs ${course}.`
+        `Es gibt keinen Online-Stundenplan für den Kurs ${newCourse}.`
       );
     }
   }
@@ -68,9 +69,7 @@ export default function EditCourse() {
           autoFocus={true}
           defaultValue={course}
           maxLength={15}
-          onChangeText={(course) =>
-            setCourse(course.trim().toUpperCase())
-          }
+          onChangeText={(course) => setCourse(course.trim())}
         />
         <Button
           title="Kurs anzeigen"
