@@ -3,8 +3,8 @@ import {
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  Button
 } from 'react-native';
 import {
   shortString,
@@ -35,11 +35,7 @@ export default function StuvEventCell({ event, onPress }) {
     : require('../../../img/crowd.png');
 
   return (
-    <TouchableOpacity
-      style={[Styles.cardShadow, styles.entry]}
-      activeOpacity={0.7}
-      onPress={onPress}
-    >
+    <View style={[Styles.cardShadow, styles.entry]}>
       <View style={styles.container}>
         <Image source={image} style={styles.imageContainer} />
 
@@ -54,12 +50,15 @@ export default function StuvEventCell({ event, onPress }) {
             {shortString(description, 120)}
           </Text>
 
-          {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
-            <Text style={{fontSize: 15, color: 'white'}}>Mehr Details</Text>
-          </View>*/}
+          <View style={{marginTop: 8, alignSelf: "center", borderRadius: 5}}>
+            <Button color={Colors.dhbwRed} title="Weitere Infos" onPress={onPress}/>
+            {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
+              <Text style={{fontSize: 15, color: 'white'}}>Mehr Details</Text>
+            </View>*/}
+          </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 
@@ -80,12 +79,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
-    resizeMode: 'contain',
+    resizeMode: 'contain'
   },
   textContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   headline: {
     fontSize: 28,
@@ -108,4 +107,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: 'white',
   },
+  button: {
+    color: Colors.dhbwRed
+  }
 });
