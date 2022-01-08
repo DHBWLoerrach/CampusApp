@@ -1199,9 +1199,9 @@
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
 "@types/react-native@^0.65.1":
-  version "0.65.15"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.65.15.tgz#102ebe9fbafa19e6aef3459b8b4cf863cd9c140b"
-  integrity sha512-Ac4TgJBQToCZuA/BLIdGTP2Ya/+l/3mjQWutGKG+t92g3QucDV6innZsBw7M00F1L3U5fgC5guP6co5QQY1D4A==
+  version "0.65.18"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.65.18.tgz#7c66097015e9937e206f623899ffeb821c82c9ff"
+  integrity sha512-fEd7cl6cI69s7BfClWM//8ypJ/+ULUaqriATjix3BstO3IyLBVaaYpCHA0RV0+0ItpJnnLmMxWBdfg4oRZG39g==
   dependencies:
     "@types/react" "*"
 
@@ -1213,9 +1213,9 @@
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^17.0.24":
-  version "17.0.35"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.35.tgz#217164cf830267d56cd1aec09dcf25a541eedd4c"
-  integrity sha512-r3C8/TJuri/SLZiiwwxQoLAoavaczARfT9up9b4Jr65+ErAUX3MIkU0oMOQnrpfgHme8zIqZLX7O5nnjm5Wayw==
+  version "17.0.38"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.38.tgz#f24249fefd89357d5fa71f739a686b8d7c7202bd"
+  integrity sha512-SI92X1IA+FMnP3qM5m4QReluXzhcmovhZnLNm3pyeQlooi02qI7sLiepEYqT678uNiyc25XfCqxREFpy3W7YhQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -5410,9 +5410,9 @@ type-fest@^0.7.1:
   integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
 
 typescript@^4.4.3:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.2.tgz#8ac1fba9f52256fdb06fb89e4122fa6a346c2998"
-  integrity sha512-5BlMof9H1yGt0P8/WF+wPNw6GfctgGjXp5hkblpyT+8rkASSmkUKMXrxR0Xg8ThVCi/JnHQiKXeBaEwCeQwMFw==
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.4.tgz#a17d3a0263bf5c8723b9c52f43c5084edf13c2e8"
+  integrity sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==
 
 ua-parser-js@^0.7.30:
   version "0.7.31"
