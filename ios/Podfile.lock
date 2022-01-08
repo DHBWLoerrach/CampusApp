@@ -351,7 +351,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNCPicker (2.2.0):
+  - RNCPicker (2.2.1):
     - React-Core
   - RNCPushNotificationIOS (1.10.1):
     - React-Core
@@ -623,7 +623,7 @@ SPEC CHECKSUMS:
   RNBackgroundFetch: 4ba650701219cf06fdc08336cc0b010242d2d024
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNCPicker: 2568e0d0b4644dd9d5f2cec9eca197f5f3f5acb3
+  RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 65583befd5706cc9c86ae9a081786181ced37b93
