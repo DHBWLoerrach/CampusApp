@@ -14,4 +14,6 @@
 -keep class com.transistorsoft.rnbackgroundfetch.HeadlessTask { *; }
 # [react-native-svg]
 -keep public class com.horcrux.svg.** {*;}
+# [reanimated 2]
+-keep class com.facebook.react.turbomodule.** { *; }
 
