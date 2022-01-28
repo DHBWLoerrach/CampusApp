@@ -66,7 +66,11 @@ export const linksEmergency = [
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
-    url: 'https://www.swfr.de/de/beratung-soziales/infoladen/',
+    url: 'https://www.swfr.de/beratung-soziales',
+  },
+  { 
+    title: 'Anlaufstellen für Betroffene',
+    url: 'https://dhbw-loerrach.de/ansprechpersonen/anlaufstellen-fuer-betroffene#inhalt',
   },
   {
     title: 'Beratungsstelle Studierendenwerk Freiburg',
