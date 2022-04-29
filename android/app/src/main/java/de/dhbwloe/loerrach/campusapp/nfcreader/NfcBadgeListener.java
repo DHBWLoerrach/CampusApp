@@ -64,7 +64,7 @@ public class NfcBadgeListener {
 
         oAdapter = NfcAdapter.getDefaultAdapter(mainActivity);
  
-        oPendingIntent = PendingIntent.getActivity(mainActivity, 0, new Intent(mainActivity, mainActivity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | PendingIntent.FLAG_IMMUTABLE), 0);
+        oPendingIntent = PendingIntent.getActivity(mainActivity, 0, new Intent(mainActivity, mainActivity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE);
         IntentFilter techDiscovered = new IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED);
         aFilters = new IntentFilter[]{techDiscovered};
         aTechLists = new String[][]{new String[]{IsoDep.class.getName()}};
