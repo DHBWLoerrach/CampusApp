@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AppState,
   Platform,
@@ -25,7 +25,6 @@ NotificationTaskScheduler();
 const Drawer = createDrawerNavigator();
 
 export default function CampusApp() {
-  const appState = useRef(AppState.currentState);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [didUpgrade, setDidUpgrade] = useState(null);
@@ -42,6 +41,19 @@ export default function CampusApp() {
   }, []);
 
   useEffect(() => {
+    // iOS: Remove all push notifications when app becomes active
+    const _handleAppStateChangeiOS = (nextAppState) => {
+      if (nextAppState === 'active') {
+        PushNotification.removeAllDeliveredNotifications();
+      }
+    };
+
+    // Android: Remove all push notifications when app is focussed
+    // no need to check appState as there's a dedicated event for this on Android
+    const _handleAppStateChangeAndroid = () => {
+      PushNotification.removeAllDeliveredNotifications();
+    };
+
     const handler =
       Platform.OS === 'android'
         ? _handleAppStateChangeAndroid
@@ -57,21 +69,6 @@ export default function CampusApp() {
       eventSubscription.remove();
     };
   }, []);
-
-  // Remove all push notifications when app becomes active
-  const _handleAppStateChangeiOS = (nextAppState) => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      PushNotification.removeAllDeliveredNotifications();
-    }
-    appState.current = nextAppState;
-  };
-
-  const _handleAppStateChangeAndroid = () => {
-    PushNotification.removeAllDeliveredNotifications();
-  };
 
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
