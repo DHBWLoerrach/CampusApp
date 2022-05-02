@@ -1,6 +1,5 @@
 import PushNotification from 'react-native-push-notification';
 import FetchManager, {
-  DHBW_COURSE,
   DHBW_EVENTS,
   DHBW_NEWS,
 } from '../fetcher/FetchManager';
@@ -69,36 +68,5 @@ async function NotificationTask() {
       eventsNotifications[0].message
     );
   }
-
-  // TODO
-  // if (settings.notificationschedule) {
-  //   const lectures = await FetchManager.getNewData(DHBW_COURSE);
-  //   lectures.newItems.forEach((newItem) => {
-  //     const parsedStartDate = Date.parse(newItem.startDate);
-  //     //Do not notify of modifications in the past
-  //     if (new Date(parsedStartDate) < new Date()) {
-  //       return;
-  //     }
-  //     PushNotification.localNotification({
-  //       title: 'Vorlesung hinzugefügt:',
-  //       message: newItem.title + ' am ' + getDay(parsedStartDate),
-  //       smallIcon: 'ic_launcher_foreground',
-  //       color: dhbwRed,
-  //     });
-  //   });
-  //   lectures.removedItems.forEach((removedItem) => {
-  //     const parsedStartDate = Date.parse(removedItem.startDate);
-  //     //Do not notify of modifications in the past
-  //     if (new Date(parsedStartDate) < new Date()) {
-  //       return;
-  //     }
-  //     PushNotification.localNotification({
-  //       title: 'Vorlesung entfernt:',
-  //       message: removedItem.title + ' am ' + getDay(parsedStartDate),
-  //       smallIcon: 'ic_launcher_foreground',
-  //       color: dhbwRed,
-  //     });
-  //   });
-  // }
 }
 export default NotificationTask;
