@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AppState, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  AppState,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import PushNotification from 'react-native-push-notification';
 
@@ -36,15 +42,24 @@ export default function CampusApp() {
   }, []);
 
   useEffect(() => {
-    AppState.addEventListener('change', _handleAppStateChange);
+    const handler =
+      Platform.OS === 'android'
+        ? _handleAppStateChangeAndroid
+        : _handleAppStateChangeiOS;
+    const event = Platform.OS === 'android' ? 'focus' : 'change';
+
+    const eventSubscription = AppState.addEventListener(
+      event,
+      handler
+    );
 
     return () => {
-      AppState.removeEventListener('change', _handleAppStateChange);
+      eventSubscription.remove();
     };
   }, []);
 
   // Remove all push notifications when app becomes active
-  const _handleAppStateChange = (nextAppState) => {
+  const _handleAppStateChangeiOS = (nextAppState) => {
     if (
       appState.current.match(/inactive|background/) &&
       nextAppState === 'active'
@@ -52,6 +67,10 @@ export default function CampusApp() {
       PushNotification.removeAllDeliveredNotifications();
     }
     appState.current = nextAppState;
+  };
+
+  const _handleAppStateChangeAndroid = () => {
+    PushNotification.removeAllDeliveredNotifications();
   };
 
   const changeRole = (role) => {
