@@ -26,6 +26,10 @@ export default class CacheFetcher {
   async getNewItems() {
     const cached = await this.getCachedItems(false);
     const items = await this.fetcher.getItems(cached.params);
+    if (!items) {
+      // items could be null e.g. if network down
+      return []; // --> no new items fetched
+    }
     const newItems = items.filter(
       (item) =>
         cached.items.filter((cache) => item.equals(cache)).length ===
