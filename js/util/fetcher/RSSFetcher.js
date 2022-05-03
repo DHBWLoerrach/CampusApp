@@ -8,18 +8,22 @@ export default class RSSFetcher {
   }
 
   async getItems() {
-    //needed because of bad cache behavior
-    const suffix = '?' + new Date().getTime();
-    const response = await fetch(this.feedUrl + suffix, {
-      cache: 'no-store',
-    });
-    if (!response.ok) {
-      // server problem
+    try {
+      //needed because of bad cache behavior
+      const suffix = '?' + new Date().getTime();
+      const response = await fetch(this.feedUrl + suffix, {
+        cache: 'no-store',
+      });
+      if (!response.ok) {
+        // server problem
+        return null;
+      } else {
+        const responseBody = await response.text();
+        const news = fetchNewsData(responseBody);
+        return news;
+      }
+    } catch (error) {
       return null;
-    } else {
-      const responseBody = await response.text();
-      const news = fetchNewsData(responseBody);
-      return news;
     }
   }
 }
