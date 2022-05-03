@@ -25,8 +25,8 @@ async function NotificationTask() {
   const eventsNotifications = [];
 
   if (settings.notificationdhbwNews) {
-    const news = await FetchManager.getNewData(DHBW_NEWS);
-    news.newItems.forEach((newItem) =>
+    const newItems = await FetchManager.getNewData(DHBW_NEWS);
+    newItems.forEach((newItem) =>
       newsNotifications.push({
         title: 'Neue DHBW News',
         message: newItem.heading,
@@ -35,8 +35,8 @@ async function NotificationTask() {
   }
 
   if (settings.notificationdhbwEvents) {
-    const events = await FetchManager.getNewData(DHBW_EVENTS);
-    events.newItems.forEach((newItem) =>
+    const newItems = await FetchManager.getNewData(DHBW_EVENTS);
+    newItems.forEach((newItem) =>
       eventsNotifications.push({
         title: 'Neue DHBW Termin',
         message:

@@ -31,12 +31,8 @@ export default class CacheFetcher {
         cached.items.filter((cache) => item.equals(cache)).length ===
         0
     );
-    const removedItems = cached.items.filter(
-      (cache) =>
-        items.filter((item) => item.equals(cache)).length === 0
-    );
     this.setCachedItems(items, cached.params);
-    return { newItems, removedItems };
+    return newItems;
   }
 
   async getCachedItems(checkAge = true) {
