@@ -25,6 +25,9 @@ async function localPush(title, body) {
       smallIcon: 'ic_launcher_foreground',
       color: dhbwRed,
       importance: AndroidImportance.LOW,
+      pressAction: {
+        id: 'default',
+      },
     },
     ios: {
       badgeCount: 1, // iOS: badge count always shows as 1
