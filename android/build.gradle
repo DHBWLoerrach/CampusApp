@@ -59,5 +59,9 @@ allprojects {
            // react-native-background-fetch
            url("${project(':react-native-background-fetch').projectDir}/libs")
         }
+        maven {
+            // notifee (push-notifications)
+            url "$rootDir/../node_modules/@notifee/react-native/android/libs"
+        }
     }
 }

@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import PushNotification from 'react-native-push-notification';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 import { dhbwGray, dhbwRed } from './Colors';
 import {
   loadNotificationSettings,
@@ -25,6 +25,20 @@ export default function ({ enabled = false }) {
 
   // save settings whenever dependencies [notifyEvents, notifyNews] change
   useEffect(() => {
+    const iosRequestPermissions = async () => {
+      const settings = await notifee.requestPermission();
+      if (
+        settings.authorizationStatus < AuthorizationStatus.AUTHORIZED
+      ) {
+        Alert.alert(
+          'Benachrichtigungen einschalten',
+          'Bitte erteile der Campus App in den Einstellungen des iPhones die Erlaubnis für den Versand von Benachrichtigungen.'
+        );
+        setNotifyEvents(false);
+        setNotifyNews(false);
+      }
+    };
+
     const settingsObject = {
       notificationdhbwNews: notifyNews,
       notificationdhbwEvents: notifyEvents,
@@ -32,26 +46,7 @@ export default function ({ enabled = false }) {
     saveNotificationSettings(settingsObject);
     // iOS: check if permission for notifications are granted
     if ((notifyNews || notifyEvents) && Platform.OS === 'ios') {
-      PushNotification.checkPermissions(
-        ({
-          alert,
-          badge,
-          sound,
-        }: {
-          alert: boolean;
-          badge: boolean;
-          sound: boolean;
-        }) => {
-          if (!alert && !badge && !sound) {
-            Alert.alert(
-              'Benachrichtigungen einschalten',
-              'Bitte erteile der Campus App in den Einstellungen des iPhones die Erlaubnis für den Versand von Benachrichtigungen.'
-            );
-            setNotifyEvents(false);
-            setNotifyNews(false);
-          }
-        }
-      );
+      iosRequestPermissions();
     }
   }, [notifyEvents, notifyNews]);
 

@@ -1,4 +1,4 @@
-import PushNotification from 'react-native-push-notification';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 import FetchManager, {
   DHBW_EVENTS,
   DHBW_NEWS,
@@ -7,13 +7,28 @@ import { dhbwRed } from '../Colors';
 import { getDay } from '../../tabs/schedule/store';
 import { loadNotificationSettings } from '../../tabs/service/SettingsHelper';
 
-function localPush(title, message) {
-  PushNotification.localNotification({
-    title: title, // required on Android,iOS
-    message: message, // optional on Android,iOS
-    channelId: 'dhbw-channel', // required on Android
-    smallIcon: 'ic_launcher_foreground', // optional on Android
-    color: dhbwRed, // optional on Android (earlier Versions)
+async function localPush(title, body) {
+  // Create a channel --> required on Android
+  // (ignored on iOS and gracefully ignored on Android if channel already exists)
+  const channelId = await notifee.createChannel({
+    id: 'dhbw-channel',
+    name: 'DHBW Channel',
+    importance: AndroidImportance.LOW,
+  });
+
+  // Display the notification
+  notifee.displayNotification({
+    title,
+    body,
+    android: {
+      channelId,
+      smallIcon: 'ic_launcher_foreground',
+      color: dhbwRed,
+      importance: AndroidImportance.LOW,
+    },
+    ios: {
+      badgeCount: 1, // iOS: badge count always shows as 1
+    },
   });
 }
 

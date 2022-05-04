@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import PushNotification from 'react-native-push-notification';
+import notifee from '@notifee/react-native';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
@@ -44,14 +44,16 @@ export default function CampusApp() {
     // iOS: Remove all push notifications when app becomes active
     const _handleAppStateChangeiOS = (nextAppState) => {
       if (nextAppState === 'active') {
-        PushNotification.removeAllDeliveredNotifications();
+        notifee.cancelAllNotifications();
+        notifee.setBadgeCount(0);
       }
     };
 
     // Android: Remove all push notifications when app is focussed
     // no need to check appState as there's a dedicated event for this on Android
     const _handleAppStateChangeAndroid = () => {
-      PushNotification.removeAllDeliveredNotifications();
+      notifee.cancelAllNotifications();
+      notifee.setBadgeCount(0);
     };
 
     const handler =
