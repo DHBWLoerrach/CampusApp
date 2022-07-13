@@ -6,12 +6,20 @@ buildscript {
         minSdkVersion = 21
         compileSdkVersion = 31
         targetSdkVersion = 31
-        ndkVersion = "21.4.7075529"
+        //ndkVersion = "21.4.7075529"
         supportLibVersion = "28.0.3"
         playServicesVersion = "17.0.0"
         androidMapsUtilsVersion = "17.0.0"
 
         if (System.properties['os.arch'] == "aarch64") {
+            // For M1 Users we need to use the NDK 24 which added support for aarch64
+            ndkVersion = "24.0.8215888"
+        } else {
+            // Otherwise we default to the side-by-side NDK version from AGP.
+            ndkVersion = "21.4.7075529"
+        }
+
+        /*if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64
             ndkVersion = "24.0.8215888"
         } else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -21,7 +29,7 @@ buildscript {
         } else {
             // Otherwise we default to the side-by-side NDK version from AGP.
             ndkVersion = "21.4.7075529"
-        }
+        }*/
     }
     repositories {
         google()
