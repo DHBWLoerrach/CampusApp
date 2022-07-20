@@ -1,17 +1,11 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import Styles from '../../Styles/StyleSheet';
 
 export default function InfoText({ route }) {
   return (
-    <View style={styles.container}>
+    <View style={Styles.InfoText.container}>
       <ScrollView>{route.params?.text}</ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});

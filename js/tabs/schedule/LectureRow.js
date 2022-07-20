@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import Colors from '../../util/Colors';
-import Constants from '../../util/Constants';
+import Styles from '../../Styles/StyleSheet';
 
 export default class LectureRow extends Component {
   render() {
@@ -12,28 +11,14 @@ export default class LectureRow extends Component {
       time = 'ganzer Tag';
     }
     return (
-      <View style={styles.row}>
-        <Text numberOfLines={3} style={styles.title}>
+      <View style={Styles.LectureRow.row}>
+        <Text numberOfLines={3} style={Styles.LectureRow.title}>
           {lecture.title}
         </Text>
-        <Text numberOfLines={1} style={styles.info}>
+        <Text numberOfLines={1} style={Styles.LectureRow.info}>
           {time} {lecture.location ? ' \u2022 ' + lecture.location : ''}
         </Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  row: {
-    paddingVertical: Constants.listViewRowPaddingVertical,
-    paddingHorizontal: Constants.listViewRowPaddingHorizontal
-  },
-  title: {
-    fontSize: Constants.bigFont
-  },
-  info: {
-    fontSize: Constants.smallFont,
-    color: Colors.lightText
-  }
-});

@@ -12,13 +12,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Colors from '../../util/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
+import Styles from '../../Styles/StyleSheet';
 
 export default function LinksList({ navigation, route }) {
   const content = route.params?.links.map((link, index) => (
     <Row link={link} key={index} navigate={navigation.navigate} />
   ));
   return (
-    <View style={styles.container}>
+    <View style={Styles.LinksList.container}>
       <ItemsWithSeparator>{content}</ItemsWithSeparator>
     </View>
   );
@@ -31,7 +32,7 @@ function ItemsWithSeparator(props) {
     children.push(child);
     if (ii !== length - 1) {
       children.push(
-        <View key={'separator-' + ii} style={styles.separator} />
+        <View key={'separator-' + ii} style={Styles.LinksList.separator} />
       );
     }
   });
@@ -58,8 +59,8 @@ class Row extends Component {
         underlayColor={Colors.cellBorder}
         onPress={this._handlePress.bind(this)}
       >
-        <View style={styles.row}>
-          <Text style={styles.title} numberOfLines={2}>
+        <View style={Styles.LinksList.row}>
+          <Text style={Styles.LinksList.title} numberOfLines={2}>
             {title}
           </Text>
           {icon}
@@ -109,26 +110,3 @@ class Row extends Component {
     Linking.openURL(telLink);
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  separator: {
-    backgroundColor: Colors.cellBorder,
-    height: StyleSheet.hairlineWidth,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    height: 50,
-  },
-  title: {
-    flex: 1,
-    fontSize: 17,
-    color: Colors.darkText,
-  },
-});

@@ -14,6 +14,7 @@ import {
 
 import Colors from '../../util/Colors';
 import { courseList } from '../../../env.js';
+import Styles from '../../Styles/StyleSheet';
 
 import {
   loadCourseFromStore,
@@ -57,13 +58,13 @@ export default function EditCourse() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={Styles.EditCourse.container}>
       <Text>
         Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
       </Text>
-      <View style={styles.inputContainer}>
+      <View style={Styles.EditCourse.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={Styles.EditCourse.input}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={true}
@@ -85,23 +86,3 @@ export default function EditCourse() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 15,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-  },
-  input: {
-    borderColor: '#CCC',
-    borderWidth: StyleSheet.hairlineWidth,
-    color: 'black',
-    height: 40,
-    width: 140,
-  },
-});

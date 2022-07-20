@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Colors from '../../util/Colors';
 import EnrollmentItem from './EnrollmentItem';
 import { Picker } from '@react-native-picker/picker';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisMain({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -93,7 +94,7 @@ export default function DualisMain({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.DualisMain.center}>
         <ActivityIndicator />
       </View>
     );
@@ -112,8 +113,8 @@ export default function DualisMain({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+    <View style={Styles.DualisMain.container}>
+      <ScrollView style={Styles.DualisMain.scrollView}>
         <Picker
           selectedValue={selectedSemester}
           onValueChange={(itemValue) =>
@@ -130,36 +131,17 @@ export default function DualisMain({ navigation }) {
         <>{enrollmentItems}</>
 
         {error && (
-          <View style={styles.center}>
-            <Text style={styles.message}>{error}</Text>
+          <View style={Styles.DualisMain.center}>
+            <Text style={Styles.DualisMain.message}>{error}</Text>
           </View>
         )}
 
         {noContent && (
-          <View style={styles.center}>
-            <Text style={styles.message}>Kein Inhalt vorhanden</Text>
+          <View style={Styles.DualisMain.center}>
+            <Text style={Styles.DualisMain.message}>Kein Inhalt vorhanden</Text>
           </View>
         )}
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  message: {
-    fontSize: 18,
-    color: Colors.dhbwRed,
-    textAlign: 'center',
-  },
-  scrollView: {
-    marginHorizontal: 20,
-  },
-});

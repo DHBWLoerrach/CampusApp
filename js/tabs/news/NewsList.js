@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import {
   useFocusEffect,
   useNavigation,
@@ -10,6 +10,7 @@ import NewsCell from './NewsCell';
 import ReloadView from '../../util/ReloadView';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import FetchManager from '../../util/fetcher/FetchManager';
+import Styles from '../../Styles/StyleSheet';
 
 function getContent(data, type, refresh, isLoading, navigate, ref) {
   let content = null;
@@ -33,7 +34,7 @@ function getContent(data, type, refresh, isLoading, navigate, ref) {
   } else {
     content = (
       <FlatList
-        style={styles.container}
+        style={Styles.NewsList.container}
         ref={ref}
         data={data}
         onRefresh={refresh}
@@ -101,7 +102,7 @@ export default ({ type }) => {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.NewsList.center}>
         <ActivityIndicator />
       </View>
     );
@@ -109,7 +110,7 @@ export default ({ type }) => {
 
   if (!data && hasNetworkError) {
     return (
-      <View style={styles.container}>
+      <View style={Styles.NewsList.container}>
         <ReloadView buttonText="News laden" onPress={refresh} />
       </View>
     );
@@ -117,20 +118,3 @@ export default ({ type }) => {
 
   return getContent(data, type, refresh, isLoading, navigate, ref);
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  header: {
-    elevation: 0,
-  },
-});

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -8,7 +8,7 @@ import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
-import Styles from '../../util/Styles';
+import Styles from '../../Styles/StyleSheet';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import ReloadView from '../../util/ReloadView';
 
@@ -89,7 +89,7 @@ function CanteenScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.CanteenScreen.center}>
         <ActivityIndicator />
       </View>
     );
@@ -110,22 +110,10 @@ function CanteenScreen() {
   }
 
   return (
-    <Tab.Navigator screenOptions={Styles.topTabBar}>
+    <Tab.Navigator screenOptions={Styles.General.topTabBar}>
       {getPages(dayPlans)}
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default CanteenScreen;

@@ -120,6 +120,11 @@ const Styles = StyleSheet.create({
             color: 'black',
         }
     },
+    ResponsiveImage: {
+        image: {
+            resizeMode: 'contain'
+        }
+    },
     ReloadView: {
         center: {
             flex: 2,

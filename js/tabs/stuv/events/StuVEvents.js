@@ -8,6 +8,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import StuvEventCell from './StuVEventCell';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuVEvents() {
   const [isLoading, setLoading] = useState(true);
@@ -40,7 +41,7 @@ export default function StuVEvents() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.StuVEvents.center}>
         <ActivityIndicator />
       </View>
     );
@@ -58,7 +59,7 @@ export default function StuVEvents() {
 
   return (
     <FlatList
-      style={styles.container}
+      style={Styles.StuVEvents.container}
       data={events}
       onRefresh={refresh}
       refreshing={isLoading}
@@ -74,17 +75,3 @@ export default function StuVEvents() {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-});

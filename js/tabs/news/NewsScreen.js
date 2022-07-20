@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Styles from '../../util/Styles';
+import Styles from '../../Styles/StyleSheet';
 import NewsList from './NewsList';
 import {
   DHBW_EVENTS,
@@ -19,7 +19,7 @@ function Events() {
 }
 
 export default () => (
-  <Tab.Navigator screenOptions={Styles.topTabBar}>
+  <Tab.Navigator screenOptions={Styles.General.topTabBar}>
     <Tab.Screen name="DHBW-News" component={News} />
     <Tab.Screen name="DHBW-Termine" component={Events} />
   </Tab.Navigator>

@@ -2,12 +2,13 @@ import React, { useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './Colors';
+import Styles from '../Styles/StyleSheet';
 
 export default function SearchBar({ onSearch, searchString }) {
   const searchInput = useRef(null);
   const [hasInput, setHasInput] = useState(false);
   return (
-    <View style={styles.searchBar}>
+    <View style={Styles.SearchBar.searchBar}>
       <MaterialIcon
         name="search"
         size={24}
@@ -15,7 +16,7 @@ export default function SearchBar({ onSearch, searchString }) {
         onPress={() => searchInput.current.focus()}
       />
       <TextInput
-        style={styles.searchInput}
+        style={Styles.SearchBar.searchInput}
         ref={searchInput}
         autoCorrect={false}
         placeholder="Suchen"
@@ -40,20 +41,3 @@ export default function SearchBar({ onSearch, searchString }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 36,
-    margin: 10,
-    padding: 3,
-    backgroundColor: Colors.veryLightGray,
-    borderRadius: 12,
-  },
-  searchInput: {
-    flex: 1,
-    padding: 0,
-    color: 'black',
-  },
-});

@@ -9,6 +9,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import Colors from './Colors';
+import Styles from '../Styles/StyleSheet';
 
 export default function DrawerContent({ navigation }) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -45,40 +46,40 @@ export default function DrawerContent({ navigation }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={Styles.DrawerContent.drawerContent}>
       <DrawerContentScrollView {...navigation}>
-        <View style={styles.drawerContent}>
-          <View style={styles.userInfoSection}>
+        <View style={Styles.DrawerContent.drawerContent}>
+          <View style={Styles.DrawerContent.userInfoSection}>
             {authenticated && (
-              <View style={styles.avatar}>
+              <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
                   style={{ backgroundColor: Colors.dhbwRed }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
-                <View style={styles.loggedIn}>
-                  <Title style={styles.title}>Eingeloggt als:</Title>
-                  <Caption style={styles.caption}>{email}</Caption>
+                <View style={Styles.DrawerContent.loggedIn}>
+                  <Title style={Styles.DrawerContent.title}>Eingeloggt als:</Title>
+                  <Caption style={Styles.DrawerContent.caption}>{email}</Caption>
                 </View>
               </View>
             )}
             {!authenticated && (
-              <View style={styles.avatar}>
+              <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
                   style={{ backgroundColor: Colors.dhbwGray }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
-                <View style={styles.loggedIn}>
-                  <Title style={styles.title}>Eingeloggt als:</Title>
-                  <Caption style={styles.caption}>Gast</Caption>
+                <View style={Styles.DrawerContent.loggedIn}>
+                  <Title style={Styles.DrawerContent.title}>Eingeloggt als:</Title>
+                  <Caption style={Styles.DrawerContent.caption}>Gast</Caption>
                 </View>
               </View>
             )}
           </View>
-          <Drawer.Section style={styles.drawerSection}>
+          <Drawer.Section style={Styles.DrawerContent.drawerSection}>
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon name="home-outline" color={color} size={size} />
@@ -100,7 +101,7 @@ export default function DrawerContent({ navigation }) {
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
-      <Drawer.Section style={styles.bottomDrawerSection}>
+      <Drawer.Section style={Styles.DrawerContent.bottomDrawerSection}>
         {authenticated && (
           <DrawerItem
             icon={({ color, size }) => (
@@ -114,51 +115,3 @@ export default function DrawerContent({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-  },
-  userInfoSection: {
-    paddingLeft: 20,
-  },
-  title: {
-    fontSize: 14,
-    marginTop: 3,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  avatar: {
-    flexDirection: 'row',
-    marginTop: 15,
-  },
-  loggedIn: {
-    flexDirection: 'column',
-    marginLeft: 5,
-  },
-  row: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
-  },
-  drawerSection: {
-    marginTop: 15,
-  },
-  bottomDrawerSection: {
-    marginBottom: 15,
-    borderTopColor: '#f4f4f4',
-    borderTopWidth: 1,
-  },
-});

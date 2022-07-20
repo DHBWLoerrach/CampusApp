@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, StyleSheet } from 'react-native';
+import { Dimensions, Image} from 'react-native';
+import Styles from '../Styles/StyleSheet';
 
 export default function ResponsiveImage({ image, margin = 0 }) {
   const [imageWidth, setImageWidth] = useState(0);
@@ -16,19 +17,11 @@ export default function ResponsiveImage({ image, margin = 0 }) {
     });
   }, [image]);
 
-  const styles = StyleSheet.create({
-    image: {
-      resizeMode: 'contain',
-      width: imageWidth,
-      height: imageHeight,
-    },
-  });
-
   return (
     <Image
       source={{ uri: image }}
       resizeMethod={'scale'}
-      style={styles.image}
+      style={[Styles.ResponsiveImage.image, {width: imageWidth, height: imageHeight}]}
     />
   );
 }

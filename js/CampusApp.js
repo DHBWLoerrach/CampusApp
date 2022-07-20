@@ -3,7 +3,6 @@ import {
   AppState,
   Platform,
   StatusBar,
-  StyleSheet,
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,6 +17,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerContent from './util/DrawerContent';
 import DualisNavigator from './drawer-screens/dualis/DualisNavigator';
 import { enableDualis } from './../env.js';
+import Styles from './Styles/StyleSheet';
 
 export const RoleContext = React.createContext(null);
 NotificationTaskScheduler();
@@ -106,7 +106,7 @@ export default function CampusApp() {
 
   if (loading) {
     content = (
-      <View style={styles.center}>
+      <View style={Styles.CampusApp.center}>
         <ActivityIndicator />
       </View>
     );
@@ -116,7 +116,7 @@ export default function CampusApp() {
 
   return (
     <RoleContext.Provider value={{ role, changeRole }}>
-      <View style={styles.container}>
+      <View style={Styles.CampusApp.container}>
         <StatusBar
           translucent={true}
           backgroundColor="rgba(0, 0, 0, 0.2)"
@@ -127,14 +127,3 @@ export default function CampusApp() {
     </RoleContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

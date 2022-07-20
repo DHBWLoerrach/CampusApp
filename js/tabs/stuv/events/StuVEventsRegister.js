@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { inviteUserEvent } from '../helper';
 import Form from '../../../util/Form';
 import PropertyDefinition from '../../../util/PropertyDefinition';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuVEventsRegister({ route }) {
   const navigation = useNavigation();
@@ -21,12 +22,12 @@ export default function StuVEventsRegister({ route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heading}>
-        <Text style={styles.text}>
+    <View style={Styles.StuVEventsRegister.container}>
+      <View style={Styles.StuVEventsRegister.heading}>
+        <Text style={Styles.StuVEventsRegister.text}>
           {`Anmeldung für das Event: ${event.title}`}
         </Text>
-        <Text style={styles.text}>
+        <Text style={Styles.StuVEventsRegister.text}>
           Bitte trage die folgenden Daten ein:
         </Text>
       </View>
@@ -48,27 +49,7 @@ export default function StuVEventsRegister({ route }) {
         }
         fields={fields}
       />
-      <Text style={styles.error}>{errText}</Text>
+      <Text style={Styles.StuVEventsRegister.error}>{errText}</Text>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  heading: {
-    marginBottom: 10,
-    marginTop: 4,
-  },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  error: {
-    color: 'red',
-    padding: 10,
-    marginBottom: 8,
-    fontSize: 17,
-  },
-});

@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Styles from '../Styles/StyleSheet';
 
 const Touchable =
   Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
@@ -16,11 +17,11 @@ export default function HeaderIcon({ icon, size, onPress }) {
     <Touchable
       onPress={onPress}
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      style={styles.touchable}
+      style={Styles.HeaderIcon.touchable}
     >
       <View>
         <MaterialIcon
-          style={styles.icon}
+          style={Styles.HeaderIcon.icon}
           name={icon}
           size={size || 24}
           color="white"
@@ -29,12 +30,3 @@ export default function HeaderIcon({ icon, size, onPress }) {
     </Touchable>
   );
 }
-
-const styles = StyleSheet.create({
-  touchable: {
-    paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 10,
-  },
-});

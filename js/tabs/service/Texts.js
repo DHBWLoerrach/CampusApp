@@ -9,6 +9,7 @@ import {
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import Colors from '../../util/Colors';
+import Styles from '../../Styles/StyleSheet';
 
 export const textAbout =
   'Die Idee zu dieser Campus App entstand auf Initiative der StuV in enger ' +
@@ -24,10 +25,10 @@ export const textAbout =
 
 export function TextCafeteriaKKH() {
   return (
-    <View style={styles.container}>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Cafeteria im KKH</Text>
-        <Text style={styles.text}>
+    <View style={Styles.Texts.container}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Cafeteria im KKH</Text>
+        <Text style={Styles.Texts.text}>
           Im fünften OG des Kreiskrankenhauses Lörrach können Sie Ihr
           Esssen in einer Cafeteria mit Sonnenterrasse und
           eindrucksvollem Panoramablick über Lörrach genießen. Das
@@ -35,15 +36,15 @@ export function TextCafeteriaKKH() {
           bereit. Die Karte wird pro Woche veröffentlicht und
           beinhaltet je ein Tagesangebot für folgende Rubriken
         </Text>
-        <Text style={[styles.text, { paddingLeft: 20 }]}>
+        <Text style={[Styles.Texts.text, { paddingLeft: 20 }]}>
           • Suppe {'\n'}• Deftig & Würzig {'\n'}• Leicht & Lecker{' '}
           {'\n'}• Vegetarisch & Vital {'\n'}• Dessert {'\n'}•
           Abendessen
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Ort</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Ort</Text>
+        <Text style={Styles.Texts.text}>
           Spitalstraße 25
           {'\n'}
           79539 Lörrach
@@ -51,22 +52,22 @@ export function TextCafeteriaKKH() {
           5. OG
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Mittagstisch</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Mittagstisch</Text>
+        <Text style={Styles.Texts.text}>
           Montag bis Freitag: 11:30 – 14:00 Uhr
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Preise</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Preise</Text>
+        <Text style={Styles.Texts.text}>
           Ein Mittagessen kostet ca. 4,50 Euro. Es wird kein
           gesonderter Studierendenrabatt gewährt. Die Bezahlung
           erfolgt in bar.
           {'\n'}
         </Text>
         <Text
-          style={styles.link}
+          style={Styles.Texts.link}
           onPress={() =>
             Linking.openURL(
               'https://www.google.de/maps/dir/Marie-Curie-Stra%C3%9Fe+4,+79539+L%C3%B6rrach/Spitalstra%C3%9Fe+25,+79539+L%C3%B6rrach/@47.6113313,7.6571084,17z/am=t/data=!4m14!4m13!1m5!1m1!1s0x4791b0966fbcb1e1:0xfc6978d1d1304112!2m2!1d7.65858!2d47.60873!1m5!1m1!1s0x4791b09109212865:0x11aee00a889d586e!2m2!1d7.65887!2d47.61412!3e2'
@@ -75,9 +76,9 @@ export function TextCafeteriaKKH() {
         >
           Wegbeschreibung im Browser öffnen
         </Text>
-        <Text style={styles.text}>(ca. 9 Minuten Fußweg) {'\n'}</Text>
+        <Text style={Styles.Texts.text}>(ca. 9 Minuten Fußweg) {'\n'}</Text>
         <Text
-          style={styles.link}
+          style={Styles.Texts.link}
           onPress={() =>
             Linking.openURL(
               'https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach'
@@ -96,25 +97,25 @@ export const disclaimerText =
 
 export function TextAgreedDisclaimer() {
   return (
-    <View style={styles.container}>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+    <View style={Styles.Texts.container}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Mit dem ersten Start der DHBW Lörrach Campus App wurde
           folgender Regelung zugestimmt:
         </Text>
       </View>
-      <View style={[styles.block, { flexDirection: 'row' }]}>
+      <View style={[Styles.Texts.block, { flexDirection: 'row' }]}>
         <MaterialIcon
           name="check"
           size={24}
           color={Colors.dhbwGray}
         />
-        <Text style={[styles.text, styles.quote]}>
+        <Text style={[Styles.Texts.text, Styles.Texts.quote]}>
           {disclaimerText}
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Um diese Zustimmung zurückzuziehen, muss die DHBW Lörrach
           Campus App auf dem Smartphone deinstalliert werden.
         </Text>
@@ -125,8 +126,8 @@ export function TextAgreedDisclaimer() {
 
 export function TextDisclaimer() {
   return (
-    <View style={[styles.block, { marginBottom: 0 }]}>
-      <Text style={styles.text}>{disclaimerText}</Text>
+    <View style={[Styles.Texts.block, { marginBottom: 0 }]}>
+      <Text style={Styles.Texts.text}>{disclaimerText}</Text>
     </View>
   );
 }
@@ -137,10 +138,10 @@ export const textFeedback =
 
 export function TextHieber() {
   return (
-    <View style={styles.container}>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Hieber’s Frische Center</Text>
-        <Text style={styles.text}>
+    <View style={Styles.Texts.container}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Hieber’s Frische Center</Text>
+        <Text style={Styles.Texts.text}>
           Im Eingangsbereich des Hieber’s Frische Center finden Sie
           einen offen designten, modernen Food Court mit urbaner
           Atmosphäre. Täglich wechselnde Gerichte mit Fleisch oder in
@@ -150,30 +151,30 @@ export function TextHieber() {
           bieten für jeden Geschmack etwas.
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Ort</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Ort</Text>
+        <Text style={Styles.Texts.text}>
           Meeraner Platz 1{'\n'}
           79539 Lörrach
           {'\n'}
           Eingangsbereich (unterer Eingang)
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Mittagstisch</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Mittagstisch</Text>
+        <Text style={Styles.Texts.text}>
           Montag bis Samstag 8:00 – 21:00 Uhr
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Preise</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Preise</Text>
+        <Text style={Styles.Texts.text}>
           Je nach Gericht bezahlen Sie i.d.R. zwischen 3 und 8 Euro.
           Es wird kein gesonderter Studierendenrabatt gewährt. Die
           Bezahlung erfolgt in bar oder mit Karte. {'\n'}
         </Text>
         <Text
-          style={styles.link}
+          style={Styles.Texts.link}
           onPress={() =>
             Linking.openURL(
               'https://www.google.de/maps/dir/Marie-Curie-Stra%C3%9Fe+4,+79539+L%C3%B6rrach/Meeraner+Pl.+1,+79539+L%C3%B6rrach/@47.6113313,7.6571084,17z/am=t/data=!4m14!4m13!1m5!1m1!1s0x4791b0966fbcb1e1:0xfc6978d1d1304112!2m2!1d7.65858!2d47.60873!1m5!1m1!1s0x4791b0960e19e73d:0x6a397541db898989!2m2!1d7.658188!2d47.6074594!3e2'
@@ -182,7 +183,7 @@ export function TextHieber() {
         >
           Wegbeschreibung im Browser öffnen
         </Text>
-        <Text style={styles.text}>(ca. 140 Meter Fußweg)</Text>
+        <Text style={Styles.Texts.text}>(ca. 140 Meter Fußweg)</Text>
       </View>
     </View>
   );
@@ -190,9 +191,9 @@ export function TextHieber() {
 
 export function TextImprint() {
   return (
-    <View style={styles.container}>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+    <View style={Styles.Texts.container}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Duale Hochschule Baden-Württemberg Lörrach
           {'\n'}
           Hangstraße 46-50
@@ -209,11 +210,11 @@ export function TextImprint() {
           Umsatzsteuergesetz: DE287664832
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>
           Rechtsform und zuständige Aufsichtsbehörde
         </Text>
-        <Text style={styles.text}>
+        <Text style={Styles.Texts.text}>
           Die Duale Hochschule Baden-Württemberg ist nach § 1 Abs. 1
           DH-ErrichtG vom 12.12.2008 eine rechtsfähige Körperschaft
           des öffentlichen Rechts und zugleich staatliche Einrichtung.
@@ -246,9 +247,9 @@ export function TextImprint() {
           http://www.mwk.bwl.de
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Externe Links</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Externe Links</Text>
+        <Text style={Styles.Texts.text}>
           Die Campus App enthält Links zu externen Webseiten Dritter,
           auf deren Inhalte wir keinen Einfluss haben und für welche
           die DHBW Lörrach keine Gewähr übernehmen kann. Für die
@@ -264,9 +265,9 @@ export function TextImprint() {
           enthalten, teilen Sie uns dies bitte mit.
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Urheberrecht</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Urheberrecht</Text>
+        <Text style={Styles.Texts.text}>
           Soweit die Inhalte auf dieser Seite nicht vom Betreiber
           erstellt wurden, werden die Urheberrechte Dritter beachtet.
           Insbesondere werden Inhalte Dritter als solche
@@ -278,14 +279,14 @@ export function TextImprint() {
           gemacht.
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.headline}>Quellcode</Text>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.headline}>Quellcode</Text>
+        <Text style={Styles.Texts.text}>
           Der Quellcode dieser App wurde als Open Source Projekt unter
           der 3-Klausel-BSD-Lizenz veröffentlicht:
         </Text>
         <Text
-          style={styles.link}
+          style={Styles.Texts.link}
           onPress={() =>
             Linking.openURL(
               'https://github.com/DHBWLoerrach/CampusApp'
@@ -301,9 +302,9 @@ export function TextImprint() {
 
 export function TextPrivacy() {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+    <ScrollView style={Styles.Texts.container}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Die Inhalte unserer Seiten wurden mit größter Sorgfalt
           erstellt. Ich nehme zur Kenntnis, dass für die Richtigkeit,
           Vollständigkeit und Aktualität der Inhalte keine Gewähr
@@ -319,12 +320,12 @@ export function TextPrivacy() {
           zugegriffen bzw. welche Funktionen sie genutzt haben.
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Unsere Datenschutzerklärung finden Sie unter:
         </Text>
         <Text
-          style={styles.link}
+          style={Styles.Texts.link}
           onPress={() =>
             Linking.openURL('https://dhbw-loerrach.de/datenschutz')
           }
@@ -332,8 +333,8 @@ export function TextPrivacy() {
           https://dhbw-loerrach.de/datenschutz
         </Text>
       </View>
-      <View style={styles.block}>
-        <Text style={styles.text}>
+      <View style={Styles.Texts.block}>
+        <Text style={Styles.Texts.text}>
           Duale Hochschule Baden-Württemberg
           {'\n'}
           Friedrichstraße 14
@@ -343,7 +344,7 @@ export function TextPrivacy() {
           Telefon: +49 711 320 660-0{'\n'}
           Telefax: +49 711 320 660-66{'\n'}
           <Text
-            style={styles.link}
+            style={Styles.Texts.link}
             onPress={() =>
               Linking.openURL('mailto:poststelle@dhbw.de')
             }
@@ -352,19 +353,19 @@ export function TextPrivacy() {
           </Text>
           {'\n'}
           <Text
-            style={styles.link}
+            style={Styles.Texts.link}
             onPress={() => Linking.openURL('https://www.dhbw.de')}
           >
             www.dhbw.de
           </Text>
           {'\n'}
         </Text>
-        <Text style={styles.text}>
+        <Text style={Styles.Texts.text}>
           Unseren Datenschutzbeauftragten erreichen Sie unter unserer
           Postadresse mit dem Zusatz "Datenschutzbeauftragte*r" oder
           unter{' '}
           <Text
-            style={styles.link}
+            style={Styles.Texts.link}
             onPress={() =>
               Linking.openURL('mailto:datenschutz@dhbw.de')
             }
@@ -383,22 +384,3 @@ export function TextPrivacy() {
 
 export const textPersonCategory =
   'Bitte wähle hier aus, für welche Personengruppe Du die Mensapreise angezeigt bekommen möchtest:';
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 15,
-  },
-  block: {
-    marginBottom: 20,
-  },
-  quote: {
-    fontStyle: 'italic',
-    marginHorizontal: 15,
-  },
-  headline: {
-    fontSize: 20,
-  },
-  link: {
-    color: Colors.link,
-  },
-});

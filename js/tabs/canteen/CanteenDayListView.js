@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Alert, Image, Text, View } from 'react-native';
 
 import Colors from '../../util/Colors';
 import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
+import Styles from '../../Styles/StyleSheet';
 
 function MealRow({ meal, role, onPress }) {
   let vegetarian;
   if (meal.vegetarian) {
     vegetarian = (
       <Image
-        style={styles.vegetarian}
+        style={Styles.CanteenDayListView.vegetarian}
         source={require('./img/vegetarian.png')}
       />
     );
@@ -28,10 +29,10 @@ function MealRow({ meal, role, onPress }) {
       underlayColor={Colors.cellBorder}
       onPress={onPress}
     >
-      <View style={styles.row}>
-        <Text style={styles.name}>{meal.name}</Text>
-        <View style={styles.right}>
-          <Text style={styles.price}>{price}</Text>
+      <View style={Styles.CanteenDayListView.row}>
+        <Text style={Styles.CanteenDayListView.name}>{meal.name}</Text>
+        <View style={Styles.CanteenDayListView.right}>
+          <Text style={Styles.CanteenDayListView.price}>{price}</Text>
           {vegetarian}
         </View>
       </View>
@@ -56,33 +57,3 @@ export default function CanteenDayListView({ meals, role }) {
   ));
   return <View>{mealRows}</View>;
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    borderColor: Colors.cellBorder,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  name: {
-    flex: 1,
-    fontSize: 17,
-  },
-  price: {
-    color: Colors.dhbwRed,
-    fontSize: 17,
-    paddingBottom: 4,
-    textAlign: 'right',
-    width: 50,
-  },
-  right: {
-    alignItems: 'flex-end',
-  },
-  vegetarian: {
-    backgroundColor: 'transparent',
-    height: 28,
-    width: 28,
-  },
-});

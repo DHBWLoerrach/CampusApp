@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { unregisterUserEvent } from '../helper';
 import Form from '../../../util/Form';
 import PropertyDefinition from '../../../util/PropertyDefinition';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuVEventsUnregister({ route }) {
   const navigation = useNavigation();
@@ -15,9 +16,9 @@ export default function StuVEventsUnregister({ route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heading}>
-        <Text style={styles.text}>
+    <View style={Styles.StuVEventsUnregister.container}>
+      <View style={Styles.StuVEventsUnregister.heading}>
+        <Text style={Styles.StuVEventsUnregister.text}>
           Abmeldung für das Event: {event.title}
         </Text>
         <Text>
@@ -38,25 +39,7 @@ export default function StuVEventsUnregister({ route }) {
         }
         fields={fields}
       ></Form>
-      <Text style={styles.error}>{errText}</Text>
+      <Text style={Styles.StuVEventsUnregister.error}>{errText}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  heading: {
-    padding: 5,
-    marginBottom: 4,
-  },
-  text: {
-    fontWeight: 'bold',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '2%',
-  },
-});

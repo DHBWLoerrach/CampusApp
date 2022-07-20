@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import SubmenuItem from './SubmenuItem';
+import Styles from '../../Styles/StyleSheet';
 
 export default class Submenu extends Component {
   render() {
@@ -12,15 +13,6 @@ export default class Submenu extends Component {
         onPress={menuItem.onPress}
       />
     ));
-    return <View style={styles.menuContainer}>{submenu}</View>;
+    return <View style={Styles.Submenu.menuContainer}>{submenu}</View>;
   }
 }
-
-const styles = StyleSheet.create({
-  menuContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around'
-  }
-});

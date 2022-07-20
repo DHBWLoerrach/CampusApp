@@ -2,75 +2,39 @@ import React from 'react';
 import {
   View,
   Image,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import { Caption, Paragraph, Text } from 'react-native-paper';
-import Colors from '../../util/Colors';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisIntro({ navigation }) {
   return (
-    <View style={styles.container}>
+    <View style={Styles.DualisIntro.container}>
       <Image
-        style={styles.dualisImage}
+        style={Styles.DualisIntro.dualisImage}
         source={require('../../img/dualis-intro.png')}
       />
-      <Caption style={styles.caption}>
+      <Caption style={Styles.DualisIntro.caption}>
         Alle Deine Noten an einem Ort!
       </Caption>
-      <Paragraph style={styles.paragraph}>
+      <Paragraph style={Styles.DualisIntro.paragraph}>
         Die neue Dualis-Funktion in der DHBW Campus App erlaubt es Dir
         jederzeit, auch unterwegs, einfach Deine Noten abzurufen.
       </Paragraph>
-      <Caption style={styles.caption}>
+      <Caption style={Styles.DualisIntro.caption}>
         Vergleiche Dich mit anderen!
       </Caption>
-      <Paragraph style={styles.paragraph}>
+      <Paragraph style={Styles.DualisIntro.paragraph}>
         Du kannst Dir den prozentualen Anteil an Studenten in Deinem
         Kurs anzeigen lassen, die in einem Modul besser, gleich oder
         schlechter abgeschnitten haben.
       </Paragraph>
       <TouchableOpacity
-        style={styles.dhbwButton}
+        style={Styles.DualisIntro.dhbwButton}
         onPress={() => navigation.navigate('DualisLogin')}
       >
-        <Text style={styles.textMargin}>Anmelden</Text>
+        <Text style={Styles.DualisIntro.textMargin}>Anmelden</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  caption: {
-    fontSize: 14,
-    marginTop: 3,
-    fontWeight: 'bold',
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 14,
-    paddingLeft: '10%',
-    paddingRight: '10%',
-    textAlign: 'center',
-    marginBottom: 40,
-  },
-  dualisImage: {
-    flex: 1,
-    width: '60%',
-    height: undefined,
-    resizeMode: 'contain',
-  },
-  dhbwButton: {
-    width: '100%',
-    backgroundColor: Colors.dhbwRed,
-    alignItems: 'center',
-  },
-  textMargin: {
-    color: 'white',
-    margin: 20,
-  },
-});

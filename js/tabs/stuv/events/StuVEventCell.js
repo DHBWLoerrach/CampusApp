@@ -12,7 +12,7 @@ import {
   unixTimeToTimeText,
 } from '../helper';
 import Colors from '../../../util/Colors';
-import Styles from '../../../util/Styles';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuvEventCell({ event, onPress }) {
   const {
@@ -35,18 +35,18 @@ export default function StuvEventCell({ event, onPress }) {
     : require('../../../img/crowd.png');
 
   return (
-    <View style={[Styles.cardShadow, styles.entry]}>
-      <View style={styles.container}>
-        <Image source={image} style={styles.imageContainer} />
+    <View style={[Styles.General.cardShadow, Styles.StuVEventCell.entry]}>
+      <View style={Styles.StuVEventCell.container}>
+        <Image source={image} style={Styles.StuVEventCell.imageContainer} />
 
-        <View style={styles.textContainer}>
-          <Text style={styles.headline}>{name}</Text>
+        <View style={Styles.StuVEventCell.textContainer}>
+          <Text style={Styles.StuVEventCell.headline}>{name}</Text>
 
-          <Text style={styles.details}>{formattedDate}</Text>
-          <Text style={styles.details}>{formattedTime}</Text>
-          <Text style={styles.details}>{registrationRequired}</Text>
+          <Text style={Styles.StuVEventCell.details}>{formattedDate}</Text>
+          <Text style={Styles.StuVEventCell.details}>{formattedTime}</Text>
+          <Text style={Styles.StuVEventCell.details}>{registrationRequired}</Text>
 
-          <Text style={styles.text}>
+          <Text style={Styles.StuVEventCell.text}>
             {shortString(description, 120)}
           </Text>
 
@@ -61,53 +61,3 @@ export default function StuvEventCell({ event, onPress }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  entry: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    flexDirection: 'column',
-  },
-  imageContainer: {
-    width: '100%',
-    aspectRatio: 1,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    resizeMode: 'contain'
-  },
-  textContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    marginBottom: 15,
-  },
-  headline: {
-    fontSize: 28,
-    color: Colors.dhbwRed,
-    fontWeight: '700',
-  },
-  text: {
-    marginTop: 8,
-    fontSize: 16,
-    lineHeight: 21,
-    color: '#262626',
-  },
-  details: {
-    marginTop: 8,
-    fontSize: 18,
-    color: '#262626',
-    fontWeight: '600',
-  },
-  icon: {
-    alignSelf: 'flex-end',
-    color: 'white',
-  },
-  button: {
-    color: Colors.dhbwRed
-  }
-});

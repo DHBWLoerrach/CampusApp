@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import Styles from '../../../Styles/StyleSheet';
 
 export default ({ latitude, longitude, venue }) => (
-  <View style={styles.container}>
+  <View style={Styles.StuVEventMap.ios.container}>
     <MapView
-      style={styles.map}
+      style={Styles.StuVEventMap.ios.map}
       region={{
         latitude,
         longitude,
@@ -17,15 +18,3 @@ export default ({ latitude, longitude, venue }) => (
     </MapView>
   </View>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    height: 250,
-    width: 400,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});

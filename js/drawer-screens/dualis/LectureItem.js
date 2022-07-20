@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Colors from '../../util/Colors';
+import { View, Text } from 'react-native';
+import Styles from '../../Styles/StyleSheet';
 
 export default function LectureItem({
   lecture: { name, number, examType, presence, weighting, grade },
@@ -8,8 +8,8 @@ export default function LectureItem({
   let thePresence = presence ? 'bestanden' : 'nicht bestanden';
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{name}</Text>
+    <View style={Styles.LectureItem.container}>
+      <Text style={Styles.LectureItem.name}>{name}</Text>
       <Text>Vorlesungsnummer: {number}</Text>
       <Text>Leistungsart: {examType}</Text>
       <Text>Note: {grade}</Text>
@@ -18,17 +18,3 @@ export default function LectureItem({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.lightGray,
-    marginBottom: 10,
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 10,
-  },
-  name: {
-    fontSize: 20,
-  },
-});

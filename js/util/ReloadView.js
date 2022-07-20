@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import Colors from './Colors';
+import Styles from '../Styles/StyleSheet';
 
 export default class ReloadView extends Component {
   render() {
@@ -11,8 +12,8 @@ export default class ReloadView extends Component {
         'Fehler mit der Internetverbindung. Probiere es später noch einmal.';
     }
     return (
-      <View style={styles.center}>
-        <Text style={styles.infoText}>{text}</Text>
+      <View style={Styles.ReloadView.center}>
+        <Text style={Styles.ReloadView.infoText}>{text}</Text>
         <Button
           title={this.props.buttonText}
           color={Colors.dhbwRed}
@@ -22,17 +23,3 @@ export default class ReloadView extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  infoText: {
-    justifyContent: 'center',
-    fontSize: 20,
-    marginBottom: 15,
-    paddingHorizontal: 20
-  }
-});

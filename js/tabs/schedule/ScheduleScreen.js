@@ -17,6 +17,7 @@ import {
   fetchLecturesFromWeb,
   saveLecturesToStore,
 } from './store';
+import Styles from '../../Styles/StyleSheet';
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -84,7 +85,7 @@ function ScheduleScreen({ navigation }) {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.ScheduleScreen.center}>
         <ActivityIndicator />
       </View>
     );
@@ -92,7 +93,7 @@ function ScheduleScreen({ navigation }) {
 
   if (!course) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.ScheduleScreen.center}>
         <Button
           title="Kurs eingeben"
           color={Colors.dhbwRed}
@@ -108,7 +109,7 @@ function ScheduleScreen({ navigation }) {
     (status === 'networkError' || status === 'not ok')
   ) {
     return (
-      <View style={styles.container}>
+      <View style={Styles.ScheduleScreen.container}>
         <ReloadView buttonText={buttonText} onPress={loadData} />
       </View>
     );
@@ -118,7 +119,7 @@ function ScheduleScreen({ navigation }) {
     const text =
       'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
     return (
-      <View style={styles.container}>
+      <View style={Styles.ScheduleScreen.container}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -135,7 +136,7 @@ function ScheduleScreen({ navigation }) {
       ' keine Termine ' +
       'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
     return (
-      <View style={styles.container}>
+      <View style={Styles.ScheduleScreen.container}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -147,7 +148,7 @@ function ScheduleScreen({ navigation }) {
 
   // contenInset: needed for last item to be displayed above tab bar on iOS
   return (
-    <View style={styles.container}>
+    <View style={Styles.ScheduleScreen.container}>
       <SearchBar
         onSearch={(text) => setSearchString(text)}
         searchString={searchString}
@@ -165,17 +166,5 @@ function ScheduleScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default ScheduleScreen;

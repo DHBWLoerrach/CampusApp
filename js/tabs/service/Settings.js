@@ -1,9 +1,10 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 
 import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import NotificationSettings from '../../util/NotificationSettings';
+import Styles from '../../Styles/StyleSheet';
 
 function HintNotificationsIOS() {
   return (
@@ -17,7 +18,7 @@ function HintNotificationsIOS() {
 
 function Notifications() {
   return (
-    <View style={styles.configBlock}>
+    <View style={Styles.Settings.configBlock}>
       <Text>
         Hier kannst Du auswählen, welche Benachrichtigungen Du
         erhalten möchtest:
@@ -30,7 +31,7 @@ function Notifications() {
 
 function Category() {
   return (
-    <View style={styles.configBlock}>
+    <View style={Styles.Settings.configBlock}>
       <Text>
         Hiermit legst Du fest, für welche Personengruppe Du die
         Mensapreise angezeigt bekommen möchtest:
@@ -46,20 +47,9 @@ function Category() {
 
 export default function () {
   return (
-    <View style={styles.container}>
+    <View style={Styles.Settings.container}>
       <Category />
       <Notifications />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 15,
-  },
-  configBlock: {
-    marginBottom: 20,
-  },
-});

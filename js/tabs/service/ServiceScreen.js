@@ -26,6 +26,7 @@ import {
   TextImprint,
 } from './Texts';
 import Color from '../../util/Colors';
+import Styles from '../../Styles/StyleSheet';
 
 const iconSize = 36;
 
@@ -183,7 +184,7 @@ export default class ServiceScreen extends Component {
 
   render() {
     return (
-      <View style={styles.screenContainer}>
+      <View style={Styles.ServiceScreen.screenContainer}>
         <ScrollView>
           <Submenu menuItems={this._getSubmenuItems()} />
         </ScrollView>
@@ -191,10 +192,3 @@ export default class ServiceScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});

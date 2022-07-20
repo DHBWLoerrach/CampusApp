@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/core';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuVEventsDetails({ route }) {
   const event = route.params.event;
@@ -67,7 +68,7 @@ export default function StuVEventsDetails({ route }) {
   let registrationView = null;
   if (registerLink) {
     registrationView = (
-      <View style={styles.button}>
+      <View style={Styles.StuVEventsDetails.button}>
         <Button
           disabled={max_limit < registered}
           title="Anmelden"
@@ -103,10 +104,10 @@ export default function StuVEventsDetails({ route }) {
       />
     ) : null;
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView style={Styles.StuVEventsDetails.scrollView}>
       {responsiveImage}
-      <View style={styles.container}>
-        <Text style={styles.headline}>{name}</Text>
+      <View style={Styles.StuVEventsDetails.container}>
+        <Text style={Styles.StuVEventsDetails.headline}>{name}</Text>
         <Text>{description}</Text>
         <Text>{unixTimeToDateText(from)}</Text>
         <Text>{formattedTime}</Text>
@@ -121,26 +122,3 @@ export default function StuVEventsDetails({ route }) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: 'white',
-  },
-  container: {
-    padding: 10,
-    backgroundColor: 'white',
-    zIndex: 2,
-  },
-  button: {
-    marginTop: 10,
-    flexGrow: 1,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'baseline',
-  },
-  headline: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});

@@ -8,6 +8,7 @@ import ReloadView from '../../../util/ReloadView';
 import ActivityIndicator from '../../../util/DHBWActivityIndicator';
 import { loadNews, unixTimeToDateText } from '../helper';
 import CommonCell from '../../../util/CommonCell';
+import Styles from '../../../Styles/StyleSheet';
 
 export default function StuVNews() {
   const [news, setNews] = useState(null);
@@ -40,7 +41,7 @@ export default function StuVNews() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.StuVNews.center}>
         <ActivityIndicator />
       </View>
     );
@@ -55,7 +56,7 @@ export default function StuVNews() {
 
   return (
     <FlatList
-      style={styles.container}
+      style={Styles.StuVNews.container}
       data={news}
       onRefresh={refresh}
       refreshing={isLoading}
@@ -76,16 +77,3 @@ export default function StuVNews() {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-});
