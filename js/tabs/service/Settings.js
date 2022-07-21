@@ -5,6 +5,7 @@ import { RoleContext } from '../../CampusApp';
 import RoleSelection from './RoleSelection';
 import NotificationSettings from '../../util/NotificationSettings';
 import Styles from '../../Styles/StyleSheet';
+import DarkModeSelection from "./DarkModeSelection";
 
 function HintNotificationsIOS() {
   return (
@@ -45,11 +46,24 @@ function Category() {
   );
 }
 
+function DarkMode() {
+    return (
+        <View style={Styles.Settings.configBlock}>
+            <Text>
+                Hier kannst du manuell den Dark Mode der App aktivieren.
+                Dafür muss die Verwendung der Systemeinstellung deaktiviert werden.
+            </Text>
+            <DarkModeSelection/>
+        </View>
+    );
+}
+
 export default function () {
   return (
     <View style={Styles.Settings.container}>
       <Category />
       <Notifications />
+        <DarkMode/>
     </View>
   );
 }
