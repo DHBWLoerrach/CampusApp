@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import {
   Image,
-  Platform,
-  ScrollView,
+  ScrollView, StyleSheet,
   Switch,
   Text,
-  TouchableNativeFeedback,
-  TouchableOpacity,
   View,
 } from 'react-native';
-
-import Colors from './util/Colors';
 
 import {
   TextDisclaimer,
@@ -19,17 +14,19 @@ import {
 import RoleSelection from './tabs/service/RoleSelection';
 import NotificationSettings from './util/NotificationSettings';
 import Styles from './Styles/StyleSheet';
+import UIButton from "./ui/UIButton";
 
-const ButtonTouchable =
+//TODO: Check if its necessary
+/*const ButtonTouchable =
   Platform.OS === 'android'
     ? TouchableNativeFeedback
-    : TouchableOpacity;
+    : TouchableOpacity;*/
 
 export default function WelcomeScreen(props) {
   const [disclaimerChecked, checkDisclaimer] = useState(false);
   const [role, setRole] = useState(null);
 
-  const _onSubmit = () => {
+  const onSubmit = () => {
     if (disclaimerChecked && role) {
       props.onSubmit(role);
     }
@@ -79,15 +76,24 @@ export default function WelcomeScreen(props) {
         <View style={Styles.WelcomeScreen.disclaimer}>
           <TextDisclaimer />
         </View>
+
+        <View style={styles.toggleContainer}>
+          <Text>Ich stimme zu</Text>
+          <Switch
+              onValueChange={(value) => checkDisclaimer(value)}
+              value={disclaimerChecked}
+          />
+        </View>
         <View style={Styles.WelcomeScreen.footer}>
-          <View style={Styles.WelcomeScreen.agreeDisclaimer}>
-            <Text style={Styles.WelcomeScreen.disclaimerLabel}>Ich stimme zu:</Text>
+          {/*<View style={Styles.WelcomeScreen.agreeDisclaimer}>
+            <Text style={Styles.WelcomeScreen.disclaimerLabel}>Ich stimme zu</Text>
             <Switch
               onValueChange={(value) => checkDisclaimer(value)}
               value={disclaimerChecked}
             />
-          </View>
-          <ButtonTouchable onPress={_onSubmit}>
+          </View>*/}
+
+          {/*<ButtonTouchable onPress={_onSubmit}>
             <Text
               style={[
                 Styles.WelcomeScreen.submit,
@@ -101,9 +107,18 @@ export default function WelcomeScreen(props) {
             >
               {'Start >'}
             </Text>
-          </ButtonTouchable>
+          </ButtonTouchable>*/}
+          <UIButton size={"small"} onClick={onSubmit} disabled={! (disclaimerChecked && role)}>Start</UIButton>
         </View>
       </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+});

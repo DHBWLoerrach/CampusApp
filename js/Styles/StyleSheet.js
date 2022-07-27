@@ -11,6 +11,47 @@ if (PixelRatio.get() <= 2) {
 }
 
 const Styles = StyleSheet.create({
+    //New Styles
+    textSizes:{
+        small: {
+            fontSize: 15,
+        },
+        medium: {
+            fontSize: 25,
+        },
+        dialog: {
+            fontSize: 18,
+        }
+    },
+    button: {
+        container: {
+            backgroundColor: Colors.dhbwRed,
+            alignItems: 'center',
+        },
+        text: {
+            color: 'white'
+        },
+        disabled: {
+            backgroundColor: 'grey',
+        },
+        sizes:{
+            small: {
+                padding: 10,
+                borderRadius: 5,
+            },
+            medium: {
+                padding: 10,
+                borderRadius: 5,
+            },
+            dialog: {
+                padding: 10,
+                borderRadius: 3,
+                marginLeft: 7
+            }
+        }
+    },
+
+    //Migrated Stypes
     General:{
         topTabBar: {
             tabBarActiveTintColor: 'white',
