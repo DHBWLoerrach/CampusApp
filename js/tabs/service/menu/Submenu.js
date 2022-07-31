@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import SubmenuItem from './SubmenuItem';
-import Styles from '../../Styles/StyleSheet';
+import Styles from '../../../Styles/StyleSheet';
 
 export default class Submenu extends Component {
   render() {
@@ -9,7 +9,7 @@ export default class Submenu extends Component {
       <SubmenuItem
         key={menuItem.label}
         label={menuItem.label}
-        icon={menuItem.icon}
+        iconName={menuItem.iconName}
         onPress={menuItem.onPress}
       />
     ));

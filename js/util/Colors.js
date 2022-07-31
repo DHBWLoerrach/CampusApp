@@ -8,5 +8,6 @@ module.exports = {
   dhbwRedWebView: 'rgb(226,0,26)', // FIXME: needed by WebView
   lightText: '#7F91A7',
   link: '#E2001A',
-  icon: '#1D1D1B',
+  icon: '#484848',
+  text: '#2c2c2c'
 };

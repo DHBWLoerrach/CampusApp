@@ -293,7 +293,7 @@ const Styles = StyleSheet.create({
             fontWeight: 'bold',
         },
         text: {
-            color: '#262626',
+            color: Colors.text,
         },
         details: {
             color: 'black',
@@ -500,19 +500,29 @@ const Styles = StyleSheet.create({
         }
     },
     SubmenuItem: {
+        icon: {
+            marginBottom: 10,
+        },
         container: {
+            backgroundColor: 'white',
+            borderRadius: 5,
             alignItems: 'center',
-            width: 110,
-            height: 70,
-            marginBottom: 20
+            justifyContent: 'center',
+            width: 180, //TODO: Set Responsive Size
+            marginBottom: 10,
+            paddingTop: 10,
+            paddingBottom: 10
         },
         label: {
-            color: Colors.lightText,
+            color: Colors.text,
+            fontSize: 15,
+            fontWeight: 'bold',
             textAlign: 'center'
         }
     },
     Submenu: {
         menuContainer: {
+            marginTop: 10,
             alignItems: 'center',
             flexDirection: 'row',
             flexWrap: 'wrap',
