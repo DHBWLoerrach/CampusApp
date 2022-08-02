@@ -6,7 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import jwt_decode from 'jwt-decode';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import DualisIntro from './DualisIntro';
 import DualisLogin from './DualisLogin';
 import DualisMain from './DualisMain';
@@ -20,7 +20,7 @@ export default function DualisNavigator({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    focusListener = navigation.addListener('focus', () =>
+    navigation.addListener('focus', () =>
       isAuthenticated()
     );
   }, []);

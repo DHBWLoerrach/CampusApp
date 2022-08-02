@@ -35,6 +35,8 @@ import { faMap } from "@fortawesome/free-solid-svg-icons/faMap";
 import {faGraduationCap} from "@fortawesome/free-solid-svg-icons/faGraduationCap";
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {faSchool} from "@fortawesome/free-solid-svg-icons/faSchool";
+import {faUtensils} from "@fortawesome/free-solid-svg-icons/faUtensils";
+import NavigatorDark from "./NavigatorDark";
 
 library.add(faEye,
     faFileLines,
@@ -43,7 +45,7 @@ library.add(faEye,
     faGear,
     faEnvelope,
     faCloudSun,
-    faBookOpen, faPhone, faMap, faLocationDot, faGraduationCap, faLink, faSchool);
+    faBookOpen, faPhone, faMap, faLocationDot, faGraduationCap, faLink, faSchool, faUtensils);
 
 
 export const RoleContext = React.createContext(null);
@@ -115,7 +117,8 @@ export default function CampusApp() {
     changeRole(role);
   };
 
-  let content = <Navigator />;
+  //let content = <Navigator />;
+  let content = <NavigatorDark />
 
   if (enableDualis) {
     content = (

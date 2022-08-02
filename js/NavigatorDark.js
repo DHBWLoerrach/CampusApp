@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import {Platform, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,7 +8,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Colors from './Styles/Colors';
 import HeaderIcon from './util/HeaderIcon';
 import StuVIcon from './../assets/stuv_icon.svg';
-import { enableStuV } from './../env.js';
+import { enableStuV } from '../env';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -29,6 +29,7 @@ import StuVEventsRegister from './tabs/stuv/events/StuVEventsRegister';
 import StuVEventsUnregister from './tabs/stuv/events/StuVEventsUnregister';
 import { enableDualis } from './../env.js';
 import ServiceScreenDark from "./tabs/service/ServiceScreenDark";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 function getDualisOptions(navigation) {
   if (!enableDualis) return {};
@@ -44,7 +45,7 @@ function getDualisOptions(navigation) {
   };
 }
 
-export default function Navigator({ navigation }) {
+export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
 
   const stackHeaderConfig = {
@@ -261,6 +262,19 @@ export default function Navigator({ navigation }) {
     );
   }
 
+  const tabBarLabel = (title,{ focused }) => {
+    return(
+      <Text style={{color: focused ? Colors.dhbwRed : Colors.darkMode.text,
+        fontSize: 10}}>
+        {title}
+      </Text>
+    )
+  }
+
+  const tabBarIcon = (icon, size, { focused }) => {
+    return <FontAwesomeIcon icon={icon} size={size} color={focused ? Colors.dhbwRed : Colors.darkMode.text}/>
+  }
+
   const tabsConfig = ({ route }) => ({
     headerShown: false,
     tabBarIcon: ({ color }) => {
@@ -274,31 +288,53 @@ export default function Navigator({ navigation }) {
         return <StuVIcon width={32} height={32} color={color} />;
       return <MaterialIcon name={iconName} size={32} color={color} />;
     },
-    tabBarActiveTintColor: Colors.dhbwRed,
+    tabBarStyle: {
+      backgroundColor: Colors.darkMode.background
+    }
+
   });
 
   const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator screenOptions={tabsConfig}>
-        <Tab.Screen name="DHBW" component={NewsStack} />
+        <Tab.Screen name="DHBW"
+                    component={NewsStack}
+                    options={{
+                      tabBarLabel: ({focused}) => tabBarLabel("DHBW", {focused}),
+                      tabBarIcon: ({focused}) => <MaterialIcon name={"rss-feed"} size={32} color={focused ? Colors.dhbwRed : Colors.darkMode.text}/>
+                    }}/>
         {enableStuV ? (
-          <Tab.Screen name="StuV" component={StuVStack} />
+          <Tab.Screen name="StuV"
+                      component={StuVStack}
+                      options={{
+                        tabBarLabel: ({focused}) => tabBarLabel("StuV", {focused}),
+                        tabBarIcon: ({focused}) => <StuVIcon name={"rss-feed"} width={32} height={32} color={focused ? Colors.dhbwRed : Colors.darkMode.text}/>
+                      }}/>
         ) : null}
         <Tab.Screen
           name="Schedule"
           component={ScheduleStack}
-          options={{ title: 'Vorlesungsplan' }}
+          options={{
+            tabBarLabel: ({focused}) => tabBarLabel("Vorlesungsplan", {focused}),
+            tabBarIcon: ({focused}) => tabBarIcon("graduation-cap", 30, {focused})
+          }}
         />
         <Tab.Screen
           name="Canteen"
           component={CanteenStack}
-          options={{ title: 'Mensa' }}
+          options={{
+            tabBarLabel: ({focused}) => tabBarLabel("Mensa", {focused}),
+            tabBarIcon: ({focused}) => tabBarIcon("utensils", 25, {focused})
+          }}
         />
         <Tab.Screen
           name="Services"
           component={ServicesStack}
-          options={{ title: 'Services' }}
+          options={{
+            tabBarLabel: ({focused}) => tabBarLabel("Services", {focused}),
+            tabBarIcon: ({focused}) => tabBarIcon("circle-info", 25, {focused})
+          }}
         />
       </Tab.Navigator>
     </NavigationContainer>

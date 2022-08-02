@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Colors from './Colors';
+import Colors from '../Styles/Colors';
 import Styles from '../Styles/StyleSheet';
 
 export default function SearchBar({ onSearch, searchString }) {

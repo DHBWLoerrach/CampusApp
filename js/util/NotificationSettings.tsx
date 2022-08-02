@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
-import { dhbwGray, dhbwRed } from './Colors';
+import { dhbwGray, dhbwRed } from '../Styles/Colors';
 import {
   loadNotificationSettings,
   saveNotificationSettings,

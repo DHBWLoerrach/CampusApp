@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Paragraph, Text, TextInput } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import Styles from '../../Styles/StyleSheet';
 
 export default function DualisLogin({ navigation }) {
@@ -27,7 +27,7 @@ export default function DualisLogin({ navigation }) {
       })
         .then((resp) => resp.json())
         .then((respJson) => {
-          if (respJson.jwt != '' && respJson.jwt != null) {
+          if (respJson.jwt !== '' && respJson.jwt != null) {
             AsyncStorage.setItem('dualisToken', respJson.jwt);
             setEmail('');
             setPassword('');

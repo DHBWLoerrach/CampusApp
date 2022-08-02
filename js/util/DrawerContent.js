@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
-import Colors from './Colors';
+import Colors from '../Styles/Colors';
 import Styles from '../Styles/StyleSheet';
 
 export default function DrawerContent({ navigation }) {
@@ -20,7 +20,7 @@ export default function DrawerContent({ navigation }) {
   async function isAuthenticated() {
     const token = await AsyncStorage.getItem('dualisToken');
 
-    if (token == null || token == 'logout') {
+    if (token == null || token === 'logout') {
       setAuthenticated(false);
       return;
     }

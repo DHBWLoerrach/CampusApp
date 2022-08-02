@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
-import Colors from '../../util/Colors';
 import EnrollmentItem from './EnrollmentItem';
 import { Picker } from '@react-native-picker/picker';
 import Styles from '../../Styles/StyleSheet';
@@ -62,15 +61,15 @@ export default function DualisMain({ navigation }) {
         }),
         mode: 'cors',
       }).then((response) => {
-        if (response.status == 204) {
+        if (response.status === 204) {
           setNoContent(true);
           setError(null);
           setEnrollments([]);
         }
 
         response.json().then((json) => {
-          if (response.status == 500) {
-            if (json.message != 'Invalid token') {
+          if (response.status === 500) {
+            if (json.message !== 'Invalid token') {
               setNoContent(true);
               setError(json.message);
               setEnrollments([]);
@@ -79,7 +78,7 @@ export default function DualisMain({ navigation }) {
             }
           }
 
-          if (response.status == 200) {
+          if (response.status === 200) {
             setNoContent(false);
             setError(null);
             setEnrollments(json.enrollments);

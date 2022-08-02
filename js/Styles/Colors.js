@@ -9,5 +9,11 @@ module.exports = {
   lightText: '#7F91A7',
   link: '#E2001A',
   icon: '#484848',
-  text: '#2c2c2c'
+  text: '#2c2c2c',
+  darkMode: {
+    background: '#000',
+    text: '#fff',
+    icon: '#fff',
+    card: '#1e1e1e',
+  }
 };

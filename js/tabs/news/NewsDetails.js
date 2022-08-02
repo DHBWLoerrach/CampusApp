@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview';
 
 import { format } from 'date-fns';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
 
 export default ({ route }) => {
@@ -64,7 +64,7 @@ export default ({ route }) => {
         <html>
           <head>
             <style>
-              body {font-family: -apple-system; ${fontSize}; padding: 0 20px; }
+              body {font-family: -apple-system,serif; ${fontSize}; padding: 0 20px; }
               h2 {color: ${Colors.dhbwRedWebView}}
             </style>
           </head>

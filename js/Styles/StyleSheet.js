@@ -1,5 +1,5 @@
 import {Dimensions, PixelRatio, StyleSheet} from 'react-native';
-import Colors from "../util/Colors";
+import Colors from "./Colors";
 import Constants from "../util/Constants";
 
 var FONT_TAB_BAR_LABEL = 13;

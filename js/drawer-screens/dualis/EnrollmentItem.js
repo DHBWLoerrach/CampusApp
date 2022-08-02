@@ -2,10 +2,9 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Styles from '../../Styles/StyleSheet';
 

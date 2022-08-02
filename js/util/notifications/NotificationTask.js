@@ -3,7 +3,7 @@ import FetchManager, {
   DHBW_EVENTS,
   DHBW_NEWS,
 } from '../fetcher/FetchManager';
-import { dhbwRed } from '../Colors';
+import { dhbwRed } from '../../Styles/Colors';
 import { getDay } from '../../tabs/schedule/store';
 import { loadNotificationSettings } from '../../tabs/service/SettingsHelper';
 

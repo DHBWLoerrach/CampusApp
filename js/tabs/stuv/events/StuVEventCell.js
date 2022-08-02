@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   View,
   Button
@@ -11,7 +10,7 @@ import {
   unixTimeToDateText,
   unixTimeToTimeText,
 } from '../helper';
-import Colors from '../../../util/Colors';
+import Colors from '../../../Styles/Colors';
 import Styles from '../../../Styles/StyleSheet';
 
 export default function StuvEventCell({ event, onPress }) {

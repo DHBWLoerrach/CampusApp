@@ -3,14 +3,13 @@ import {
   Alert,
   Platform,
   Linking,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';
 

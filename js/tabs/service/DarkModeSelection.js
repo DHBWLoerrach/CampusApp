@@ -1,8 +1,7 @@
 import {View, StyleSheet, Text, Switch} from "react-native";
 import React, {useState} from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import Styles from "../../Styles/StyleSheet";
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 
 export default function DarkModeSelection() {
     const [darkMode, setDarkMode] = useState(false);

@@ -1,14 +1,13 @@
 import React from 'react';
 import {
   Linking,
-  StyleSheet,
   ScrollView,
   Text,
   View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import Styles from '../../Styles/StyleSheet';
 
 export const textAbout =

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import { textFeedback } from './Texts';
 import ListCellTouchable from '../../util/ListCellTouchable';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import Styles from '../../Styles/StyleSheet';
 
 export default class Feedback extends Component {

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, ScrollView, Linking } from 'react-native';
-
-import Colors from '../../util/Colors';
+import { Text, ScrollView, Linking } from 'react-native';
 
 import { textAbout } from './Texts';
 import Styles from '../../Styles/StyleSheet';

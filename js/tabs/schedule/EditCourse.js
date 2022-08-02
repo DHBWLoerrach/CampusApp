@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import {
   Alert,
   Button,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -12,7 +11,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import { courseList } from '../../../env.js';
 import Styles from '../../Styles/StyleSheet';
 

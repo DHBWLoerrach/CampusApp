@@ -3,7 +3,7 @@ import {Text, TouchableOpacity} from 'react-native';
 
 import Styles from '../../../Styles/StyleSheet';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import Color from "../../../util/Colors";
+import Color from "../../../Styles/Colors";
 
 const iconSize = 30;
 

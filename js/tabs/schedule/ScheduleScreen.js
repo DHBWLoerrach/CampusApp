@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Button, SectionList, StyleSheet, View } from 'react-native';
+import { Button, SectionList, View } from 'react-native';
 import {
   useFocusEffect,
   useScrollToTop,
 } from '@react-navigation/native';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';

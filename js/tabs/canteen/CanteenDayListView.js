@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Image, Text, View } from 'react-native';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';

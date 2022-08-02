@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Text, View } from 'react-native';
 
-import Colors from './Colors';
+import Colors from '../Styles/Colors';
 import Styles from '../Styles/StyleSheet';
 
 export default class ReloadView extends Component {
