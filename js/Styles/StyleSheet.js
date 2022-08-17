@@ -79,7 +79,6 @@ const Styles = StyleSheet.create({
             flex: 1,
         },
         contentContainer: {
-            backgroundColor: 'white',
             paddingHorizontal: 10,
             paddingVertical: 10,
         },
@@ -103,8 +102,7 @@ const Styles = StyleSheet.create({
         },
         welcome: {
             flex: 1,
-            flexDirection: 'row',
-            color: Colors.dhbwRed,
+            flexDirection: 'row'
         },
         selection: {
             marginTop: 15,
@@ -133,6 +131,11 @@ const Styles = StyleSheet.create({
         },
         submit: {
             fontSize: 24,
+        },
+        toggleContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10,
         }
     },
     CampusApp: {
@@ -152,13 +155,11 @@ const Styles = StyleSheet.create({
             height: 36,
             margin: 10,
             padding: 3,
-            backgroundColor: Colors.veryLightGray,
             borderRadius: 12,
         },
         searchInput: {
             flex: 1,
             padding: 0,
-            color: 'black',
         }
     },
     ResponsiveImage: {
@@ -259,14 +260,10 @@ const Styles = StyleSheet.create({
             height: 32,
             justifyContent: 'center',
             paddingHorizontal: Constants.listViewRowPaddingHorizontal
-        },
-        label: {
-            color: Colors.lightText
         }
     },
     CommonCell: {
         entry: {
-            backgroundColor: 'white',
             borderRadius: 10,
             padding: 10,
             marginBottom: 10,
@@ -292,12 +289,8 @@ const Styles = StyleSheet.create({
             color: Colors.dhbwRed,
             fontWeight: 'bold',
         },
-        text: {
-            color: Colors.text,
-        },
         details: {
-            color: 'black',
-            fontWeight: 'bold',
+            fontWeight: 'bold'
         }
     },
     StuVNewsDetails: {
@@ -387,14 +380,12 @@ const Styles = StyleSheet.create({
     StuVEvents: {
         container: {
             flex: 1,
-            backgroundColor: 'white',
             paddingVertical: 10,
         },
         center: {
             flex: 2,
             alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'white',
+            justifyContent: 'center'
         }
     },
     StuVEventMap: {
@@ -504,7 +495,6 @@ const Styles = StyleSheet.create({
             marginBottom: 10,
         },
         container: {
-            backgroundColor: 'white',
             borderRadius: 5,
             alignItems: 'center',
             justifyContent: 'center',
@@ -514,7 +504,6 @@ const Styles = StyleSheet.create({
             paddingBottom: 10
         },
         label: {
-            color: Colors.text,
             fontSize: 15,
             fontWeight: 'bold',
             textAlign: 'center'
@@ -541,8 +530,7 @@ const Styles = StyleSheet.create({
     },
     ServiceScreen: {
         screenContainer: {
-            flex: 1,
-            backgroundColor: 'white',
+            flex: 1
         }
     },
     RoleSelection: {
@@ -558,15 +546,13 @@ const Styles = StyleSheet.create({
             width: 20,
             borderRadius: 10,
             borderWidth: 2,
-            borderColor: 'black',
             alignItems: 'center',
             justifyContent: 'center',
         },
         innerCircle: {
             height: 10,
             width: 10,
-            borderRadius: 5,
-            backgroundColor: 'black',
+            borderRadius: 5
         },
         label: {
             marginLeft: 5,
@@ -577,11 +563,9 @@ const Styles = StyleSheet.create({
     },
     LinksList: {
         container: {
-            flex: 1,
-            backgroundColor: 'white',
+            flex: 1
         },
         separator: {
-            backgroundColor: Colors.cellBorder,
             height: StyleSheet.hairlineWidth,
         },
         row: {
@@ -593,8 +577,7 @@ const Styles = StyleSheet.create({
         },
         title: {
             flex: 1,
-            fontSize: 17,
-            color: Colors.darkText,
+            fontSize: 17
         }
     },
     InfoText: {
@@ -619,18 +602,15 @@ const Styles = StyleSheet.create({
         title: {
             flex: 1,
             fontSize: 17,
-            color: Colors.darkText,
         }
     },
     About: {
         container: {
             flex: 1,
-            backgroundColor: 'white',
             padding: 20,
         },
         link: {
             fontSize: 15,
-            color: Colors.link,
         },
         marginBig: {
             marginTop: 24,
@@ -641,8 +621,7 @@ const Styles = StyleSheet.create({
     },
     ScheduleScreen: {
         container: {
-            flex: 1,
-            backgroundColor: 'white',
+            flex: 1
         },
         center: {
             flex: 2,
@@ -659,8 +638,7 @@ const Styles = StyleSheet.create({
             fontSize: Constants.bigFont
         },
         info: {
-            fontSize: Constants.smallFont,
-            color: Colors.lightText
+            fontSize: Constants.smallFont
         }
     },
     EditCourse: {
@@ -685,14 +663,12 @@ const Styles = StyleSheet.create({
     NewsList: {
         container: {
             flex: 1,
-            backgroundColor: 'white',
             paddingVertical: 10,
         },
         center: {
             flex: 2,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'white',
         },
         header: {
             elevation: 0,
@@ -714,8 +690,6 @@ const Styles = StyleSheet.create({
             flexDirection: 'row',
             paddingVertical: 10,
             paddingHorizontal: 10,
-            backgroundColor: 'white',
-            borderColor: Colors.cellBorder,
             borderBottomWidth: StyleSheet.hairlineWidth,
         },
         name: {
@@ -723,7 +697,6 @@ const Styles = StyleSheet.create({
             fontSize: 17,
         },
         price: {
-            color: Colors.dhbwRed,
             fontSize: 17,
             paddingBottom: 4,
             textAlign: 'right',
@@ -914,13 +887,24 @@ const Styles = StyleSheet.create({
     },
     InfoImage: {
         container: {
-            flex: 1,
-            backgroundColor: 'white'
+            flex: 1
         },
         img: {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').width,
             marginBottom: 2
+        }
+    },
+    DarkModeSelection: {
+        container: {
+            flex: 1
+        },
+        itemRow: {
+            flexDirection: "row",
+            marginTop: 10
+        },
+        switchRow: {
+            justifyContent: "space-between"
         }
     }
 });

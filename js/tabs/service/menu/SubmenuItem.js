@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 
 import Styles from '../../../Styles/StyleSheet';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import Color from "../../../Styles/Colors";
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 const iconSize = 30;
 
-export default class SubmenuItem extends Component {
-
-    render() {
-        return (
-            <TouchableOpacity style={[Styles.SubmenuItem.container, Styles.General.cardShadow]}
-                              activeOpacity={0.7}
-                              onPress={this.props.onPress}>
-                <FontAwesomeIcon style={Styles.SubmenuItem.icon}
-                                    icon={this.props.iconName}
-                                 size={iconSize}
-                                 color={Color.icon}/>
-                <Text style={Styles.SubmenuItem.label}>{this.props.label}</Text>
-          </TouchableOpacity>
-        );
-  }
+export default function SubmenuItem(props)
+{
+    const colorContext = useContext(ColorSchemeContext);
+    return (
+        <TouchableOpacity style={[Styles.SubmenuItem.container, Styles.General.cardShadow, {backgroundColor: colorContext.colorScheme.card}]}
+                          activeOpacity={0.7}
+                          onPress={props.onPress}>
+            <FontAwesomeIcon style={Styles.SubmenuItem.icon}
+                             icon={props.iconName}
+                             size={iconSize}
+                             color={colorContext.colorScheme.icon}/>
+            <Text style={[Styles.SubmenuItem.label, {color: colorContext.colorScheme.text}]}>{props.label}</Text>
+        </TouchableOpacity>
+    );
 }

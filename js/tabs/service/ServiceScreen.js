@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import {
   Linking,
   ScrollView,
@@ -21,11 +21,13 @@ import {
   TextImprint,
 } from './Texts';
 import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
-export default class ServiceScreen extends Component {
+export default function ServiceScreen(props){
+  const colorContext = useContext(ColorSchemeContext);
 
-  _getSubmenuItems() {
-    const { navigate } = this.props.navigation;
+  const _getSubmenuItems = () => {
+    const { navigate } = props.navigation;
     return [
       {
         label: 'Anreise',
@@ -101,14 +103,11 @@ export default class ServiceScreen extends Component {
       },
     ];
   }
-
-  render() {
     return (
-      <View style={Styles.ServiceScreen.screenContainer}>
+      <View style={[Styles.ServiceScreen.screenContainer, {backgroundColor: colorContext.colorScheme.background}]}>
         <ScrollView>
-          <Submenu menuItems={this._getSubmenuItems()} />
+          <Submenu menuItems={_getSubmenuItems()} />
         </ScrollView>
       </View>
     );
-  }
 }

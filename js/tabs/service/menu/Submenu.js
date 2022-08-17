@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import { View } from 'react-native';
 import SubmenuItem from './SubmenuItem';
 import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
-export default class Submenu extends Component {
-  render() {
-    let submenu = this.props.menuItems.map(menuItem => (
+export default function Submenu(props) {
+  const colorContext = useContext(ColorSchemeContext);
+
+    let submenu = props.menuItems.map(menuItem => (
       <SubmenuItem
         key={menuItem.label}
         label={menuItem.label}
@@ -13,6 +15,5 @@ export default class Submenu extends Component {
         onPress={menuItem.onPress}
       />
     ));
-    return <View style={Styles.Submenu.menuContainer}>{submenu}</View>;
-  }
+    return <View style={[Styles.Submenu.menuContainer, {backgroundColor: colorContext.colorScheme.background}]}>{submenu}</View>;
 }

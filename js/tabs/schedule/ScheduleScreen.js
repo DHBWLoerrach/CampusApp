@@ -1,11 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import { Button, SectionList, View } from 'react-native';
 import {
   useFocusEffect,
   useScrollToTop,
 } from '@react-navigation/native';
 
-import Colors from '../../Styles/Colors';
 import DayHeader from '../../util/DayHeader';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';
@@ -18,6 +17,7 @@ import {
   saveLecturesToStore,
 } from './store';
 import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -26,6 +26,7 @@ function ScheduleScreen({ navigation }) {
   const [lectures, setLectures] = useState(null);
   const [searchString, setSearchString] = useState('');
   const ref = React.useRef(null);
+  const colorContext = useContext(ColorSchemeContext);
   useScrollToTop(ref);
 
   // load data: first from local store, then fetch latest data from web
@@ -85,7 +86,7 @@ function ScheduleScreen({ navigation }) {
 
   if (isLoading) {
     return (
-      <View style={Styles.ScheduleScreen.center}>
+      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
         <ActivityIndicator />
       </View>
     );
@@ -93,10 +94,10 @@ function ScheduleScreen({ navigation }) {
 
   if (!course) {
     return (
-      <View style={Styles.ScheduleScreen.center}>
+      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
         <Button
           title="Kurs eingeben"
-          color={Colors.dhbwRed}
+          color={colorContext.colorScheme.dhbwRed}
           onPress={() => navigation.navigate('EditCourse')}
         />
       </View>
@@ -109,7 +110,7 @@ function ScheduleScreen({ navigation }) {
     (status === 'networkError' || status === 'not ok')
   ) {
     return (
-      <View style={Styles.ScheduleScreen.container}>
+      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
         <ReloadView buttonText={buttonText} onPress={loadData} />
       </View>
     );
@@ -119,7 +120,7 @@ function ScheduleScreen({ navigation }) {
     const text =
       'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
     return (
-      <View style={Styles.ScheduleScreen.container}>
+      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -136,7 +137,7 @@ function ScheduleScreen({ navigation }) {
       ' keine Termine ' +
       'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
     return (
-      <View style={Styles.ScheduleScreen.container}>
+      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -148,7 +149,7 @@ function ScheduleScreen({ navigation }) {
 
   // contenInset: needed for last item to be displayed above tab bar on iOS
   return (
-    <View style={Styles.ScheduleScreen.container}>
+    <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
       <SearchBar
         onSearch={(text) => setSearchString(text)}
         searchString={searchString}

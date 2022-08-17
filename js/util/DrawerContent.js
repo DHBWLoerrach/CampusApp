@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { View } from 'react-native';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,10 +10,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import Colors from '../Styles/Colors';
 import Styles from '../Styles/StyleSheet';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 export default function DrawerContent({ navigation }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
+  const colorContext = useContext(ColorSchemeContext);
 
   useEffect(() => setInterval(() => isAuthenticated(), 5000), []);
 
@@ -46,35 +48,35 @@ export default function DrawerContent({ navigation }) {
   }
 
   return (
-    <View style={Styles.DrawerContent.drawerContent}>
+    <View style={[Styles.DrawerContent.drawerContent, {backgroundColor: colorContext.colorScheme.background}]}>
       <DrawerContentScrollView {...navigation}>
         <View style={Styles.DrawerContent.drawerContent}>
           <View style={Styles.DrawerContent.userInfoSection}>
             {authenticated && (
               <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
-                  style={{ backgroundColor: Colors.dhbwRed }}
+                  style={{ backgroundColor: colorContext.colorScheme.dhbwRed }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
                 <View style={Styles.DrawerContent.loggedIn}>
-                  <Title style={Styles.DrawerContent.title}>Eingeloggt als:</Title>
-                  <Caption style={Styles.DrawerContent.caption}>{email}</Caption>
+                  <Title style={[Styles.DrawerContent.title, {color: colorContext.colorScheme.text}]}>Eingeloggt als:</Title>
+                  <Caption style={[Styles.DrawerContent.caption, {color: colorContext.colorScheme.text}]}>{email}</Caption>
                 </View>
               </View>
             )}
             {!authenticated && (
               <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
-                  style={{ backgroundColor: Colors.dhbwGray }}
+                  style={{ backgroundColor: colorContext.colorScheme.dhbwGray }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
                 <View style={Styles.DrawerContent.loggedIn}>
-                  <Title style={Styles.DrawerContent.title}>Eingeloggt als:</Title>
-                  <Caption style={Styles.DrawerContent.caption}>Gast</Caption>
+                  <Title style={[Styles.DrawerContent.title, {color: colorContext.colorScheme.text}]}>Eingeloggt als:</Title>
+                  <Caption style={[Styles.DrawerContent.caption, {color: colorContext.colorScheme.text}]}>Gast</Caption>
                 </View>
               </View>
             )}

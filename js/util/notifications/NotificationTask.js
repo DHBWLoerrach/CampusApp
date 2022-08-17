@@ -3,7 +3,6 @@ import FetchManager, {
   DHBW_EVENTS,
   DHBW_NEWS,
 } from '../fetcher/FetchManager';
-import { dhbwRed } from '../../Styles/Colors';
 import { getDay } from '../../tabs/schedule/store';
 import { loadNotificationSettings } from '../../tabs/service/SettingsHelper';
 
@@ -23,7 +22,7 @@ async function localPush(title, body) {
     android: {
       channelId,
       smallIcon: 'ic_launcher_foreground',
-      color: dhbwRed,
+      color: '#E2001A',
       importance: AndroidImportance.LOW,
       pressAction: {
         id: 'default',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Image,
   Text,
@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import Styles from '../Styles/StyleSheet';
 import { shortString } from '../tabs/stuv/helper';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 export default ({
   imageSource,
@@ -15,9 +16,12 @@ export default ({
   details = [],
   description,
   onPress,
-}) => (
+}) => {
+  const colorContext = useContext(ColorSchemeContext);
+
+  return (
   <TouchableOpacity
-    style={[Styles.General.cardShadow, Styles.CommonCell.entry]}
+    style={[Styles.General.cardShadow, Styles.CommonCell.entry, {backgroundColor: colorContext.colorScheme.card}]}
     activeOpacity={0.7}
     onPress={onPress}
   >
@@ -29,14 +33,14 @@ export default ({
       <View style={Styles.CommonCell.textContainer}>
         <Text style={Styles.CommonCell.headline}>{title}</Text>
         {details.map((detail, index) => (
-          <Text style={Styles.CommonCell.details} key={index}>
+          <Text style={[Styles.CommonCell.details, {color: colorContext.colorScheme.text}]} key={index}>
             {detail}
           </Text>
         ))}
-        <Text style={Styles.CommonCell.text}>
+        <Text style={{color: colorContext.colorScheme.text}}>
           {shortString(description, 90)}
         </Text>
       </View>
     </View>
   </TouchableOpacity>
-);
+)};

@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { format } from 'date-fns';
-
-import Colors from '../../Styles/Colors';
 import { DHBW_EVENTS } from '../../util/fetcher/FetchManager';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 export default ({ route }) => {
   const fontSize = 'font-size: 42px;';
+  const colorContext = useContext(ColorSchemeContext);
   const googleDocsPDF =
     'https://docs.google.com/gview?embedded=true&url=';
   let {
@@ -64,8 +64,9 @@ export default ({ route }) => {
         <html>
           <head>
             <style>
-              body {font-family: -apple-system,serif; ${fontSize}; padding: 0 20px; }
-              h2 {color: ${Colors.dhbwRedWebView}}
+              body {font-family: -apple-system,serif; ${fontSize}; padding: 0 20px; background-color: ${colorContext.colorScheme.background}; color: ${colorContext.colorScheme.text}}
+              h2 {color: ${colorContext.colorScheme.dhbwRedWebView}}
+              h3 {color: ${colorContext.colorScheme.text}}
             </style>
           </head>
           <body>

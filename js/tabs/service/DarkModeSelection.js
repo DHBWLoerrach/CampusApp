@@ -1,50 +1,68 @@
-import {View, StyleSheet, Text, Switch} from "react-native";
-import React, {useState} from "react";
+import {View, StyleSheet, Text, Switch, useColorScheme} from "react-native";
+import React, {useContext, useState} from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Colors from '../../Styles/Colors';
+import AsyncStorage from "@react-native-community/async-storage";
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import Styles from "../../Styles/StyleSheet";
 
 export default function DarkModeSelection() {
-    const [darkMode, setDarkMode] = useState(false);
-    const [override, setOverride] = useState(false);
+    const colorContext = useContext(ColorSchemeContext);
+    const systemTheme = useColorScheme();
+
+    const onClickOverride = (value) => {
+        AsyncStorage.setItem("overrideSystemTheme", JSON.stringify(value));
+        colorContext.setOverride(value);
+
+        if(!value)
+        {
+            colorContext.setColorScheme(systemTheme === "dark" ? Colors.darkMode : Colors.lightMode);
+        }
+        else
+        {
+            colorContext.setColorScheme(colorContext.darkMode ? Colors.darkMode : Colors.lightMode);
+        }
+    };
+
+    const onToggleDarkMode = (value) => {
+        AsyncStorage.setItem("manualDarkMode", JSON.stringify(value));
+        colorContext.setDarkMode(value);
+        if(value)
+        {
+            colorContext.setColorScheme(Colors.darkMode);
+
+        }
+        else
+        {
+            colorContext.setColorScheme(Colors.lightMode);
+        }
+    };
 
     return (
         <View>
-            <View style={style.itemRow}>
+            <View style={Styles.DarkModeSelection.itemRow}>
                 <BouncyCheckbox
-                    fillColor={Colors.dhbwRed}
-                    unfillColor="#FFFFFF"
+                    fillColor={colorContext.colorScheme.dhbwRed}
+                    unfillColor={colorContext.colorScheme.card}
                     text="Systemeinstellung ignorieren"
-                    onPress={(isChecked) => {setOverride(isChecked)}}
-                    isChecked={override}
+                    onPress={(value) => onClickOverride(value)}
+                    isChecked={colorContext.override}
                     size={20}
-                    textStyle={{fontSize: 14}}/>
+                    textStyle={{fontSize: 14, color: colorContext.colorScheme.text, textDecorationLine: "none"}}/>
             </View>
             {
-                override && (
-                    <View style={[style.itemRow, style.switchRow]}>
-                        <Text>
+                colorContext.override && (
+                    <View style={[Styles.DarkModeSelection.itemRow, Styles.DarkModeSelection.switchRow]}>
+                        <Text style={{color: colorContext.colorScheme.text}}>
                             Dark Mode
                         </Text>
-                        <Switch trackColor={{false: Colors.dhbwGray, true: Colors.dhbwRed}}
+                        <Switch trackColor={{false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed}}
                                 thumbColor="#f4f3f4"
-                                onValueChange={(value) => setDarkMode(value)}
-                                value={darkMode}/>
+                                onValueChange={(value) => onToggleDarkMode(value)}
+                                value={colorContext.darkMode}/>
                     </View>
                 )
             }
         </View>
     );
 }
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    itemRow: {
-        flexDirection: "row",
-        marginTop: 10
-    },
-    switchRow: {
-        justifyContent: "space-between"
-    }
-});

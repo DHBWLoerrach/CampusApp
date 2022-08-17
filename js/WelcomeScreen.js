@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Image,
   ScrollView, StyleSheet,
@@ -15,6 +15,7 @@ import RoleSelection from './tabs/service/RoleSelection';
 import NotificationSettings from './util/NotificationSettings';
 import Styles from './Styles/StyleSheet';
 import UIButton from "./ui/UIButton";
+import {ColorSchemeContext} from "./context/ColorSchemeContext";
 
 //TODO: Check if its necessary
 /*const ButtonTouchable =
@@ -25,6 +26,7 @@ import UIButton from "./ui/UIButton";
 export default function WelcomeScreen(props) {
   const [disclaimerChecked, checkDisclaimer] = useState(false);
   const [role, setRole] = useState(null);
+  const colorContext = useContext(ColorSchemeContext);
 
   const onSubmit = () => {
     if (disclaimerChecked && role) {
@@ -33,14 +35,14 @@ export default function WelcomeScreen(props) {
   };
 
   return (
-    <View style={Styles.WelcomeScreen.container}>
+    <View style={[Styles.WelcomeScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
       <Image
         style={Styles.WelcomeScreen.headerImage}
         source={require('./img/drawer-header.png')}
       />
-      <ScrollView style={Styles.WelcomeScreen.contentContainer}>
+      <ScrollView style={[Styles.WelcomeScreen.contentContainer, {backgroundColor: colorContext.colorScheme.background}]}>
         <View style={Styles.WelcomeScreen.header}>
-          <Text style={[Styles.WelcomeScreen.heading, Styles.WelcomeScreen.welcome]}>
+          <Text style={[Styles.WelcomeScreen.heading, Styles.WelcomeScreen.welcome, {color: colorContext.colorScheme.dhbwRed}]}>
             Willkommen an der DHBW Lörrach
           </Text>
           <Image
@@ -49,14 +51,14 @@ export default function WelcomeScreen(props) {
           />
         </View>
         <View>
-          <Text>
+          <Text style={{color: colorContext.colorScheme.text}}>
             Diese App ermöglicht den mobilen Zugriff auf News für
             Studierende, Vorlesungspläne, Speiseplan der Mensa…
           </Text>
         </View>
         <View style={Styles.WelcomeScreen.selection}>
           <View>
-            <Text>{textPersonCategory}</Text>
+            <Text style={{color: colorContext.colorScheme.text}}>{textPersonCategory}</Text>
           </View>
           <RoleSelection
             role={role}
@@ -65,7 +67,7 @@ export default function WelcomeScreen(props) {
         </View>
 
         <View style={Styles.WelcomeScreen.notificationSettings}>
-          <Text>
+          <Text style={{color: colorContext.colorScheme.text}}>
             Hier kannst Du auswählen, welche Benachrichtigungen Du
             erhalten möchtest. Dies geschieht höchstens einmal am Tag.
           </Text>
@@ -77,9 +79,11 @@ export default function WelcomeScreen(props) {
           <TextDisclaimer />
         </View>
 
-        <View style={styles.toggleContainer}>
-          <Text>Ich stimme zu</Text>
+        <View style={Styles.WelcomeScreen.toggleContainer}>
+          <Text style={{color: colorContext.colorScheme.text}}>Ich stimme zu</Text>
           <Switch
+              trackColor={{false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed}}
+              thumbColor="#f4f3f4"
               onValueChange={(value) => checkDisclaimer(value)}
               value={disclaimerChecked}
           />
@@ -114,11 +118,3 @@ export default function WelcomeScreen(props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  toggleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-});

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {
   Alert,
   Button,
@@ -11,7 +11,6 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-import Colors from '../../Styles/Colors';
 import { courseList } from '../../../env.js';
 import Styles from '../../Styles/StyleSheet';
 
@@ -20,10 +19,12 @@ import {
   clearLecturesFromStore,
   saveCourseToStore,
 } from './store';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 export default function EditCourse() {
   const [course, setCourse] = useState('');
   const [currentCourse, setCurrentCourse] = useState(null);
+  const colorContext = useContext(ColorSchemeContext);
   const { goBack } = useNavigation();
 
   // when screen is focussed, load current course from store and keep it in separate state
@@ -57,13 +58,13 @@ export default function EditCourse() {
   }
 
   return (
-    <View style={Styles.EditCourse.container}>
-      <Text>
+    <View style={[Styles.EditCourse.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <Text style={{color: colorContext.colorScheme.text}}>
         Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
       </Text>
       <View style={Styles.EditCourse.inputContainer}>
         <TextInput
-          style={Styles.EditCourse.input}
+          style={[Styles.EditCourse.input, {color: colorContext.colorScheme.text}]}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={true}
@@ -73,11 +74,11 @@ export default function EditCourse() {
         />
         <Button
           title="Kurs anzeigen"
-          color={Colors.dhbwRed}
+          color={colorContext.colorScheme.dhbwRed}
           onPress={onPressClicked}
         />
       </View>
-      <Text>
+      <Text style={{color: colorContext.colorScheme.text}}>
         Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
         -- Feedback.

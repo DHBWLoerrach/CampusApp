@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Alert, Image, Text, View } from 'react-native';
 
-import Colors from '../../Styles/Colors';
 import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 function MealRow({ meal, role, onPress }) {
   let vegetarian;
+  const colorContext = useContext(ColorSchemeContext);
   if (meal.vegetarian) {
     vegetarian = (
       <Image
@@ -26,13 +27,13 @@ function MealRow({ meal, role, onPress }) {
   }
   return (
     <ListCellTouchable
-      underlayColor={Colors.cellBorder}
+      underlayColor={colorContext.colorScheme.cellBorder}
       onPress={onPress}
     >
-      <View style={Styles.CanteenDayListView.row}>
-        <Text style={Styles.CanteenDayListView.name}>{meal.name}</Text>
+      <View style={[Styles.CanteenDayListView.row, {backgroundColor: colorContext.colorScheme.background, borderColor: colorContext.colorScheme.cellBorder}]}>
+        <Text style={[Styles.CanteenDayListView.name, {color: colorContext.colorScheme.text}]}>{meal.name}</Text>
         <View style={Styles.CanteenDayListView.right}>
-          <Text style={Styles.CanteenDayListView.price}>{price}</Text>
+          <Text style={[Styles.CanteenDayListView.price, {color: colorContext.colorScheme.dhbwRed}]}>{price}</Text>
           {vegetarian}
         </View>
       </View>
@@ -41,6 +42,7 @@ function MealRow({ meal, role, onPress }) {
 }
 
 export default function CanteenDayListView({ meals, role }) {
+  const colorContext = useContext(ColorSchemeContext);
   function _showMealInfo(meal) {
     if (meal.addition && Array.isArray(meal.addition)) {
       Alert.alert('Inhaltsstoffe', meal.addition.join('\n'));
@@ -55,5 +57,5 @@ export default function CanteenDayListView({ meals, role }) {
       onPress={() => _showMealInfo(meal)}
     />
   ));
-  return <View>{mealRows}</View>;
+  return <View style={{backgroundColor: colorContext.colorScheme.background}}>{mealRows}</View>;
 }

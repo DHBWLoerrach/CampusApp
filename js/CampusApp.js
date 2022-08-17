@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   AppState,
   Platform,
-  StatusBar,
+  StatusBar, useColorScheme,
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,6 +18,8 @@ import DrawerContent from './util/DrawerContent';
 import DualisNavigator from './drawer-screens/dualis/DualisNavigator';
 import { enableDualis } from './../env.js';
 import Styles from './Styles/StyleSheet';
+import {ColorSchemeContext} from "./context/ColorSchemeContext";
+import Colors from './Styles/Colors';
 
 //FontAwesome Library
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -36,7 +38,6 @@ import {faGraduationCap} from "@fortawesome/free-solid-svg-icons/faGraduationCap
 import {faLink} from "@fortawesome/free-solid-svg-icons/faLink";
 import {faSchool} from "@fortawesome/free-solid-svg-icons/faSchool";
 import {faUtensils} from "@fortawesome/free-solid-svg-icons/faUtensils";
-import NavigatorDark from "./NavigatorDark";
 
 library.add(faEye,
     faFileLines,
@@ -57,6 +58,10 @@ export default function CampusApp() {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [didUpgrade, setDidUpgrade] = useState(null);
+  const [overrideSystemScheme, setOverrideSystemScheme] = useState(false);
+  const [manualDarkMode, setManualDarkMode] = useState(false);
+  const [colors, setColors] = useState(Colors.lightMode);
+  let systemTheme = useColorScheme();
 
   useEffect(() => {
     const fetchSetupData = async () => {
@@ -64,6 +69,23 @@ export default function CampusApp() {
       const upgrade = await AsyncStorage.getItem('didUpgrade');
       setDidUpgrade(upgrade);
       setRole(role);
+
+      const override = await AsyncStorage.getItem('overrideSystemTheme');
+      const manualSetting = await AsyncStorage.getItem('manualDarkMode');
+      setOverrideSystemScheme(override === "true" ? true : false);
+      if(override !== null)
+      {
+        setManualDarkMode(manualSetting === "true" ? true : false);
+      }
+
+      if(override === "true")
+      {
+        setColors(manualSetting === "true" ? Colors.darkMode : Colors.lightMode);
+      }
+      else
+      {
+        setColors(systemTheme === "dark" ? Colors.darkMode : Colors.lightMode);
+      }
       setLoading(false);
     };
     fetchSetupData();
@@ -117,8 +139,7 @@ export default function CampusApp() {
     changeRole(role);
   };
 
-  //let content = <Navigator />;
-  let content = <NavigatorDark />
+  let content = <Navigator />;
 
   if (enableDualis) {
     content = (
@@ -146,14 +167,19 @@ export default function CampusApp() {
 
   return (
     <RoleContext.Provider value={{ role, changeRole }}>
-      <View style={Styles.CampusApp.container}>
-        <StatusBar
-          translucent={true}
-          backgroundColor="rgba(0, 0, 0, 0.2)"
-          barStyle="light-content"
-        />
-        {content}
-      </View>
+      <ColorSchemeContext.Provider value={{
+        override: overrideSystemScheme, setOverride: setOverrideSystemScheme,
+        darkMode: manualDarkMode, setDarkMode: setManualDarkMode,
+        colorScheme: colors, setColorScheme: setColors}}>
+        <View style={[Styles.CampusApp.container, {backgroundColor: colors.background}]}>
+          <StatusBar
+            translucent={true}
+            backgroundColor="rgba(0, 0, 0, 0.2)"
+            barStyle="light-content"
+          />
+          {content}
+        </View>
+      </ColorSchemeContext.Provider>
     </RoleContext.Provider>
   );
 }
