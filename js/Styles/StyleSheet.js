@@ -456,12 +456,12 @@ const Styles = StyleSheet.create({
             marginTop: 8,
             fontSize: 16,
             lineHeight: 21,
-            color: '#262626',
+            //color: '#262626',
         },
         details: {
             marginTop: 8,
             fontSize: 18,
-            color: '#262626',
+            //color: '#262626',
             fontWeight: '600',
         },
         icon: {

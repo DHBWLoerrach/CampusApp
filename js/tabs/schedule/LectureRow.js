@@ -1,4 +1,4 @@
-import React, {Component, useContext} from 'react';
+import React, {useContext} from 'react';
 import { Text, View } from 'react-native';
 
 import Styles from '../../Styles/StyleSheet';
@@ -16,7 +16,7 @@ export default function LectureRow(props) {
         <Text numberOfLines={3} style={[Styles.LectureRow.title, {color: colorContext.colorScheme.text}]}>
           {lecture.title}
         </Text>
-        <Text numberOfLines={1} style={[Styles.LectureRow.info, {color: colorContext.colorScheme.dhbwRed}]}>
+        <Text numberOfLines={1} style={[Styles.LectureRow.info, {color: colorContext.colorScheme.text}]}>
           {time} {lecture.location ? ' \u2022 ' + lecture.location : ''}
         </Text>
       </View>

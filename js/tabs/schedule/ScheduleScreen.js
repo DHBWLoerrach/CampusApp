@@ -5,7 +5,7 @@ import {
   useScrollToTop,
 } from '@react-navigation/native';
 
-import DayHeader from '../../util/DayHeader';
+import DayHeader from './DayHeader';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
