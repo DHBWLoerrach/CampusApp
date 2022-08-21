@@ -16,7 +16,7 @@ export default function LectureRow(props) {
         <Text numberOfLines={3} style={[Styles.LectureRow.title, {color: colorContext.colorScheme.text}]}>
           {lecture.title}
         </Text>
-        <Text numberOfLines={1} style={[Styles.LectureRow.info, {color: colorContext.colorScheme.text}]}>
+        <Text numberOfLines={1} style={[Styles.LectureRow.info, {color: colorContext.colorScheme.scheduleInfo}]}>
           {time} {lecture.location ? ' \u2022 ' + lecture.location : ''}
         </Text>
       </View>

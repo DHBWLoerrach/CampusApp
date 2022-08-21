@@ -19,6 +19,7 @@ module.exports = {
     text: '#000',
     card: '#fff',
     scheduleHeader: '#ededed',
+    scheduleInfo: '#7F91A7',
     tabBarText: '#777777',
     tabBarIcon: '#777777',
     background: '#fcfcfc'
@@ -31,6 +32,7 @@ module.exports = {
     icon: '#fff',
     card: '#1e1e1e',
     scheduleHeader: '#1e1e1e',
+    scheduleInfo: '#9fdbf5',
     dhbwGray: '#5C6971',
     dhbwRed: '#E2001A',
     dhbwRedWebView: 'rgb(226,0,26)', // FIXME: needed by WebView

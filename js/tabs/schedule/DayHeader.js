@@ -8,7 +8,7 @@ export default function DayHeader(props){
   const colorContext = useContext(ColorSchemeContext);
     return (
       <View style={[Styles.DayHeader.header, {backgroundColor: colorContext.colorScheme.scheduleHeader}]}>
-        <Text style={{color: colorContext.colorScheme.text}}>{props.title}</Text>
+        <Text style={{color: colorContext.colorScheme.scheduleInfo}}>{props.title}</Text>
       </View>
     );
 }
