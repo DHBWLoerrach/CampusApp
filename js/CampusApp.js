@@ -123,6 +123,13 @@ export default function CampusApp() {
     };
   }, []);
 
+  useEffect(() => {
+    if(!overrideSystemScheme)
+    {
+      setColors(systemTheme === "light" ? Colors.lightMode : Colors.darkMode);
+    }
+  },[systemTheme]);
+
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
     setRole(role);
