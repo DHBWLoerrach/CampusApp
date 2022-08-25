@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Alert,
   Button,
@@ -13,9 +13,11 @@ import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
 import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 export default function StuVEventsDetails({ route }) {
   const event = route.params.event;
+  const colorContext = useContext(ColorSchemeContext);
   const {
     name,
     description,
@@ -72,7 +74,7 @@ export default function StuVEventsDetails({ route }) {
         <Button
           disabled={max_limit < registered}
           title="Anmelden"
-          color={Colors.dhbwRed}
+          color={colorContext.colorScheme.dhbwRed}
           onPress={() =>
             navigation.navigate('StuVEventsRegister', {
               event: event,
@@ -81,7 +83,7 @@ export default function StuVEventsDetails({ route }) {
         />
         <Button
           title="Abmelden"
-          color={Colors.lightGray}
+          color={colorContext.colorScheme.lightGray}
           onPress={() =>
             navigation.navigate('StuVEventsUnregister', {
               event: event,
@@ -104,16 +106,16 @@ export default function StuVEventsDetails({ route }) {
       />
     ) : null;
   return (
-    <ScrollView style={Styles.StuVEventsDetails.scrollView}>
+    <ScrollView style={{backgroundColor: colorContext.colorScheme.background}}>
       {responsiveImage}
-      <View style={Styles.StuVEventsDetails.container}>
-        <Text style={Styles.StuVEventsDetails.headline}>{name}</Text>
-        <Text>{description}</Text>
-        <Text>{unixTimeToDateText(from)}</Text>
-        <Text>{formattedTime}</Text>
+      <View style={[Styles.StuVEventsDetails.container, {backgroundColor: colorContext.colorScheme.background}]}>
+        <Text style={[Styles.StuVEventsDetails.headline, {color: colorContext.colorScheme.text}]}>{name}</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>{description}</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>{unixTimeToDateText(from)}</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>{formattedTime}</Text>
         {priceInfo}
         {registrationInfo}
-        <Text>Maximale Plätze: {limitInfo}</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>Maximale Plätze: {limitInfo}</Text>
         {registrationUntil}
         {registrationView}
         {onlineLink}

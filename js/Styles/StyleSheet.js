@@ -321,7 +321,6 @@ const Styles = StyleSheet.create({
     StuVEventsUnregister: {
         container: {
             flex: 1,
-            backgroundColor: 'white',
         },
         heading: {
             padding: 5,
@@ -338,7 +337,6 @@ const Styles = StyleSheet.create({
     StuVEventsRegister: {
         container: {
             flex: 1,
-            backgroundColor: 'white',
         },
         heading: {
             marginBottom: 10,
@@ -356,12 +354,8 @@ const Styles = StyleSheet.create({
         }
     },
     StuVEventsDetails: {
-        scrollView: {
-            backgroundColor: 'white',
-        },
         container: {
             padding: 10,
-            backgroundColor: 'white',
             zIndex: 2,
         },
         button: {

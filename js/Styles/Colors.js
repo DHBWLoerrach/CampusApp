@@ -14,6 +14,7 @@ module.exports = {
     cellBorder: '#EEEEEE',
     dhbwGray: '#5C6971',
     dhbwRed: '#E2001A',
+    lightGray: '#DADADA',
     dhbwRedWebView: 'rgb(226,0,26)', // FIXME: needed by WebView
     icon: '#484848',
     text: '#000',
@@ -35,6 +36,7 @@ module.exports = {
     scheduleInfo: '#9fdbf5',
     dhbwGray: '#5C6971',
     dhbwRed: '#E2001A',
+    lightGray: '#DADADA',
     dhbwRedWebView: 'rgb(226,0,26)', // FIXME: needed by WebView
     cellBorder: '#1f1f1f'
   }

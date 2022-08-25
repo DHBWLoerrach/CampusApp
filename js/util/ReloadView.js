@@ -1,7 +1,6 @@
 import React, {Component, useContext} from 'react';
 import { Button, Text, View } from 'react-native';
 
-import Colors from '../Styles/Colors';
 import Styles from '../Styles/StyleSheet';
 import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
