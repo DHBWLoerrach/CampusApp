@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Alert, Image, Text, View } from 'react-native';
+import {Alert, Image, Platform, Text, View} from 'react-native';
 
 import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
@@ -72,8 +72,10 @@ export default function CanteenDayListView({ meals, role }) {
 
   return <View style={{backgroundColor: colorContext.colorScheme.background, flex: 1}}>
     {mealRows}
+    {(Platform.OS === 'android') && (
     <View style={{flexDirection: "row-reverse", padding: 20}}>
       <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
     </View>
+  )}
   </View>;
 }
