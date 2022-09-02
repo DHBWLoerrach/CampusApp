@@ -5,6 +5,7 @@ import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';
 import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import UIButton from "../../ui/UIButton";
 
 function MealRow({ meal, role, onPress }) {
   let vegetarian;
@@ -57,5 +58,22 @@ export default function CanteenDayListView({ meals, role }) {
       onPress={() => _showMealInfo(meal)}
     />
   ));
-  return <View style={{backgroundColor: colorContext.colorScheme.background}}>{mealRows}</View>;
+
+  const textNfcInfo =
+      '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
+      'muss NFC aktiviert sein (sofern vom Handy unterstützt).\n' +
+      'Schau dazu in den Einstellungen unter "Drahtlos & Netzwerke" nach.\n' +
+      'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
+      'zu halten.';
+
+  const onClickBalanceInfo = () => {
+    Alert.alert("Guthaben auslesen", textNfcInfo);
+  };
+
+  return <View style={{backgroundColor: colorContext.colorScheme.background, flex: 1}}>
+    {mealRows}
+    <View style={{flexDirection: "row-reverse", padding: 20}}>
+      <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
+    </View>
+  </View>;
 }
