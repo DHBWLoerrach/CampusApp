@@ -52,11 +52,8 @@ export default function StuvEventCell({ event, onPress }) {
             {shortString(description, 120)}
           </Text>
 
-          <View style={{marginTop: 8, alignSelf: "center", borderRadius: 5}}>
-            <Button color={Colors.dhbwRed} title="Weitere Infos" onPress={onPress}/>
-            {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
-              <Text style={{fontSize: 15, color: 'white'}}>Mehr Details</Text>
-            </View>*/}
+          <View style={{marginTop: 15, alignSelf: "center", borderRadius: 5}}>
+            <Button color={Colors.dhbwRed} title="Mehr Details" onPress={onPress}/>
           </View>
         </View>
       </View>

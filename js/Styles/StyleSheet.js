@@ -374,12 +374,12 @@ const Styles = StyleSheet.create({
     StuVEvents: {
         container: {
             flex: 1,
-            paddingVertical: 10,
+            paddingVertical: 10
         },
         center: {
             flex: 2,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
         }
     },
     StuVEventMap: {
@@ -465,6 +465,35 @@ const Styles = StyleSheet.create({
         button: {
             color: Colors.dhbwRed
         }
+    },
+    StuVEventDetails: {
+        headline: {
+            fontSize: 28,
+            fontWeight: '700'
+        },
+        container: {
+            marginTop: 20,
+            marginHorizontal: 20,
+            backgroundColor: 'white',
+        },
+        details: {
+            marginTop: 8,
+            fontSize: 18,
+            fontWeight: '600',
+        },
+        description: {
+            marginTop: 8,
+            fontSize: 16,
+            lineHeight: 21,
+        },
+        button: {
+            marginTop: 10,
+            flexGrow: 1,
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            alignItems: 'baseline',
+        },
     },
     Texts: {
         container: {
