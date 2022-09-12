@@ -70,10 +70,12 @@ export default function CanteenDayListView({ meals, role }) {
     Alert.alert("Guthaben auslesen", textNfcInfo);
   };
 
-  return <View style={{backgroundColor: colorContext.colorScheme.background, flex: 1}}>
-    {mealRows}
+  return <View style={[{backgroundColor: colorContext.colorScheme.background}, Styles.CanteenDayListView.menuContainer]}>
+    <View>
+      {mealRows}
+    </View>
     {(Platform.OS === 'android') && (
-    <View style={{flexDirection: "row-reverse", padding: 20}}>
+    <View style={Styles.CanteenDayListView.buttonContainer}>
       <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
     </View>
   )}

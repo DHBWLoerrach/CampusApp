@@ -732,6 +732,15 @@ const Styles = StyleSheet.create({
             backgroundColor: 'transparent',
             height: 28,
             width: 28,
+        },
+        buttonContainer: {
+            flexDirection: "column",
+            alignSelf:"center",
+            marginBottom: 15
+        },
+        menuContainer: {
+            flex: 1,
+            justifyContent: "space-between"
         }
     },
     LectureItem: {
