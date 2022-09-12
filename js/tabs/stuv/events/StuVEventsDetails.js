@@ -102,7 +102,7 @@ export default function StuVEventsDetails({ route }) {
   const onlineLink =
     address.type === 'ONLINE' ? (
         <View style={[Styles.StuVEventDetails.details, {alignSelf: "center"}]}>
-            <UIButton size="small" onClick={() => Linking.openURL(address.link)}>Teilnehmen</UIButton>
+            <UIButton size="small" onClick={() => Linking.openURL(address.link)}>Jetzt online teilnehmen</UIButton>
         </View>
     ) : null;
 
