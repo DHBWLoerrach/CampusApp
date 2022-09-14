@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {useCallback, useContext, useState} from 'react';
+import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -8,7 +8,7 @@ import { de } from 'date-fns/locale';
 import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
-import Styles from '../../util/Styles';
+import Styles from '../../Styles/StyleSheet';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import ReloadView from '../../util/ReloadView';
 
@@ -18,6 +18,7 @@ import {
   saveCanteenDataToStore,
 } from './store';
 import CanteenDayListView from './CanteenDayListView';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -50,6 +51,7 @@ function CanteenScreen() {
   const [isLoading, setLoading] = useState(true);
   const [hasNetworkError, setNetworkError] = useState(false);
   const [dayPlans, setDayPlans] = useState(null);
+  const colorContext = useContext(ColorSchemeContext);
 
   // load fresh data from web and store it locally
   async function refresh() {
@@ -89,7 +91,7 @@ function CanteenScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={[Styles.CanteenScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
         <ActivityIndicator />
       </View>
     );
@@ -110,22 +112,10 @@ function CanteenScreen() {
   }
 
   return (
-    <Tab.Navigator screenOptions={Styles.topTabBar}>
+    <Tab.Navigator screenOptions={Styles.General.topTabBar}>
       {getPages(dayPlans)}
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default CanteenScreen;

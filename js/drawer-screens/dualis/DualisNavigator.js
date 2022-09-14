@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Platform, StyleSheet } from 'react-native';
+import { View, Platform} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import jwt_decode from 'jwt-decode';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import DualisIntro from './DualisIntro';
 import DualisLogin from './DualisLogin';
 import DualisMain from './DualisMain';
 import DualisDetail from './DualisDetail';
 import DualisStatistics from './DualisStatistics';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisNavigator({ navigation }) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -19,7 +20,7 @@ export default function DualisNavigator({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    focusListener = navigation.addListener('focus', () =>
+    navigation.addListener('focus', () =>
       isAuthenticated()
     );
   }, []);
@@ -60,7 +61,7 @@ export default function DualisNavigator({ navigation }) {
     headerTintColor: 'white',
     headerLeft: () => (
       <MaterialIcon
-        style={styles.icon}
+        style={Styles.DualisNavigator.icon}
         onPress={() => {
           navigation.toggleDrawer();
         }}
@@ -83,7 +84,7 @@ export default function DualisNavigator({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.DualisNavigator.center}>
         <ActivityIndicator />
       </View>
     );
@@ -178,15 +179,3 @@ export default function DualisNavigator({ navigation }) {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  icon: {
-    paddingLeft: 10,
-    color: 'white',
-  },
-});

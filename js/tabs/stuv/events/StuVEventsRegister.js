@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { inviteUserEvent } from '../helper';
 import Form from '../../../util/Form';
 import PropertyDefinition from '../../../util/PropertyDefinition';
+import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 export default function StuVEventsRegister({ route }) {
   const navigation = useNavigation();
   const event = route.params.event;
   const [errText, setErrText] = useState(null);
+  const colorContext = useContext(ColorSchemeContext);
 
   const fields = {
     Email: new PropertyDefinition('Email').isRequired(),
@@ -21,12 +24,12 @@ export default function StuVEventsRegister({ route }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heading}>
-        <Text style={styles.text}>
+    <View style={[Styles.StuVEventsRegister.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={Styles.StuVEventsRegister.heading}>
+        <Text style={[Styles.StuVEventsRegister.text, {color: colorContext.colorScheme.text}]}>
           {`Anmeldung für das Event: ${event.title}`}
         </Text>
-        <Text style={styles.text}>
+        <Text style={[Styles.StuVEventsRegister.text, {color: colorContext.colorScheme.text}]}>
           Bitte trage die folgenden Daten ein:
         </Text>
       </View>
@@ -48,27 +51,7 @@ export default function StuVEventsRegister({ route }) {
         }
         fields={fields}
       />
-      <Text style={styles.error}>{errText}</Text>
+      <Text style={Styles.StuVEventsRegister.error}>{errText}</Text>
     </View>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  heading: {
-    marginBottom: 10,
-    marginTop: 4,
-  },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  error: {
-    color: 'red',
-    padding: 10,
-    marginBottom: 8,
-    fontSize: 17,
-  },
-});

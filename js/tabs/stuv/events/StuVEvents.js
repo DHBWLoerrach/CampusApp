@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { loadEvents } from '../helper';
 import ReloadView from '../../../util/ReloadView';
@@ -8,11 +8,14 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import StuvEventCell from './StuVEventCell';
+import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 export default function StuVEvents() {
   const [isLoading, setLoading] = useState(true);
   const [events, setEvents] = useState(null);
   const navigation = useNavigation();
+  const colorContext = useContext(ColorSchemeContext);
 
   // when screen is focussed, load data
   useFocusEffect(
@@ -40,7 +43,7 @@ export default function StuVEvents() {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={[Styles.StuVEvents.center, {backgroundColor: colorContext.colorScheme.background}]}>
         <ActivityIndicator />
       </View>
     );
@@ -58,7 +61,7 @@ export default function StuVEvents() {
 
   return (
     <FlatList
-      style={styles.container}
+      style={[Styles.StuVEvents.container, {backgroundColor: colorContext.colorScheme.background}]}
       data={events}
       onRefresh={refresh}
       refreshing={isLoading}
@@ -74,17 +77,3 @@ export default function StuVEvents() {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-});

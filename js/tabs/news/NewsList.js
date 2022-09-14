@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, {useCallback, useContext, useState} from 'react';
+import { FlatList, View } from 'react-native';
 import {
   useFocusEffect,
   useNavigation,
@@ -10,54 +10,8 @@ import NewsCell from './NewsCell';
 import ReloadView from '../../util/ReloadView';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import FetchManager from '../../util/fetcher/FetchManager';
-
-function getContent(data, type, refresh, isLoading, navigate, ref) {
-  let content = null;
-  if (!data) {
-    // this could occur if there's a server problem with a news page
-    content = (
-      <ReloadView
-        buttonText="Nochmal versuchen"
-        message="Es konnten keine Daten geladen werden."
-        onPress={refresh}
-      />
-    );
-  } else if (data.length === 0) {
-    content = (
-      <ReloadView
-        message="Keine Einträge"
-        buttonText="Aktualisieren"
-        onPress={refresh}
-      />
-    );
-  } else {
-    content = (
-      <FlatList
-        style={styles.container}
-        ref={ref}
-        data={data}
-        onRefresh={refresh}
-        refreshing={isLoading}
-        keyExtractor={(item) => 'item' + item.id}
-        renderItem={({ item }) => (
-          <NewsCell
-            news={item}
-            topic={type}
-            onPress={() => {
-              // news item: remove equals function and convert time to string value
-              // this will keep news item serializable (otherwise a warning will pop up)
-              // --> TODO: cleanup design ?
-              item.equals = undefined;
-              item.time = `${item.time}`;
-              navigate('NewsDetails', { news: item, topic: type });
-            }}
-          />
-        )}
-      />
-    );
-  }
-  return content;
-}
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 export default ({ type }) => {
   const [isLoading, setLoading] = useState(true);
@@ -65,6 +19,7 @@ export default ({ type }) => {
   const [data, setData] = useState(null);
   const { navigate } = useNavigation();
   const ref = React.useRef(null);
+  const colorContext = useContext(ColorSchemeContext);
   useScrollToTop(ref);
 
   // load fresh data from web and store it locally
@@ -101,7 +56,7 @@ export default ({ type }) => {
 
   if (isLoading) {
     return (
-      <View style={styles.center}>
+      <View style={[Styles.NewsList.center, {backgroundColor: colorContext.colorScheme.background}]}>
         <ActivityIndicator />
       </View>
     );
@@ -109,28 +64,59 @@ export default ({ type }) => {
 
   if (!data && hasNetworkError) {
     return (
-      <View style={styles.container}>
+      <View style={[Styles.NewsList.container, {backgroundColor: colorContext.colorScheme.background}]}>
         <ReloadView buttonText="News laden" onPress={refresh} />
       </View>
     );
   }
 
+  const getContent = (data, type, refresh, isLoading, navigate, ref) => {
+    let content = null;
+    if (!data) {
+      // this could occur if there's a server problem with a news page
+      content = (
+          <ReloadView
+              buttonText="Nochmal versuchen"
+              message="Es konnten keine Daten geladen werden."
+              onPress={refresh}
+          />
+      );
+    } else if (data.length === 0) {
+      content = (
+          <ReloadView
+              message="Keine Einträge"
+              buttonText="Aktualisieren"
+              onPress={refresh}
+          />
+      );
+    } else {
+      content = (
+          <FlatList
+              style={[Styles.NewsList.container, {backgroundColor: colorContext.colorScheme.background}]}
+              ref={ref}
+              data={data}
+              onRefresh={refresh}
+              refreshing={isLoading}
+              keyExtractor={(item) => 'item' + item.id}
+              renderItem={({ item }) => (
+                  <NewsCell
+                      news={item}
+                      topic={type}
+                      onPress={() => {
+                        // news item: remove equals function and convert time to string value
+                        // this will keep news item serializable (otherwise a warning will pop up)
+                        // --> TODO: cleanup design ?
+                        item.equals = undefined;
+                        item.time = `${item.time}`;
+                        navigate('NewsDetails', { news: item, topic: type });
+                      }}
+                  />
+              )}
+          />
+      );
+    }
+    return content;
+  }
+
   return getContent(data, type, refresh, isLoading, navigate, ref);
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingVertical: 10,
-  },
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-  },
-  header: {
-    elevation: 0,
-  },
-});

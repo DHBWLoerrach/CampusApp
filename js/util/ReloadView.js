@@ -1,38 +1,24 @@
-import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import React, {Component, useContext} from 'react';
+import { Button, Text, View } from 'react-native';
 
-import Colors from './Colors';
+import Styles from '../Styles/StyleSheet';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
-export default class ReloadView extends Component {
-  render() {
-    let text = this.props.message;
+export default function ReloadView(props) {
+    const colorContext = useContext(ColorSchemeContext);
+    let text = props.message;
     if (!text) {
       text =
         'Fehler mit der Internetverbindung. Probiere es später noch einmal.';
     }
     return (
-      <View style={styles.center}>
-        <Text style={styles.infoText}>{text}</Text>
+      <View style={[Styles.ReloadView.center, {backgroundColor: colorContext.colorScheme.background}]}>
+        <Text style={[Styles.ReloadView.infoText, {color: colorContext.colorScheme.text}]}>{text}</Text>
         <Button
-          title={this.props.buttonText}
-          color={Colors.dhbwRed}
-          onPress={this.props.onPress}
+          title={props.buttonText}
+          color={colorContext.colorScheme.dhbwRed}
+          onPress={props.onPress}
         />
       </View>
     );
-  }
 }
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  infoText: {
-    justifyContent: 'center',
-    fontSize: 20,
-    marginBottom: 15,
-    paddingHorizontal: 20
-  }
-});

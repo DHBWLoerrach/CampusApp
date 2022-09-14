@@ -1,26 +1,29 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { unregisterUserEvent } from '../helper';
 import Form from '../../../util/Form';
 import PropertyDefinition from '../../../util/PropertyDefinition';
+import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 export default function StuVEventsUnregister({ route }) {
   const navigation = useNavigation();
   const event = route.params.event;
   const [errText, setErrText] = useState(null);
+  const colorContext = useContext(ColorSchemeContext);
 
   const fields = {
     email: new PropertyDefinition('Email').isRequired(),
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.heading}>
-        <Text style={styles.text}>
+    <View style={[Styles.StuVEventsUnregister.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={Styles.StuVEventsUnregister.heading}>
+        <Text style={[Styles.StuVEventsUnregister.text, {color: colorContext.colorScheme.text}]}>
           Abmeldung für das Event: {event.title}
         </Text>
-        <Text>
+        <Text style={{color: colorContext.colorScheme.text}}>
           Geben Sie Ihre Email ein. Sie bekommen eine Bestätigung per
           Email.
         </Text>
@@ -38,25 +41,7 @@ export default function StuVEventsUnregister({ route }) {
         }
         fields={fields}
       ></Form>
-      <Text style={styles.error}>{errText}</Text>
+      <Text style={Styles.StuVEventsUnregister.error}>{errText}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  heading: {
-    padding: 5,
-    marginBottom: 4,
-  },
-  text: {
-    fontWeight: 'bold',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '2%',
-  },
-});

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import Styles from '../Styles/StyleSheet';
 
 export default class Form extends Component {
   // fields sind alle Felder, die über dem textfeld erscheinen sollen.
@@ -23,7 +24,7 @@ export default class Form extends Component {
       (!field.value || field.value.trim() === '')
     ) {
       return (
-        <Text style={styles.errText}>
+        <Text style={Styles.Form.errText}>
           {field.name + ' '}darf nicht leer sein
         </Text>
       );
@@ -43,7 +44,7 @@ export default class Form extends Component {
         <View key={i} style={{ flex: 1 }}>
           <Text>{field.name}:</Text>
           <TextInput
-            style={styles.input}
+            style={Styles.Form.input}
             onChangeText={(input) => {
               const newField = field;
               newField.value = input;
@@ -62,7 +63,7 @@ export default class Form extends Component {
         if (tmp.length === 1) {
           res.push(tmp[0]);
         } else {
-          res.push(<View style={styles.row}>{tmp.slice()}</View>);
+          res.push(<View style={Styles.Form.row}>{tmp.slice()}</View>);
         }
         tmp = [];
       }
@@ -83,7 +84,7 @@ export default class Form extends Component {
       if (tmp.length === 1) {
         res.push(tmp[0]);
       } else {
-        res.push(<View style={styles.row}>{tmp.slice()}</View>);
+        res.push(<View style={Styles.Form.row}>{tmp.slice()}</View>);
       }
       tmp = [];
     }
@@ -94,7 +95,7 @@ export default class Form extends Component {
   render() {
     const fields = this.state.fields;
     return (
-      <View style={styles.container}>
+      <View style={Styles.Form.container}>
         <ScrollView persistentScrollbar={true}>
           {this.createForm(fields)}
         </ScrollView>
@@ -116,23 +117,3 @@ export default class Form extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    height: 35,
-    margin: 3,
-  },
-  errText: {
-    color: 'red',
-    padding: 4,
-  },
-  container: {
-    marginBottom: 4,
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-});

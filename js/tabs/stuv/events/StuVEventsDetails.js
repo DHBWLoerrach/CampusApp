@@ -1,10 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Alert,
-  Button,
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -12,8 +10,12 @@ import { useNavigation } from '@react-navigation/core';
 import { unixTimeToDateText, unixTimeToTimeText } from '../helper';
 import ResponsiveImage from '../../../util/ResponsiveImage';
 import StuVEventMap from './StuVEventMap';
+import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
+import UIButton from "../../../ui/UIButton";
 
 export default function StuVEventsDetails({ route }) {
+
   const event = route.params.event;
   const {
     name,
@@ -27,7 +29,10 @@ export default function StuVEventsDetails({ route }) {
     max_limit,
     date: { from, to },
   } = event;
+
   const navigation = useNavigation();
+  const colorContext = useContext(ColorSchemeContext);
+
   function openRegisterLink() {
     Linking.canOpenURL(event.registerLink).then((result) => {
       if (!result) {
@@ -49,29 +54,32 @@ export default function StuVEventsDetails({ route }) {
   const formattedTime = to
     ? `${unixTimeToTimeText(from)} bis ${unixTimeToTimeText(to)} Uhr`
     : `${unixTimeToTimeText(from)} Uhr`;
-  const priceInfo = price ? <Text>Preis: {price}</Text> : null;
-  const registrationInfo = registration.required ? (
+
+  //const priceInfo = price ? <Text>Preis: {price}</Text> : null;
+
+  /*const registrationInfo = registration.required ? (
     <Text>Anzahl Teilnehmer*innen: {registered}</Text>
-  ) : null;
-  const limitInfo = registration.hasLimit
-    ? registration.limit
-    : 'unbegrenzt';
+  ) : null;*/
+
+  const limitInfo = registration.hasLimit ? registration.limit : 'Unbegrenzt';
+
   let registrationUntil = null;
   if (registration.required) {
     registrationUntil = (
-      <Text>
+      <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.details]}>
         Anmeldefrist: {unixTimeToDateText(registration.until)}
       </Text>
     );
   }
-  let registrationView = null;
+
+  /*let registrationView = null;
   if (registerLink) {
     registrationView = (
-      <View style={styles.button}>
+      <View style={Styles.StuVEventsDetails.button}>
         <Button
           disabled={max_limit < registered}
           title="Anmelden"
-          color={Colors.dhbwRed}
+          color={colorContext.colorScheme.dhbwRed}
           onPress={() =>
             navigation.navigate('StuVEventsRegister', {
               event: event,
@@ -80,7 +88,7 @@ export default function StuVEventsDetails({ route }) {
         />
         <Button
           title="Abmelden"
-          color={Colors.lightGray}
+          color={colorContext.colorScheme.lightGray}
           onPress={() =>
             navigation.navigate('StuVEventsUnregister', {
               event: event,
@@ -89,11 +97,15 @@ export default function StuVEventsDetails({ route }) {
         />
       </View>
     );
-  }
+  }*/
+
   const onlineLink =
     address.type === 'ONLINE' ? (
-      <Text>Online-Link: {address.link}</Text>
+        <View style={[Styles.StuVEventDetails.details, {alignSelf: "center"}]}>
+            <UIButton size="small" onClick={() => Linking.openURL(address.link)}>Jetzt online teilnehmen</UIButton>
+        </View>
     ) : null;
+
   const mapView =
     address.type === 'PRESENCE' ? (
       <StuVEventMap
@@ -102,45 +114,42 @@ export default function StuVEventsDetails({ route }) {
         venue={address.name}
       />
     ) : null;
+
   return (
-    <ScrollView style={styles.scrollView}>
-      {responsiveImage}
-      <View style={styles.container}>
-        <Text style={styles.headline}>{name}</Text>
-        <Text>{description}</Text>
-        <Text>{unixTimeToDateText(from)}</Text>
-        <Text>{formattedTime}</Text>
-        {priceInfo}
-        {registrationInfo}
-        <Text>Maximale Plätze: {limitInfo}</Text>
-        {registrationUntil}
-        {registrationView}
-        {onlineLink}
+      <View style={{flex: 1, flexDirection: "column", justifyContent: "space-between"}}>
+          <ScrollView style={{backgroundColor: colorContext.colorScheme.background}}>
+              {responsiveImage}
+
+              <View style={Styles.StuVEventsDetails.container}>
+                  <Text style={[{color: colorContext.colorScheme.dhbwRed}, Styles.StuVEventDetails.headline]}>{name}</Text>
+
+                  {/*Date and Time*/}
+                  <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.details]}>{unixTimeToDateText(from)}</Text>
+                  <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.details]}>{formattedTime}</Text>
+
+                  {/*Registration*/}
+                  <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.details]}>Maximale Teilnehmer: {limitInfo}</Text>
+                  {registrationUntil}
+
+                  {/*Online URL or Address*/}
+                  <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.details]}>
+                      {address.type === "ONLINE" ?
+                          "Wo: Online auf " + address.platform :
+                          "Wo: Am " + address.name
+                      }
+                  </Text>
+
+                  {/*Description*/}
+                  <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventDetails.description]}>{description}</Text>
+
+                  {onlineLink}
+
+              </View>
+          </ScrollView>
+          <View>
+              {mapView}
+          </View>
       </View>
-      {mapView}
-    </ScrollView>
+
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: 'white',
-  },
-  container: {
-    padding: 10,
-    backgroundColor: 'white',
-    zIndex: 2,
-  },
-  button: {
-    marginTop: 10,
-    flexGrow: 1,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'baseline',
-  },
-  headline: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});

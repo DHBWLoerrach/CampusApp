@@ -2,17 +2,17 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Styles from '../../Styles/StyleSheet';
 
 export default function EnrollmentItem({ navigation, enrollment }) {
   return (
-    <View style={styles.container}>
+    <View style={Styles.EnrollmentItem.container}>
       <View>
-        <Text style={styles.name}>
+        <Text style={Styles.EnrollmentItem.name}>
           {enrollment.moduleResult[0].name}
         </Text>
         <Text>Modulnummer: {enrollment.moduleResult[0].number}</Text>
@@ -21,7 +21,7 @@ export default function EnrollmentItem({ navigation, enrollment }) {
         <Text>Semester: {enrollment.semester}</Text>
         <Text>Status: {enrollment.status}</Text>
       </View>
-      <View style={styles.iconBar}>
+      <View style={Styles.EnrollmentItem.iconBar}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('DualisDetail', {
@@ -49,22 +49,3 @@ export default function EnrollmentItem({ navigation, enrollment }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.lightGray,
-    marginBottom: 10,
-    marginTop: 20,
-    padding: 10,
-    borderRadius: 10,
-  },
-  name: {
-    fontSize: 20,
-  },
-  iconBar: {
-    justifyContent: 'space-between',
-  },
-});

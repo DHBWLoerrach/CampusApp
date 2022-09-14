@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
-import { Alert, Image, StyleSheet, Text, View } from 'react-native';
+import React, {useContext} from 'react';
+import {Alert, Image, Platform, Text, View} from 'react-native';
 
-import Colors from '../../util/Colors';
 import { roles } from '../../util/Constants';
 import ListCellTouchable from '../../util/ListCellTouchable';
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import UIButton from "../../ui/UIButton";
 
 function MealRow({ meal, role, onPress }) {
   let vegetarian;
+  const colorContext = useContext(ColorSchemeContext);
   if (meal.vegetarian) {
     vegetarian = (
       <Image
-        style={styles.vegetarian}
+        style={Styles.CanteenDayListView.vegetarian}
         source={require('./img/vegetarian.png')}
       />
     );
@@ -25,13 +28,13 @@ function MealRow({ meal, role, onPress }) {
   }
   return (
     <ListCellTouchable
-      underlayColor={Colors.cellBorder}
+      underlayColor={colorContext.colorScheme.cellBorder}
       onPress={onPress}
     >
-      <View style={styles.row}>
-        <Text style={styles.name}>{meal.name}</Text>
-        <View style={styles.right}>
-          <Text style={styles.price}>{price}</Text>
+      <View style={[Styles.CanteenDayListView.row, {backgroundColor: colorContext.colorScheme.background, borderColor: colorContext.colorScheme.cellBorder}]}>
+        <Text style={[Styles.CanteenDayListView.name, {color: colorContext.colorScheme.text}]}>{meal.name}</Text>
+        <View style={Styles.CanteenDayListView.right}>
+          <Text style={[Styles.CanteenDayListView.price, {color: colorContext.colorScheme.dhbwRed}]}>{price}</Text>
           {vegetarian}
         </View>
       </View>
@@ -40,6 +43,7 @@ function MealRow({ meal, role, onPress }) {
 }
 
 export default function CanteenDayListView({ meals, role }) {
+  const colorContext = useContext(ColorSchemeContext);
   function _showMealInfo(meal) {
     if (meal.addition && Array.isArray(meal.addition)) {
       Alert.alert('Inhaltsstoffe', meal.addition.join('\n'));
@@ -54,35 +58,26 @@ export default function CanteenDayListView({ meals, role }) {
       onPress={() => _showMealInfo(meal)}
     />
   ));
-  return <View>{mealRows}</View>;
-}
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    borderColor: Colors.cellBorder,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  name: {
-    flex: 1,
-    fontSize: 17,
-  },
-  price: {
-    color: Colors.dhbwRed,
-    fontSize: 17,
-    paddingBottom: 4,
-    textAlign: 'right',
-    width: 50,
-  },
-  right: {
-    alignItems: 'flex-end',
-  },
-  vegetarian: {
-    backgroundColor: 'transparent',
-    height: 28,
-    width: 28,
-  },
-});
+  const textNfcInfo =
+      '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
+      'muss NFC aktiviert sein (sofern vom Handy unterstützt).\n' +
+      'Schau dazu in den Einstellungen unter "Drahtlos & Netzwerke" nach.\n' +
+      'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
+      'zu halten.';
+
+  const onClickBalanceInfo = () => {
+    Alert.alert("Guthaben auslesen", textNfcInfo);
+  };
+
+  return <View style={[{backgroundColor: colorContext.colorScheme.background}, Styles.CanteenDayListView.menuContainer]}>
+    <View>
+      {mealRows}
+    </View>
+    {(Platform.OS === 'android') && (
+    <View style={Styles.CanteenDayListView.buttonContainer}>
+      <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
+    </View>
+  )}
+  </View>;
+}

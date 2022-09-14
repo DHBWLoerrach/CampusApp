@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Paragraph, Text, TextInput } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisLogin({ navigation }) {
   const [email, setEmail] = useState('');
@@ -26,7 +27,7 @@ export default function DualisLogin({ navigation }) {
       })
         .then((resp) => resp.json())
         .then((respJson) => {
-          if (respJson.jwt != '' && respJson.jwt != null) {
+          if (respJson.jwt !== '' && respJson.jwt != null) {
             AsyncStorage.setItem('dualisToken', respJson.jwt);
             setEmail('');
             setPassword('');
@@ -45,36 +46,36 @@ export default function DualisLogin({ navigation }) {
   let textInputTheme = loginFailed ? failureTheme : standardTheme;
 
   return (
-    <View style={styles.container}>
+    <View style={Styles.DualisLogin.container}>
       <TextInput
-        style={styles.textInput}
+        style={Styles.DualisLogin.textInput}
         theme={textInputTheme}
         onChangeText={(value) => setEmail(value)}
         value={email}
         placeholder="DHBW E-Mail"
       />
       <TextInput
-        style={styles.textInput}
+        style={Styles.DualisLogin.textInput}
         theme={textInputTheme}
         onChangeText={(value) => setPassword(value)}
         secureTextEntry={true}
         value={password}
         placeholder="Passwort"
       />
-      <TouchableOpacity style={styles.dhbwButton} onPress={login}>
-        <Text style={styles.buttonText}>Anmelden</Text>
+      <TouchableOpacity style={Styles.DualisLogin.dhbwButton} onPress={login}>
+        <Text style={Styles.DualisLogin.buttonText}>Anmelden</Text>
         {loading && (
           <ActivityIndicator size="large" color={Colors.lightGray} />
         )}
       </TouchableOpacity>
       {error && <Text>{error}</Text>}
-      <Paragraph style={styles.paragraph}>
+      <Paragraph style={Styles.DualisLogin.paragraph}>
         Bitte denke daran, dass keine Gewähr für die Richtigkeit der
         hier bereitgestellten Informationen übernommen werden kann. Im
         Zweifelsfall ist das Sekretariat oder die entsprechende
         Lehrkraft zu befragen.
       </Paragraph>
-      <Paragraph style={styles.paragraph}>
+      <Paragraph style={Styles.DualisLogin.paragraph}>
         Aus Sicherheitsgründen wirst Du nach 10 Minuten automatisch
         abgemeldet.
       </Paragraph>
@@ -96,32 +97,3 @@ const failureTheme = {
     background: Colors.dhbwRed,
   },
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 14,
-    paddingLeft: '10%',
-    paddingRight: '10%',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-  dhbwButton: {
-    width: '100%',
-    backgroundColor: Colors.dhbwRed,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    margin: 20,
-  },
-  textInput: {
-    marginTop: 40,
-  },
-});

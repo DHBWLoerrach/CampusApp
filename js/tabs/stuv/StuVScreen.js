@@ -1,7 +1,7 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Styles from '../../util/Styles';
+import Styles from '../../Styles/StyleSheet';
 import StuVEvents from './events/StuVEvents';
 import StuVNews from './news/StuVNews';
 

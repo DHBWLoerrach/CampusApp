@@ -1,28 +1,17 @@
-import React, { Component } from 'react';
-import { Dimensions, Image, StyleSheet } from 'react-native';
+import React, {Component, useContext} from 'react';
+import {Image, View} from 'react-native';
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
-export default class InfoImage extends Component {
-  render() {
+export default function InfoImage(){
+  const colorContext = useContext(ColorSchemeContext);
     return (
-      <Image
-        style={styles.img}
-        resizeMode="contain"
-        source={require('./img/CampusHangstrasse.jpg')}
-      />
+        <View style={[Styles.InfoImage.container, {backgroundColor: colorContext.colorScheme.background}]}>
+          <Image
+              style={Styles.InfoImage.img}
+              resizeMode="contain"
+              source={require('./img/CampusHangstrasse.jpg')}
+          />
+        </View>
     );
-  }
 }
-
-const width = Dimensions.get('window').width;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white'
-  },
-  img: {
-    width: width,
-    height: width,
-    marginBottom: 2
-  }
-});

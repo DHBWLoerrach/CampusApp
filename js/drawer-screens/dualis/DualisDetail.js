@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import LectureItem from './LectureItem';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisDetail({ route }) {
   let lectureItems = [];
@@ -12,19 +13,10 @@ export default function DualisDetail({ route }) {
   });
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+    <View style={Styles.DualisDetail.container}>
+      <ScrollView style={Styles.DualisDetail.scrollView}>
         <>{lectureItems}</>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    marginHorizontal: 20,
-  },
-});

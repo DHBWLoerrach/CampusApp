@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import { View } from 'react-native';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -8,18 +8,21 @@ import {
 } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
-import Colors from './Colors';
+import Colors from '../Styles/Colors';
+import Styles from '../Styles/StyleSheet';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 export default function DrawerContent({ navigation }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
+  const colorContext = useContext(ColorSchemeContext);
 
   useEffect(() => setInterval(() => isAuthenticated(), 5000), []);
 
   async function isAuthenticated() {
     const token = await AsyncStorage.getItem('dualisToken');
 
-    if (token == null || token == 'logout') {
+    if (token == null || token === 'logout') {
       setAuthenticated(false);
       return;
     }
@@ -45,40 +48,40 @@ export default function DrawerContent({ navigation }) {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={[Styles.DrawerContent.drawerContent, {backgroundColor: colorContext.colorScheme.background}]}>
       <DrawerContentScrollView {...navigation}>
-        <View style={styles.drawerContent}>
-          <View style={styles.userInfoSection}>
+        <View style={Styles.DrawerContent.drawerContent}>
+          <View style={Styles.DrawerContent.userInfoSection}>
             {authenticated && (
-              <View style={styles.avatar}>
+              <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
-                  style={{ backgroundColor: Colors.dhbwRed }}
+                  style={{ backgroundColor: colorContext.colorScheme.dhbwRed }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
-                <View style={styles.loggedIn}>
-                  <Title style={styles.title}>Eingeloggt als:</Title>
-                  <Caption style={styles.caption}>{email}</Caption>
+                <View style={Styles.DrawerContent.loggedIn}>
+                  <Title style={[Styles.DrawerContent.title, {color: colorContext.colorScheme.text}]}>Eingeloggt als:</Title>
+                  <Caption style={[Styles.DrawerContent.caption, {color: colorContext.colorScheme.text}]}>{email}</Caption>
                 </View>
               </View>
             )}
             {!authenticated && (
-              <View style={styles.avatar}>
+              <View style={Styles.DrawerContent.avatar}>
                 <Avatar.Icon
-                  style={{ backgroundColor: Colors.dhbwGray }}
+                  style={{ backgroundColor: colorContext.colorScheme.dhbwGray }}
                   size={62}
                   icon="face"
                   color={'white'}
                 />
-                <View style={styles.loggedIn}>
-                  <Title style={styles.title}>Eingeloggt als:</Title>
-                  <Caption style={styles.caption}>Gast</Caption>
+                <View style={Styles.DrawerContent.loggedIn}>
+                  <Title style={[Styles.DrawerContent.title, {color: colorContext.colorScheme.text}]}>Eingeloggt als:</Title>
+                  <Caption style={[Styles.DrawerContent.caption, {color: colorContext.colorScheme.text}]}>Gast</Caption>
                 </View>
               </View>
             )}
           </View>
-          <Drawer.Section style={styles.drawerSection}>
+          <Drawer.Section style={Styles.DrawerContent.drawerSection}>
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon name="home-outline" color={color} size={size} />
@@ -100,7 +103,7 @@ export default function DrawerContent({ navigation }) {
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
-      <Drawer.Section style={styles.bottomDrawerSection}>
+      <Drawer.Section style={Styles.DrawerContent.bottomDrawerSection}>
         {authenticated && (
           <DrawerItem
             icon={({ color, size }) => (
@@ -114,51 +117,3 @@ export default function DrawerContent({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-  },
-  userInfoSection: {
-    paddingLeft: 20,
-  },
-  title: {
-    fontSize: 14,
-    marginTop: 3,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  avatar: {
-    flexDirection: 'row',
-    marginTop: 15,
-  },
-  loggedIn: {
-    flexDirection: 'column',
-    marginLeft: 5,
-  },
-  row: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
-  },
-  drawerSection: {
-    marginTop: 15,
-  },
-  bottomDrawerSection: {
-    marginBottom: 15,
-    borderTopColor: '#f4f4f4',
-    borderTopWidth: 1,
-  },
-});

@@ -1,6 +1,6 @@
 {
   "name": "CampusApp",
-  "version": "2.5.10",
+  "version": "2.6.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -9,6 +9,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
     "@notifee/react-native": "^5.2.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
@@ -24,15 +27,16 @@
     "react": "17.0.2",
     "react-native": "0.68.1",
     "react-native-background-fetch": "^4.0.3",
+    "react-native-bouncy-checkbox": "^2.1.10",
     "react-native-gesture-handler": "^1.10.3",
-    "react-native-maps": "0.29.3",
+    "react-native-maps": "^0.29.4",
     "react-native-pager-view": "^5.4.4",
     "react-native-paper": "^4.8.1",
     "react-native-push-notification": "^8.1.0",
     "react-native-reanimated": "^2.2.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.7.2",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "^12.4.3",
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^8.1.0",
     "react-native-webview": "^11.13.0",
@@ -46,7 +50,7 @@
     "@types/react-native": "^0.65.1",
     "@types/react-test-renderer": "^17.0.1",
     "metro-react-native-babel-preset": "^0.67.0",
-    "react-native-svg-transformer": "^0.14.3",
+    "react-native-svg-transformer": "^1.0.0",
     "typescript": "^4.4.3"
   }
 }

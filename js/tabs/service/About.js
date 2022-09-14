@@ -1,56 +1,62 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, ScrollView, Linking } from 'react-native';
-
-import Colors from '../../util/Colors';
+import React, { Component, useContext } from 'react';
+import { Text, ScrollView, Linking } from 'react-native';
 
 import { textAbout } from './Texts';
+import Styles from '../../Styles/StyleSheet';
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
-export default class About extends Component {
-  render() {
-    return (
-      <ScrollView style={styles.container}>
-        <Text>{textAbout}</Text>
-        <Text
-          style={styles.link}
-          onPress={() =>
-            Linking.openURL('mailto:apps@dhbw-loerrach.de')
-          }
-        >
-          apps@dhbw-loerrach.de
-        </Text>
-        <Text style={styles.marginBig}>
-          Diese App ist ein Open Source Projekt:
-        </Text>
-        <Text
-          style={[styles.margin, styles.link]}
-          onPress={() =>
-            Linking.openURL(
-              'https://github.com/DHBWLoerrach/CampusApp'
-            )
-          }
-        >
-          github.com/DHBWLoerrach/CampusApp
-        </Text>
-        <Text style={styles.marginBig}>Version (App): 2.5.10</Text>
-      </ScrollView>
-    );
-  }
+export default function About() {
+  const colorContext = useContext(ColorSchemeContext);
+
+  return (
+    <ScrollView
+      style={[
+        Styles.About.container,
+        { backgroundColor: colorContext.colorScheme.background },
+      ]}
+    >
+      <Text style={{ color: colorContext.colorScheme.text }}>
+        {textAbout}
+      </Text>
+      <Text
+        style={[
+          Styles.About.link,
+          { color: colorContext.colorScheme.dhbwRed },
+        ]}
+        onPress={() =>
+          Linking.openURL('mailto:apps@dhbw-loerrach.de')
+        }
+      >
+        apps@dhbw-loerrach.de
+      </Text>
+      <Text
+        style={[
+          Styles.About.marginBig,
+          { color: colorContext.colorScheme.text },
+        ]}
+      >
+        Diese App ist ein Open Source Projekt:
+      </Text>
+      <Text
+        style={[
+          Styles.About.margin,
+          Styles.About.link,
+          { color: colorContext.colorScheme.dhbwRed },
+        ]}
+        onPress={() =>
+          Linking.openURL('https://github.com/DHBWLoerrach/CampusApp')
+        }
+      >
+        github.com/DHBWLoerrach/CampusApp
+      </Text>
+      <Text
+        style={[
+          Styles.About.marginBig,
+          { color: colorContext.colorScheme.text },
+        ]}
+      >
+        Version (App): 2.6.0
+      </Text>
+    </ScrollView>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 20,
-  },
-  link: {
-    fontSize: 15,
-    color: Colors.link,
-  },
-  marginBig: {
-    marginTop: 24,
-  },
-  margin: {
-    marginTop: 12,
-  },
-});

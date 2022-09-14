@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
 import AsyncStorage from '@react-native-community/async-storage';
-import Colors from '../../util/Colors';
+import Styles from '../../Styles/StyleSheet';
 
 export default function DualisStatistics({ route, navigation }) {
   const [loading, setLoading] = useState(false);
@@ -71,7 +71,7 @@ export default function DualisStatistics({ route, navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={Styles.DualisStatistics.center}>
         <ActivityIndicator />
       </View>
     );
@@ -79,8 +79,8 @@ export default function DualisStatistics({ route, navigation }) {
 
   if (noContent) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.message}>
+      <View style={Styles.DualisStatistics.center}>
+        <Text style={Styles.DualisStatistics.message}>
           Die Statistiken zu diesem Modul können nicht erfasst werden!
         </Text>
       </View>
@@ -89,50 +89,50 @@ export default function DualisStatistics({ route, navigation }) {
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.message}>{error}</Text>
+      <View style={Styles.DualisStatistics.center}>
+        <Text style={Styles.DualisStatistics.message}>{error}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={Styles.DualisStatistics.container}>
       <View>
-        <Text style={styles.name}>{route.params.name}</Text>
-        <View style={styles.percentageBlock}>
-          <Text style={styles.text}>
+        <Text style={Styles.DualisStatistics.name}>{route.params.name}</Text>
+        <View style={Styles.DualisStatistics.percentageBlock}>
+          <Text style={Styles.DualisStatistics.text}>
             Besser als Du abgeschnitten haben...
           </Text>
-          <Text style={styles.percentage}>{better}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>{better}%</Text>
         </View>
 
-        <View style={styles.percentageBlock}>
-          <Text style={styles.text}>
+        <View style={Styles.DualisStatistics.percentageBlock}>
+          <Text style={Styles.DualisStatistics.text}>
             Gleich gut wie Du abgeschnitten haben...
           </Text>
-          <Text style={styles.percentage}>{equal}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>{equal}%</Text>
         </View>
 
-        <View style={styles.percentageBlock}>
-          <Text style={styles.text}>
+        <View style={Styles.DualisStatistics.percentageBlock}>
+          <Text style={Styles.DualisStatistics.text}>
             Schlechter als Du abgeschnitten haben...
           </Text>
-          <Text style={styles.percentage}>{worse}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>{worse}%</Text>
         </View>
 
-        <View style={styles.percentageBlock}>
-          <Text style={styles.text}>
+        <View style={Styles.DualisStatistics.percentageBlock}>
+          <Text style={Styles.DualisStatistics.text}>
             ...der Studenten Deines Kurses.*
           </Text>
         </View>
 
-        <View style={styles.percentageBlock}>
-          <Text style={styles.text}>Durchfallquote:</Text>
-          <Text style={styles.percentage}>{failureRate}%</Text>
+        <View style={Styles.DualisStatistics.percentageBlock}>
+          <Text style={Styles.DualisStatistics.text}>Durchfallquote:</Text>
+          <Text style={Styles.DualisStatistics.percentage}>{failureRate}%</Text>
         </View>
       </View>
       <View>
-        <Text style={styles.note}>
+        <Text style={Styles.DualisStatistics.note}>
           * bei kursübergreifenden Modulen wirst Du natürlich nur mit
           Studenten verglichen, die dieses Modul ebenfalls gewählt
           haben.
@@ -141,48 +141,3 @@ export default function DualisStatistics({ route, navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 30,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  name: {
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 18,
-    color: Colors.dhbwRed,
-    textAlign: 'center',
-  },
-  text: {
-    fontSize: 16,
-    color: Colors.dhbwGray,
-    textAlign: 'center',
-  },
-  percentageBlock: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  percentage: {
-    fontSize: 26,
-    color: Colors.dhbwRed,
-  },
-  scrollView: {
-    marginHorizontal: 20,
-  },
-  note: {
-    fontSize: 10,
-    paddingBottom: 5,
-    textAlign: 'center',
-  },
-});

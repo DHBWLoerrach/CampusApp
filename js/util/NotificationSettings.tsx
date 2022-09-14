@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Alert,
   Platform,
@@ -8,11 +8,11 @@ import {
   View,
 } from 'react-native';
 import notifee, { AuthorizationStatus } from '@notifee/react-native';
-import { dhbwGray, dhbwRed } from './Colors';
 import {
   loadNotificationSettings,
   saveNotificationSettings,
 } from '../tabs/service/SettingsHelper';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 export default function ({ enabled = false }) {
   const [notifyNews, setNotifyNews] = useState(enabled);
@@ -58,21 +58,24 @@ export default function ({ enabled = false }) {
     }
   }
 
+  const colorContext = useContext(ColorSchemeContext);
+
+  // @ts-ignore
   return (
     <View>
       <View style={styles.toggleContainer}>
-        <Text>DHBW-News</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>DHBW-News</Text>
         <Switch
-          trackColor={{ false: dhbwGray, true: dhbwRed }}
+          trackColor={{ false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed }}
           thumbColor="#f4f3f4"
           onValueChange={(value) => setNotifyNews(value)}
           value={notifyNews}
         />
       </View>
       <View style={styles.toggleContainer}>
-        <Text>DHBW-Termine</Text>
+        <Text style={{color: colorContext.colorScheme.text}}>DHBW-Termine</Text>
         <Switch
-          trackColor={{ false: dhbwGray, true: dhbwRed }}
+          trackColor={{ false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed }}
           thumbColor="#f4f3f4"
           onValueChange={(value) => setNotifyEvents(value)}
           value={notifyEvents}

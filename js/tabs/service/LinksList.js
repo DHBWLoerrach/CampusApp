@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import {
   Alert,
   Platform,
   Linking,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import Colors from '../../util/Colors';
+import Colors from '../../Styles/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 export default function LinksList({ navigation, route }) {
+  const colorContext = useContext(ColorSchemeContext);
+
   const content = route.params?.links.map((link, index) => (
     <Row link={link} key={index} navigate={navigation.navigate} />
   ));
   return (
-    <View style={styles.container}>
+    <View style={[Styles.LinksList.container, {backgroundColor: colorContext.colorScheme.background}]}>
       <ItemsWithSeparator>{content}</ItemsWithSeparator>
     </View>
   );
@@ -26,109 +29,86 @@ export default function LinksList({ navigation, route }) {
 
 function ItemsWithSeparator(props) {
   const children = [];
+  const colorContext = useContext(ColorSchemeContext);
   const length = React.Children.count(props.children);
   React.Children.forEach(props.children, (child, ii) => {
     children.push(child);
     if (ii !== length - 1) {
       children.push(
-        <View key={'separator-' + ii} style={styles.separator} />
+        <View key={'separator-' + ii} style={[Styles.LinksList.separator, {backgroundColor: colorContext.colorScheme.cellBorder}]} />
       );
     }
   });
   return <View>{children}</View>;
 }
 
-class Row extends Component {
-  render() {
-    const { title, url, tel, onPress, screen } = this.props.link;
+function Row(props) {
+    const { title, url, tel, onPress, screen } = props.link;
+    const colorContext = useContext(ColorSchemeContext);
 
     let icon = null;
     if (tel) {
-      icon = <MaterialIcon name="phone" size={16} />;
+      icon = <MaterialIcon name="phone" size={16} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}}/>;
     }
     if (url) {
-      icon = <FontAwesome name="external-link" size={16} />;
+      icon = <FontAwesome name="external-link" size={16} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}}/>;
     }
     if (onPress || screen) {
-      icon = <MaterialIcon name="chevron-right" size={24} />;
+      icon = <MaterialIcon name="chevron-right" size={24} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}} />;
     }
 
-    return (
-      <ListCellTouchable
-        underlayColor={Colors.cellBorder}
-        onPress={this._handlePress.bind(this)}
-      >
-        <View style={styles.row}>
-          <Text style={styles.title} numberOfLines={2}>
-            {title}
-          </Text>
-          {icon}
-        </View>
-      </ListCellTouchable>
-    );
-  }
+  const _handlePress = () => {
+    _handleOnPress();
+    _handleUrlPress();
+    _handleScreenPress();
+    _handleTelPress();
+  };
 
-  _handlePress() {
-    this._handleOnPress();
-    this._handleUrlPress();
-    this._handleScreenPress();
-    this._handleTelPress();
-  }
-
-  _handleOnPress() {
-    const { onPress } = this.props.link;
+  const _handleOnPress = () => {
+    const { onPress } = props.link;
     if (onPress) onPress();
-  }
+  };
 
-  _handleUrlPress() {
-    const { url } = this.props.link;
+  const _handleUrlPress = () => {
+    const { url } = props.link;
     if (url) Linking.openURL(url);
-  }
+  };
 
-  _handleScreenPress() {
-    const { screen, text } = this.props.link;
-    if (screen) this.props.navigate(screen, { text });
-  }
+  const _handleScreenPress = () => {
+    const { screen, text } = props.link;
+    if (screen) props.navigate(screen, { text });
+  };
 
-  _handleTelPress() {
-    const { tel } = this.props.link;
+  const _handleTelPress = () => {
+    const { tel } = props.link;
     if (tel) {
       const telLink = 'tel:' + tel;
       if (Platform.OS === 'ios') {
         Alert.alert('Nummer wählen?', tel, [
           { text: 'Nein' },
-          { text: 'Ja', onPress: () => this._openTelLink(telLink) },
+          { text: 'Ja', onPress: () => _openTelLink(telLink) },
         ]);
       } else {
-        this._openTelLink(telLink);
+        _openTelLink(telLink);
       }
     }
-  }
+  };
 
-  _openTelLink(telLink) {
+  const _openTelLink = (telLink) => {
     Linking.openURL(telLink);
-  }
-}
+  };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  separator: {
-    backgroundColor: Colors.cellBorder,
-    height: StyleSheet.hairlineWidth,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    height: 50,
-  },
-  title: {
-    flex: 1,
-    fontSize: 17,
-    color: Colors.darkText,
-  },
-});
+  return (
+      <ListCellTouchable
+          underlayColor={colorContext.colorScheme.cellBorder}
+          onPress={_handlePress.bind(this)}
+      >
+        <View style={Styles.LinksList.row}>
+          <Text style={[Styles.LinksList.title, {color: colorContext.colorScheme.text}]} numberOfLines={2}>
+            {title}
+          </Text>
+          {icon}
+        </View>
+      </ListCellTouchable>
+  );
+}

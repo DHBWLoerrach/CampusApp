@@ -1,14 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import {
-  Image,
   Linking,
   ScrollView,
-  StyleSheet,
   View,
 } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {
   linksAccounts,
@@ -19,182 +14,100 @@ import {
   linkOrientation,
   linksStudy,
 } from './Links';
-import Submenu from './Submenu';
+import Submenu from './menu/Submenu';
 import {
   TextPrivacy,
   TextAgreedDisclaimer,
   TextImprint,
 } from './Texts';
-import Color from '../../util/Colors';
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
-const iconSize = 36;
+export default function ServiceScreen(props){
+  const colorContext = useContext(ColorSchemeContext);
 
-export default class ServiceScreen extends Component {
-  _getSubmenuItems() {
-    const { navigate } = this.props.navigation;
-    var submenuItems = [
+  const _getSubmenuItems = () => {
+    const { navigate } = props.navigation;
+    return [
       {
-        label: 'Anreise ➚',
-        icon: (
-          <FontAwesome
-            name="map-marker"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        label: 'Anreise',
+        iconName: "location-dot",
         onPress: () => Linking.openURL(linkOrientation),
       },
       {
         label: 'Gebäude Hangstraße',
-        icon: (
-          <MaterialIcon
-            name="map"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "map",
         onPress: () => navigate('CampusHangstr'),
       },
       {
         label: 'Service-Zugänge',
-        icon: (
-          <MaterialIcon
-            name="screen-share"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "link",
         onPress: () => navigate('Accounts', { links: linksAccounts }),
       },
       {
         label: 'Hilfe im Notfall',
-        icon: (
-          <MaterialIcon
-            name="phone"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "phone",
         onPress: () =>
           navigate('Emergency', { links: linksEmergency }),
       },
       {
         label: 'Studium',
-        icon: (
-          <MaterialIcon
-            name="school"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "graduation-cap",
         onPress: () => navigate('Study', { links: linksStudy }),
       },
       {
-        label: 'Katalog Bibliothek ➚',
-        icon: (
-          <MaterialCommunityIcon
-            name="book-open-variant"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        label: 'Katalog Bibliothek',
+        iconName: "book-open",
         onPress: () => Linking.openURL(linkBib),
       },
       {
         label: 'Angebote bei der KBC',
-        icon: <Image source={require('./img/kbc.png')} />,
+        iconName: 'school',
         onPress: () => navigate('KBC', { links: linksKBC }),
       },
       {
         label: 'Freizeit',
-        icon: (
-          <MaterialIcon
-            name="wb-sunny"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "cloud-sun",
         onPress: () => navigate('Freetime', { links: linksFreetime }),
       },
       {
         label: 'Feedback',
-        icon: (
-          <MaterialIcon
-            name="mail-outline"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "envelope",
         onPress: () => navigate('Feedback'),
       },
       {
         label: 'Einstellungen',
-        icon: (
-          <MaterialIcon
-            name="settings"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "gear",
         onPress: () => navigate('Settings'),
       },
       {
         label: 'Über',
-        icon: (
-          <MaterialIcon
-            name="help-outline"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "circle-info",
         onPress: () => navigate('About'),
       },
       {
         label: 'Haftung',
-        icon: <Image source={require('./img/disclaimer.png')} />,
+        iconName: 'file-shield',
         onPress: () =>
           navigate('Disclaimer', { text: <TextAgreedDisclaimer /> }),
       },
       {
         label: 'Impressum',
-        icon: (
-          <MaterialCommunityIcon
-            name="file-document"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: "file-lines",
         onPress: () => navigate('Imprint', { text: <TextImprint /> }),
       },
       {
         label: 'Datenschutz',
-        icon: (
-          <MaterialIcon
-            name="remove-red-eye"
-            size={iconSize}
-            color={Color.icon}
-          />
-        ),
+        iconName: 'eye',
         onPress: () => navigate('Privacy', { text: <TextPrivacy /> }),
       },
     ];
-    return submenuItems;
   }
-
-  render() {
     return (
-      <View style={styles.screenContainer}>
+      <View style={[Styles.ServiceScreen.screenContainer, {backgroundColor: colorContext.colorScheme.background}]}>
         <ScrollView>
-          <Submenu menuItems={this._getSubmenuItems()} />
+          <Submenu menuItems={_getSubmenuItems()} />
         </ScrollView>
       </View>
     );
-  }
 }
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});

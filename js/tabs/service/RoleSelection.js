@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   TouchableNativeFeedback,
   TouchableOpacity,
@@ -9,6 +8,8 @@ import {
 } from 'react-native';
 
 import { roles } from '../../util/Constants';
+import Styles from '../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../context/ColorSchemeContext";
 
 const RadioButtonTouchable =
   Platform.OS === 'android'
@@ -16,16 +17,17 @@ const RadioButtonTouchable =
     : TouchableOpacity;
 
 function RadioButton(props) {
+  const colorContext = useContext(ColorSchemeContext);
   return (
     <RadioButtonTouchable onPress={props.onPress}>
-      <View style={styles.radioButton}>
-        <View style={styles.outerCircle}>
+      <View style={Styles.RoleSelection.radioButton}>
+        <View style={[Styles.RoleSelection.outerCircle, {borderColor: colorContext.colorScheme.icon}]}>
           {props.selected ? (
-            <View style={styles.innerCircle} />
+            <View style={[Styles.RoleSelection.innerCircle, {backgroundColor: colorContext.colorScheme.icon}]} />
           ) : null}
         </View>
         <Text
-          style={[styles.label, props.selected ? styles.bold : null]}
+          style={[Styles.RoleSelection.label, {color: colorContext.colorScheme.text}, props.selected ? Styles.RoleSelection.bold : null]}
         >
           {props.label}
         </Text>
@@ -36,7 +38,7 @@ function RadioButton(props) {
 
 export default function RoleSelection(props) {
   return (
-    <View style={styles.radioGroup}>
+    <View style={Styles.RoleSelection.radioGroup}>
       {roles.map((role, index) => (
         <RadioButton
           key={index}
@@ -48,34 +50,3 @@ export default function RoleSelection(props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  radioGroup: {
-    marginTop: 10,
-  },
-  radioButton: {
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-  outerCircle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  innerCircle: {
-    height: 10,
-    width: 10,
-    borderRadius: 5,
-    backgroundColor: 'black',
-  },
-  label: {
-    marginLeft: 5,
-  },
-  bold: {
-    fontWeight: 'bold',
-  },
-});

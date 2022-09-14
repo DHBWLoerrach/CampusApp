@@ -1,14 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Colors from '../util/Colors';
-import Styles from '../util/Styles';
+import Styles from '../Styles/StyleSheet';
 import { shortString } from '../tabs/stuv/helper';
+import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 export default ({
   imageSource,
@@ -17,65 +16,31 @@ export default ({
   details = [],
   description,
   onPress,
-}) => (
+}) => {
+  const colorContext = useContext(ColorSchemeContext);
+
+  return (
   <TouchableOpacity
-    style={[Styles.cardShadow, styles.entry]}
+    style={[Styles.General.cardShadow, Styles.CommonCell.entry, {backgroundColor: colorContext.colorScheme.card}]}
     activeOpacity={0.7}
     onPress={onPress}
   >
-    <View style={styles.container}>
+    <View style={Styles.CommonCell.container}>
       <Image
         source={imageSource}
-        style={[styles.image, imageStyle]}
+        style={[Styles.CommonCell.image, imageStyle]}
       />
-      <View style={styles.textContainer}>
-        <Text style={styles.headline}>{title}</Text>
+      <View style={Styles.CommonCell.textContainer}>
+        <Text style={Styles.CommonCell.headline}>{title}</Text>
         {details.map((detail, index) => (
-          <Text style={styles.details} key={index}>
+          <Text style={[Styles.CommonCell.details, {color: colorContext.colorScheme.text}]} key={index}>
             {detail}
           </Text>
         ))}
-        <Text style={styles.text}>
+        <Text style={{color: colorContext.colorScheme.text}}>
           {shortString(description, 90)}
         </Text>
       </View>
     </View>
   </TouchableOpacity>
-);
-
-const styles = StyleSheet.create({
-  entry: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-  },
-  image: {
-    marginTop: 'auto',
-    marginBottom: 'auto',
-    flex: 1,
-    marginRight: 10,
-    resizeMode: 'contain',
-  },
-  textContainer: {
-    flex: 2,
-  },
-  headline: {
-    fontSize: 18,
-    color: Colors.dhbwRed,
-    fontWeight: 'bold',
-  },
-  text: {
-    color: '#262626',
-  },
-  details: {
-    color: 'black',
-    fontWeight: 'bold',
-  },
-});
+)};

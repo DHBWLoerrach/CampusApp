@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   Image,
-  StyleSheet,
   Text,
   View,
   Button
@@ -11,8 +10,9 @@ import {
   unixTimeToDateText,
   unixTimeToTimeText,
 } from '../helper';
-import Colors from '../../../util/Colors';
-import Styles from '../../../util/Styles';
+import Colors from '../../../Styles/Colors';
+import Styles from '../../../Styles/StyleSheet';
+import {ColorSchemeContext} from "../../../context/ColorSchemeContext";
 
 export default function StuvEventCell({ event, onPress }) {
   const {
@@ -21,6 +21,8 @@ export default function StuvEventCell({ event, onPress }) {
     images,
     date: { from, to },
   } = event;
+
+  const colorContext = useContext(ColorSchemeContext);
 
   const formattedDate = unixTimeToDateText(from);
   const formattedTime = to
@@ -35,79 +37,26 @@ export default function StuvEventCell({ event, onPress }) {
     : require('../../../img/crowd.png');
 
   return (
-    <View style={[Styles.cardShadow, styles.entry]}>
-      <View style={styles.container}>
-        <Image source={image} style={styles.imageContainer} />
+    <View style={[Styles.General.cardShadow, Styles.StuVEventCell.entry]}>
+      <View style={[{backgroundColor: colorContext.colorScheme.card}, Styles.StuVEventCell.container]}>
+        <Image source={image} style={Styles.StuVEventCell.imageContainer} />
 
-        <View style={styles.textContainer}>
-          <Text style={styles.headline}>{name}</Text>
+        <View style={Styles.StuVEventCell.textContainer}>
+          <Text style={Styles.StuVEventCell.headline}>{name}</Text>
 
-          <Text style={styles.details}>{formattedDate}</Text>
-          <Text style={styles.details}>{formattedTime}</Text>
-          <Text style={styles.details}>{registrationRequired}</Text>
+          <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventCell.details]}>{formattedDate}</Text>
+          <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventCell.details]}>{formattedTime}</Text>
+          <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventCell.details]}>{registrationRequired}</Text>
 
-          <Text style={styles.text}>
+          <Text style={[{color: colorContext.colorScheme.text}, Styles.StuVEventCell.text]}>
             {shortString(description, 120)}
           </Text>
 
-          <View style={{marginTop: 8, alignSelf: "center", borderRadius: 5}}>
-            <Button color={Colors.dhbwRed} title="Weitere Infos" onPress={onPress}/>
-            {/*<View style={{flex: 1, flexDirection: "row", backgroundColor: Colors.dhbwRed, borderRadius: 5, alignItems: "center", alignSelf: "center", padding: 15}}>
-              <Text style={{fontSize: 15, color: 'white'}}>Mehr Details</Text>
-            </View>*/}
+          <View style={{marginTop: 15, alignSelf: "center", borderRadius: 5}}>
+            <Button color={Colors.dhbwRed} title="Mehr Details" onPress={onPress}/>
           </View>
         </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  entry: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    flexDirection: 'column',
-  },
-  imageContainer: {
-    width: '100%',
-    aspectRatio: 1,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    resizeMode: 'contain'
-  },
-  textContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    marginBottom: 15,
-  },
-  headline: {
-    fontSize: 28,
-    color: Colors.dhbwRed,
-    fontWeight: '700',
-  },
-  text: {
-    marginTop: 8,
-    fontSize: 16,
-    lineHeight: 21,
-    color: '#262626',
-  },
-  details: {
-    marginTop: 8,
-    fontSize: 18,
-    color: '#262626',
-    fontWeight: '600',
-  },
-  icon: {
-    alignSelf: 'flex-end',
-    color: 'white',
-  },
-  button: {
-    color: Colors.dhbwRed
-  }
-});
