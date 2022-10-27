@@ -1,4 +1,4 @@
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 
 export default function fetchCanteenData(canteenXMLData) {
   let dayPlans = [];

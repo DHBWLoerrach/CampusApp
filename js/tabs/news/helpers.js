@@ -1,6 +1,6 @@
 const websiteUrl = 'https://www.dhbw-loerrach.de/';
 
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 
 export default function fetchNewsData(newsXMLData) {
   var domParser = new DOMParser();
