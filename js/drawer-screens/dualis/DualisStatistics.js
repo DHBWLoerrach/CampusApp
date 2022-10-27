@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Styles from '../../Styles/StyleSheet';
 
 export default function DualisStatistics({ route, navigation }) {
@@ -98,26 +98,34 @@ export default function DualisStatistics({ route, navigation }) {
   return (
     <View style={Styles.DualisStatistics.container}>
       <View>
-        <Text style={Styles.DualisStatistics.name}>{route.params.name}</Text>
+        <Text style={Styles.DualisStatistics.name}>
+          {route.params.name}
+        </Text>
         <View style={Styles.DualisStatistics.percentageBlock}>
           <Text style={Styles.DualisStatistics.text}>
             Besser als Du abgeschnitten haben...
           </Text>
-          <Text style={Styles.DualisStatistics.percentage}>{better}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>
+            {better}%
+          </Text>
         </View>
 
         <View style={Styles.DualisStatistics.percentageBlock}>
           <Text style={Styles.DualisStatistics.text}>
             Gleich gut wie Du abgeschnitten haben...
           </Text>
-          <Text style={Styles.DualisStatistics.percentage}>{equal}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>
+            {equal}%
+          </Text>
         </View>
 
         <View style={Styles.DualisStatistics.percentageBlock}>
           <Text style={Styles.DualisStatistics.text}>
             Schlechter als Du abgeschnitten haben...
           </Text>
-          <Text style={Styles.DualisStatistics.percentage}>{worse}%</Text>
+          <Text style={Styles.DualisStatistics.percentage}>
+            {worse}%
+          </Text>
         </View>
 
         <View style={Styles.DualisStatistics.percentageBlock}>
@@ -127,8 +135,12 @@ export default function DualisStatistics({ route, navigation }) {
         </View>
 
         <View style={Styles.DualisStatistics.percentageBlock}>
-          <Text style={Styles.DualisStatistics.text}>Durchfallquote:</Text>
-          <Text style={Styles.DualisStatistics.percentage}>{failureRate}%</Text>
+          <Text style={Styles.DualisStatistics.text}>
+            Durchfallquote:
+          </Text>
+          <Text style={Styles.DualisStatistics.percentage}>
+            {failureRate}%
+          </Text>
         </View>
       </View>
       <View>

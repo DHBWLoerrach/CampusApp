@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Paragraph, Text, TextInput } from 'react-native-paper';
 import { ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../../Styles/Colors';
 import Styles from '../../Styles/StyleSheet';
 
@@ -62,7 +62,10 @@ export default function DualisLogin({ navigation }) {
         value={password}
         placeholder="Passwort"
       />
-      <TouchableOpacity style={Styles.DualisLogin.dhbwButton} onPress={login}>
+      <TouchableOpacity
+        style={Styles.DualisLogin.dhbwButton}
+        onPress={login}
+      >
         <Text style={Styles.DualisLogin.buttonText}>Anmelden</Text>
         {loading && (
           <ActivityIndicator size="large" color={Colors.lightGray} />

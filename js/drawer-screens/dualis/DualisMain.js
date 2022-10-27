@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import EnrollmentItem from './EnrollmentItem';
 import { Picker } from '@react-native-picker/picker';
 import Styles from '../../Styles/StyleSheet';
@@ -137,7 +137,9 @@ export default function DualisMain({ navigation }) {
 
         {noContent && (
           <View style={Styles.DualisMain.center}>
-            <Text style={Styles.DualisMain.message}>Kein Inhalt vorhanden</Text>
+            <Text style={Styles.DualisMain.message}>
+              Kein Inhalt vorhanden
+            </Text>
           </View>
         )}
       </ScrollView>
