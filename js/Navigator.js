@@ -359,7 +359,7 @@ export default function NavigatorDark({ navigation }) {
           component={ScheduleStack}
           options={{
             tabBarLabel: ({ focused }) =>
-              tabBarLabel('Vorlesungsplan', { focused }),
+              tabBarLabel('Vorlesungen', { focused }),
             tabBarIcon: ({ focused }) =>
               tabBarIcon('graduation-cap', 30, { focused }),
           }}
