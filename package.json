@@ -26,7 +26,7 @@
     "ical.js": "^1.5.0",
     "jwt-decode": "^3.1.2",
     "react": "18.1.0",
-    "react-native": "0.70.4",
+    "react-native": "0.70.6",
     "react-native-background-fetch": "^4.1.5",
     "react-native-bouncy-checkbox": "^3.0.5",
     "react-native-gesture-handler": "^2.8.0",
