@@ -1,5 +1,5 @@
-import React, {useCallback, useContext, useState} from 'react';
-import { Button, SectionList, View } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import { Button, SectionList, View, Text } from 'react-native';
 import {
   useFocusEffect,
   useScrollToTop,
@@ -17,7 +17,11 @@ import {
   saveLecturesToStore,
 } from './store';
 import Styles from '../../Styles/StyleSheet';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from "../../context/ColorSchemeContext";
+import WeekView from 'react-native-week-view';
+import { dhbwGray, dhbwRed } from '../../Styles/Colors';
+import moment from 'moment';
+import 'moment/locale/de'
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -81,12 +85,17 @@ function ScheduleScreen({ navigation }) {
         navigation.setParams({ course: course });
       }
       loadCourseAndSetParam();
+      /*addLocale('de-DE', {
+        months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
+        weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+      });*/
+      moment.locale('de')
     }, [])
   );
 
   if (isLoading) {
     return (
-      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.center, { backgroundColor: colorContext.colorScheme.background }]}>
         <ActivityIndicator />
       </View>
     );
@@ -94,7 +103,7 @@ function ScheduleScreen({ navigation }) {
 
   if (!course) {
     return (
-      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.center, { backgroundColor: colorContext.colorScheme.background }]}>
         <Button
           title="Kurs eingeben"
           color={colorContext.colorScheme.dhbwRed}
@@ -110,7 +119,7 @@ function ScheduleScreen({ navigation }) {
     (status === 'networkError' || status === 'not ok')
   ) {
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView buttonText={buttonText} onPress={loadData} />
       </View>
     );
@@ -120,7 +129,7 @@ function ScheduleScreen({ navigation }) {
     const text =
       'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -137,7 +146,7 @@ function ScheduleScreen({ navigation }) {
       ' keine Termine ' +
       'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -147,10 +156,45 @@ function ScheduleScreen({ navigation }) {
     );
   }
 
+  const weekViewLectures = [];
+  lectures.forEach((lectureGroup, index) => {
+    lectureGroup.data.forEach((lecture, lectureIndex) => {
+      let startDate = new Date(lecture.startDate);
+      let endDate = new Date(lecture.startDate);
+      endDate.setHours(lecture.endTime.split(':')[0]);
+      endDate.setMinutes(lecture.endTime.split(':')[1]);
+      weekViewLectures.push({
+        id: lecture.key,
+        title: lecture.title,
+        startTime: lecture.startTime,
+        endTime: lecture.endTime,
+        location: lecture.location,
+        color: dhbwRed,
+        startDate: startDate,
+        endDate: endDate,
+      });
+    });
+  });
+
+  // Highlight today with a bold font
+  const MyTodayComponent = ({ formattedDate, textStyle }) => (
+    <View style={{ borderRadius: 10, backgroundColor: dhbwRed }}>
+      <Text style={[textStyle, { fontWeight: 'bold', color: 'white', padding: 5 }]}>{formattedDate}</Text>
+    </View>
+  );
+
+  const EventComponent = ({ event }) => (
+    <Text style={{ textAlign: 'left', color: 'white' }} >
+      <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>{'\n'}
+      <Text>{event.startTime} bis {event.endTime}</Text>{'\n'}
+      <Text>{event.location}</Text>
+    </Text>
+  );
+
   // contenInset: needed for last item to be displayed above tab bar on iOS
   return (
-    <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
-      <SearchBar
+    <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
+      {/*<SearchBar
         onSearch={(text) => setSearchString(text)}
         searchString={searchString}
       />
@@ -163,6 +207,26 @@ function ScheduleScreen({ navigation }) {
         renderSectionHeader={({ section }) => (
           <DayHeader title={section.title} />
         )}
+      />*/}
+      <WeekView
+        locale='de'
+        events={weekViewLectures}
+        numberOfDays={3}
+        selectedDate={new Date()}
+        showNowLine={true}
+        nowLineColor={dhbwGray}
+        allowScrollByDay={true}
+        isRefreshing={isLoading}
+        onRefresh={loadData}
+        hoursInDisplay={12}
+        startHour={8}
+        timeStep={60}
+        formatDateHeader={'dd D.MM'}
+        eventContainerStyle={{ borderTopRightRadius: 10, borderBottomRightRadius: 10, margin: 0, alignItems: 'flex-start', padding: 5 }}
+        EventComponent={EventComponent}
+        TodayHeaderComponent={MyTodayComponent}
+        headerStyle={{ borderColor: 'white' }}
+        onMonthPress={loadData}
       />
     </View>
   );
