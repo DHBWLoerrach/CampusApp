@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Button, SectionList, View, Text } from 'react-native';
+import { Button, SectionList, View, Text, Alert } from 'react-native';
 import {
   useFocusEffect,
   useScrollToTop,
@@ -85,10 +85,6 @@ function ScheduleScreen({ navigation }) {
         navigation.setParams({ course: course });
       }
       loadCourseAndSetParam();
-      /*addLocale('de-DE', {
-        months: 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-        weekdaysMin: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
-      });*/
       moment.locale('de')
     }, [])
   );
@@ -191,6 +187,11 @@ function ScheduleScreen({ navigation }) {
     </Text>
   );
 
+  function OnEventPress(event) {
+    let body = `${event.startTime} bis ${event.endTime} ${'\n'} ${event.location}`;
+    Alert.alert(event.title, body);
+  }
+
   // contenInset: needed for last item to be displayed above tab bar on iOS
   return (
     <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
@@ -216,8 +217,6 @@ function ScheduleScreen({ navigation }) {
         showNowLine={true}
         nowLineColor={dhbwGray}
         allowScrollByDay={true}
-        isRefreshing={isLoading}
-        onRefresh={loadData}
         hoursInDisplay={12}
         startHour={8}
         timeStep={60}
@@ -227,6 +226,7 @@ function ScheduleScreen({ navigation }) {
         TodayHeaderComponent={MyTodayComponent}
         headerStyle={{ borderColor: 'white' }}
         onMonthPress={loadData}
+        onEventPress={OnEventPress}
       />
     </View>
   );
