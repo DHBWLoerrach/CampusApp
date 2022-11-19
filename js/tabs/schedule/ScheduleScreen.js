@@ -22,6 +22,7 @@ import WeekView from 'react-native-week-view';
 import { dhbwGray, dhbwRed } from '../../Styles/Colors';
 import moment from 'moment';
 import 'moment/locale/de'
+import { ScheduleModeContext } from '../../context/ScheduleModeContext';
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ function ScheduleScreen({ navigation }) {
   const [searchString, setSearchString] = useState('');
   const ref = React.useRef(null);
   const colorContext = useContext(ColorSchemeContext);
+  const scheduleMode = useContext(ScheduleModeContext);
   useScrollToTop(ref);
 
   // load data: first from local store, then fetch latest data from web
@@ -192,10 +194,10 @@ function ScheduleScreen({ navigation }) {
     Alert.alert(event.title, body);
   }
 
-  // contenInset: needed for last item to be displayed above tab bar on iOS
-  return (
-    <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
-      {/*<SearchBar
+  let body;
+  if (scheduleMode == 0) {
+    body = <>
+      <SearchBar
         onSearch={(text) => setSearchString(text)}
         searchString={searchString}
       />
@@ -208,11 +210,14 @@ function ScheduleScreen({ navigation }) {
         renderSectionHeader={({ section }) => (
           <DayHeader title={section.title} />
         )}
-      />*/}
+      />
+    </>;
+  } else {
+    body = <>
       <WeekView
         locale='de'
         events={weekViewLectures}
-        numberOfDays={3}
+        numberOfDays={scheduleMode}
         selectedDate={new Date()}
         showNowLine={true}
         nowLineColor={dhbwGray}
@@ -228,7 +233,11 @@ function ScheduleScreen({ navigation }) {
         onMonthPress={loadData}
         onEventPress={OnEventPress}
       />
-    </View>
+    </>
+  }
+  // contenInset: needed for last item to be displayed above tab bar on iOS
+  return (
+    <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>{body}</View>
   );
 }
 

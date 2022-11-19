@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Platform, Text } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Platform, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -30,6 +30,8 @@ import { enableDualis } from './../env.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { ScheduleModeContext } from './context/ScheduleModeContext';
 
 function getDualisOptions(navigation) {
   if (!enableDualis) return {};
@@ -48,6 +50,7 @@ function getDualisOptions(navigation) {
 export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
+  const [scheduleMode, setScheduleMode] = useState(3);
 
   const stackHeaderConfig = {
     ...dualisOptions,
@@ -127,6 +130,9 @@ export default function NavigatorDark({ navigation }) {
   }
 
   const scheduleOptions = ({ navigation, route }) => {
+    const [visible, setVisible] = useState(false);
+    const hideMenu = () => setVisible(false);
+    const showMenu = () => setVisible(true);
     const headerTitle = route.params?.course ?? 'Vorlesungsplan';
     return {
       headerRight: () => (
@@ -136,26 +142,51 @@ export default function NavigatorDark({ navigation }) {
         />
       ),
       headerTitle,
+      headerLeft: () => (
+        <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+          <Menu
+            visible={visible}
+            anchor={
+              <HeaderIcon
+                onPress={showMenu}
+                icon='tune'
+              />
+            }
+            onRequestClose={hideMenu}
+          >
+            <MenuItem onPress={() => setScheduleMode(0)}>Liste</MenuItem>
+            <MenuDivider />
+            <MenuItem onPress={() => setScheduleMode(1)}>1 Tag</MenuItem>
+            <MenuItem onPress={() => setScheduleMode(3)}>3 Tage</MenuItem>
+            <MenuItem onPress={() => setScheduleMode(5)}>5 Tage</MenuItem>
+            <MenuItem onPress={() => setScheduleMode(7)}>Woche</MenuItem>
+          </Menu>
+        </View>
+      ),
     };
   };
 
   function ScheduleStack() {
     return (
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={stackHeaderConfig}
+      <ScheduleModeContext.Provider
+        value={scheduleMode}
       >
-        <Stack.Screen
-          name="Home"
-          component={ScheduleScreen}
-          options={scheduleOptions}
-        />
-        <Stack.Screen
-          name="EditCourse"
-          component={EditCourse}
-          options={{ title: 'Kurs eingeben' }}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={stackHeaderConfig}
+        >
+          <Stack.Screen
+            name="Home"
+            component={ScheduleScreen}
+            options={scheduleOptions}
+          />
+          <Stack.Screen
+            name="EditCourse"
+            component={EditCourse}
+            options={{ title: 'Kurs eingeben' }}
+          />
+        </Stack.Navigator>
+      </ScheduleModeContext.Provider>
     );
   }
 
