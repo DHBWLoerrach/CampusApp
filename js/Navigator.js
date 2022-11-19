@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Platform, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HeaderIcon from './util/HeaderIcon';
 import StuVIcon from './../assets/stuv_icon.svg';
@@ -51,6 +52,14 @@ export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
   const [scheduleMode, setScheduleMode] = useState(3);
+
+  useEffect(() => {
+    const fetchScheduleData = async () => {
+      const scheduleMode = await AsyncStorage.getItem('scheduleMode');
+      scheduleMode && setScheduleMode(Number(scheduleMode));
+    }
+    fetchScheduleData();
+  }, []);
 
   const stackHeaderConfig = {
     ...dualisOptions,
@@ -134,6 +143,10 @@ export default function NavigatorDark({ navigation }) {
     const hideMenu = () => setVisible(false);
     const showMenu = () => setVisible(true);
     const headerTitle = route.params?.course ?? 'Vorlesungsplan';
+    const setNewScheduleMode = async (mode) => {
+      setScheduleMode(mode);
+      await AsyncStorage.setItem('scheduleMode', mode.toString());
+    }
     return {
       headerRight: () => (
         <HeaderIcon
@@ -154,12 +167,12 @@ export default function NavigatorDark({ navigation }) {
             }
             onRequestClose={hideMenu}
           >
-            <MenuItem onPress={() => setScheduleMode(0)}>Liste</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(0)}>Liste</MenuItem>
             <MenuDivider />
-            <MenuItem onPress={() => setScheduleMode(1)}>1 Tag</MenuItem>
-            <MenuItem onPress={() => setScheduleMode(3)}>3 Tage</MenuItem>
-            <MenuItem onPress={() => setScheduleMode(5)}>5 Tage</MenuItem>
-            <MenuItem onPress={() => setScheduleMode(7)}>Woche</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(1)}>1 Tag</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(3)}>3 Tage</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(5)}>5 Tage</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(7)}>Woche</MenuItem>
           </Menu>
         </View>
       ),
