@@ -66,3 +66,6 @@ env.js
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+
+# Custom
+test/
