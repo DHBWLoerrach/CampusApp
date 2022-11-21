@@ -1,7 +1,8 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
   Alert,
   Button,
+  Pressable,
   Text,
   TextInput,
   View,
@@ -18,11 +19,17 @@ import {
   loadCourseFromStore,
   clearLecturesFromStore,
   saveCourseToStore,
+  loadRecentCoursesFromStore,
+  saveRecentCoursesToStore,
 } from './store';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from "../../context/ColorSchemeContext";
+import { dhbwGray, dhbwRed } from '../../Styles/Colors.js';
+import { ScrollView } from 'react-native-gesture-handler';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default function EditCourse() {
   const [course, setCourse] = useState('');
+  const [recentCourses, setRecentCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
   const colorContext = useContext(ColorSchemeContext);
   const { goBack } = useNavigation();
@@ -35,7 +42,12 @@ export default function EditCourse() {
         setCourse(data);
         setCurrentCourse(data);
       }
+      async function loadRecentCourses() {
+        const data = await loadRecentCoursesFromStore();
+        setRecentCourses(data);
+      }
       loadCourse();
+      loadRecentCourses();
     }, [])
   );
 
@@ -48,6 +60,11 @@ export default function EditCourse() {
         await saveCourseToStore(newCourse);
         await clearLecturesFromStore();
       }
+      if (!recentCourses.includes(newCourse)) {
+        let recentCoursesHelper = recentCourses;
+        recentCoursesHelper.push(newCourse);
+        await saveRecentCoursesToStore(recentCoursesHelper);
+      }
       goBack();
     } else {
       Alert.alert(
@@ -57,14 +74,43 @@ export default function EditCourse() {
     }
   }
 
+  async function removeRecentCourseItem(title) {
+    let recentCoursesHelper = recentCourses.filter(item => item !== title);
+    await saveRecentCoursesToStore(recentCoursesHelper);
+    setRecentCourses(recentCoursesHelper);
+  }
+
+  const listItem = (title, key) => {
+    return <Pressable key={key} onPress={() => setCourse(title)}
+      style={({ pressed }) => [
+        {
+          opacity: pressed
+            ? 0.6
+            : 1,
+        },
+        {
+          padding: 10, borderWidth: 1, marginBottom: 3, borderRadius: 8, borderColor: title === course ? dhbwRed : dhbwGray, backgroundColor: title === course ? dhbwRed : 'white', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+        },
+      ]}
+    >
+      <Text style={{ color: title === course ? 'white' : 'black' }}>{title}</Text>
+      <MaterialIcon
+        style={{ paddingLeft: 10, color: title === course ? 'white' : 'black' }}
+        onPress={() => removeRecentCourseItem(title)}
+        name="close"
+        size={30}
+      />
+    </Pressable>
+  }
+
   return (
-    <View style={[Styles.EditCourse.container, {backgroundColor: colorContext.colorScheme.background}]}>
-      <Text style={{color: colorContext.colorScheme.text}}>
+    <View style={[Styles.EditCourse.container, { backgroundColor: colorContext.colorScheme.background }]}>
+      <Text style={{ color: colorContext.colorScheme.text }}>
         Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
       </Text>
       <View style={Styles.EditCourse.inputContainer}>
         <TextInput
-          style={[Styles.EditCourse.input, {color: colorContext.colorScheme.text}]}
+          style={[Styles.EditCourse.input, { color: colorContext.colorScheme.text }]}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={true}
@@ -78,11 +124,17 @@ export default function EditCourse() {
           onPress={onPressClicked}
         />
       </View>
-      <Text style={{color: colorContext.colorScheme.text}}>
+      <Text style={{ color: colorContext.colorScheme.text }}>
         Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
         -- Feedback.
       </Text>
+      <Text style={{ marginTop: 10 }}>Zuletzt angezeigte Kurse:</Text>
+      <ScrollView style={{ marginTop: 10 }}>
+        {recentCourses.map((item, index) => {
+          return listItem(item, index);
+        })}
+      </ScrollView>
     </View>
   );
 }
