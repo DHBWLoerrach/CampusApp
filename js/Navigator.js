@@ -52,6 +52,9 @@ export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
   const [scheduleMode, setScheduleMode] = useState(3);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const hideMenu = () => setIsMenuVisible(false);
+  const showMenu = () => setIsMenuVisible(true);
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -139,9 +142,6 @@ export default function NavigatorDark({ navigation }) {
   }
 
   const scheduleOptions = ({ navigation, route }) => {
-    const [visible, setVisible] = useState(false);
-    const hideMenu = () => setVisible(false);
-    const showMenu = () => setVisible(true);
     const headerTitle = route.params?.course ?? 'Vorlesungsplan';
     const setNewScheduleMode = async (mode) => {
       setScheduleMode(mode);
@@ -158,7 +158,7 @@ export default function NavigatorDark({ navigation }) {
       headerLeft: () => (
         <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Menu
-            visible={visible}
+            visible={isMenuVisible}
             anchor={
               <HeaderIcon
                 onPress={showMenu}
