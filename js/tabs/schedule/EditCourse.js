@@ -44,7 +44,7 @@ export default function EditCourse() {
       }
       async function loadRecentCourses() {
         const data = await loadRecentCoursesFromStore();
-        setRecentCourses(data);
+        data && setRecentCourses(data);
       }
       loadCourse();
       loadRecentCourses();
@@ -131,7 +131,7 @@ export default function EditCourse() {
       </Text>
       <Text style={{ marginTop: 10 }}>Zuletzt angezeigte Kurse:</Text>
       <ScrollView style={{ marginTop: 10 }}>
-        {recentCourses.map((item, index) => {
+        {recentCourses?.map((item, index) => {
           return listItem(item, index);
         })}
       </ScrollView>
