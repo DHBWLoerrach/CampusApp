@@ -41,6 +41,7 @@ function ScheduleScreen({ navigation }) {
     const dataFromStore = await loadScheduleDataFromStore();
     const courseFromStore = dataFromStore.course;
     const lecturesFromStore = dataFromStore.lectures;
+    navigation.setParams({ course: courseFromStore });
     setCourse(courseFromStore);
     setLectures(lecturesFromStore);
     const fetchResult = await fetchLecturesFromWeb(courseFromStore);
@@ -82,11 +83,6 @@ function ScheduleScreen({ navigation }) {
       //The user expects an empty search bar on re-navigation
       setSearchString('');
       loadData();
-      async function loadCourseAndSetParam() {
-        let { course } = await loadScheduleDataFromStore();
-        navigation.setParams({ course: course });
-      }
-      loadCourseAndSetParam();
       moment.locale('de')
     }, [])
   );
