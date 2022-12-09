@@ -168,12 +168,12 @@ export default function NavigatorDark({ navigation }) {
             }
             onRequestClose={hideMenu}
           >
-            <MenuItem onPress={() => setNewScheduleMode(0)}>Liste</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(0)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>Liste</MenuItem>
             <MenuDivider />
-            <MenuItem onPress={() => setNewScheduleMode(1)}>1 Tag</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(3)}>3 Tage</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(5)}>5 Tage</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(7)}>Woche</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(1)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>1 Tag</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(3)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>3 Tage</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(5)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>5 Tage</MenuItem>
+            <MenuItem onPress={() => setNewScheduleMode(7)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>Woche</MenuItem>
           </Menu>
         </View>
       ),

@@ -172,7 +172,7 @@ function ScheduleScreen({ navigation }) {
 
   // Highlight today with a bold font
   const MyTodayComponent = ({ formattedDate, textStyle }) => (
-    <View style={{ borderRadius: 10, backgroundColor: dhbwRed }}>
+    <View style={{ borderRadius: 10, backgroundColor: colorContext.colorScheme.dhbwRed }}>
       <Text style={[textStyle, { fontWeight: 'bold', color: 'white', padding: 5 }]}>{formattedDate}</Text>
     </View>
   );
@@ -222,10 +222,14 @@ function ScheduleScreen({ navigation }) {
         startHour={8}
         timeStep={60}
         formatDateHeader={'dd D.MM'}
-        eventContainerStyle={{ borderTopRightRadius: 10, borderBottomRightRadius: 10, margin: 0, alignItems: 'flex-start', padding: 5 }}
+        eventContainerStyle={{ borderTopRightRadius: 10, borderBottomRightRadius: 10, margin: 0, alignItems: 'flex-start', padding: 5, backgroundColor: colorContext.colorScheme.dhbwRed }}
         EventComponent={EventComponent}
         TodayHeaderComponent={MyTodayComponent}
-        headerStyle={{ borderColor: 'white' }}
+        headerStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
+        headerTextStyle={{ color: colorContext.colorScheme.text }}
+        hourTextStyle={{ color: colorContext.colorScheme.text }}
+        gridRowStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
+        gridColumnStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
         onMonthPress={loadData}
         onEventPress={OnEventPress}
       />
