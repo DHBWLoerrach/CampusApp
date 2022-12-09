@@ -52,9 +52,8 @@ export default function fetchCanteenData(canteenXMLData) {
 
       addition = addition.concat(addition2);
 
-      let vegetarianAttribute = menuElement.attributes.getNamedItem(
-        'zusatz'
-      );
+      let vegetarianAttribute =
+        menuElement.attributes.getNamedItem('zusatz');
       let vegetarian =
         vegetarianAttribute != null &&
         (vegetarianAttribute.nodeValue === 'vegetarisch' ||
@@ -74,8 +73,8 @@ export default function fetchCanteenData(canteenXMLData) {
       pushPrices('gaeste', 'guest');
 
       // sometimes menus don't have a name, use category in that case (e.g. 'Buffet')
-      let menuName = menuElement.attributes.getNamedItem('art')
-        .nodeValue;
+      let menuName =
+        menuElement.attributes.getNamedItem('art').nodeValue;
       let nameElement = menuElement
         .getElementsByTagName('name')
         .item(0)
