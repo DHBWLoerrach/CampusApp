@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HeaderIcon from './util/HeaderIcon';
 import StuVIcon from './../assets/stuv_icon.svg';
@@ -33,6 +32,7 @@ import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import { ScheduleModeContext } from './context/ScheduleModeContext';
+import { loadScheduleMode, saveScheduleMode } from './tabs/schedule/store';
 
 function getDualisOptions(navigation) {
   if (!enableDualis) return {};
@@ -51,15 +51,17 @@ function getDualisOptions(navigation) {
 export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
-  const [scheduleMode, setScheduleMode] = useState(3);
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const hideMenu = () => setIsMenuVisible(false);
-  const showMenu = () => setIsMenuVisible(true);
+  const [scheduleMode, setScheduleMode] = useState();
 
   useEffect(() => {
     const fetchScheduleData = async () => {
-      const scheduleMode = await AsyncStorage.getItem('scheduleMode');
-      scheduleMode && setScheduleMode(Number(scheduleMode));
+      const scheduleMode = await loadScheduleMode();
+      // falls scheduleMode noch nicht gesetzt ist, wird es auf 3 gesetzt
+      if (scheduleMode) {
+        setScheduleMode(Number(scheduleMode));
+      } else {
+        setNewScheduleMode(3);
+      }
     }
     fetchScheduleData();
   }, []);
@@ -141,12 +143,11 @@ export default function NavigatorDark({ navigation }) {
     );
   }
 
-  const scheduleOptions = ({ navigation, route }) => {
+  const ScheduleOptions = ({ navigation, route }) => {
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const hideMenu = () => setIsMenuVisible(false);
+    const showMenu = () => setIsMenuVisible(true);
     const headerTitle = route.params?.course ?? 'Vorlesungsplan';
-    const setNewScheduleMode = async (mode) => {
-      setScheduleMode(mode);
-      await AsyncStorage.setItem('scheduleMode', mode.toString());
-    }
     return {
       headerRight: () => (
         <HeaderIcon
@@ -191,7 +192,7 @@ export default function NavigatorDark({ navigation }) {
           <Stack.Screen
             name="Home"
             component={ScheduleScreen}
-            options={scheduleOptions}
+            options={ScheduleOptions}
           />
           <Stack.Screen
             name="EditCourse"
@@ -354,6 +355,11 @@ export default function NavigatorDark({ navigation }) {
   });
 
   const Tab = createBottomTabNavigator();
+
+  const setNewScheduleMode = async (mode) => {
+    setScheduleMode(mode);
+    await saveScheduleMode(mode);
+  }
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator screenOptions={tabsConfig}>

@@ -67,3 +67,12 @@ export function getDay(startDate) {
     locale: de,
   });
 }
+
+export async function saveScheduleMode(mode) {
+  AsyncStorage.setItem('scheduleMode', mode.toString());
+}
+
+export async function loadScheduleMode() {
+  const data = await AsyncStorage.getItem('scheduleMode');
+  return data;
+}
