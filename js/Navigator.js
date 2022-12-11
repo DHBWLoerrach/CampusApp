@@ -327,7 +327,7 @@ export default function NavigatorDark({ navigation }) {
   const Tab = createBottomTabNavigator();
   if (!isReady) return null;
   return (
-    <NavigationContainer independent={true} onStateChange={saveRouteStateToStore} initialState={initialState} >
+    <NavigationContainer independent={true} onStateChange={saveRouteStateToStore} initialState={initialState}>
       <Tab.Navigator screenOptions={tabsConfig} >
         <Tab.Screen
           name="DHBW"
@@ -401,6 +401,6 @@ export default function NavigatorDark({ navigation }) {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer >
+    </NavigationContainer>
   );
 }
