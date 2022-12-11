@@ -44,7 +44,7 @@ export default function EditCourse() {
       }
       async function loadRecentCourses() {
         const data = await loadRecentCoursesFromStore();
-        data && setRecentCourses(data);
+        data && setRecentCourses(data.reverse());
       }
       loadCourse();
       loadRecentCourses();
@@ -62,6 +62,10 @@ export default function EditCourse() {
       }
       if (!recentCourses.includes(newCourse)) {
         let recentCoursesHelper = recentCourses;
+        recentCoursesHelper.push(newCourse);
+        await saveRecentCoursesToStore(recentCoursesHelper);
+      } else {
+        let recentCoursesHelper = recentCourses.filter(item => item !== newCourse);
         recentCoursesHelper.push(newCourse);
         await saveRecentCoursesToStore(recentCoursesHelper);
       }
@@ -129,7 +133,7 @@ export default function EditCourse() {
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
         -- Feedback.
       </Text>
-      <Text style={{ marginTop: 10 }}>Zuletzt angezeigte Kurse:</Text>
+      {recentCourses?.length > 0 && <Text style={{ color: colorContext.colorScheme.text, marginTop: 10 }}>Zuletzt verwendete Kurse:</Text>}
       <ScrollView style={{ marginTop: 10 }}>
         {recentCourses?.map((item, index) => {
           return listItem(item, index);
