@@ -40,6 +40,15 @@ export async function clearLecturesFromStore() {
   AsyncStorage.removeItem('lectures');
 }
 
+export async function saveRouteStateToStore(data) {
+  AsyncStorage.setItem('selectedRoute', JSON.stringify(data));
+}
+
+export async function loadRouteStateFromStore() {
+  const data = await AsyncStorage.getItem('selectedRoute');
+  return JSON.parse(data);
+}
+
 export async function fetchLecturesFromWeb(course) {
   const result = await FetchManager.fetch(DHBW_COURSE, true, {
     course,

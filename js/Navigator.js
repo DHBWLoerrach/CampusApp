@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -30,6 +30,7 @@ import { enableDualis } from './../env.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
+import { loadRouteStateFromStore, saveRouteStateToStore } from './tabs/schedule/store';
 
 function getDualisOptions(navigation) {
   if (!enableDualis) return {};
@@ -48,6 +49,20 @@ function getDualisOptions(navigation) {
 export default function NavigatorDark({ navigation }) {
   const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
+  const [isReady, setIsReady] = React.useState(false);
+  const [initialState, setInitialState] = useState();
+
+  useEffect(() => {
+    loadRoute = async () => {
+      const state = await loadRouteStateFromStore();
+      if (state) {
+        setInitialState(state);
+        setIsReady(true);
+      }
+    }
+    loadRoute()
+  }, []);
+
 
   const stackHeaderConfig = {
     ...dualisOptions,
@@ -310,9 +325,10 @@ export default function NavigatorDark({ navigation }) {
   });
 
   const Tab = createBottomTabNavigator();
+  if (!isReady) return null;
   return (
-    <NavigationContainer independent={true}>
-      <Tab.Navigator screenOptions={tabsConfig}>
+    <NavigationContainer independent={true} onStateChange={saveRouteStateToStore} initialState={initialState} >
+      <Tab.Navigator screenOptions={tabsConfig} >
         <Tab.Screen
           name="DHBW"
           component={NewsStack}
@@ -385,6 +401,6 @@ export default function NavigatorDark({ navigation }) {
           }}
         />
       </Tab.Navigator>
-    </NavigationContainer>
+    </NavigationContainer >
   );
 }
