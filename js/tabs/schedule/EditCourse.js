@@ -89,7 +89,7 @@ export default function EditCourse() {
             : 1,
         },
         {
-          padding: 10, borderWidth: 1, marginBottom: 3, borderRadius: 8, borderColor: title === course ? dhbwRed : dhbwGray, backgroundColor: title === course ? dhbwRed : 'white', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
+          padding: 10, borderWidth: 1, marginBottom: 3, borderRadius: 8, borderColor: title === course ? colorContext.colorScheme.dhbwRed : colorContext.colorScheme.cellBorder, backgroundColor: title === course ? colorContext.colorScheme.dhbwRed : colorContext.colorScheme.lightGray, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
         },
       ]}
     >
