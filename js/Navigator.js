@@ -369,6 +369,7 @@ export default function NavigatorDark({ navigation }) {
           options={{
             tabBarLabel: ({ focused }) =>
               tabBarLabel('DHBW', { focused }),
+            tabBarLabelPosition: 'below-icon',
             tabBarIcon: ({ focused }) => (
               <MaterialIcon
                 name={'rss-feed'}

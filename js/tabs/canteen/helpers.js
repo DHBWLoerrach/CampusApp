@@ -14,24 +14,8 @@ export default function fetchCanteenData(canteenXMLData) {
 
     for (let k = 0; k < menus.length; k++) {
       let menuElement = menus.item(k);
-      let addition =
-        menuElement
-          .getElementsByTagName('allergikerhinweise')
-          .item(0)
-          .childNodes.item(0) !== null
-          ? menuElement
-              .getElementsByTagName('allergikerhinweise')
-              .item(0)
-              .childNodes.item(0).nodeValue
-          : '';
-      if (addition) {
-        // remove 'Ei: '' etc from string
-        addition = addition.replace(/,\w+: /g, ',');
-        addition = addition.replace(/.*: /, '');
-        addition = addition.split(',');
-      }
 
-      let addition2 =
+      let addition =
         menuElement
           .getElementsByTagName('kennzeichnungen')
           .item(0)
@@ -41,20 +25,16 @@ export default function fetchCanteenData(canteenXMLData) {
               .item(0)
               .childNodes.item(0).nodeValue
           : '';
-      if (addition2) {
-        // remove '1: '' etc from string
-        addition2 = addition2.replace(/,\w+: /g, ',');
-        addition2 = addition2.replace(/.*: /, '');
-        // remove 'mit ' from string
-        addition2 = addition2.replace(/mit /g, '');
-        addition2 = addition2.split(',');
+      if (addition) {
+        addition = addition
+          .replace(/(\w+):/g, '') // remove 1: 2: etc from string
+          .replace(/mit /g, '') // remove 'mit ' from string
+          .replace(/\s+/g, '') // remove all whitespace
+          .split(','); // split string into array
       }
 
-      addition = addition.concat(addition2);
-
-      let vegetarianAttribute = menuElement.attributes.getNamedItem(
-        'zusatz'
-      );
+      let vegetarianAttribute =
+        menuElement.attributes.getNamedItem('zusatz');
       let vegetarian =
         vegetarianAttribute != null &&
         (vegetarianAttribute.nodeValue === 'vegetarisch' ||
@@ -74,8 +54,8 @@ export default function fetchCanteenData(canteenXMLData) {
       pushPrices('gaeste', 'guest');
 
       // sometimes menus don't have a name, use category in that case (e.g. 'Buffet')
-      let menuName = menuElement.attributes.getNamedItem('art')
-        .nodeValue;
+      let menuName =
+        menuElement.attributes.getNamedItem('art').nodeValue;
       let nameElement = menuElement
         .getElementsByTagName('name')
         .item(0)
