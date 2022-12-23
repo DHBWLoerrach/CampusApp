@@ -23,7 +23,6 @@ import {
   saveRecentCoursesToStore,
 } from './store';
 import { ColorSchemeContext } from "../../context/ColorSchemeContext";
-import { dhbwGray, dhbwRed } from '../../Styles/Colors.js';
 import { ScrollView } from 'react-native-gesture-handler';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -44,7 +43,7 @@ export default function EditCourse() {
       }
       async function loadRecentCourses() {
         const data = await loadRecentCoursesFromStore();
-        data && setRecentCourses(data.reverse());
+        data && setRecentCourses(data);
       }
       loadCourse();
       loadRecentCourses();
@@ -135,7 +134,7 @@ export default function EditCourse() {
       </Text>
       {recentCourses?.length > 0 && <Text style={{ color: colorContext.colorScheme.text, marginTop: 10 }}>Zuletzt verwendete Kurse:</Text>}
       <ScrollView style={{ marginTop: 10 }}>
-        {recentCourses?.map((item, index) => {
+        {recentCourses?.slice(0).reverse().map((item, index) => {
           return listItem(item, index);
         })}
       </ScrollView>
