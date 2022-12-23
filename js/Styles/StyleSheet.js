@@ -1,4 +1,4 @@
-import {Dimensions, PixelRatio, StyleSheet} from 'react-native';
+import { Dimensions, PixelRatio, StyleSheet } from 'react-native';
 import Colors from "./Colors";
 import Constants from "../util/Constants";
 
@@ -12,7 +12,7 @@ if (PixelRatio.get() <= 2) {
 
 const Styles = StyleSheet.create({
     //New Styles
-    textSizes:{
+    textSizes: {
         small: {
             fontSize: 15,
         },
@@ -34,7 +34,7 @@ const Styles = StyleSheet.create({
         disabled: {
             backgroundColor: 'grey',
         },
-        sizes:{
+        sizes: {
             small: {
                 padding: 10,
                 borderRadius: 5,
@@ -52,7 +52,7 @@ const Styles = StyleSheet.create({
     },
 
     //Migrated Stypes
-    General:{
+    General: {
         topTabBar: {
             tabBarActiveTintColor: 'white',
             tabBarInactiveTintColor: 'white',
@@ -74,7 +74,7 @@ const Styles = StyleSheet.create({
             elevation: 4, // needed only for Android
         }
     },
-    WelcomeScreen:{
+    WelcomeScreen: {
         container: {
             flex: 1,
         },
@@ -711,8 +711,7 @@ const Styles = StyleSheet.create({
     CanteenDayListView: {
         row: {
             flexDirection: 'row',
-            paddingVertical: 10,
-            paddingHorizontal: 10,
+            padding: 10,
             borderBottomWidth: StyleSheet.hairlineWidth,
         },
         name: {
@@ -735,13 +734,30 @@ const Styles = StyleSheet.create({
         },
         buttonContainer: {
             flexDirection: "column",
-            alignSelf:"center",
+            alignSelf: "center",
             marginBottom: 15
         },
         menuContainer: {
             flex: 1,
             justifyContent: "space-between"
-        }
+        },
+        cardElementHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+        },
+        cardElementName: {
+            fontWeight: 'bold',
+        },
+        cardVegetarianBox: {
+            alignSelf: 'flex-start',
+            borderRadius: 10,
+            paddingVertical: 2,
+            paddingHorizontal: 6,
+            marginTop: 5
+        },
+        listOfCards: {
+            paddingVertical: 10,
+        },
     },
     LectureItem: {
         container: {
