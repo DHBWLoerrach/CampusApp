@@ -32,7 +32,6 @@ export default function fetchCanteenData(canteenXMLData) {
           .replace(/\s\s/g, '') // remove double spaces
           .split(','); // split string into array
       }
-      console.log(addition);
 
       let vegetarianAttribute =
         menuElement.attributes.getNamedItem('zusatz');
