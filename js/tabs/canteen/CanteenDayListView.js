@@ -1,23 +1,13 @@
-import React, {useContext} from 'react';
-import {Alert, Image, Platform, Text, View} from 'react-native';
+import React, { useContext } from 'react';
+import { Alert, Platform, Text, View } from 'react-native';
 
 import { roles } from '../../util/Constants';
-import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
-import UIButton from "../../ui/UIButton";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
+import UIButton from '../../ui/UIButton';
 
-function MealRow({ meal, role, onPress }) {
-  let vegetarian;
+function MealRow({ meal, role }) {
   const colorContext = useContext(ColorSchemeContext);
-  if (meal.vegetarian) {
-    vegetarian = (
-      <Image
-        style={Styles.CanteenDayListView.vegetarian}
-        source={require('./img/vegetarian.png')}
-      />
-    );
-  }
   let price = meal.prices[0].price; // Student
   if (role === roles[3] || role === roles[1]) {
     // Gäste oder Lehrbeauftragte
@@ -26,58 +16,83 @@ function MealRow({ meal, role, onPress }) {
     // Mitarbeiter
     price = meal.prices[1].price;
   }
+
   return (
-    <ListCellTouchable
-      underlayColor={colorContext.colorScheme.cellBorder}
-      onPress={onPress}
+    <View
+      style={[
+        Styles.General.cardShadow,
+        Styles.CommonCell.entry,
+        { backgroundColor: colorContext.colorScheme.card },
+      ]}
     >
-      <View style={[Styles.CanteenDayListView.row, {backgroundColor: colorContext.colorScheme.background, borderColor: colorContext.colorScheme.cellBorder}]}>
-        <Text style={[Styles.CanteenDayListView.name, {color: colorContext.colorScheme.text}]}>{meal.name}</Text>
-        <View style={Styles.CanteenDayListView.right}>
-          <Text style={[Styles.CanteenDayListView.price, {color: colorContext.colorScheme.dhbwRed}]}>{price}</Text>
-          {vegetarian}
-        </View>
+      <View style={Styles.CanteenDayListView.cardElementHeader}>
+        <Text style={Styles.CommonCell.headline}>{meal.menu}</Text>
+        <Text style={{ color: colorContext.colorScheme.dhbwGray }}>
+          {price}
+        </Text>
       </View>
-    </ListCellTouchable>
+      <Text
+        style={[
+          Styles.CanteenDayListView.cardElementName,
+          { color: colorContext.colorScheme.text },
+        ]}
+      >
+        {meal.name}
+      </Text>
+      {Array.isArray(meal.addition) && (
+        <Text style={[{ color: colorContext.colorScheme.text }]}>
+          Inhaltsstoffe: {meal.addition.join(', ')}
+        </Text>
+      )}
+      {meal.vegetarian && (
+        <View
+          style={[
+            Styles.CanteenDayListView.cardVegetarianBox,
+            { backgroundColor: colorContext.colorScheme.dhbwGray },
+          ]}
+        >
+          <Text style={{ color: '#fff' }}>Vegetarisch</Text>
+        </View>
+      )}
+    </View>
   );
 }
 
 export default function CanteenDayListView({ meals, role }) {
   const colorContext = useContext(ColorSchemeContext);
-  function _showMealInfo(meal) {
-    if (meal.addition && Array.isArray(meal.addition)) {
-      Alert.alert('Inhaltsstoffe', meal.addition.join('\n'));
-    }
-  }
 
   const mealRows = meals.map((meal, index) => (
-    <MealRow
-      key={'meal' + index}
-      meal={meal}
-      role={role}
-      onPress={() => _showMealInfo(meal)}
-    />
+    <MealRow key={'meal' + index} meal={meal} role={role} />
   ));
 
   const textNfcInfo =
-      '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
-      'muss NFC aktiviert sein (sofern vom Handy unterstützt).\n' +
-      'Schau dazu in den Einstellungen unter "Drahtlos & Netzwerke" nach.\n' +
-      'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
-      'zu halten.';
+    '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
+    'muss NFC aktiviert sein (sofern vom Handy unterstützt).\n' +
+    'Schau dazu in den Einstellungen unter "Drahtlos & Netzwerke" nach.\n' +
+    'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
+    'zu halten.';
 
   const onClickBalanceInfo = () => {
-    Alert.alert("Guthaben auslesen", textNfcInfo);
+    Alert.alert('Guthaben auslesen', textNfcInfo);
   };
 
-  return <View style={[{backgroundColor: colorContext.colorScheme.background}, Styles.CanteenDayListView.menuContainer]}>
-    <View>
-      {mealRows}
+  return (
+    <View
+      style={[
+        { backgroundColor: colorContext.colorScheme.background },
+        Styles.CanteenDayListView.menuContainer,
+      ]}
+    >
+      <View style={Styles.CanteenDayListView.listOfCards}>
+        {mealRows}
+      </View>
+      {Platform.OS === 'android' && (
+        <View style={Styles.CanteenDayListView.buttonContainer}>
+          <UIButton size="small" onClick={onClickBalanceInfo}>
+            Guthaben-Info
+          </UIButton>
+        </View>
+      )}
     </View>
-    {(Platform.OS === 'android') && (
-    <View style={Styles.CanteenDayListView.buttonContainer}>
-      <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
-    </View>
-  )}
-  </View>;
+  );
 }

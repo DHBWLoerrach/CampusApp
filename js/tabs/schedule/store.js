@@ -23,8 +23,17 @@ export async function loadCourseFromStore() {
   return JSON.parse(data);
 }
 
+export async function loadRecentCoursesFromStore() {
+  const data = await AsyncStorage.getItem('recentCourses');
+  return JSON.parse(data);
+}
+
 export async function saveCourseToStore(data) {
   AsyncStorage.setItem('course', JSON.stringify(data));
+}
+
+export async function saveRecentCoursesToStore(data) {
+  AsyncStorage.setItem('recentCourses', JSON.stringify(data));
 }
 
 export async function clearLecturesFromStore() {

@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,7 +18,7 @@ import {
   saveCanteenDataToStore,
 } from './store';
 import CanteenDayListView from './CanteenDayListView';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -38,7 +38,7 @@ function DayPage({ menus }) {
 function getPages(dayPlans) {
   return dayPlans.slice(0, 5).map((dayPlan, index) => {
     const date = getDateObject(dayPlan.date);
-    const title = format(date, 'EE dd.MM.', { locale: de });
+    const title = format(date, 'iiiiii dd.MM.', { locale: de });
     return (
       <Tab.Screen key={index} name={title}>
         {() => <DayPage menus={dayPlan.menus} />}
@@ -91,7 +91,12 @@ function CanteenScreen() {
 
   if (isLoading) {
     return (
-      <View style={[Styles.CanteenScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View
+        style={[
+          Styles.CanteenScreen.center,
+          { backgroundColor: colorContext.colorScheme.background },
+        ]}
+      >
         <ActivityIndicator />
       </View>
     );
