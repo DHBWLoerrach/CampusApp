@@ -3,8 +3,8 @@ import { Alert, Platform, Text, View } from 'react-native';
 
 import { roles } from '../../util/Constants';
 import Styles from '../../Styles/StyleSheet';
-import { ColorSchemeContext } from "../../context/ColorSchemeContext";
-import UIButton from "../../ui/UIButton";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
+import UIButton from '../../ui/UIButton';
 
 function MealRow({ meal, role }) {
   const colorContext = useContext(ColorSchemeContext);
@@ -18,20 +18,43 @@ function MealRow({ meal, role }) {
   }
 
   return (
-    <View style={[Styles.General.cardShadow, Styles.CommonCell.entry, { backgroundColor: colorContext.colorScheme.card }]}>
+    <View
+      style={[
+        Styles.General.cardShadow,
+        Styles.CommonCell.entry,
+        { backgroundColor: colorContext.colorScheme.card },
+      ]}
+    >
       <View style={Styles.CanteenDayListView.cardElementHeader}>
         <Text style={Styles.CommonCell.headline}>{meal.menu}</Text>
-        <Text style={{ color: colorContext.colorScheme.dhbwGray }}>{price}</Text>
+        <Text style={{ color: colorContext.colorScheme.dhbwGray }}>
+          {price}
+        </Text>
       </View>
-      <Text style={[Styles.CanteenDayListView.cardElementName, { color: colorContext.colorScheme.text }]}>
+      <Text
+        style={[
+          Styles.CanteenDayListView.cardElementName,
+          { color: colorContext.colorScheme.text },
+        ]}
+      >
         {meal.name}
       </Text>
-      {Array.isArray(meal.addition) && <Text style={[{ color: colorContext.colorScheme.text }]} >Inhaltsstoffe: {meal.addition.join(', ')}</Text>}
-      {meal.vegetarian && <View style={[Styles.CanteenDayListView.cardVegetarianBox, { backgroundColor: colorContext.colorScheme.dhbwGray }]}>
-        <Text style={{ color: '#fff' }}>Vegetarisch</Text>
-      </View>}
+      {Array.isArray(meal.addition) && (
+        <Text style={[{ color: colorContext.colorScheme.text }]}>
+          Inhaltsstoffe: {meal.addition.join(', ')}
+        </Text>
+      )}
+      {meal.vegetarian && (
+        <View
+          style={[
+            Styles.CanteenDayListView.cardVegetarianBox,
+            { backgroundColor: colorContext.colorScheme.dhbwGray },
+          ]}
+        >
+          <Text style={{ color: '#fff' }}>Vegetarisch</Text>
+        </View>
+      )}
     </View>
-
   );
 }
 
@@ -39,11 +62,7 @@ export default function CanteenDayListView({ meals, role }) {
   const colorContext = useContext(ColorSchemeContext);
 
   const mealRows = meals.map((meal, index) => (
-    <MealRow
-      key={'meal' + index}
-      meal={meal}
-      role={role}
-    />
+    <MealRow key={'meal' + index} meal={meal} role={role} />
   ));
 
   const textNfcInfo =
@@ -54,17 +73,26 @@ export default function CanteenDayListView({ meals, role }) {
     'zu halten.';
 
   const onClickBalanceInfo = () => {
-    Alert.alert("Guthaben auslesen", textNfcInfo);
+    Alert.alert('Guthaben auslesen', textNfcInfo);
   };
 
-  return <View style={[{ backgroundColor: colorContext.colorScheme.background }, Styles.CanteenDayListView.menuContainer]}>
-    <View style={Styles.CanteenDayListView.listOfCards}>
-      {mealRows}
-    </View>
-    {(Platform.OS === 'android') && (
-      <View style={Styles.CanteenDayListView.buttonContainer}>
-        <UIButton size="small" onClick={onClickBalanceInfo}>Guthaben-Info</UIButton>
+  return (
+    <View
+      style={[
+        { backgroundColor: colorContext.colorScheme.background },
+        Styles.CanteenDayListView.menuContainer,
+      ]}
+    >
+      <View style={Styles.CanteenDayListView.listOfCards}>
+        {mealRows}
       </View>
-    )}
-  </View>;
+      {Platform.OS === 'android' && (
+        <View style={Styles.CanteenDayListView.buttonContainer}>
+          <UIButton size="small" onClick={onClickBalanceInfo}>
+            Guthaben-Info
+          </UIButton>
+        </View>
+      )}
+    </View>
+  );
 }
