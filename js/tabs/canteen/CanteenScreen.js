@@ -18,7 +18,7 @@ import {
   saveCanteenDataToStore,
 } from './store';
 import CanteenDayListView from './CanteenDayListView';
-import { ColorSchemeContext } from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -91,7 +91,12 @@ function CanteenScreen() {
 
   if (isLoading) {
     return (
-      <View style={[Styles.CanteenScreen.center, { backgroundColor: colorContext.colorScheme.background }]}>
+      <View
+        style={[
+          Styles.CanteenScreen.center,
+          { backgroundColor: colorContext.colorScheme.background },
+        ]}
+      >
         <ActivityIndicator />
       </View>
     );
