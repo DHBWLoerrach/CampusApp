@@ -50,8 +50,13 @@ export default function EditCourse() {
     }, [])
   );
 
-  async function onPressClicked() {
-    const newCourse = course && course.toUpperCase();
+  async function onPressClicked({ listItem }) {
+    let newCourse;
+    if (listItem) {
+      newCourse = listItem;
+    } else {
+      newCourse = course && course.toUpperCase();
+    }
     if (!newCourse) {
       Alert.alert('Bitte Kursnamen eingeben');
     } else if (courseList.indexOf(newCourse) >= 0) {
@@ -84,7 +89,10 @@ export default function EditCourse() {
   }
 
   const listItem = (title, key) => {
-    return <Pressable key={key} onPress={() => setCourse(title)}
+    return <Pressable key={key} onPress={() => {
+      setCourse(title)
+      onPressClicked({ listItem: title })
+    }}
       style={({ pressed }) => [
         {
           opacity: pressed
