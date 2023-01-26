@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Platform, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import HeaderIcon from './util/HeaderIcon';
@@ -31,6 +32,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
 
+const ROUTE_KEY = 'selectedRoute';
+
 function getDualisOptions(navigation) {
   if (!enableDualis) return {};
   return {
@@ -46,8 +49,23 @@ function getDualisOptions(navigation) {
 }
 
 export default function NavigatorDark({ navigation }) {
-  const dualisOptions = getDualisOptions(navigation);
   const colorContext = useContext(ColorSchemeContext);
+  const [isReady, setIsReady] = useState(false);
+  const [initialState, setInitialState] = useState(null);
+
+  useEffect(() => {
+    const loadRoute = async () => {
+      let savedRoute = await AsyncStorage.getItem(ROUTE_KEY);
+      savedRoute = JSON.parse(savedRoute);
+      if (savedRoute) {
+        setInitialState(savedRoute);
+      }
+      setIsReady(true);
+    };
+    loadRoute();
+  }, []);
+
+  const dualisOptions = getDualisOptions(navigation);
 
   const stackHeaderConfig = {
     ...dualisOptions,
@@ -309,9 +327,17 @@ export default function NavigatorDark({ navigation }) {
     },
   });
 
+  if (!isReady) return null;
+
   const Tab = createBottomTabNavigator();
   return (
-    <NavigationContainer independent={true}>
+    <NavigationContainer
+      independent={true}
+      initialState={initialState}
+      onStateChange={(state) =>
+        AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(state))
+      }
+    >
       <Tab.Navigator screenOptions={tabsConfig}>
         <Tab.Screen
           name="DHBW"
