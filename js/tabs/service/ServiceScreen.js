@@ -35,6 +35,11 @@ export default function ServiceScreen(props){
         onPress: () => Linking.openURL(linkOrientation),
       },
       {
+        label: '360°-Tour',
+        iconName: "map",
+        onPress: () => navigate('CampusTour'),
+      },
+      {
         label: 'Gebäude Hangstraße',
         iconName: "map",
         onPress: () => navigate('CampusHangstr'),
