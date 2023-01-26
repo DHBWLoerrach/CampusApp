@@ -38,7 +38,7 @@ function DayPage({ menus }) {
 function getPages(dayPlans) {
   return dayPlans.slice(0, 5).map((dayPlan, index) => {
     const date = getDateObject(dayPlan.date);
-    const title = format(date, 'EE dd.MM.', { locale: de });
+    const title = format(date, 'iiiiii dd.MM.', { locale: de });
     return (
       <Tab.Screen key={index} name={title}>
         {() => <DayPage menus={dayPlan.menus} />}
