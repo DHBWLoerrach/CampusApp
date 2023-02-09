@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Platform, Text } from 'react-native';
+import { PixelRatio, Platform, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -287,7 +287,9 @@ export default function NavigatorDark({ navigation }) {
           color: focused
             ? colorContext.colorScheme.dhbwRed
             : colorContext.colorScheme.tabBarText,
-          fontSize: 10,
+          // smaller font for tab labels on smaller displays (e.g. iPhoneSE)
+          // to prevent line breaks in "Vorlesungen"
+          fontSize: PixelRatio.get() <= 2 ? 8 : 10,
         }}
       >
         {title}
@@ -345,7 +347,6 @@ export default function NavigatorDark({ navigation }) {
           options={{
             tabBarLabel: ({ focused }) =>
               tabBarLabel('DHBW', { focused }),
-            tabBarLabelPosition: 'below-icon',
             tabBarIcon: ({ focused }) => (
               <MaterialIcon
                 name={'rss-feed'}

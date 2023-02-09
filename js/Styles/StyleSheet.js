@@ -2,12 +2,12 @@ import { Dimensions, PixelRatio, StyleSheet } from 'react-native';
 import Colors from './Colors';
 import Constants from '../util/Constants';
 
-var FONT_TAB_BAR_LABEL = 13;
+let FONT_TAB_BAR_LABEL = 13;
 
 // tabBarLabel font for smaller displays (e.g. iPhoneSE)
 // this makes sure that dates like 22.10. fit in tab
 if (PixelRatio.get() <= 2) {
-  FONT_TAB_BAR_LABEL = 10;
+  FONT_TAB_BAR_LABEL = 8;
 }
 
 const Styles = StyleSheet.create({
