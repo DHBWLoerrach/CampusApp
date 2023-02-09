@@ -22,7 +22,7 @@ import {
   loadRecentCoursesFromStore,
   saveRecentCoursesToStore,
 } from './store';
-import { ColorSchemeContext } from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { ScrollView } from 'react-native-gesture-handler';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -69,7 +69,9 @@ export default function EditCourse() {
         recentCoursesHelper.push(newCourse);
         await saveRecentCoursesToStore(recentCoursesHelper);
       } else {
-        let recentCoursesHelper = recentCourses.filter(item => item !== newCourse);
+        let recentCoursesHelper = recentCourses.filter(
+          (item) => item !== newCourse
+        );
         recentCoursesHelper.push(newCourse);
         await saveRecentCoursesToStore(recentCoursesHelper);
       }
@@ -83,45 +85,77 @@ export default function EditCourse() {
   }
 
   async function removeRecentCourseItem(title) {
-    let recentCoursesHelper = recentCourses.filter(item => item !== title);
+    let recentCoursesHelper = recentCourses.filter(
+      (item) => item !== title
+    );
     await saveRecentCoursesToStore(recentCoursesHelper);
     setRecentCourses(recentCoursesHelper);
   }
 
   const listItem = (title, key) => {
-    return <Pressable key={key} onPress={() => {
-      setCourse(title)
-      onPressClicked({ listItem: title })
-    }}
-      style={({ pressed }) => [
-        {
-          opacity: pressed
-            ? 0.6
-            : 1,
-        },
-        {
-          padding: 10, borderWidth: 1, marginBottom: 3, borderRadius: 8, borderColor: title === course ? colorContext.colorScheme.dhbwRed : colorContext.colorScheme.cellBorder, backgroundColor: title === course ? colorContext.colorScheme.dhbwRed : colorContext.colorScheme.lightGray, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
-        },
-      ]}
-    >
-      <Text style={{ color: title === course ? 'white' : 'black' }}>{title}</Text>
-      <MaterialIcon
-        style={{ paddingLeft: 10, color: title === course ? 'white' : 'black' }}
-        onPress={() => removeRecentCourseItem(title)}
-        name="close"
-        size={30}
-      />
-    </Pressable>
-  }
+    return (
+      <Pressable
+        key={key}
+        onPress={() => {
+          setCourse(title);
+          onPressClicked({ listItem: title });
+        }}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? 0.6 : 1,
+          },
+          {
+            padding: 10,
+            borderWidth: 1,
+            marginBottom: 3,
+            borderRadius: 8,
+            borderColor:
+              title === course
+                ? colorContext.colorScheme.dhbwRed
+                : colorContext.colorScheme.cellBorder,
+            backgroundColor:
+              title === course
+                ? colorContext.colorScheme.dhbwRed
+                : colorContext.colorScheme.lightGray,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+        ]}
+      >
+        <Text style={{ color: title === course ? 'white' : 'black' }}>
+          {title}
+        </Text>
+        <MaterialIcon
+          style={{
+            paddingLeft: 10,
+            color: title === course ? 'white' : 'black',
+          }}
+          onPress={() => removeRecentCourseItem(title)}
+          name="close"
+          size={30}
+        />
+      </Pressable>
+    );
+  };
 
   return (
-    <View style={[Styles.EditCourse.container, { backgroundColor: colorContext.colorScheme.background }]}>
+    <View
+      style={[
+        Styles.EditCourse.container,
+        { backgroundColor: colorContext.colorScheme.background },
+      ]}
+    >
       <Text style={{ color: colorContext.colorScheme.text }}>
         Für welchen Kurs soll der Vorlesungsplan angezeigt werden?
       </Text>
       <View style={Styles.EditCourse.inputContainer}>
         <TextInput
-          style={[Styles.EditCourse.input, { color: colorContext.colorScheme.text }]}
+          style={[
+            Styles.EditCourse.input,
+            { color: colorContext.colorScheme.text },
+          ]}
           autoCapitalize="characters"
           autoCorrect={false}
           autoFocus={true}
@@ -140,11 +174,23 @@ export default function EditCourse() {
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
         -- Feedback.
       </Text>
-      {recentCourses?.length > 0 && <Text style={{ color: colorContext.colorScheme.text, marginTop: 10 }}>Zuletzt verwendete Kurse:</Text>}
+      {recentCourses?.length > 0 && (
+        <Text
+          style={{
+            color: colorContext.colorScheme.text,
+            marginTop: 10,
+          }}
+        >
+          Zuletzt verwendete Kurse:
+        </Text>
+      )}
       <ScrollView style={{ marginTop: 10 }}>
-        {recentCourses?.slice(0).reverse().map((item, index) => {
-          return listItem(item, index);
-        })}
+        {recentCourses
+          ?.slice(0)
+          .reverse()
+          .map((item, index) => {
+            return listItem(item, index);
+          })}
       </ScrollView>
     </View>
   );
