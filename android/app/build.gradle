@@ -98,8 +98,8 @@ android {
         applicationId "de.dhbwloe.loerrach.campusapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 86
-        versionName "2.6.2"
+        versionCode 87
+        versionName "2.7.0"
         multiDexEnabled true
     }
     splits {
