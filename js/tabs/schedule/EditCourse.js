@@ -158,7 +158,6 @@ export default function EditCourse() {
           ]}
           autoCapitalize="characters"
           autoCorrect={false}
-          autoFocus={true}
           defaultValue={course}
           maxLength={15}
           onChangeText={(course) => setCourse(course.trim())}
