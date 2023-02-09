@@ -46,7 +46,8 @@ class CampusTourWebViewHTML extends Component {
         return (
             <WebView
                 originWhiteList={['*']}
-                source={{ html: web_view_html}}
+                //source={{ html: web_view_html}}
+                source={{uri: "https://dhbw-loerrach.de/player360"}}
                 injectedJavaScript={enterPanoFullscreen}
             />
         );
