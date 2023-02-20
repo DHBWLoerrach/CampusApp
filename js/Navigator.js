@@ -31,6 +31,7 @@ import { enableDualis } from './../env.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
+import CampusTour from './tabs/service/CampusTour';
 
 const ROUTE_KEY = 'selectedRoute';
 
@@ -275,6 +276,11 @@ export default function NavigatorDark({ navigation }) {
           name="CampusHangstr"
           component={InfoImage}
           options={{ title: 'Campus Hangstraße' }}
+        />
+        <Stack.Screen
+          name="CampusTour"
+          component={CampusTour}
+          options={{ title: '360°-Tour' }}
         />
       </Stack.Navigator>
     );
