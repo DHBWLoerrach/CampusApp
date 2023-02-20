@@ -1,5 +1,11 @@
 import React, { useContext } from 'react';
-import { Alert, Platform, Text, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 
 import { roles } from '../../util/Constants';
 import Styles from '../../Styles/StyleSheet';
@@ -83,9 +89,9 @@ export default function CanteenDayListView({ meals, role }) {
         Styles.CanteenDayListView.menuContainer,
       ]}
     >
-      <View style={Styles.CanteenDayListView.listOfCards}>
+      <ScrollView style={Styles.CanteenDayListView.listOfCards}>
         {mealRows}
-      </View>
+      </ScrollView>
       {Platform.OS === 'android' && (
         <View style={Styles.CanteenDayListView.buttonContainer}>
           <UIButton size="small" onClick={onClickBalanceInfo}>
