@@ -38,6 +38,7 @@ import { faMap } from '@fortawesome/free-solid-svg-icons/faMap';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationCap';
 import { faLink } from '@fortawesome/free-solid-svg-icons/faLink';
 import { faSchool } from '@fortawesome/free-solid-svg-icons/faSchool';
+import { faStreetView } from '@fortawesome/free-solid-svg-icons/faStreetView';
 import { faUtensils } from '@fortawesome/free-solid-svg-icons/faUtensils';
 
 library.add(
@@ -55,6 +56,7 @@ library.add(
   faGraduationCap,
   faLink,
   faSchool,
+  faStreetView,
   faUtensils
 );
 

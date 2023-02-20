@@ -32,7 +32,7 @@ export default function ServiceScreen(props) {
       },
       {
         label: '360°-Tour',
-        iconName: 'map',
+        iconName: 'street-view',
         onPress: () => navigate('CampusTour'),
       },
       {
