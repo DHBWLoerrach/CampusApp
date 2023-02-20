@@ -744,10 +744,7 @@ const Styles = StyleSheet.create({
     cardElementHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'baseline',
-    },
-    cardElementName: {
-      fontWeight: 'bold',
+      alignItems: 'center',
     },
     cardVegetarianBox: {
       alignSelf: 'flex-start',

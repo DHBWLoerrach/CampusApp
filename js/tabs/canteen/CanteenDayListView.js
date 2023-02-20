@@ -32,23 +32,24 @@ function MealRow({ meal, role }) {
       ]}
     >
       <View style={Styles.CanteenDayListView.cardElementHeader}>
-        <Text style={Styles.CommonCell.headline}>{meal.menu}</Text>
+        <Text style={[Styles.CommonCell.headline, { flex: 1 }]}>
+          {meal.name}
+        </Text>
         <Text style={{ color: colorContext.colorScheme.dhbwGray }}>
           {price}
         </Text>
       </View>
-      <Text
-        style={[
-          Styles.CanteenDayListView.cardElementName,
-          { color: colorContext.colorScheme.text },
-        ]}
-      >
-        {meal.name}
-      </Text>
       {Array.isArray(meal.addition) && (
-        <Text style={[{ color: colorContext.colorScheme.text }]}>
-          Inhaltsstoffe: {meal.addition.join(', ')}
-        </Text>
+        <View
+          style={[
+            Styles.CanteenDayListView.cardVegetarianBox,
+            { backgroundColor: colorContext.colorScheme.dhbwGray },
+          ]}
+        >
+          <Text style={[{ color: '#fff' }]}>
+            Inhaltsstoffe: {meal.addition.join(', ')}
+          </Text>
+        </View>
       )}
       {meal.vegetarian && (
         <View
