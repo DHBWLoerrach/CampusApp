@@ -1,9 +1,5 @@
-import React, {Component, useContext} from 'react';
-import {
-  Linking,
-  ScrollView,
-  View,
-} from 'react-native';
+import React, { Component, useContext } from 'react';
+import { Linking, ScrollView, View } from 'react-native';
 
 import {
   linksAccounts,
@@ -21,9 +17,9 @@ import {
   TextImprint,
 } from './Texts';
 import Styles from '../../Styles/StyleSheet';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
-export default function ServiceScreen(props){
+export default function ServiceScreen(props) {
   const colorContext = useContext(ColorSchemeContext);
 
   const _getSubmenuItems = () => {
@@ -31,38 +27,38 @@ export default function ServiceScreen(props){
     return [
       {
         label: 'Anreise',
-        iconName: "location-dot",
+        iconName: 'location-dot',
         onPress: () => Linking.openURL(linkOrientation),
       },
       {
         label: '360°-Tour',
-        iconName: "map",
+        iconName: 'map',
         onPress: () => navigate('CampusTour'),
       },
       {
         label: 'Gebäude Hangstraße',
-        iconName: "map",
+        iconName: 'map',
         onPress: () => navigate('CampusHangstr'),
       },
       {
         label: 'Service-Zugänge',
-        iconName: "link",
+        iconName: 'link',
         onPress: () => navigate('Accounts', { links: linksAccounts }),
       },
       {
         label: 'Hilfe im Notfall',
-        iconName: "phone",
+        iconName: 'phone',
         onPress: () =>
           navigate('Emergency', { links: linksEmergency }),
       },
       {
         label: 'Studium',
-        iconName: "graduation-cap",
+        iconName: 'graduation-cap',
         onPress: () => navigate('Study', { links: linksStudy }),
       },
       {
         label: 'Katalog Bibliothek',
-        iconName: "book-open",
+        iconName: 'book-open',
         onPress: () => Linking.openURL(linkBib),
       },
       {
@@ -72,22 +68,22 @@ export default function ServiceScreen(props){
       },
       {
         label: 'Freizeit',
-        iconName: "cloud-sun",
+        iconName: 'cloud-sun',
         onPress: () => navigate('Freetime', { links: linksFreetime }),
       },
       {
         label: 'Feedback',
-        iconName: "envelope",
+        iconName: 'envelope',
         onPress: () => navigate('Feedback'),
       },
       {
         label: 'Einstellungen',
-        iconName: "gear",
+        iconName: 'gear',
         onPress: () => navigate('Settings'),
       },
       {
         label: 'Über',
-        iconName: "circle-info",
+        iconName: 'circle-info',
         onPress: () => navigate('About'),
       },
       {
@@ -98,7 +94,7 @@ export default function ServiceScreen(props){
       },
       {
         label: 'Impressum',
-        iconName: "file-lines",
+        iconName: 'file-lines',
         onPress: () => navigate('Imprint', { text: <TextImprint /> }),
       },
       {
@@ -107,12 +103,17 @@ export default function ServiceScreen(props){
         onPress: () => navigate('Privacy', { text: <TextPrivacy /> }),
       },
     ];
-  }
-    return (
-      <View style={[Styles.ServiceScreen.screenContainer, {backgroundColor: colorContext.colorScheme.background}]}>
-        <ScrollView>
-          <Submenu menuItems={_getSubmenuItems()} />
-        </ScrollView>
-      </View>
-    );
+  };
+  return (
+    <View
+      style={[
+        Styles.ServiceScreen.screenContainer,
+        { backgroundColor: colorContext.colorScheme.background },
+      ]}
+    >
+      <ScrollView>
+        <Submenu menuItems={_getSubmenuItems()} />
+      </ScrollView>
+    </View>
+  );
 }
