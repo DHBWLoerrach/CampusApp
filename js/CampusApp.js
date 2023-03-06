@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee from '@notifee/react-native';
-import NfcManager, { NfcTech } from 'react-native-nfc-manager'
+import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager'
 import Snackbar from 'react-native-snackbar';
 
 import WelcomeScreen from './WelcomeScreen';
@@ -158,14 +158,20 @@ export default function CampusApp() {
       const isNfcAvailable = await NfcManager.isSupported();
       if (isNfcAvailable) {
         // NFC is available
-        
-        // call the readIsoDep function in a while loop
-        // this is necessary because the NFC tag needs to be in the field of the device
-        // for a certain amount of time
+
+        // Register the StateChanged listener
+        const handleNfcStateChanged = async ({ state }) => {
+          if (state === 'off') {
+            NfcManager.cancelTechnologyRequest().catch(() => 0);
+          }
+        };
+
+        NfcManager.setEventListener(NfcEvents.StateChanged, handleNfcStateChanged);
+
+        // Call the readIsoDep function to read the NFC tag in an infinite loop 
         while (true) {
           await readIsoDep();
         }
-
       }
     }
 
@@ -190,12 +196,12 @@ export default function CampusApp() {
         // command byte arrays are sent to tag, first element is command, following are 'parameters'
         // send command 0x5a to select application with ID 0x15845F
         const response = await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
-         // now we can access data and files on the level of the selected application
+        // now we can access data and files on the level of the selected application
 
         // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
         // the contents of this value file contains the current balance in 4 bytes
         const balanceBytes = await isoDep.transceive([0x6c, 0x1]);
-        
+
         function convertFourHexBytesToInt(b1, b2, b3, b4) {
           let hexString = b1.toString(16).padStart(2, '0') +
             b2.toString(16).padStart(2, '0') +
@@ -222,15 +228,16 @@ export default function CampusApp() {
         });
 
       } catch (ex) {
-        console.warn(ex);
+        // error handling
+        console.warn('error reading nfc tag: ', ex);
       } finally {
         await NfcManager.cancelTechnologyRequest().catch(() => 0); // cancel NFC request
       }
     }
 
     return () => {
-      NfcManager.unregisterTagEvent().catch(() => 0);
       NfcManager.cancelTechnologyRequest().catch(() => 0);
+      NfcManager.setEventListener(NfcEvents.StateChanged, null);
     }
   }, []);
 
