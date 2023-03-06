@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee from '@notifee/react-native';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager'
+import Snackbar from 'react-native-snackbar';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
@@ -148,6 +150,89 @@ export default function CampusApp() {
       );
     }
   }, [systemTheme]);
+
+  useEffect(() => {
+    async function startNFCManager() {
+      // start the NFC manager and check if NFC is available on the device 
+      await NfcManager.start();
+      const isNfcAvailable = await NfcManager.isSupported();
+      if (isNfcAvailable) {
+        // NFC is available
+        
+        // call the readIsoDep function in a while loop
+        // this is necessary because the NFC tag needs to be in the field of the device
+        // for a certain amount of time
+        while (true) {
+          await readIsoDep();
+        }
+
+      }
+    }
+
+    startNFCManager();
+
+    async function readIsoDep() {
+      try {
+        await NfcManager.requestTechnology(NfcTech.IsoDep, {
+          alertMessage: 'Ready to send APDU',
+        });
+
+        const isoDep = NfcManager.isoDepHandler;
+        // note: documentation for the InterCard (i.e. Mifare Desfire) is hard to find :-(
+        // inspect raw NFC data an NFC app, search PlayStore for "nfc info" or "nfc reader"
+        // see https://ridrix.wordpress.com/2009/09/20/tkort-public-transportation-card-explorations/
+        // see https://ridrix.wordpress.com/2009/09/19/mifare-desfire-communication-example/
+        // these NFC tags are based on ISO 14443-4
+
+        // A tag contains applications which consist of files. Value files have settings and a value.
+        // The following code access a specific app and gets contents and settings from a value file.
+
+        // command byte arrays are sent to tag, first element is command, following are 'parameters'
+        // send command 0x5a to select application with ID 0x15845F
+        const response = await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
+         // now we can access data and files on the level of the selected application
+
+        // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
+        // the contents of this value file contains the current balance in 4 bytes
+        const balanceBytes = await isoDep.transceive([0x6c, 0x1]);
+        
+        function convertFourHexBytesToInt(b1, b2, b3, b4) {
+          let hexString = b1.toString(16).padStart(2, '0') +
+            b2.toString(16).padStart(2, '0') +
+            b3.toString(16).padStart(2, '0') +
+            b4.toString(16).padStart(2, '0');
+
+          return parseInt(hexString, 16);
+        }
+        // convert relevant bytes to int in proper order (reverse)
+        let balance = convertFourHexBytesToInt(balanceBytes[4], balanceBytes[3], balanceBytes[2], balanceBytes[1]);
+        balance /= 10; // for some reason the tag contains the amount in euro cent * 10
+        // command to get file settings: 0xf5, file 1 is requested (which is a value file)
+        const lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
+        // File settings consist of 18 bytes. Bytes 13 - 17 correspond to a "limited credit value"
+        // which seems to contain the amount for the last transaction
+        // convert relevant bytes to int in proper order (reverse)
+        let lastTransaction = convertFourHexBytesToInt(lastTransactionBytes[16], lastTransactionBytes[15],
+          lastTransactionBytes[14], lastTransactionBytes[13]);
+        lastTransaction /= 10; // for some reason the tag contains the amount in euro cent * 10
+        //show the balance and the last transaction in a snackbar
+        Snackbar.show({
+          text: `Guthaben: ${balance / 100.0}€\nLetzte Transaktion: ${-lastTransaction / 100.0}€`,
+          duration: Snackbar.LENGTH_LONG,
+        });
+
+      } catch (ex) {
+        console.warn(ex);
+      } finally {
+        await NfcManager.cancelTechnologyRequest().catch(() => 0); // cancel NFC request
+      }
+    }
+
+    return () => {
+      NfcManager.unregisterTagEvent().catch(() => 0);
+      NfcManager.cancelTechnologyRequest().catch(() => 0);
+    }
+  }, []);
 
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
