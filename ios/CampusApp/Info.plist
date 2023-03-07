@@ -71,6 +71,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NFCReaderUsageDescription</key>
-	<string>We need to use NFC</string>
+	<string>NFC wird für das Guthaben benötigt der DHBW-Karte benötigt.</string>
 </dict>
 </plist>
