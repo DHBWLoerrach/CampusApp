@@ -154,11 +154,10 @@ export default function CampusApp() {
   useEffect(() => {
     async function startNFCManager() {
       // start the NFC manager and check if NFC is available on the device 
-      await NfcManager.start();
       const isNfcAvailable = await NfcManager.isSupported();
       if (isNfcAvailable) {
         // NFC is available
-
+        await NfcManager.start();
         // Register the StateChanged listener
         const handleNfcStateChanged = async ({ state }) => {
           if (state === 'off') {
