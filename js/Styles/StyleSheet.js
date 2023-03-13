@@ -27,6 +27,7 @@ const Styles = StyleSheet.create({
     container: {
       backgroundColor: Colors.dhbwRed,
       alignItems: 'center',
+      width: '100%',
     },
     text: {
       color: 'white',
@@ -121,6 +122,7 @@ const Styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 20,
+      marginTop: 10,
     },
     agreeDisclaimer: {
       flexDirection: 'row',
