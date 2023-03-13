@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee from '@notifee/react-native';
 import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager'
 import Snackbar from 'react-native-snackbar';
+import convertBytesToDouble from './util/Nfc_helper';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
@@ -174,7 +175,10 @@ export default function CampusApp() {
       }
     }
 
-    startNFCManager();
+    // if platform is android, start the NFC manager
+    if (Platform.OS === 'android') {
+      startNFCManager();
+    }
 
     async function readIsoDep() {
       try {
@@ -195,68 +199,20 @@ export default function CampusApp() {
         // command byte arrays are sent to tag, first element is command, following are 'parameters'
         // send command 0x5a to select application with ID 0x15845F
         // if android then use transceive else use sendCommandAPDU
-        let balanceBytes;
-        let lastTransactionBytes;
-        if (Platform.OS === 'android') {
-          // now we can access data and files on the level of the selected application
-          await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
-          // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
-          // the contents of this value file contains the current balance in 4 bytes
-          balanceBytes = await isoDep.transceive([0x6c, 0x1]);
-          // command to get file settings: 0xf5, file 1 is requested (which is a value file)
-          lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
-        } else {
-          // now we can access data and files on the level of the selected application
-          await isoDep.sendCommandAPDU({
-            cla: 0x00,
-            ins: 0xA4,
-            p1: 0x04,
-            p2: 0x00,
-            data: [0x5F, 0x84, 0x15],
-            le: 0x00
-          });
-          // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
-          // the contents of this value file contains the current balance in 4 bytes
-          balanceBytes = await isoDep.sendCommandAPDU({
-            cla: 0x00,
-            ins: 0x6C,
-            p1: 0x00,
-            p2: 0x01,
-            data: [],
-            le: 0x00,
-          });
-          // command to get file settings: 0xf5, file 1 is requested (which is a value file)
-          lastTransactionBytes = await isoDep.transceive({
-            cla: 0xF5,
-            ins: 0x01,
-            p1: 0x00,
-            p2: 0x00,
-            data: [],
-            le: 0x00
-          });
-        }
 
-        function convertFourHexBytesToInt(b1, b2, b3, b4) {
-          let hexString = b1.toString(16).padStart(2, '0') +
-            b2.toString(16).padStart(2, '0') +
-            b3.toString(16).padStart(2, '0') +
-            b4.toString(16).padStart(2, '0');
+        // now we can access data and files on the level of the selected application
+        await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
+        // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
+        // the contents of this value file contains the current balance in 4 bytes
+        let balanceBytes = await isoDep.transceive([0x6c, 0x1]);
+        // command to get file settings: 0xf5, file 1 is requested (which is a value file)
+        let lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
 
-          return parseInt(hexString, 16);
-        }
-        // convert relevant bytes to int in proper order (reverse)
-        let balance = convertFourHexBytesToInt(balanceBytes[4], balanceBytes[3], balanceBytes[2], balanceBytes[1]);
-        balance /= 10; // for some reason the tag contains the amount in euro cent * 10
+        // convert bytes to double
+        let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
 
-        // File settings consist of 18 bytes. Bytes 13 - 17 correspond to a "limited credit value"
-        // which seems to contain the amount for the last transaction
-        // convert relevant bytes to int in proper order (reverse)
-        let lastTransaction = convertFourHexBytesToInt(lastTransactionBytes[16], lastTransactionBytes[15],
-          lastTransactionBytes[14], lastTransactionBytes[13]);
-        lastTransaction /= 10; // for some reason the tag contains the amount in euro cent * 10
-        //show the balance and the last transaction in a snackbar
         Snackbar.show({
-          text: `Guthaben: ${balance / 100.0}€\nLetzte Transaktion: ${-lastTransaction / 100.0}€`,
+          text: `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€`,
           duration: Snackbar.LENGTH_LONG,
         });
 
