@@ -11,6 +11,8 @@ import { roles } from '../../util/Constants';
 import Styles from '../../Styles/StyleSheet';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import UIButton from '../../ui/UIButton';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import convertBytesToDouble from '../../util/Nfc_helper';
 
 function MealRow({ meal, role }) {
   const colorContext = useContext(ColorSchemeContext);
@@ -79,8 +81,41 @@ export default function CanteenDayListView({ meals, role }) {
     'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
     'zu halten.';
 
-  const onClickBalanceInfo = () => {
+  const onClickBalanceInfoAndroid = () => {
     Alert.alert('Guthaben auslesen', textNfcInfo);
+  };
+
+  const onClickBalanceInfoIOS = async () => {
+    const isNfcAvailable = await NfcManager.isSupported();
+
+    if (isNfcAvailable) {
+      try {
+        // NFC is available
+        await NfcManager.start();
+        // Request access to the NFC technology
+        await NfcManager.requestTechnology(NfcTech.MifareIOS);
+
+        // now we can access data and files on the level of the selected application
+        await NfcManager.sendMifareCommandIOS([0x5a, 0x5f, 0x84, 0x15]);
+        // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
+        // the contents of this value file contains the current balance in 4 bytes
+        const balanceBytes = await NfcManager.sendMifareCommandIOS([0x6c, 0x1]);
+        // command to get file settings: 0xf5, file 1 is requested (which is a value file)
+        const lastTransactionBytes = await NfcManager.sendMifareCommandIOS([0xf5, 0x1]);
+
+        // convert bytes to double
+        let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
+
+        Alert.alert('Guthaben-Info', 'Guthaben: ' + balance + '€\nLetzte Transaktion: ' + lastTransaction + '€');
+      } catch (ex) {
+        console.warn('Error:', ex);
+      } finally {
+        // Release the technology
+        NfcManager.cancelTechnologyRequest();
+      }
+    } else {
+      Alert.alert('Guthaben auslesen', textNfcInfo);
+    }
   };
 
   return (
@@ -93,13 +128,12 @@ export default function CanteenDayListView({ meals, role }) {
       <ScrollView style={Styles.CanteenDayListView.listOfCards}>
         {mealRows}
       </ScrollView>
-      {Platform.OS === 'android' && (
-        <View style={Styles.CanteenDayListView.buttonContainer}>
-          <UIButton size="small" onClick={onClickBalanceInfo}>
-            Guthaben-Info
-          </UIButton>
-        </View>
-      )}
+
+      <View style={Styles.CanteenDayListView.buttonContainer}>
+        <UIButton size="small" onClick={Platform.OS === 'android' ? onClickBalanceInfoAndroid : onClickBalanceInfoIOS}>
+          Guthaben-Info
+        </UIButton>
+      </View>
     </View>
   );
 }

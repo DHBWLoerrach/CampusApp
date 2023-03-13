@@ -204,9 +204,9 @@ export default function CampusApp() {
         await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
         // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
         // the contents of this value file contains the current balance in 4 bytes
-        let balanceBytes = await isoDep.transceive([0x6c, 0x1]);
+        const balanceBytes = await isoDep.transceive([0x6c, 0x1]);
         // command to get file settings: 0xf5, file 1 is requested (which is a value file)
-        let lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
+        const lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
 
         // convert bytes to double
         let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
