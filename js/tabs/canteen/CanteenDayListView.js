@@ -114,7 +114,7 @@ export default function CanteenDayListView({ meals, role }) {
         NfcManager.cancelTechnologyRequest();
       }
     } else {
-      Alert.alert('Guthaben auslesen', textNfcInfo);
+      Alert.alert('Guthaben-Info', 'NFC scheint von Deinem Gerät nicht unterstützt zu werden.');
     }
   };
 
