@@ -674,15 +674,17 @@ const Styles = StyleSheet.create({
     },
     inputContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
-      paddingVertical: 10,
+      justifyContent: 'space-between',
+      marginVertical: 10,
+      borderWidth: 1,
+      borderColor: '#CCC',
+      borderRadius: 10,
     },
     input: {
-      borderColor: '#CCC',
-      borderWidth: StyleSheet.hairlineWidth,
+      flex: 1,
       color: 'black',
       height: 40,
-      width: 140,
+      paddingLeft: 10,
     },
   },
   NewsList: {
