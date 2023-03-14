@@ -8,9 +8,6 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import notifee from '@notifee/react-native';
-import NfcManager, { NfcTech, NfcEvents } from 'react-native-nfc-manager'
-import Snackbar from 'react-native-snackbar';
-import convertBytesToDouble from './util/Nfc_helper';
 
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
@@ -151,84 +148,6 @@ export default function CampusApp() {
       );
     }
   }, [systemTheme]);
-
-  useEffect(() => {
-    async function startNFCManager() {
-      // start the NFC manager and check if NFC is available on the device 
-      const isNfcAvailable = await NfcManager.isSupported();
-      if (isNfcAvailable) {
-        // NFC is available
-        await NfcManager.start();
-        // Register the StateChanged listener
-        const handleNfcStateChanged = async ({ state }) => {
-          if (state === 'off') {
-            NfcManager.cancelTechnologyRequest().catch(() => 0);
-          }
-        };
-
-        NfcManager.setEventListener(NfcEvents.StateChanged, handleNfcStateChanged);
-
-        // Call the readIsoDep function to read the NFC tag in an infinite loop 
-        while (true) {
-          await readIsoDep();
-        }
-      }
-    }
-
-    // if platform is android, start the NFC manager
-    if (Platform.OS === 'android') {
-      startNFCManager();
-    }
-
-    async function readIsoDep() {
-      try {
-        await NfcManager.requestTechnology(NfcTech.IsoDep, {
-          alertMessage: 'Halte nun Deinen DHBW-Ausweis an die Rückseite Deines Handys',
-        });
-
-        const isoDep = NfcManager.isoDepHandler;
-        // note: documentation for the InterCard (i.e. Mifare Desfire) is hard to find :-(
-        // inspect raw NFC data an NFC app, search PlayStore for "nfc info" or "nfc reader"
-        // see https://ridrix.wordpress.com/2009/09/20/tkort-public-transportation-card-explorations/
-        // see https://ridrix.wordpress.com/2009/09/19/mifare-desfire-communication-example/
-        // these NFC tags are based on ISO 14443-4
-
-        // A tag contains applications which consist of files. Value files have settings and a value.
-        // The following code access a specific app and gets contents and settings from a value file.
-
-        // command byte arrays are sent to tag, first element is command, following are 'parameters'
-        // send command 0x5a to select application with ID 0x15845F
-        // if android then use transceive else use sendCommandAPDU
-
-        // now we can access data and files on the level of the selected application
-        await isoDep.transceive([0x5a, 0x5f, 0x84, 0x15]);
-        // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
-        // the contents of this value file contains the current balance in 4 bytes
-        const balanceBytes = await isoDep.transceive([0x6c, 0x1]);
-        // command to get file settings: 0xf5, file 1 is requested (which is a value file)
-        const lastTransactionBytes = await isoDep.transceive([0xf5, 0x1]);
-
-        // convert bytes to double
-        let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
-
-        Snackbar.show({
-          text: `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€`,
-          duration: Snackbar.LENGTH_LONG,
-        });
-
-      } catch (ex) {
-        // error handling
-        console.warn('error reading nfc tag: ', ex);
-      } finally {
-        await NfcManager.cancelTechnologyRequest().catch(() => 0); // cancel NFC request
-      }
-    }
-
-    return () => {
-      NfcManager.cancelTechnologyRequest().catch(() => 0);
-      NfcManager.setEventListener(NfcEvents.StateChanged, null);
-    }
-  }, []);
 
   const changeRole = (role) => {
     AsyncStorage.setItem('role', role);
