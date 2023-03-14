@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Alert,
   Platform,
@@ -70,6 +70,12 @@ function MealRow({ meal, role }) {
 export default function CanteenDayListView({ meals, role }) {
   const colorContext = useContext(ColorSchemeContext);
 
+  useEffect(async () => {
+    if (Platform.OS === 'ios' && await NfcManager.isSupported()) {
+      NfcManager.start();
+    }
+  }, []);
+
   const mealRows = meals.map((meal, index) => (
     <MealRow key={'meal' + index} meal={meal} role={role} />
   ));
@@ -86,14 +92,14 @@ export default function CanteenDayListView({ meals, role }) {
   };
 
   const onClickBalanceInfoIOS = async () => {
-    const isNfcAvailable = await NfcManager.isSupported();
+    const isNfcAvailable = await NfcManager.isEnabled();
 
     if (isNfcAvailable) {
       try {
-        // NFC is available
-        await NfcManager.start();
         // Request access to the NFC technology
-        await NfcManager.requestTechnology(NfcTech.MifareIOS);
+        await NfcManager.requestTechnology(NfcTech.MifareIOS, {
+          alertMessage: 'Halte nun Deinen Studenten-Ausweis an den oberen Rand Deines Handys.',
+        });
 
         // now we can access data and files on the level of the selected application
         await NfcManager.sendMifareCommandIOS([0x5a, 0x5f, 0x84, 0x15]);
@@ -106,9 +112,10 @@ export default function CanteenDayListView({ meals, role }) {
         // convert bytes to double
         let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
 
-        Alert.alert('Guthaben-Info', 'Guthaben: ' + balance + '€\nLetzte Transaktion: ' + lastTransaction + '€');
+        NfcManager.setAlertMessageIOS('Guthaben: ' + balance + '€\nLetzte Transaktion: ' + lastTransaction + '€');
       } catch (ex) {
-        console.warn('Error:', ex);
+        // handle error
+        console.log('NFC error', ex);
       } finally {
         // Release the technology
         NfcManager.cancelTechnologyRequest();
