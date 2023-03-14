@@ -71,9 +71,12 @@ export default function CanteenDayListView({ meals, role }) {
   const colorContext = useContext(ColorSchemeContext);
 
   useEffect(async () => {
-    if (Platform.OS === 'ios' && await NfcManager.isSupported()) {
-      NfcManager.start();
+    async function initNfc() {
+      if (Platform.OS === 'ios' && await NfcManager.isSupported()) {
+        NfcManager.start();
+      }
     }
+    initNfc();
   }, []);
 
   const mealRows = meals.map((meal, index) => (
