@@ -1,5 +1,5 @@
-import React, {useCallback, useContext, useState} from 'react';
-import { Button, SectionList, View } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import { Button, SectionList, View, Text, Alert } from 'react-native';
 import {
   useFocusEffect,
   useScrollToTop,
@@ -17,7 +17,12 @@ import {
   saveLecturesToStore,
 } from './store';
 import Styles from '../../Styles/StyleSheet';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from "../../context/ColorSchemeContext";
+import WeekView from 'react-native-week-view';
+import { dhbwGray, dhbwRed } from '../../Styles/Colors';
+import moment from 'moment';
+import 'moment/locale/de'
+import { ScheduleModeContext } from '../../context/ScheduleModeContext';
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -27,6 +32,7 @@ function ScheduleScreen({ navigation }) {
   const [searchString, setSearchString] = useState('');
   const ref = React.useRef(null);
   const colorContext = useContext(ColorSchemeContext);
+  const scheduleMode = useContext(ScheduleModeContext);
   useScrollToTop(ref);
 
   // load data: first from local store, then fetch latest data from web
@@ -35,6 +41,7 @@ function ScheduleScreen({ navigation }) {
     const dataFromStore = await loadScheduleDataFromStore();
     const courseFromStore = dataFromStore.course;
     const lecturesFromStore = dataFromStore.lectures;
+    navigation.setParams({ course: courseFromStore });
     setCourse(courseFromStore);
     setLectures(lecturesFromStore);
     const fetchResult = await fetchLecturesFromWeb(courseFromStore);
@@ -76,17 +83,13 @@ function ScheduleScreen({ navigation }) {
       //The user expects an empty search bar on re-navigation
       setSearchString('');
       loadData();
-      async function loadCourseAndSetParam() {
-        let { course } = await loadScheduleDataFromStore();
-        navigation.setParams({ course: course });
-      }
-      loadCourseAndSetParam();
+      moment.locale('de')
     }, [])
   );
 
   if (isLoading) {
     return (
-      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.center, { backgroundColor: colorContext.colorScheme.background }]}>
         <ActivityIndicator />
       </View>
     );
@@ -94,7 +97,7 @@ function ScheduleScreen({ navigation }) {
 
   if (!course) {
     return (
-      <View style={[Styles.ScheduleScreen.center, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.center, { backgroundColor: colorContext.colorScheme.background }]}>
         <Button
           title="Kurs eingeben"
           color={colorContext.colorScheme.dhbwRed}
@@ -110,7 +113,7 @@ function ScheduleScreen({ navigation }) {
     (status === 'networkError' || status === 'not ok')
   ) {
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView buttonText={buttonText} onPress={loadData} />
       </View>
     );
@@ -120,7 +123,7 @@ function ScheduleScreen({ navigation }) {
     const text =
       'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -137,7 +140,7 @@ function ScheduleScreen({ navigation }) {
       ' keine Termine ' +
       'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
     return (
-      <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+      <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>
         <ReloadView
           message={text}
           buttonText={buttonText}
@@ -147,9 +150,49 @@ function ScheduleScreen({ navigation }) {
     );
   }
 
-  // contenInset: needed for last item to be displayed above tab bar on iOS
-  return (
-    <View style={[Styles.ScheduleScreen.container, {backgroundColor: colorContext.colorScheme.background}]}>
+  const weekViewLectures = [];
+  lectures.forEach((lectureGroup, index) => {
+    lectureGroup.data.forEach((lecture, lectureIndex) => {
+      let startDate = new Date(lecture.startDate);
+      let endDate = new Date(lecture.startDate);
+      endDate.setHours(lecture.endTime.split(':')[0]);
+      endDate.setMinutes(lecture.endTime.split(':')[1]);
+      weekViewLectures.push({
+        id: lecture.key,
+        title: lecture.title,
+        startTime: lecture.startTime,
+        endTime: lecture.endTime,
+        location: lecture.location,
+        color: dhbwRed,
+        startDate: startDate,
+        endDate: endDate,
+      });
+    });
+  });
+
+  // Highlight today with a bold font
+  const MyTodayComponent = ({ formattedDate, textStyle }) => (
+    <View style={{ borderRadius: 10, backgroundColor: colorContext.colorScheme.dhbwRed }}>
+      <Text style={[textStyle, { fontWeight: 'bold', color: 'white', padding: 5 }]}>{formattedDate}</Text>
+    </View>
+  );
+
+  const EventComponent = ({ event }) => (
+    <Text style={{ textAlign: 'left', color: 'white' }} >
+      <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>{'\n'}
+      <Text>{event.startTime} bis {event.endTime}</Text>{'\n'}
+      <Text>{event.location}</Text>
+    </Text>
+  );
+
+  function OnEventPress(event) {
+    let body = `${event.startTime} bis ${event.endTime} ${'\n'} ${event.location}`;
+    Alert.alert(event.title, body);
+  }
+
+  let body;
+  if (scheduleMode == 0) {
+    body = <>
       <SearchBar
         onSearch={(text) => setSearchString(text)}
         searchString={searchString}
@@ -164,7 +207,37 @@ function ScheduleScreen({ navigation }) {
           <DayHeader title={section.title} />
         )}
       />
-    </View>
+    </>;
+  } else {
+    body = <>
+      <WeekView
+        locale='de'
+        events={weekViewLectures}
+        numberOfDays={scheduleMode}
+        selectedDate={new Date()}
+        showNowLine={true}
+        nowLineColor={dhbwGray}
+        allowScrollByDay={true}
+        hoursInDisplay={12}
+        startHour={8}
+        timeStep={60}
+        formatDateHeader={'dd D.MM'}
+        eventContainerStyle={{ borderTopRightRadius: 10, borderBottomRightRadius: 10, margin: 0, alignItems: 'flex-start', padding: 5, backgroundColor: colorContext.colorScheme.dhbwRed }}
+        EventComponent={EventComponent}
+        TodayHeaderComponent={MyTodayComponent}
+        headerStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
+        headerTextStyle={{ color: colorContext.colorScheme.text }}
+        hourTextStyle={{ color: colorContext.colorScheme.text }}
+        gridRowStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
+        gridColumnStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
+        onMonthPress={loadData}
+        onEventPress={OnEventPress}
+      />
+    </>
+  }
+  // contenInset: needed for last item to be displayed above tab bar on iOS
+  return (
+    <View style={[Styles.ScheduleScreen.container, { backgroundColor: colorContext.colorScheme.background }]}>{body}</View>
   );
 }
 

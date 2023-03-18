@@ -1,7 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
   Alert,
   Button,
+  Pressable,
   Pressable,
   Text,
   TextInput,
@@ -21,6 +23,8 @@ import {
   saveCourseToStore,
   loadRecentCoursesFromStore,
   saveRecentCoursesToStore,
+  loadRecentCoursesFromStore,
+  saveRecentCoursesToStore,
 } from './store';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -28,6 +32,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default function EditCourse() {
   const [course, setCourse] = useState('');
+  const [recentCourses, setRecentCourses] = useState([]);
   const [recentCourses, setRecentCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(null);
   const colorContext = useContext(ColorSchemeContext);
@@ -45,7 +50,12 @@ export default function EditCourse() {
         const data = await loadRecentCoursesFromStore();
         data && setRecentCourses(data);
       }
+      async function loadRecentCourses() {
+        const data = await loadRecentCoursesFromStore();
+        data && setRecentCourses(data);
+      }
       loadCourse();
+      loadRecentCourses();
       loadRecentCourses();
     }, [])
   );
@@ -168,6 +178,7 @@ export default function EditCourse() {
           onPress={onPressClicked}
         />
       </View>
+      <Text style={{ color: colorContext.colorScheme.text }}>
       <Text style={{ color: colorContext.colorScheme.text }}>
         Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
