@@ -18,7 +18,6 @@ import {
 } from './store';
 import Styles from '../../Styles/StyleSheet';
 import { ColorSchemeContext } from "../../context/ColorSchemeContext";
-import WeekView from 'react-native-week-view';
 import { dhbwGray, dhbwRed } from '../../Styles/Colors';
 import moment from 'moment';
 import 'moment/locale/de'
@@ -210,7 +209,7 @@ function ScheduleScreen({ navigation }) {
     </>;
   } else {
     body = <>
-      <WeekView
+      {/* <WeekView
         locale='de'
         events={weekViewLectures}
         numberOfDays={scheduleMode}
@@ -232,7 +231,8 @@ function ScheduleScreen({ navigation }) {
         gridColumnStyle={{ borderColor: colorContext.colorScheme.cellBorder }}
         onMonthPress={loadData}
         onEventPress={OnEventPress}
-      />
+      /> */}
+      <Text>Wochenansicht wird noch entwickelt</Text>
     </>
   }
   // contenInset: needed for last item to be displayed above tab bar on iOS

@@ -41,8 +41,7 @@
     "react-native-svg": "^13.8.0",
     "react-native-tab-view": "^3.3.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-webview": "^11.23.1",
-    "react-native-week-view": "^0.28.0"
+    "react-native-webview": "^11.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
