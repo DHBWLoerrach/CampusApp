@@ -35,7 +35,7 @@ function MealRow({ meal, role }) {
         <Text style={[Styles.CommonCell.headline, { flex: 1 }]}>
           {meal.name}
         </Text>
-        <Text style={{ color: colorContext.colorScheme.dhbwGray }}>
+        <Text style={{ color: colorContext.colorScheme.dhbwRed }}>
           {price}
         </Text>
       </View>
