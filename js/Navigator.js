@@ -58,6 +58,11 @@ export default function NavigatorDark({ navigation }) {
   const [initialState, setInitialState] = useState(null);
   const [scheduleMode, setScheduleMode] = useState();
 
+  const setNewScheduleMode = async (mode) => {
+    setScheduleMode(mode);
+    await saveScheduleMode(mode);
+  }
+
   useEffect(() => {
     const loadRoute = async () => {
       let savedRoute = await AsyncStorage.getItem(ROUTE_KEY);
@@ -69,7 +74,7 @@ export default function NavigatorDark({ navigation }) {
     };
     loadRoute();
   }, []);
-  
+
   useEffect(() => {
     const fetchScheduleData = async () => {
       const scheduleMode = await loadScheduleMode();
@@ -84,7 +89,6 @@ export default function NavigatorDark({ navigation }) {
   }, []);
 
   const dualisOptions = getDualisOptions(navigation);
-
 
   const stackHeaderConfig = {
     ...dualisOptions,
@@ -385,10 +389,6 @@ export default function NavigatorDark({ navigation }) {
 
   const Tab = createBottomTabNavigator();
 
-  const setNewScheduleMode = async (mode) => {
-    setScheduleMode(mode);
-    await saveScheduleMode(mode);
-  }
   return (
     <NavigationContainer
       independent={true}
