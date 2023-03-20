@@ -46,7 +46,6 @@ function ScheduleScreen({ navigation }) {
     } else {
       viewMode = 'week';
     }
-    console.log('rendering calendar');
     const weekViewLectures = [];
     lectures?.forEach((lectureGroup, index) => {
       lectureGroup.data.forEach((lecture, lectureIndex) => {
