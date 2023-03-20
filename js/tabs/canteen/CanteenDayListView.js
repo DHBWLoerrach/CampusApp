@@ -70,7 +70,7 @@ function MealRow({ meal, role }) {
 export default function CanteenDayListView({ meals, role }) {
   const colorContext = useContext(ColorSchemeContext);
 
-  useEffect(async () => {
+  useEffect(() => {
     async function initNfc() {
       if (Platform.OS === 'ios' && await NfcManager.isSupported()) {
         NfcManager.start();
@@ -95,7 +95,7 @@ export default function CanteenDayListView({ meals, role }) {
   };
 
   const onClickBalanceInfoIOS = async () => {
-    const isNfcAvailable = await NfcManager.isEnabled();
+    const isNfcAvailable = await NfcManager.isSupported() && await NfcManager.isEnabled();
 
     if (isNfcAvailable) {
       try {
