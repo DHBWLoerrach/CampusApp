@@ -78,11 +78,11 @@ export default function NavigatorDark({ navigation }) {
   useEffect(() => {
     const fetchScheduleData = async () => {
       const scheduleMode = await loadScheduleMode();
-      // falls scheduleMode noch nicht gesetzt ist, wird es auf 3 gesetzt
+      // falls scheduleMode noch nicht gesetzt ist, wird es auf 7 gesetzt (Wochenansicht)
       if (scheduleMode) {
         setScheduleMode(Number(scheduleMode));
       } else {
-        setNewScheduleMode(3);
+        setNewScheduleMode(7);
       }
     }
     fetchScheduleData();
