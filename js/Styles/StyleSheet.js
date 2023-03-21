@@ -7,7 +7,7 @@ let FONT_TAB_BAR_LABEL = 13;
 // tabBarLabel font for smaller displays (e.g. iPhoneSE)
 // this makes sure that dates like 22.10. fit in tab
 if (PixelRatio.get() <= 2) {
-  FONT_TAB_BAR_LABEL = 8;
+  FONT_TAB_BAR_LABEL = 10;
 }
 
 const Styles = StyleSheet.create({
@@ -103,7 +103,7 @@ const Styles = StyleSheet.create({
     },
     welcome: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: 'row'
     },
     selection: {
       marginTop: 15,
@@ -138,7 +138,7 @@ const Styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginTop: 10,
-    },
+    }
   },
   CampusApp: {
     container: {
@@ -148,7 +148,7 @@ const Styles = StyleSheet.create({
       flex: 2,
       alignItems: 'center',
       justifyContent: 'center',
-    },
+    }
   },
   SearchBar: {
     searchBar: {
@@ -162,25 +162,25 @@ const Styles = StyleSheet.create({
     searchInput: {
       flex: 1,
       padding: 0,
-    },
+    }
   },
   ResponsiveImage: {
     image: {
-      resizeMode: 'contain',
-    },
+      resizeMode: 'contain'
+    }
   },
   ReloadView: {
     center: {
       flex: 2,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'center'
     },
     infoText: {
       justifyContent: 'center',
       fontSize: 20,
       marginBottom: 15,
-      paddingHorizontal: 20,
-    },
+      paddingHorizontal: 20
+    }
   },
   HeaderIcon: {
     touchable: {
@@ -188,7 +188,7 @@ const Styles = StyleSheet.create({
     },
     icon: {
       marginRight: 10,
-    },
+    }
   },
   Form: {
     input: {
@@ -207,7 +207,7 @@ const Styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
       flex: 1,
-    },
+    }
   },
   DrawerContent: {
     drawerContent: {
@@ -254,15 +254,15 @@ const Styles = StyleSheet.create({
       marginBottom: 15,
       borderTopColor: '#f4f4f4',
       borderTopWidth: 1,
-    },
+    }
   },
   DayHeader: {
     header: {
       backgroundColor: Colors.lightGray,
       height: 32,
       justifyContent: 'center',
-      paddingHorizontal: Constants.listViewRowPaddingHorizontal,
-    },
+      paddingHorizontal: Constants.listViewRowPaddingHorizontal
+    }
   },
   CommonCell: {
     entry: {
@@ -292,8 +292,8 @@ const Styles = StyleSheet.create({
       fontWeight: 'bold',
     },
     details: {
-      fontWeight: 'bold',
-    },
+      fontWeight: 'bold'
+    }
   },
   StuVNewsDetails: {
     scrollView: {
@@ -306,7 +306,7 @@ const Styles = StyleSheet.create({
     headline: {
       fontSize: 24,
       fontWeight: 'bold',
-    },
+    }
   },
   StuVNews: {
     container: {
@@ -318,7 +318,7 @@ const Styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: 'white',
-    },
+    }
   },
   StuVEventsUnregister: {
     container: {
@@ -334,7 +334,7 @@ const Styles = StyleSheet.create({
     error: {
       color: 'red',
       marginBottom: '2%',
-    },
+    }
   },
   StuVEventsRegister: {
     container: {
@@ -353,7 +353,7 @@ const Styles = StyleSheet.create({
       padding: 10,
       marginBottom: 8,
       fontSize: 17,
-    },
+    }
   },
   StuVEventsDetails: {
     container: {
@@ -371,18 +371,18 @@ const Styles = StyleSheet.create({
     headline: {
       fontSize: 24,
       fontWeight: 'bold',
-    },
+    }
   },
   StuVEvents: {
     container: {
       flex: 1,
-      paddingVertical: 10,
+      paddingVertical: 10
     },
     center: {
       flex: 2,
       alignItems: 'center',
       justifyContent: 'center',
-    },
+    }
   },
   StuVEventMap: {
     ios: {
@@ -394,7 +394,7 @@ const Styles = StyleSheet.create({
       },
       map: {
         ...StyleSheet.absoluteFillObject,
-      },
+      }
     },
     android: {
       copyrightText: {
@@ -416,12 +416,12 @@ const Styles = StyleSheet.create({
         top: 0,
         left: 0,
         margin: 3,
-      },
-    },
+      }
+    }
   },
   StuVEventCell: {
     entry: {
-      backgroundColor: 'white',
+      backgroundColor: "white",
       borderRadius: 5,
       marginBottom: 10,
       marginHorizontal: 10,
@@ -436,7 +436,7 @@ const Styles = StyleSheet.create({
       aspectRatio: 1,
       borderTopLeftRadius: 5,
       borderTopRightRadius: 5,
-      resizeMode: 'contain',
+      resizeMode: 'contain'
     },
     textContainer: {
       marginTop: 15,
@@ -465,13 +465,13 @@ const Styles = StyleSheet.create({
       color: 'white',
     },
     button: {
-      color: Colors.dhbwRed,
-    },
+      color: Colors.dhbwRed
+    }
   },
   StuVEventDetails: {
     headline: {
       fontSize: 28,
-      fontWeight: '700',
+      fontWeight: '700'
     },
     container: {
       marginTop: 20,
@@ -513,7 +513,7 @@ const Styles = StyleSheet.create({
     },
     link: {
       color: Colors.link,
-    },
+    }
   },
   SubmenuItem: {
     icon: {
@@ -526,13 +526,13 @@ const Styles = StyleSheet.create({
       width: 180, //TODO: Set Responsive Size
       marginBottom: 10,
       paddingTop: 10,
-      paddingBottom: 10,
+      paddingBottom: 10
     },
     label: {
       fontSize: 15,
       fontWeight: 'bold',
-      textAlign: 'center',
-    },
+      textAlign: 'center'
+    }
   },
   Submenu: {
     menuContainer: {
@@ -540,8 +540,8 @@ const Styles = StyleSheet.create({
       alignItems: 'center',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'space-around',
-    },
+      justifyContent: 'space-around'
+    }
   },
   Settings: {
     container: {
@@ -551,12 +551,12 @@ const Styles = StyleSheet.create({
     },
     configBlock: {
       marginBottom: 20,
-    },
+    }
   },
   ServiceScreen: {
     screenContainer: {
-      flex: 1,
-    },
+      flex: 1
+    }
   },
   RoleSelection: {
     radioGroup: {
@@ -577,18 +577,18 @@ const Styles = StyleSheet.create({
     innerCircle: {
       height: 10,
       width: 10,
-      borderRadius: 5,
+      borderRadius: 5
     },
     label: {
       marginLeft: 5,
     },
     bold: {
       fontWeight: 'bold',
-    },
+    }
   },
   LinksList: {
     container: {
-      flex: 1,
+      flex: 1
     },
     separator: {
       height: StyleSheet.hairlineWidth,
@@ -602,14 +602,14 @@ const Styles = StyleSheet.create({
     },
     title: {
       flex: 1,
-      fontSize: 17,
-    },
+      fontSize: 17
+    }
   },
   InfoText: {
     container: {
       flex: 1,
       backgroundColor: 'white',
-    },
+    }
   },
   Feedback: {
     container: {
@@ -627,7 +627,7 @@ const Styles = StyleSheet.create({
     title: {
       flex: 1,
       fontSize: 17,
-    },
+    }
   },
   About: {
     container: {
@@ -642,29 +642,29 @@ const Styles = StyleSheet.create({
     },
     margin: {
       marginTop: 12,
-    },
+    }
   },
   ScheduleScreen: {
     container: {
-      flex: 1,
+      flex: 1
     },
     center: {
       flex: 2,
       alignItems: 'center',
       justifyContent: 'center',
-    },
+    }
   },
   LectureRow: {
     row: {
       paddingVertical: Constants.listViewRowPaddingVertical,
-      paddingHorizontal: Constants.listViewRowPaddingHorizontal,
+      paddingHorizontal: Constants.listViewRowPaddingHorizontal
     },
     title: {
-      fontSize: Constants.bigFont,
+      fontSize: Constants.bigFont
     },
     info: {
-      fontSize: Constants.smallFont,
-    },
+      fontSize: Constants.smallFont
+    }
   },
   EditCourse: {
     container: {
@@ -699,7 +699,7 @@ const Styles = StyleSheet.create({
     },
     header: {
       elevation: 0,
-    },
+    }
   },
   CanteenScreen: {
     container: {
@@ -710,12 +710,13 @@ const Styles = StyleSheet.create({
       flex: 2,
       alignItems: 'center',
       justifyContent: 'center',
-    },
+    }
   },
   CanteenDayListView: {
     row: {
       flexDirection: 'row',
-      padding: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 10,
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     name: {
@@ -737,29 +738,14 @@ const Styles = StyleSheet.create({
       width: 28,
     },
     buttonContainer: {
-      flexDirection: 'column',
-      alignSelf: 'center',
-      marginBottom: 15,
+      flexDirection: "column",
+      alignSelf: "center",
+      marginBottom: 15
     },
     menuContainer: {
       flex: 1,
-      justifyContent: 'space-between',
-    },
-    cardElementHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    cardVegetarianBox: {
-      alignSelf: 'flex-start',
-      borderRadius: 10,
-      paddingVertical: 2,
-      paddingHorizontal: 6,
-      marginTop: 5,
-    },
-    listOfCards: {
-      paddingVertical: 10,
-    },
+      justifyContent: "space-between"
+    }
   },
   LectureItem: {
     container: {
@@ -772,7 +758,7 @@ const Styles = StyleSheet.create({
     },
     name: {
       fontSize: 20,
-    },
+    }
   },
   EnrollmentItem: {
     container: {
@@ -790,7 +776,7 @@ const Styles = StyleSheet.create({
     },
     iconBar: {
       justifyContent: 'space-between',
-    },
+    }
   },
   DualisStatistics: {
     container: {
@@ -834,7 +820,7 @@ const Styles = StyleSheet.create({
       fontSize: 10,
       paddingBottom: 5,
       textAlign: 'center',
-    },
+    }
   },
   DualisNavigator: {
     center: {
@@ -845,7 +831,7 @@ const Styles = StyleSheet.create({
     icon: {
       paddingLeft: 10,
       color: 'white',
-    },
+    }
   },
   DualisMain: {
     container: {
@@ -863,7 +849,7 @@ const Styles = StyleSheet.create({
     },
     scrollView: {
       marginHorizontal: 20,
-    },
+    }
   },
   DualisLogin: {
     container: {
@@ -891,7 +877,7 @@ const Styles = StyleSheet.create({
     },
     textInput: {
       marginTop: 40,
-    },
+    }
   },
   DualisIntro: {
     container: {
@@ -925,7 +911,7 @@ const Styles = StyleSheet.create({
     textMargin: {
       color: 'white',
       margin: 20,
-    },
+    }
   },
   DualisDetail: {
     container: {
@@ -933,30 +919,30 @@ const Styles = StyleSheet.create({
     },
     scrollView: {
       marginHorizontal: 20,
-    },
+    }
   },
   InfoImage: {
     container: {
-      flex: 1,
+      flex: 1
     },
     img: {
       width: Dimensions.get('window').width,
       height: Dimensions.get('window').width,
-      marginBottom: 2,
-    },
+      marginBottom: 2
+    }
   },
   DarkModeSelection: {
     container: {
-      flex: 1,
+      flex: 1
     },
     itemRow: {
-      flexDirection: 'row',
-      marginTop: 10,
+      flexDirection: "row",
+      marginTop: 10
     },
     switchRow: {
-      justifyContent: 'space-between',
-    },
-  },
+      justifyContent: "space-between"
+    }
+  }
 });
 
 export default Styles;

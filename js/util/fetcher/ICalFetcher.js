@@ -1,4 +1,5 @@
 import getLecturesFromiCalData from '../../tabs/schedule/helpers';
+import { loadScheduleMode } from '../../tabs/schedule/store';
 
 export default class ICalFetcher {
   async getItems(params) {
@@ -17,7 +18,8 @@ export default class ICalFetcher {
         status = 'not ok';
       } else {
         const responseBody = await response.text();
-        lectures = getLecturesFromiCalData(responseBody);
+        const scheduleMode = await loadScheduleMode();
+        lectures = getLecturesFromiCalData(responseBody, scheduleMode);
       }
     } catch (error) {
       return { lectures: null, status: 'networkError' };

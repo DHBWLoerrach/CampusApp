@@ -45,7 +45,12 @@ export default function EditCourse() {
         const data = await loadRecentCoursesFromStore();
         data && setRecentCourses(data);
       }
+      async function loadRecentCourses() {
+        const data = await loadRecentCoursesFromStore();
+        data && setRecentCourses(data);
+      }
       loadCourse();
+      loadRecentCourses();
       loadRecentCourses();
     }, [])
   );
@@ -170,6 +175,7 @@ export default function EditCourse() {
           onPress={onPressClicked}
         />
       </View>
+      <Text style={{ color: colorContext.colorScheme.text }} />
       <Text style={{ color: colorContext.colorScheme.text }}>
         Nicht alle Kurse haben einen Online-Stundenplan. Falls ein
         Kalender fehlt, dann teile uns dies bitte mit, siehe Service
