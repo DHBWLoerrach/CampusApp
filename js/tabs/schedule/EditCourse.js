@@ -45,12 +45,7 @@ export default function EditCourse() {
         const data = await loadRecentCoursesFromStore();
         data && setRecentCourses(data);
       }
-      async function loadRecentCourses() {
-        const data = await loadRecentCoursesFromStore();
-        data && setRecentCourses(data);
-      }
       loadCourse();
-      loadRecentCourses();
       loadRecentCourses();
     }, [])
   );
