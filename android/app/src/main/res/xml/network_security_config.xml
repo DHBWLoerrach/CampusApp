@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!-- SWFR's ssl certificate is not trusted by Campus App on Android -->
 <!-- however it is trusted by iPhone, Chrome and other browsers even on Android -->
 <!-- we included SWFR's public certificate in the app as described here: -->
@@ -5,7 +6,6 @@
 <!-- to debug, for example axios can be used to obtain more info than via fetch -->
 <!-- the actual error/exception: -->
 <!-- java.security.cert.CertPathValidatorException: Trust anchor for certification path not found. -->
-<?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config>
         <!-- Localhost config is NEEDED from react-native for the bundling to work  -->
