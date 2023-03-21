@@ -34,7 +34,12 @@ function MealRow({ meal, role }) {
       ]}
     >
       <View style={Styles.CanteenDayListView.cardElementHeader}>
-        <Text style={[Styles.CommonCell.headline, { flex: 1, lineHeight: 21.5 }]}>
+        <Text
+          style={[
+            Styles.CommonCell.headline,
+            { flex: 1, lineHeight: 21.5 },
+          ]}
+        >
           {meal.name}
         </Text>
         <Text
@@ -71,7 +76,7 @@ export default function CanteenDayListView({ meals, role }) {
 
   useEffect(() => {
     async function initNfc() {
-      if (Platform.OS === 'ios' && await NfcManager.isSupported()) {
+      if (Platform.OS === 'ios' && (await NfcManager.isSupported())) {
         NfcManager.start();
       }
     }
@@ -94,27 +99,44 @@ export default function CanteenDayListView({ meals, role }) {
   };
 
   const onClickBalanceInfoIOS = async () => {
-    const isNfcAvailable = await NfcManager.isSupported() && await NfcManager.isEnabled();
+    const isNfcAvailable =
+      (await NfcManager.isSupported()) &&
+      (await NfcManager.isEnabled());
 
     if (isNfcAvailable) {
       try {
         // Request access to the NFC technology
         await NfcManager.requestTechnology(NfcTech.MifareIOS, {
-          alertMessage: 'Halte nun Deinen Studenten-Ausweis an den oberen Rand Deines Handys.',
+          alertMessage:
+            'Halte nun Deinen Studenten-Ausweis an den oberen Rand Deines Handys.',
         });
 
         // now we can access data and files on the level of the selected application
-        await NfcManager.sendMifareCommandIOS([0x5a, 0x5f, 0x84, 0x15]);
+        await NfcManager.sendMifareCommandIOS([
+          0x5a, 0x5f, 0x84, 0x15,
+        ]);
         // command to get value of value file: 0x6c, file 1 is requested (which is a value file)
         // the contents of this value file contains the current balance in 4 bytes
-        const balanceBytes = await NfcManager.sendMifareCommandIOS([0x6c, 0x1]);
+        const balanceBytes = await NfcManager.sendMifareCommandIOS([
+          0x6c, 0x1,
+        ]);
         // command to get file settings: 0xf5, file 1 is requested (which is a value file)
-        const lastTransactionBytes = await NfcManager.sendMifareCommandIOS([0xf5, 0x1]);
+        const lastTransactionBytes =
+          await NfcManager.sendMifareCommandIOS([0xf5, 0x1]);
 
         // convert bytes to double
-        let { balance, lastTransaction } = convertBytesToDouble(balanceBytes, lastTransactionBytes);
+        let { balance, lastTransaction } = convertBytesToDouble(
+          balanceBytes,
+          lastTransactionBytes
+        );
 
-        NfcManager.setAlertMessageIOS('Guthaben: ' + balance + '€\nLetzte Transaktion: ' + lastTransaction + '€');
+        NfcManager.setAlertMessageIOS(
+          'Guthaben: ' +
+            balance +
+            '€\nLetzte Transaktion: ' +
+            lastTransaction +
+            '€'
+        );
       } catch (ex) {
         // handle error
         console.log('NFC error', ex);
@@ -123,7 +145,10 @@ export default function CanteenDayListView({ meals, role }) {
         NfcManager.cancelTechnologyRequest();
       }
     } else {
-      Alert.alert('Guthaben-Info', 'NFC scheint von Deinem Gerät nicht unterstützt zu werden.');
+      Alert.alert(
+        'Guthaben-Info',
+        'NFC scheint von Deinem Gerät nicht unterstützt zu werden.'
+      );
     }
   };
 
@@ -139,7 +164,14 @@ export default function CanteenDayListView({ meals, role }) {
       </ScrollView>
 
       <View style={Styles.CanteenDayListView.buttonContainer}>
-        <UIButton size="small" onClick={Platform.OS === 'android' ? onClickBalanceInfoAndroid : onClickBalanceInfoIOS}>
+        <UIButton
+          size="small"
+          onClick={
+            Platform.OS === 'android'
+              ? onClickBalanceInfoAndroid
+              : onClickBalanceInfoIOS
+          }
+        >
           Guthaben-Info
         </UIButton>
       </View>
