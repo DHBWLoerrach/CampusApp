@@ -105,10 +105,11 @@ export default function EditCourse() {
             opacity: pressed ? 0.6 : 1,
           },
           {
-            padding: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
             borderWidth: 1,
             marginBottom: 3,
-            borderRadius: 8,
+            borderRadius: 10,
             borderColor:
               title === course
                 ? colorContext.colorScheme.dhbwRed
@@ -159,6 +160,7 @@ export default function EditCourse() {
           autoCapitalize="characters"
           autoCorrect={false}
           defaultValue={course}
+          placeholder="Kursname"
           maxLength={15}
           onChangeText={(course) => setCourse(course.trim())}
         />

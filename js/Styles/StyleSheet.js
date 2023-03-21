@@ -27,6 +27,7 @@ const Styles = StyleSheet.create({
     container: {
       backgroundColor: Colors.dhbwRed,
       alignItems: 'center',
+      width: '100%',
     },
     text: {
       color: 'white',
@@ -121,6 +122,7 @@ const Styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 20,
+      marginTop: 10,
     },
     agreeDisclaimer: {
       flexDirection: 'row',
@@ -672,15 +674,17 @@ const Styles = StyleSheet.create({
     },
     inputContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
-      paddingVertical: 10,
+      justifyContent: 'space-between',
+      marginVertical: 10,
+      borderWidth: 1,
+      borderColor: '#CCC',
+      borderRadius: 10,
     },
     input: {
-      borderColor: '#CCC',
-      borderWidth: StyleSheet.hairlineWidth,
+      flex: 1,
       color: 'black',
       height: 40,
-      width: 140,
+      paddingLeft: 10,
     },
   },
   NewsList: {
