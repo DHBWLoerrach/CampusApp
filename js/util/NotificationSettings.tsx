@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Alert,
   Platform,
@@ -12,43 +12,30 @@ import {
   loadNotificationSettings,
   saveNotificationSettings,
 } from '../tabs/service/SettingsHelper';
-import {ColorSchemeContext} from "../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../context/ColorSchemeContext';
 
-export default function ({ enabled = false }) {
+export default function ({ enabled = false, onFirstLaunch = false }) {
   const [notifyNews, setNotifyNews] = useState(enabled);
   const [notifyEvents, setNotifyEvents] = useState(enabled);
 
   // load settings only once after mount ([] empty dependency list)
   useEffect(() => {
     loadSettings();
+    if ((notifyEvents || notifyNews) && Platform.OS === 'ios') {
+      iosCheckPermissions();
+    }
   }, []);
 
   // save settings whenever dependencies [notifyEvents, notifyNews] change
   useEffect(() => {
-    const iosRequestPermissions = async () => {
-      const settings = await notifee.requestPermission();
-      if (
-        settings.authorizationStatus < AuthorizationStatus.AUTHORIZED
-      ) {
-        Alert.alert(
-          'Benachrichtigungen einschalten',
-          'Bitte erteile der Campus App in den Einstellungen des iPhones die Erlaubnis für den Versand von Benachrichtigungen.'
-        );
-        setNotifyEvents(false);
-        setNotifyNews(false);
-      }
-    };
-
     const settingsObject = {
       notificationdhbwNews: notifyNews,
       notificationdhbwEvents: notifyEvents,
     };
     saveNotificationSettings(settingsObject);
-    // iOS: check if permission for notifications are granted
-    if ((notifyNews || notifyEvents) && Platform.OS === 'ios') {
-      iosRequestPermissions();
-    }
   }, [notifyEvents, notifyNews]);
+
+  const colorContext = useContext(ColorSchemeContext);
 
   async function loadSettings() {
     const settings = await loadNotificationSettings();
@@ -58,26 +45,79 @@ export default function ({ enabled = false }) {
     }
   }
 
-  const colorContext = useContext(ColorSchemeContext);
+  async function iosRequestPermissions() {
+    const settings = await notifee.requestPermission();
+    return (
+      settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED
+    );
+  }
 
-  // @ts-ignore
+  async function iosCheckPermissions() {
+    const allowed = await iosRequestPermissions();
+    // if user disabled notifications for Campus App in the meantime
+    // we disable them in the settings as well
+    if (!allowed) {
+      setNotifyNews(false);
+      setNotifyEvents(false);
+    }
+  }
+
+  async function iosRequestPermissionWithAlert() {
+    const allowed = await iosRequestPermissions();
+    if (!allowed) {
+      Alert.alert(
+        'Benachrichtigungen einschalten',
+        'Bitte erteile der Campus App in den Einstellungen des iPhones die Erlaubnis für den Versand von Benachrichtigungen.'
+      );
+    }
+    return allowed;
+  }
+
+  async function toggleNotifyNews(value) {
+    // iOS: check if permission for notifications are granted
+    if (value && Platform.OS === 'ios') {
+      const allowed = await iosRequestPermissionWithAlert();
+      if (!allowed) return;
+    }
+    setNotifyNews(value);
+  }
+
+  async function toggleNotifyEvents(value) {
+    // iOS: check if permission for notifications are granted
+    if (value && Platform.OS === 'ios') {
+      const allowed = await iosRequestPermissionWithAlert();
+      if (!allowed) return;
+    }
+    setNotifyEvents(value);
+  }
+
   return (
     <View>
       <View style={styles.toggleContainer}>
-        <Text style={{color: colorContext.colorScheme.text}}>DHBW-News</Text>
+        <Text style={{ color: colorContext.colorScheme.text }}>
+          DHBW-News
+        </Text>
         <Switch
-          trackColor={{ false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed }}
+          trackColor={{
+            false: colorContext.colorScheme.dhbwGray,
+            true: colorContext.colorScheme.dhbwRed,
+          }}
           thumbColor="#f4f3f4"
-          onValueChange={(value) => setNotifyNews(value)}
+          onValueChange={(value) => toggleNotifyNews(value)}
           value={notifyNews}
         />
       </View>
       <View style={styles.toggleContainer}>
-        <Text style={{color: colorContext.colorScheme.text}}>DHBW-Termine</Text>
+        <Text style={{ color: colorContext.colorScheme.text }}>
+          DHBW-Termine
+        </Text>
         <Switch
-          trackColor={{ false: colorContext.colorScheme.dhbwGray, true: colorContext.colorScheme.dhbwRed }}
+          trackColor={{
+            false: colorContext.colorScheme.dhbwGray,
+            true: colorContext.colorScheme.dhbwRed,
+          }}
           thumbColor="#f4f3f4"
-          onValueChange={(value) => setNotifyEvents(value)}
+          onValueChange={(value) => toggleNotifyEvents(value)}
           value={notifyEvents}
         />
       </View>
