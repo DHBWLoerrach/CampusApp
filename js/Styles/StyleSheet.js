@@ -523,10 +523,8 @@ const Styles = StyleSheet.create({
       borderRadius: 5,
       alignItems: 'center',
       justifyContent: 'center',
-      width: 180, //TODO: Set Responsive Size
-      marginBottom: 10,
-      paddingTop: 10,
-      paddingBottom: 10,
+      width: '45%',
+      paddingVertical: 10,
     },
     label: {
       fontSize: 15,
@@ -536,11 +534,12 @@ const Styles = StyleSheet.create({
   },
   Submenu: {
     menuContainer: {
-      marginTop: 10,
+      marginVertical: 10,
       alignItems: 'center',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'space-around',
+      justifyContent: 'space-evenly',
+      rowGap: 10,
     },
   },
   Settings: {
