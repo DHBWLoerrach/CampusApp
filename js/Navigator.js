@@ -383,20 +383,20 @@ export default function NavigatorDark({ navigation }) {
   }
 
   const tabBarLabel = (title, { focused }) => {
-    return (
-      <Text
-        style={{
-          color: focused
-            ? colorContext.colorScheme.dhbwRed
-            : colorContext.colorScheme.tabBarText,
-          // smaller font for tab labels on smaller displays (e.g. iPhoneSE)
-          // to prevent line breaks in "Vorlesungen"
-          fontSize: PixelRatio.get() <= 2 ? 8 : 10,
-        }}
-      >
-        {title}
-      </Text>
-    );
+    const style = {
+      color: focused
+        ? colorContext.colorScheme.dhbwRed
+        : colorContext.colorScheme.tabBarText,
+    };
+    if (Platform.isPad) {
+      // on iPad, tab bar labels are places beside icon: add some margin
+      style.marginLeft = 20;
+    } else {
+      // smaller font for tab labels on smaller displays (e.g. iPhoneSE)
+      // to prevent line breaks in "Vorlesungen"
+      style.fontSize = PixelRatio.get() <= 2 ? 8 : 10;
+    }
+    return <Text style={style}>{title}</Text>;
   };
 
   const tabBarIcon = (icon, size, { focused }) => {
