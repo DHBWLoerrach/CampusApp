@@ -31,9 +31,16 @@ import { enableDualis } from './../env.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
-import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import {
+  Menu,
+  MenuItem,
+  MenuDivider,
+} from 'react-native-material-menu';
 import { ScheduleModeContext } from './context/ScheduleModeContext';
-import { loadScheduleMode, saveScheduleMode } from './tabs/schedule/store';
+import {
+  loadScheduleMode,
+  saveScheduleMode,
+} from './tabs/schedule/store';
 import CampusTour from './tabs/service/CampusTour';
 
 const ROUTE_KEY = 'selectedRoute';
@@ -61,7 +68,7 @@ export default function NavigatorDark({ navigation }) {
   const setNewScheduleMode = async (mode) => {
     setScheduleMode(mode);
     await saveScheduleMode(mode);
-  }
+  };
 
   useEffect(() => {
     const loadRoute = async () => {
@@ -84,7 +91,7 @@ export default function NavigatorDark({ navigation }) {
       } else {
         setNewScheduleMode(7);
       }
-    }
+    };
     fetchScheduleData();
   }, []);
 
@@ -181,23 +188,64 @@ export default function NavigatorDark({ navigation }) {
       ),
       headerTitle,
       headerLeft: () => (
-        <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+        <View
+          style={{
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Menu
             visible={isMenuVisible}
-            anchor={
-              <HeaderIcon
-                onPress={showMenu}
-                icon='tune'
-              />
-            }
+            anchor={<HeaderIcon onPress={showMenu} icon="tune" />}
             onRequestClose={hideMenu}
           >
-            <MenuItem onPress={() => setNewScheduleMode(0)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>Liste</MenuItem>
+            <MenuItem
+              onPress={() => setNewScheduleMode(0)}
+              textStyle={{ color: colorContext.colorScheme.text }}
+              style={{
+                backgroundColor: colorContext.colorScheme.card,
+              }}
+            >
+              Liste
+            </MenuItem>
             <MenuDivider />
-            <MenuItem onPress={() => setNewScheduleMode(1)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>1 Tag</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(3)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>3 Tage</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(5)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>Arbeitswoche</MenuItem>
-            <MenuItem onPress={() => setNewScheduleMode(7)} textStyle={{ color: colorContext.colorScheme.text }} style={{ backgroundColor: colorContext.colorScheme.card }}>Woche</MenuItem>
+            <MenuItem
+              onPress={() => setNewScheduleMode(1)}
+              textStyle={{ color: colorContext.colorScheme.text }}
+              style={{
+                backgroundColor: colorContext.colorScheme.card,
+              }}
+            >
+              1 Tag
+            </MenuItem>
+            <MenuItem
+              onPress={() => setNewScheduleMode(3)}
+              textStyle={{ color: colorContext.colorScheme.text }}
+              style={{
+                backgroundColor: colorContext.colorScheme.card,
+              }}
+            >
+              3 Tage
+            </MenuItem>
+            <MenuItem
+              onPress={() => setNewScheduleMode(5)}
+              textStyle={{ color: colorContext.colorScheme.text }}
+              style={{
+                backgroundColor: colorContext.colorScheme.card,
+              }}
+            >
+              Arbeitswoche
+            </MenuItem>
+            <MenuItem
+              onPress={() => setNewScheduleMode(7)}
+              textStyle={{ color: colorContext.colorScheme.text }}
+              style={{
+                backgroundColor: colorContext.colorScheme.card,
+              }}
+            >
+              Woche
+            </MenuItem>
           </Menu>
         </View>
       ),
@@ -206,9 +254,7 @@ export default function NavigatorDark({ navigation }) {
 
   function ScheduleStack() {
     return (
-      <ScheduleModeContext.Provider
-        value={scheduleMode}
-      >
+      <ScheduleModeContext.Provider value={scheduleMode}>
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={stackHeaderConfig}
