@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AppState,
-  Platform,
   StatusBar,
   useColorScheme,
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import notifee from '@notifee/react-native';
-
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
-import NotificationTaskScheduler from './util/notifications/NotificationTaskScheduler';
 import ActivityIndicator from './util/DHBWActivityIndicator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -61,7 +56,6 @@ library.add(
 );
 
 export const RoleContext = React.createContext(null);
-NotificationTaskScheduler();
 
 const Drawer = createDrawerNavigator();
 
@@ -107,38 +101,6 @@ export default function CampusApp() {
       setLoading(false);
     };
     fetchSetupData();
-  }, []);
-
-  useEffect(() => {
-    // iOS: Remove all push notifications when app becomes active
-    const _handleAppStateChangeiOS = (nextAppState) => {
-      if (nextAppState === 'active') {
-        notifee.cancelAllNotifications();
-        notifee.setBadgeCount(0);
-      }
-    };
-
-    // Android: Remove all push notifications when app is focussed
-    // no need to check appState as there's a dedicated event for this on Android
-    const _handleAppStateChangeAndroid = () => {
-      notifee.cancelAllNotifications();
-      notifee.setBadgeCount(0);
-    };
-
-    const handler =
-      Platform.OS === 'android'
-        ? _handleAppStateChangeAndroid
-        : _handleAppStateChangeiOS;
-    const event = Platform.OS === 'android' ? 'focus' : 'change';
-
-    const eventSubscription = AppState.addEventListener(
-      event,
-      handler
-    );
-
-    return () => {
-      eventSubscription.remove();
-    };
   }, []);
 
   useEffect(() => {

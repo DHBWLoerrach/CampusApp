@@ -10,8 +10,6 @@
 # Add any project specific keep options here:
 -keep class com.facebook.hermes.unicode.** { *; }
 -keep class com.facebook.jni.** { *; }
-# [react-native-background-fetch]
--keep class com.transistorsoft.rnbackgroundfetch.HeadlessTask { *; }
 # [react-native-svg]
 -keep public class com.horcrux.svg.** {*;}
 # [reanimated 2]

@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Image, ScrollView, Switch, Text, View } from 'react-native';
-
 import {
   TextDisclaimer,
   textPersonCategory,
 } from './tabs/service/Texts';
 import RoleSelection from './tabs/service/RoleSelection';
-import NotificationSettings from './util/NotificationSettings';
 import Styles from './Styles/StyleSheet';
 import UIButton from './ui/UIButton';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
@@ -71,15 +69,6 @@ export default function WelcomeScreen(props) {
             onRoleChange={(role) => setRole(role)}
           />
         </View>
-
-        <View style={Styles.WelcomeScreen.notificationSettings}>
-          <Text style={{ color: colorContext.colorScheme.text }}>
-            Hier kannst Du auswählen, welche Benachrichtigungen Du
-            erhalten möchtest. Dies geschieht höchstens einmal am Tag.
-          </Text>
-        </View>
-
-        <NotificationSettings enabled={true} />
 
         <View style={Styles.WelcomeScreen.disclaimer}>
           <TextDisclaimer />

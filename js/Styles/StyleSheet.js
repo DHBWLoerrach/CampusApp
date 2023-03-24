@@ -112,9 +112,6 @@ const Styles = StyleSheet.create({
       marginRight: 20,
       marginBottom: 15,
     },
-    notificationSettings: {
-      marginTop: 10,
-    },
     disclaimer: {
       marginTop: 10,
     },
