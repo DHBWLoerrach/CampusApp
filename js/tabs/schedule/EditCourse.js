@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import {
   Alert,
   Button,
@@ -177,23 +177,25 @@ export default function EditCourse() {
         -- Feedback.
       </Text>
       {recentCourses?.length > 0 && (
-        <Text
-          style={{
-            color: colorContext.colorScheme.text,
-            marginTop: 10,
-          }}
-        >
-          Zuletzt verwendete Kurse:
-        </Text>
+        <>
+          <Text
+            style={{
+              color: colorContext.colorScheme.text,
+              marginTop: 10,
+            }}
+          >
+            Zuletzt verwendete Kurse:
+          </Text>
+          <ScrollView style={{ marginTop: 10 }}>
+            {recentCourses
+              ?.slice(0)
+              .reverse()
+              .map((item, index) => {
+                return listItem(item, index);
+              })}
+          </ScrollView>
+        </>
       )}
-      <ScrollView style={{ marginTop: 10 }}>
-        {recentCourses
-          ?.slice(0)
-          .reverse()
-          .map((item, index) => {
-            return listItem(item, index);
-          })}
-      </ScrollView>
     </View>
   );
 }
