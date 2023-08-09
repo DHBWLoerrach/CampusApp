@@ -5086,7 +5086,7 @@ react-native-material-menu@^2.0.0:
   resolved "https://registry.yarnpkg.com/react-native-material-menu/-/react-native-material-menu-2.0.0.tgz#139f407a52fbc0d47e5351d50ac769e05812da5c"
   integrity sha512-SmO9PLE3E469EPbVWZqvdu6JGPPZIm7YjqDcWs2PPoY0k7w2V9tFo3BmmLXNzNZDCVCAi+PPSsL7h/5WkfHcSg==
 
-react-native-nfc-manager@^3.14.2:
+react-native-nfc-manager@^3.14.6:
   version "3.14.6"
   resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-3.14.6.tgz#079cebe0e00bd836d0e733089997bd1e4a061c75"
   integrity sha512-A86vnMzQ6KzNGoCevI3t7VIju5mAzDeQ5hvGJI7Z7ANtDDfJEDNhqgilxqGi0KX0mDxGEYsctW8GHsJ1Jg/WKQ==
