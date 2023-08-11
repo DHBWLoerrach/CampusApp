@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -11,10 +12,8 @@ import {
   useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
-
 import { courseList } from '../../../env.js';
 import Styles from '../../Styles/StyleSheet';
-
 import {
   loadCourseFromStore,
   clearLecturesFromStore,
@@ -23,7 +22,6 @@ import {
   saveRecentCoursesToStore,
 } from './store';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
-import { ScrollView } from 'react-native-gesture-handler';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export default function EditCourse() {
