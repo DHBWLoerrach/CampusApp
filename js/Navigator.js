@@ -10,8 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 import HeaderIcon from './util/HeaderIcon';
-import StuVIcon from './../assets/stuv_icon.svg';
-import { enableStuV } from '../env';
 
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
@@ -25,11 +23,6 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
-import StuVScreen from './tabs/stuv/StuVScreen';
-import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
-import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
-import StuVEventsRegister from './tabs/stuv/events/StuVEventsRegister';
-import StuVEventsUnregister from './tabs/stuv/events/StuVEventsUnregister';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
@@ -111,49 +104,6 @@ export default function Navigator() {
           name="NewsDetails"
           component={NewsDetails}
           options={{ headerTitle: 'Neuigkeiten & Termine' }}
-        />
-      </Stack.Navigator>
-    );
-  }
-
-  function StuVStack() {
-    return (
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={stackHeaderConfig}
-      >
-        <Stack.Screen
-          name="Home"
-          component={StuVScreen}
-          options={{ title: 'Studierendenvertretung - StuV' }}
-        />
-        <Stack.Screen
-          name="StuVEventsDetails"
-          component={StuVEventsDetails}
-          options={({ route }) => {
-            return { title: route.params.event.name };
-          }}
-        />
-        <Stack.Screen
-          name="StuVNewsDetails"
-          component={StuVNewsDetails}
-          options={({ route }) => {
-            return { title: route.params.news.title };
-          }}
-        />
-        <Stack.Screen
-          name="StuVEventsRegister"
-          component={StuVEventsRegister}
-          options={({ route }) => {
-            return { title: route.params.title };
-          }}
-        />
-        <Stack.Screen
-          name="StuVEventsUnregister"
-          component={StuVEventsUnregister}
-          options={({ route }) => {
-            return { title: route.params.title };
-          }}
         />
       </Stack.Navigator>
     );
@@ -407,8 +357,6 @@ export default function Navigator() {
       else if (routeName === 'Schedule') iconName = 'school';
       else if (routeName === 'Canteen') iconName = 'restaurant';
       else if (routeName === 'Services') iconName = 'info-outline';
-      else if (routeName === 'StuV')
-        return <StuVIcon width={32} height={32} color={color} />;
       return <MaterialIcon name={iconName} size={32} color={color} />;
     },
     tabBarStyle: {
@@ -447,28 +395,6 @@ export default function Navigator() {
             ),
           }}
         />
-        {enableStuV ? (
-          <Tab.Screen
-            name="StuV"
-            component={StuVStack}
-            options={{
-              tabBarLabel: ({ focused }) =>
-                tabBarLabel('StuV', { focused }),
-              tabBarIcon: ({ focused }) => (
-                <StuVIcon
-                  name={'rss-feed'}
-                  width={32}
-                  height={32}
-                  color={
-                    focused
-                      ? colorContext.colorScheme.dhbwRed
-                      : colorContext.colorScheme.tabBarText
-                  }
-                />
-              ),
-            }}
-          />
-        ) : null}
         <Tab.Screen
           name="Schedule"
           component={ScheduleStack}
