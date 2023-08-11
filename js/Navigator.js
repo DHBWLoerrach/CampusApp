@@ -422,7 +422,7 @@ export default function Navigator() {
 
   return (
     <NavigationContainer
-      // initialState={initialState}
+      initialState={initialState}
       onStateChange={(state) =>
         AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(state))
       }
