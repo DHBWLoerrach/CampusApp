@@ -12,7 +12,7 @@ function Category() {
   return (
     <View style={Styles.Settings.configBlock}>
       <Text style={{ color: colorContext.colorScheme.text }}>
-        Hiermit legst Du fest, für welche Personengruppe Du die
+        Hiermit legst du fest, für welche Personengruppe du die
         Mensapreise angezeigt bekommen möchtest:
       </Text>
       <RoleContext.Consumer>

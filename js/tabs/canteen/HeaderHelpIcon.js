@@ -5,7 +5,7 @@ import HeaderIcon from '../../util/HeaderIcon';
 const textCanteenInfo =
   'Mo-Fr geöffnet 9.30-13.45 Uhr \n' +
   'Mittagessen: 11.45-13.30 Uhr\n\n' +
-  'Die Preise werden für die von Dir gewählte Personengruppe ' +
+  'Die Preise werden für die von dir gewählte Personengruppe ' +
   'angezeigt (siehe Services > Einstellungen).';
 
 export default () => (

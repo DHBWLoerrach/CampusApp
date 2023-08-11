@@ -88,10 +88,10 @@ export default function CanteenDayListView({ meals, role }) {
   ));
 
   const textNfcInfo =
-    '\n\nUm das Guthaben Deines DHBW-Ausweises auszulesen, ' +
+    '\n\nUm das Guthaben deines DHBW-Ausweises auszulesen, ' +
     'muss NFC aktiviert sein (sofern vom Handy unterstützt).\n' +
     'Schau dazu in den Einstellungen unter "Drahtlos & Netzwerke" nach.\n' +
-    'Danach brauchst Du einfach nur den Ausweis an die Rückseite Deines Handys ' +
+    'Danach brauchst du einfach nur den Ausweis an die Rückseite deines Handys ' +
     'zu halten.';
 
   const onClickBalanceInfoAndroid = () => {
@@ -108,7 +108,7 @@ export default function CanteenDayListView({ meals, role }) {
         // Request access to the NFC technology
         await NfcManager.requestTechnology(NfcTech.MifareIOS, {
           alertMessage:
-            'Halte nun Deinen Studenten-Ausweis an den oberen Rand Deines Handys.',
+            'Halte nun deinen Studenten-Ausweis an den oberen Rand deines Handys.',
         });
 
         // now we can access data and files on the level of the selected application
@@ -147,7 +147,7 @@ export default function CanteenDayListView({ meals, role }) {
     } else {
       Alert.alert(
         'Guthaben-Info',
-        'NFC scheint von Deinem Gerät nicht unterstützt zu werden.'
+        'NFC scheint von deinem Gerät nicht unterstützt zu werden.'
       );
     }
   };

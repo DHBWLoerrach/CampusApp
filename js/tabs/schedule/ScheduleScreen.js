@@ -295,7 +295,7 @@ function ScheduleScreen({ navigation }) {
       'Aktuell sind für Kurs ' +
       course +
       ' keine Termine ' +
-      'vorhanden oder Dein Studiengang veröffentlicht keine Termine online.';
+      'vorhanden oder dein Studiengang veröffentlicht keine Termine online.';
     return (
       <View
         style={[
