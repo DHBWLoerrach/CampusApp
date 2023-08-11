@@ -8,44 +8,6 @@ import Styles from './Styles/StyleSheet';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import Colors from './Styles/Colors';
 
-//FontAwesome Library
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEye } from '@fortawesome/free-solid-svg-icons/faEye';
-import { faFileLines } from '@fortawesome/free-solid-svg-icons/faFileLines';
-import { faFileShield } from '@fortawesome/free-solid-svg-icons/faFileShield';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons/faCircleInfo';
-import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope';
-import { faCloudSun } from '@fortawesome/free-solid-svg-icons/faCloudSun';
-import { faBookOpen } from '@fortawesome/free-solid-svg-icons/faBookOpen';
-import { faPhone } from '@fortawesome/free-solid-svg-icons/faPhone';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons/faLocationDot';
-import { faMap } from '@fortawesome/free-solid-svg-icons/faMap';
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons/faGraduationCap';
-import { faLink } from '@fortawesome/free-solid-svg-icons/faLink';
-import { faSchool } from '@fortawesome/free-solid-svg-icons/faSchool';
-import { faStreetView } from '@fortawesome/free-solid-svg-icons/faStreetView';
-import { faUtensils } from '@fortawesome/free-solid-svg-icons/faUtensils';
-
-library.add(
-  faEye,
-  faFileLines,
-  faFileShield,
-  faCircleInfo,
-  faGear,
-  faEnvelope,
-  faCloudSun,
-  faBookOpen,
-  faPhone,
-  faMap,
-  faLocationDot,
-  faGraduationCap,
-  faLink,
-  faSchool,
-  faStreetView,
-  faUtensils
-);
-
 export const RoleContext = createContext(null);
 
 export default function CampusApp() {

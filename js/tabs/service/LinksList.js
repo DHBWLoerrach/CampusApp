@@ -1,18 +1,11 @@
-import React, {Component, useContext} from 'react';
-import {
-  Alert,
-  Platform,
-  Linking,
-  Text,
-  View,
-} from 'react-native';
+import { useContext } from 'react';
+import { Alert, Platform, Linking, Text, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-import Colors from '../../Styles/Colors';
 import ListCellTouchable from '../../util/ListCellTouchable';
 import Styles from '../../Styles/StyleSheet';
-import {ColorSchemeContext} from "../../context/ColorSchemeContext";
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
 export default function LinksList({ navigation, route }) {
   const colorContext = useContext(ColorSchemeContext);
@@ -21,7 +14,12 @@ export default function LinksList({ navigation, route }) {
     <Row link={link} key={index} navigate={navigation.navigate} />
   ));
   return (
-    <View style={[Styles.LinksList.container, {backgroundColor: colorContext.colorScheme.background}]}>
+    <View
+      style={[
+        Styles.LinksList.container,
+        { backgroundColor: colorContext.colorScheme.background },
+      ]}
+    >
       <ItemsWithSeparator>{content}</ItemsWithSeparator>
     </View>
   );
@@ -35,7 +33,13 @@ function ItemsWithSeparator(props) {
     children.push(child);
     if (ii !== length - 1) {
       children.push(
-        <View key={'separator-' + ii} style={[Styles.LinksList.separator, {backgroundColor: colorContext.colorScheme.cellBorder}]} />
+        <View
+          key={'separator-' + ii}
+          style={[
+            Styles.LinksList.separator,
+            { backgroundColor: colorContext.colorScheme.cellBorder },
+          ]}
+        />
       );
     }
   });
@@ -43,19 +47,46 @@ function ItemsWithSeparator(props) {
 }
 
 function Row(props) {
-    const { title, url, tel, onPress, screen } = props.link;
-    const colorContext = useContext(ColorSchemeContext);
+  const { title, url, tel, onPress, screen } = props.link;
+  const colorContext = useContext(ColorSchemeContext);
 
-    let icon = null;
-    if (tel) {
-      icon = <MaterialIcon name="phone" size={16} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}}/>;
-    }
-    if (url) {
-      icon = <FontAwesome name="external-link" size={16} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}}/>;
-    }
-    if (onPress || screen) {
-      icon = <MaterialIcon name="chevron-right" size={24} style={{color: colorContext.colorScheme.icon, backgroundColor: colorContext.colorScheme.background}} />;
-    }
+  let icon = null;
+  if (tel) {
+    icon = (
+      <MaterialIcon
+        name="phone"
+        size={16}
+        style={{
+          color: colorContext.colorScheme.icon,
+          backgroundColor: colorContext.colorScheme.background,
+        }}
+      />
+    );
+  }
+  if (url) {
+    icon = (
+      <FontAwesome6
+        name="external-link"
+        size={16}
+        style={{
+          color: colorContext.colorScheme.icon,
+          backgroundColor: colorContext.colorScheme.background,
+        }}
+      />
+    );
+  }
+  if (onPress || screen) {
+    icon = (
+      <MaterialIcon
+        name="chevron-right"
+        size={24}
+        style={{
+          color: colorContext.colorScheme.icon,
+          backgroundColor: colorContext.colorScheme.background,
+        }}
+      />
+    );
+  }
 
   const _handlePress = () => {
     _handleOnPress();
@@ -99,16 +130,22 @@ function Row(props) {
   };
 
   return (
-      <ListCellTouchable
-          underlayColor={colorContext.colorScheme.cellBorder}
-          onPress={_handlePress.bind(this)}
-      >
-        <View style={Styles.LinksList.row}>
-          <Text style={[Styles.LinksList.title, {color: colorContext.colorScheme.text}]} numberOfLines={2}>
-            {title}
-          </Text>
-          {icon}
-        </View>
-      </ListCellTouchable>
+    <ListCellTouchable
+      underlayColor={colorContext.colorScheme.cellBorder}
+      onPress={_handlePress.bind(this)}
+    >
+      <View style={Styles.LinksList.row}>
+        <Text
+          style={[
+            Styles.LinksList.title,
+            { color: colorContext.colorScheme.text },
+          ]}
+          numberOfLines={2}
+        >
+          {title}
+        </Text>
+        {icon}
+      </View>
+    </ListCellTouchable>
   );
 }

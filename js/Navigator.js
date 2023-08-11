@@ -23,7 +23,7 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
 import {
@@ -336,8 +336,8 @@ export default function Navigator() {
 
   const tabBarIcon = (icon, size, { focused }) => {
     return (
-      <FontAwesomeIcon
-        icon={icon}
+      <FontAwesome6
+        name={icon}
         size={size}
         color={
           focused
