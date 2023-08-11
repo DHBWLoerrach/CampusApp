@@ -24,7 +24,6 @@ import {
 import Styles from '../../Styles/StyleSheet';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { dhbwRed } from '../../Styles/Colors';
-import 'moment/locale/de';
 import { ScheduleModeContext } from '../../context/ScheduleModeContext';
 import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
 
