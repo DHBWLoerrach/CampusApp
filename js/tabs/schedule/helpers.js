@@ -2,14 +2,17 @@ import ICAL from 'ical.js';
 import { startOfToday, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
-export default function getLecturesFromiCalData(iCalendarData, scheduleMode) {
+export default function getLecturesFromiCalData(
+  iCalendarData,
+  scheduleMode
+) {
   var jcalData = ICAL.parse(iCalendarData);
   var comp = new ICAL.Component(jcalData);
 
   // get timezone contained in iCal Data and register with TimezoneService
   var timezoneComp = comp.getFirstSubcomponent('vtimezone');
   if (!timezoneComp) {
-    return {};
+    return [];
   }
   var tzid = timezoneComp.getFirstPropertyValue('tzid');
   var timezone = new ICAL.Timezone({
@@ -93,7 +96,9 @@ export default function getLecturesFromiCalData(iCalendarData, scheduleMode) {
 
   var range = 180; // get events for next 6 months
   var rangeStart = startOfToday();
-  scheduleMode && Number(scheduleMode) != 0 && rangeStart.setDate(rangeStart.getDate() - range);
+  scheduleMode &&
+    Number(scheduleMode) != 0 &&
+    rangeStart.setDate(rangeStart.getDate() - range);
   var rangeEnd = new Date().setDate(rangeStart.getDate() + range);
 
   var filteredEvents = events.filter(function (filterEvent) {
