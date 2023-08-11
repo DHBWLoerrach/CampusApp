@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import {
-  StatusBar,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { createContext, useEffect, useState } from 'react';
+import { StatusBar, useColorScheme, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WelcomeScreen from './WelcomeScreen';
 import Navigator from './Navigator';
 import ActivityIndicator from './util/DHBWActivityIndicator';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import DrawerContent from './util/DrawerContent';
-import DualisNavigator from './drawer-screens/dualis/DualisNavigator';
-import { enableDualis } from './../env.js';
 import Styles from './Styles/StyleSheet';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import Colors from './Styles/Colors';
@@ -55,9 +46,7 @@ library.add(
   faUtensils
 );
 
-export const RoleContext = React.createContext(null);
-
-const Drawer = createDrawerNavigator();
+export const RoleContext = createContext(null);
 
 export default function CampusApp() {
   const [role, setRole] = useState(null);
@@ -128,20 +117,6 @@ export default function CampusApp() {
   };
 
   let content = <Navigator />;
-
-  if (enableDualis) {
-    content = (
-      <NavigationContainer independent={true}>
-        <Drawer.Navigator
-          screenOptions={{ headerShown: false }}
-          drawerContent={(props) => <DrawerContent {...props} />}
-        >
-          <Drawer.Screen name="Home" component={Navigator} />
-          <Drawer.Screen name="Dualis" component={DualisNavigator} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    );
-  }
 
   if (loading) {
     content = (

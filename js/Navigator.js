@@ -1,8 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Platform, PixelRatio, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// TODO remove drawer: next 2 lines and dep in package.json !!! (no idea why iOS needs this :-()
+import { createDrawerNavigator } from '@react-navigation/drawer';
+createDrawerNavigator();
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
@@ -27,7 +30,6 @@ import StuVEventsDetails from './tabs/stuv/events/StuVEventsDetails';
 import StuVNewsDetails from './tabs/stuv/news/StuVNewsDetails';
 import StuVEventsRegister from './tabs/stuv/events/StuVEventsRegister';
 import StuVEventsUnregister from './tabs/stuv/events/StuVEventsUnregister';
-import { enableDualis } from './../env.js';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
@@ -45,21 +47,7 @@ import CampusTour from './tabs/service/CampusTour';
 
 const ROUTE_KEY = 'selectedRoute';
 
-function getDualisOptions(navigation) {
-  if (!enableDualis) return {};
-  return {
-    headerLeft: () => (
-      <MaterialIcon
-        style={{ paddingLeft: 10, color: 'white' }}
-        onPress={() => navigation.openDrawer()}
-        name="menu"
-        size={30}
-      />
-    ),
-  };
-}
-
-export default function NavigatorDark({ navigation }) {
+export default function Navigator() {
   const colorContext = useContext(ColorSchemeContext);
   const [isReady, setIsReady] = useState(false);
   const [initialState, setInitialState] = useState(null);
@@ -95,10 +83,7 @@ export default function NavigatorDark({ navigation }) {
     fetchScheduleData();
   }, []);
 
-  const dualisOptions = getDualisOptions(navigation);
-
   const stackHeaderConfig = {
-    ...dualisOptions,
     headerBackTitle: 'Zurück',
     headerTintColor: 'white',
     headerStyle: {
@@ -437,8 +422,7 @@ export default function NavigatorDark({ navigation }) {
 
   return (
     <NavigationContainer
-      independent={true}
-      initialState={initialState}
+      // initialState={initialState}
       onStateChange={(state) =>
         AsyncStorage.setItem(ROUTE_KEY, JSON.stringify(state))
       }
