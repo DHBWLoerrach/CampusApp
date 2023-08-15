@@ -3,9 +3,6 @@ import { Platform, PixelRatio, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// TODO remove drawer: next 2 lines and dep in package.json !!! (no idea why iOS needs this :-()
-import { createDrawerNavigator } from '@react-navigation/drawer';
-createDrawerNavigator();
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
