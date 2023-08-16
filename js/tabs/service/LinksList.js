@@ -66,7 +66,7 @@ function Row(props) {
   if (url) {
     icon = (
       <FontAwesome6
-        name="external-link"
+        name="arrow-up-right-from-square"
         size={16}
         style={{
           color: colorContext.colorScheme.icon,
