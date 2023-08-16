@@ -1,6 +1,4 @@
-import React, {useContext} from 'react';
 import {
-  StyleSheet,
   Platform,
   TouchableOpacity,
   TouchableNativeFeedback,
@@ -8,7 +6,6 @@ import {
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Styles from '../Styles/StyleSheet';
-import {ColorSchemeContext} from "../context/ColorSchemeContext";
 
 const Touchable =
   Platform.OS === 'ios' ? TouchableOpacity : TouchableNativeFeedback;
