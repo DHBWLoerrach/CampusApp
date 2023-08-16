@@ -9,12 +9,12 @@ import {
   useFocusEffect,
   useScrollToTop,
 } from '@react-navigation/native';
-
+import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
+import 'moment/locale/de'; // needed by calendar-kit, otherwise ScheduleScreen crashes in release builds!1!
 import DayHeader from './DayHeader';
 import ReloadView from '../../util/ReloadView';
 import SearchBar from '../../util/SearchBar';
 import ActivityIndicator from '../../util/DHBWActivityIndicator';
-
 import LectureRow from './LectureRow';
 import {
   loadScheduleDataFromStore,
@@ -22,10 +22,9 @@ import {
   saveLecturesToStore,
 } from './store';
 import Styles from '../../Styles/StyleSheet';
-import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { dhbwRed } from '../../Styles/Colors';
+import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { ScheduleModeContext } from '../../context/ScheduleModeContext';
-import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
 
 function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
