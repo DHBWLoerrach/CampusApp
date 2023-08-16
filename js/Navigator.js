@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Platform, PixelRatio, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -87,7 +87,7 @@ export default function Navigator() {
     },
   };
 
-  const Stack = createNativeStackNavigator();
+  const Stack = createStackNavigator();
 
   function NewsStack() {
     return (
