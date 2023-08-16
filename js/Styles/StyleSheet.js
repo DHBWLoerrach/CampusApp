@@ -422,6 +422,7 @@ const Styles = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       marginVertical: 10,
       borderWidth: 1,
       borderColor: '#CCC',
@@ -430,8 +431,14 @@ const Styles = StyleSheet.create({
     input: {
       flex: 1,
       color: 'black',
+      fontSize: Constants.bigFont,
       height: 40,
       paddingLeft: 10,
+    },
+    inputButton: {
+      color: Colors.dhbwRed,
+      fontSize: Constants.bigFont,
+      paddingRight: 5,
     },
   },
   NewsList: {

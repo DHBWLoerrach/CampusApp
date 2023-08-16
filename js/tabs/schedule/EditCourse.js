@@ -1,7 +1,6 @@
 import { useCallback, useContext, useState } from 'react';
 import {
   Alert,
-  Button,
   Pressable,
   ScrollView,
   Text,
@@ -162,11 +161,11 @@ export default function EditCourse() {
           maxLength={15}
           onChangeText={(course) => setCourse(course.trim())}
         />
-        <Button
-          title="Kurs anzeigen"
-          color={colorContext.colorScheme.dhbwRed}
-          onPress={onPressClicked}
-        />
+        <Pressable onPress={onPressClicked}>
+          <Text style={Styles.EditCourse.inputButton}>
+            Kurs anzeigen
+          </Text>
+        </Pressable>
       </View>
       <Text style={{ color: colorContext.colorScheme.text }} />
       <Text style={{ color: colorContext.colorScheme.text }}>
