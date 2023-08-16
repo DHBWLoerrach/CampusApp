@@ -13,7 +13,6 @@ export const RoleContext = createContext(null);
 export default function CampusApp() {
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [didUpgrade, setDidUpgrade] = useState(null);
   const [overrideSystemScheme, setOverrideSystemScheme] =
     useState(false);
   const [manualDarkMode, setManualDarkMode] = useState(false);
@@ -23,8 +22,6 @@ export default function CampusApp() {
   useEffect(() => {
     const fetchSetupData = async () => {
       const role = await AsyncStorage.getItem('role');
-      const upgrade = await AsyncStorage.getItem('didUpgrade');
-      setDidUpgrade(upgrade);
       setRole(role);
 
       const override = await AsyncStorage.getItem(
@@ -62,20 +59,9 @@ export default function CampusApp() {
     }
   }, [systemTheme]);
 
-  const changeRole = (role) => {
-    AsyncStorage.setItem('role', role);
+  const changeRole = async (role) => {
+    await AsyncStorage.setItem('role', role);
     setRole(role);
-  };
-
-  // TODO remove didUpgrade flag from AsyncStorage (in fetchSetupData above)
-  // and remove this code in next version:
-  // WelcomeScreen onSubmit should use changeRole
-  // finishSetup method can be removed
-  // didUpgrade in else if below
-  const finishSetup = (role) => {
-    AsyncStorage.setItem('didUpgrade', '2.5');
-    setDidUpgrade('2.5');
-    changeRole(role);
   };
 
   let content = <Navigator />;
@@ -86,8 +72,8 @@ export default function CampusApp() {
         <ActivityIndicator />
       </View>
     );
-  } else if (!role || !didUpgrade) {
-    content = <WelcomeScreen onSubmit={finishSetup} />;
+  } else if (!role) {
+    content = <WelcomeScreen onSubmit={changeRole} />;
   }
 
   return (
