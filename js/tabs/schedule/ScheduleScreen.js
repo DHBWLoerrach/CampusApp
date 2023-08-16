@@ -1,7 +1,8 @@
-import React, {
+import {
   useCallback,
   useContext,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Button, SectionList, View, Text, Alert } from 'react-native';
@@ -26,14 +27,14 @@ import { dhbwRed } from '../../Styles/Colors';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { ScheduleModeContext } from '../../context/ScheduleModeContext';
 
-function ScheduleScreen({ navigation }) {
+export default function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [status, setStatus] = useState('ok');
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState(null);
   const [searchString, setSearchString] = useState('');
   const [calHeading, setCalHeading] = useState('');
-  const ref = React.useRef(null);
+  const ref = useRef(null);
   const colorContext = useContext(ColorSchemeContext);
   const scheduleMode = useContext(ScheduleModeContext);
 
@@ -85,7 +86,7 @@ function ScheduleScreen({ navigation }) {
           viewMode={viewMode}
           locale="de"
           events={weekViewLectures}
-          onPressEvent={OnEventPress}
+          onPressEvent={onEventPress}
           isLoading={isLoading}
           theme={{
             //today style
@@ -164,6 +165,18 @@ function ScheduleScreen({ navigation }) {
   }, [isLoading, scheduleMode, colorContext.colorScheme]);
   useScrollToTop(ref);
 
+  // when screen is focussed, load data and update header title
+  useFocusEffect(
+    useCallback(() => {
+      //The user expects an empty search bar on re-navigation
+      setSearchString('');
+      loadData();
+      MomentConfig.updateLocale('de', {
+        weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+      });
+    }, [])
+  );
+
   // load data: first from local store, then fetch latest data from web
   async function loadData() {
     setLoading(true);
@@ -206,17 +219,47 @@ function ScheduleScreen({ navigation }) {
     return lectures.filter((lecture) => lecture.data.length !== 0);
   }
 
-  // when screen is focussed, load data and update header title
-  useFocusEffect(
-    useCallback(() => {
-      //The user expects an empty search bar on re-navigation
-      setSearchString('');
-      loadData();
-      MomentConfig.updateLocale('de', {
-        weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
-      });
-    }, [])
-  );
+  function onEventPress(event) {
+    const daysOfWeek = [
+      'Sonntag',
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+    ];
+    const monthsOfYear = [
+      'Januar',
+      'Februar',
+      'März',
+      'April',
+      'Mai',
+      'Juni',
+      'Juli',
+      'August',
+      'September',
+      'Oktober',
+      'November',
+      'Dezember',
+    ];
+
+    const start = new Date(event.start);
+    const dayOfWeek = daysOfWeek[start.getDay()];
+    const day = start.getDate().toString().padStart(2, '0');
+    const month = monthsOfYear[start.getMonth()];
+    const hours = start.getHours().toString().padStart(2, '0');
+    const minutes = start.getMinutes().toString().padStart(2, '0');
+
+    const end = new Date(event.end);
+    const endHours = end.getHours().toString().padStart(2, '0');
+    const endMinutes = end.getMinutes().toString().padStart(2, '0');
+
+    let body = `${dayOfWeek}, ${day}. ${month} · ${hours}:${minutes} - ${endHours}:${endMinutes} ${'\n'} ${
+      event.location
+    }`;
+    Alert.alert(event.title_heading, body);
+  }
 
   if (isLoading && (scheduleMode == 0 || !course)) {
     return (
@@ -271,8 +314,6 @@ function ScheduleScreen({ navigation }) {
     !Array.isArray(lectures) &&
     status === 'serviceUnavailable'
   ) {
-    const text =
-      'Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt.';
     return (
       <View
         style={[
@@ -281,7 +322,7 @@ function ScheduleScreen({ navigation }) {
         ]}
       >
         <ReloadView
-          message={text}
+          message="Der Kurskalender konnte nicht geladen werden, weil es ein Problem mit dem Webmail-Server gibt."
           buttonText={buttonText}
           onPress={loadData}
         />
@@ -290,11 +331,6 @@ function ScheduleScreen({ navigation }) {
   }
 
   if (!isLoading && (!Array.isArray(lectures) || !lectures.length)) {
-    const text =
-      'Aktuell sind für Kurs ' +
-      course +
-      ' keine Termine ' +
-      'vorhanden oder dein Studiengang veröffentlicht keine Termine online.';
     return (
       <View
         style={[
@@ -303,7 +339,7 @@ function ScheduleScreen({ navigation }) {
         ]}
       >
         <ReloadView
-          message={text}
+          message={`Aktuell sind für den Kurs ${course} keine Termine vorhanden oder dieser Studiengang veröffentlicht keine Termine online.`}
           buttonText={buttonText}
           onPress={loadData}
         />
@@ -311,80 +347,27 @@ function ScheduleScreen({ navigation }) {
     );
   }
 
-  // Highlight today with a bold font
-  const MyTodayComponent = ({ formattedDate, textStyle }) => (
-    <View
-      style={{
-        borderRadius: 10,
-        backgroundColor: colorContext.colorScheme.dhbwRed,
-      }}
-    >
-      <Text
-        style={[
-          textStyle,
-          { fontWeight: 'bold', color: 'white', padding: 5 },
-        ]}
+  let body = (
+    <>
+      <View
+        style={{
+          alignItems: 'center',
+          padding: 5,
+          backgroundColor: colorContext.colorScheme.scheduleHeader,
+        }}
       >
-        {formattedDate}
-      </Text>
-    </View>
+        <Text
+          style={{
+            color: colorContext.colorScheme.tabBarText,
+            fontSize: 12,
+          }}
+        >
+          {calHeading}
+        </Text>
+      </View>
+      {calendar}
+    </>
   );
-
-  const EventComponent = ({ event }) => (
-    <Text style={{ textAlign: 'left', color: 'white' }}>
-      <Text style={{ fontWeight: 'bold' }}>{event.title}</Text>
-      {'\n'}
-      <Text>
-        {event.startTime} bis {event.endTime}
-      </Text>
-      {'\n'}
-      <Text>{event.location}</Text>
-    </Text>
-  );
-
-  function OnEventPress(event) {
-    const daysOfWeek = [
-      'Sonntag',
-      'Montag',
-      'Dienstag',
-      'Mittwoch',
-      'Donnerstag',
-      'Freitag',
-      'Samstag',
-    ];
-    const monthsOfYear = [
-      'Januar',
-      'Februar',
-      'März',
-      'April',
-      'Mai',
-      'Juni',
-      'Juli',
-      'August',
-      'September',
-      'Oktober',
-      'November',
-      'Dezember',
-    ];
-
-    const start = new Date(event.start);
-    const dayOfWeek = daysOfWeek[start.getDay()];
-    const day = start.getDate().toString().padStart(2, '0');
-    const month = monthsOfYear[start.getMonth()];
-    const hours = start.getHours().toString().padStart(2, '0');
-    const minutes = start.getMinutes().toString().padStart(2, '0');
-
-    const end = new Date(event.end);
-    const endHours = end.getHours().toString().padStart(2, '0');
-    const endMinutes = end.getMinutes().toString().padStart(2, '0');
-
-    let body = `${dayOfWeek}, ${day}. ${month} · ${hours}:${minutes} - ${endHours}:${endMinutes} ${'\n'} ${
-      event.location
-    }`;
-    Alert.alert(event.title_heading, body);
-  }
-
-  let body;
   if (scheduleMode == 0) {
     body = (
       <>
@@ -404,30 +387,8 @@ function ScheduleScreen({ navigation }) {
         />
       </>
     );
-  } else {
-    body = (
-      <>
-        <View
-          style={{
-            alignItems: 'center',
-            padding: 5,
-            backgroundColor: colorContext.colorScheme.scheduleHeader,
-          }}
-        >
-          <Text
-            style={{
-              color: colorContext.colorScheme.tabBarText,
-              fontSize: 12,
-            }}
-          >
-            {calHeading}
-          </Text>
-        </View>
-        {calendar}
-      </>
-    );
   }
-  // contenInset: needed for last item to be displayed above tab bar on iOS
+
   return (
     <View
       style={[
@@ -439,5 +400,3 @@ function ScheduleScreen({ navigation }) {
     </View>
   );
 }
-
-export default ScheduleScreen;
