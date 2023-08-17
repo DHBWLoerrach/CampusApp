@@ -1,5 +1,4 @@
 import getLecturesFromiCalData from '../../tabs/schedule/helpers';
-import { loadScheduleMode } from '../../tabs/schedule/store';
 
 export default class ICalFetcher {
   async getItems(params) {
@@ -18,10 +17,10 @@ export default class ICalFetcher {
         status = 'not ok';
       } else {
         const responseBody = await response.text();
-        const scheduleMode = await loadScheduleMode();
-        lectures = getLecturesFromiCalData(responseBody, scheduleMode);
+        lectures = getLecturesFromiCalData(responseBody);
       }
     } catch (error) {
+      console.log('Error fetching webmail calendar', error);
       return { lectures: null, status: 'networkError' };
     }
     return { lectures, status };

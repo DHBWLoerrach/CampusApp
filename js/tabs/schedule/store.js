@@ -5,19 +5,6 @@ import FetchManager, {
   DHBW_COURSE,
 } from '../../util/fetcher/FetchManager';
 
-export async function loadScheduleDataFromStore() {
-  const lectures = await AsyncStorage.getItem('lectures');
-  const course = await AsyncStorage.getItem('course');
-  return {
-    course: JSON.parse(course),
-    lectures: JSON.parse(lectures),
-  };
-}
-
-export async function saveLecturesToStore(data) {
-  AsyncStorage.setItem('lectures', JSON.stringify(data));
-}
-
 export async function loadCourseFromStore() {
   const data = await AsyncStorage.getItem('course');
   return JSON.parse(data);
@@ -36,52 +23,61 @@ export async function saveRecentCoursesToStore(data) {
   AsyncStorage.setItem('recentCourses', JSON.stringify(data));
 }
 
+export async function loadScheduleDataFromStore() {
+  // clear legacy data (key: lectures) --> changed in August 2023
+  await AsyncStorage.removeItem('lectures');
+  // TODO: remove previous line after some time passed (e.g. in 2024)
+  const course = await AsyncStorage.getItem('course');
+  const sections = await AsyncStorage.getItem('lectureSections');
+  const calData = await AsyncStorage.getItem('lectureCalData');
+  return {
+    course: JSON.parse(course),
+    lectureSections: JSON.parse(sections),
+    lectureCalData: JSON.parse(calData),
+  };
+}
+
+export async function saveLecturesToStore(sections, calData) {
+  AsyncStorage.setItem('lectureSections', JSON.stringify(sections));
+  AsyncStorage.setItem('lectureCalData', JSON.stringify(calData));
+}
+
 export async function clearLecturesFromStore() {
-  AsyncStorage.removeItem('lectures');
+  AsyncStorage.removeItem('lectureSections');
+  AsyncStorage.removeItem('lectureCalData');
 }
 
 export async function fetchLecturesFromWeb(course) {
   const result = await FetchManager.fetch(DHBW_COURSE, true, {
     course,
   });
-  if (result.status !== 'ok') {
-    return result;
-  }
 
-  const { lectures } = result;
+  if (result.status !== 'ok') return result;
 
-  //Get all dates
-  const dates = [];
-  lectures.forEach((lecture) => {
-    const day = getDay(lecture.startDate);
-    if (!dates.includes(day)) {
-      dates.push(day);
-    }
-  });
+  return {
+    lectureSections: groupLecturesByDate(result.lectures),
+    lectureCalData: result.lectures,
+    status: result.status,
+  };
+}
 
-  const schedule = [];
-  dates.forEach((date) => {
-    schedule.push({
-      title: date,
-      data: lectures.filter(
-        (lecture) => date === getDay(lecture.startDate)
-      ),
+function groupLecturesByDate(lectures) {
+  const resultObj = {};
+  const today = new Date();
+
+  lectures.forEach((item) => {
+    // only take lectures from today on
+    if (item.startDate < today) return;
+    const day = format(item.startDate, 'EEEE dd.MM.yy', {
+      locale: de,
     });
+    if (!resultObj[day]) resultObj[day] = [];
+    resultObj[day].push(item);
   });
-  return { lectures: schedule, status: result.status };
-}
 
-export function getDay(startDate) {
-  return format(startDate, 'EEEE dd.MM.yy', {
-    locale: de,
+  const resultArray = Object.keys(resultObj).map((date) => {
+    return { title: date, data: resultObj[date] };
   });
-}
 
-export async function saveScheduleMode(mode) {
-  AsyncStorage.setItem('scheduleMode', mode.toString());
-}
-
-export async function loadScheduleMode() {
-  const data = await AsyncStorage.getItem('scheduleMode');
-  return data;
+  return resultArray;
 }

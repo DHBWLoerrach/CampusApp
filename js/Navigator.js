@@ -1,13 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
-import { Platform, PixelRatio, Text, View } from 'react-native';
+import { Platform, PixelRatio, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
+import { ColorSchemeContext } from './context/ColorSchemeContext';
+import {
+  ReloadDataProvider,
+  useReloadData,
+} from './context/ReloadContext';
 import HeaderIcon from './util/HeaderIcon';
-
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
@@ -20,19 +25,7 @@ import LinksList from './tabs/service/LinksList';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { ColorSchemeContext } from './context/ColorSchemeContext';
 import ServiceScreen from './tabs/service/ServiceScreen';
-import {
-  Menu,
-  MenuItem,
-  MenuDivider,
-} from 'react-native-material-menu';
-import { ScheduleModeContext } from './context/ScheduleModeContext';
-import {
-  loadScheduleMode,
-  saveScheduleMode,
-} from './tabs/schedule/store';
 import CampusTour from './tabs/service/CampusTour';
 
 const ROUTE_KEY = 'selectedRoute';
@@ -41,12 +34,6 @@ export default function Navigator() {
   const colorContext = useContext(ColorSchemeContext);
   const [isReady, setIsReady] = useState(false);
   const [initialState, setInitialState] = useState(null);
-  const [scheduleMode, setScheduleMode] = useState();
-
-  const setNewScheduleMode = async (mode) => {
-    setScheduleMode(mode);
-    await saveScheduleMode(mode);
-  };
 
   useEffect(() => {
     const loadRoute = async () => {
@@ -58,19 +45,6 @@ export default function Navigator() {
       setIsReady(true);
     };
     loadRoute();
-  }, []);
-
-  useEffect(() => {
-    const fetchScheduleData = async () => {
-      const scheduleMode = await loadScheduleMode();
-      // falls scheduleMode noch nicht gesetzt ist, wird es auf 7 gesetzt (Wochenansicht)
-      if (scheduleMode) {
-        setScheduleMode(Number(scheduleMode));
-      } else {
-        setNewScheduleMode(7);
-      }
-    };
-    fetchScheduleData();
   }, []);
 
   const stackHeaderConfig = {
@@ -107,10 +81,8 @@ export default function Navigator() {
   }
 
   const ScheduleOptions = ({ navigation, route }) => {
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const hideMenu = () => setIsMenuVisible(false);
-    const showMenu = () => setIsMenuVisible(true);
-    const headerTitle = route.params?.course ?? 'Vorlesungsplan';
+    const { setReload } = useReloadData();
+    const headerTitle = route.params?.course ?? 'Vorlesungen';
     return {
       headerRight: () => (
         <HeaderIcon
@@ -119,74 +91,19 @@ export default function Navigator() {
         />
       ),
       headerTitle,
-      headerLeft: () => (
-        <View
-          style={{
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Menu
-            visible={isMenuVisible}
-            anchor={<HeaderIcon onPress={showMenu} icon="tune" />}
-            onRequestClose={hideMenu}
-          >
-            <MenuItem
-              onPress={() => setNewScheduleMode(0)}
-              textStyle={{ color: colorContext.colorScheme.text }}
-              style={{
-                backgroundColor: colorContext.colorScheme.card,
-              }}
-            >
-              Liste
-            </MenuItem>
-            <MenuDivider />
-            <MenuItem
-              onPress={() => setNewScheduleMode(1)}
-              textStyle={{ color: colorContext.colorScheme.text }}
-              style={{
-                backgroundColor: colorContext.colorScheme.card,
-              }}
-            >
-              1 Tag
-            </MenuItem>
-            <MenuItem
-              onPress={() => setNewScheduleMode(3)}
-              textStyle={{ color: colorContext.colorScheme.text }}
-              style={{
-                backgroundColor: colorContext.colorScheme.card,
-              }}
-            >
-              3 Tage
-            </MenuItem>
-            <MenuItem
-              onPress={() => setNewScheduleMode(5)}
-              textStyle={{ color: colorContext.colorScheme.text }}
-              style={{
-                backgroundColor: colorContext.colorScheme.card,
-              }}
-            >
-              Arbeitswoche
-            </MenuItem>
-            <MenuItem
-              onPress={() => setNewScheduleMode(7)}
-              textStyle={{ color: colorContext.colorScheme.text }}
-              style={{
-                backgroundColor: colorContext.colorScheme.card,
-              }}
-            >
-              Woche
-            </MenuItem>
-          </Menu>
-        </View>
-      ),
+      headerLeft: () =>
+        route.params?.course && (
+          <HeaderIcon
+            onPress={() => setReload(true)}
+            icon="refresh"
+          />
+        ),
     };
   };
 
   function ScheduleStack() {
     return (
-      <ScheduleModeContext.Provider value={scheduleMode}>
+      <ReloadDataProvider>
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={stackHeaderConfig}
@@ -202,7 +119,7 @@ export default function Navigator() {
             options={{ title: 'Kurs eingeben' }}
           />
         </Stack.Navigator>
-      </ScheduleModeContext.Provider>
+      </ReloadDataProvider>
     );
   }
 
