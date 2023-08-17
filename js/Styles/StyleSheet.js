@@ -1,4 +1,9 @@
-import { Dimensions, PixelRatio, StyleSheet } from 'react-native';
+import {
+  Dimensions,
+  PixelRatio,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import Colors from './Colors';
 import Constants from '../util/Constants';
 
@@ -184,7 +189,7 @@ const Styles = StyleSheet.create({
       paddingHorizontal: 8,
     },
     icon: {
-      marginRight: 10,
+      marginRight: Platform.OS === 'android' ? 10 : 0,
     },
   },
   Form: {
