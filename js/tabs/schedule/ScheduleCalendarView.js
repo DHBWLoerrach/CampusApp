@@ -1,5 +1,5 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
 import 'moment/locale/de'; // needed by calendar-kit, otherwise ScheduleScreen crashes in release builds!1!
 import Styles from '../../Styles/StyleSheet';
@@ -58,6 +58,8 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
   const colorContext = useContext(ColorSchemeContext);
   const { lectureCalData, isLoading } = useContext(LecturesContext);
 
+  const calendarRef = useRef(null);
+
   const calendar = useMemo(() => {
     const weekViewLectures = lectureCalData?.map(
       ({ startDate, startTime, endTime, title, key, location }) => {
@@ -90,6 +92,7 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
     return (
       <View style={{ flex: 1 }}>
         <TimelineCalendar
+          ref={calendarRef}
           viewMode={viewMode}
           locale="de"
           events={weekViewLectures}
@@ -168,6 +171,23 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
     );
   }, [isLoading, colorContext.colorScheme]);
 
+  const GoToToday = () => (
+    <Pressable
+      onPress={() => {
+        calendarRef.current?.goToDate({ animatedDate: true });
+      }}
+    >
+      <Text
+        style={{
+          color: colorContext.colorScheme.dhbwRed,
+          fontSize: 12,
+        }}
+      >
+        Heute
+      </Text>
+    </Pressable>
+  );
+
   return (
     <View
       style={[
@@ -177,7 +197,8 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
     >
       <View
         style={{
-          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           padding: 5,
           backgroundColor: colorContext.colorScheme.scheduleHeader,
         }}
@@ -190,6 +211,7 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
         >
           {calHeading}
         </Text>
+        <GoToToday />
       </View>
       {calendar}
     </View>
