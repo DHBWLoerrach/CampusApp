@@ -26,8 +26,8 @@ export default function ScheduleScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [status, setStatus] = useState('ok');
   const [course, setCourse] = useState(null);
-  const [lectureSections, setLectureSections] = useState(null); // TODO: []?
-  const [lectureCalData, setLectureCalData] = useState(null); // TODO: []?
+  const [lectureSections, setLectureSections] = useState(null);
+  const [lectureCalData, setLectureCalData] = useState(null);
 
   const colorContext = useContext(ColorSchemeContext);
   const { reload, setReload } = useReloadData();
@@ -71,7 +71,6 @@ export default function ScheduleScreen({ navigation }) {
       setLectureSections(newLectureSections);
       setLectureCalData(newLectureCalData);
     } else if (!Array.isArray(newLectureSections)) {
-      // TODO: is this if needed? to be changed?
       // no lectures in cache and data fetch unsuccessful
       setStatus(fetchStatus);
     }
