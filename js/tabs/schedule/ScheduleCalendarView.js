@@ -1,12 +1,15 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { View, Text, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
 import 'moment/locale/de'; // needed by calendar-kit, otherwise ScheduleScreen crashes in release builds!1!
 import Styles from '../../Styles/StyleSheet';
 import { dhbwRed } from '../../Styles/Colors';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { LecturesContext } from '../../context/LecturesContext';
+
+MomentConfig.updateLocale('de', {
+  weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+});
 
 function onEventPress(event) {
   const daysOfWeek = [
@@ -164,15 +167,6 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
       </View>
     );
   }, [isLoading, colorContext.colorScheme]);
-
-  // when screen is focussed, load data and update header title
-  useFocusEffect(
-    useCallback(() => {
-      MomentConfig.updateLocale('de', {
-        weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
-      });
-    }, [])
-  );
 
   return (
     <View
