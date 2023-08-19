@@ -1,15 +1,9 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  Switch,
-  useColorScheme,
-} from 'react-native';
-import React, { useContext, useState } from 'react';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { View, Text, Switch, useColorScheme } from 'react-native';
+import { useContext } from 'react';
 import Colors from '../../Styles/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
+import Checkbox from '../../ui/Checkbox';
 import Styles from '../../Styles/StyleSheet';
 
 export default function DarkModeSelection() {
@@ -37,28 +31,20 @@ export default function DarkModeSelection() {
   const onToggleDarkMode = (value) => {
     AsyncStorage.setItem('manualDarkMode', JSON.stringify(value));
     colorContext.setDarkMode(value);
-    if (value) {
-      colorContext.setColorScheme(Colors.darkMode);
-    } else {
-      colorContext.setColorScheme(Colors.lightMode);
-    }
+    colorContext.setColorScheme(
+      value ? Colors.darkMode : Colors.lightMode
+    );
   };
 
   return (
     <View>
       <View style={Styles.DarkModeSelection.itemRow}>
-        <BouncyCheckbox
-          fillColor={colorContext.colorScheme.dhbwRed}
-          unfillColor={colorContext.colorScheme.card}
-          text="Systemeinstellung ignorieren"
-          onPress={(value) => onClickOverride(value)}
+        <Checkbox
           isChecked={colorContext.override}
-          size={20}
-          textStyle={{
-            fontSize: 14,
-            color: colorContext.colorScheme.text,
-            textDecorationLine: 'none',
-          }}
+          onPress={(value) => onClickOverride(value)}
+          color={colorContext.colorScheme.text}
+          backgroundColor={colorContext.colorScheme.background}
+          label="Systemeinstellung ignorieren"
         />
       </View>
       {colorContext.override && (
