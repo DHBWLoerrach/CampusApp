@@ -9,4 +9,6 @@ module.exports = {
     'Mitarbeiter/in',
     'Gast',
   ],
+  webmailUrl: (course) =>
+    `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`,
 };

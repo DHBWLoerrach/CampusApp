@@ -1,3 +1,4 @@
+import { webmailUrl } from '../../util/Constants';
 import getLecturesFromiCalData from '../../tabs/schedule/helpers';
 
 export default class ICalFetcher {
@@ -7,7 +8,7 @@ export default class ICalFetcher {
     try {
       //needed because of bad cache behavior
       const suffix = '?' + new Date().getTime();
-      const scheduleUrl = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${params.course}@dhbw-loerrach.de/Kalender/calendar.ics${suffix}`;
+      const scheduleUrl = `${webmailUrl(params.course)}${suffix}`;
       const response = await fetch(scheduleUrl, {
         cache: 'no-store',
       });
