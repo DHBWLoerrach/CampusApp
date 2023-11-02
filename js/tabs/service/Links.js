@@ -65,10 +65,10 @@ export const linksEmergency = [
     url: 'https://dhbw-loerrach.de/studienberatung',
   },
   {
-    title: 'Beratungsstelle Studierendenwerk Freiburg',
-    url: 'https://www.swfr.de/beratung-soziales',
+    title: 'Beratung des Studierendenwerks Freiburg',
+    url: 'https://www.swfr.de',
   },
-  { 
+  {
     title: 'Anlaufstellen für Betroffene',
     url: 'https://dhbw-loerrach.de/ansprechpersonen/anlaufstellen-fuer-betroffene#inhalt',
   },
