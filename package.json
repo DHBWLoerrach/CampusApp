@@ -20,7 +20,7 @@
     "date-fns": "^2.30.0",
     "ical.js": "^1.5.0",
     "react": "18.2.0",
-    "react-native": "0.72.5",
+    "react-native": "0.72.7",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-nfc-manager": "^3.14.6",
     "react-native-pager-view": "^6.0.1",
