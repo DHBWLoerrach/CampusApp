@@ -64,6 +64,7 @@ export async function fetchLecturesFromWeb(course) {
 function groupLecturesByDate(lectures) {
   const resultObj = {};
   const today = new Date();
+  today.setHours(0, 0, 0, 0); // set to midnight to compare only dates
 
   lectures.forEach((item) => {
     // only take lectures from today on
