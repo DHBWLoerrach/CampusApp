@@ -129,4 +129,4 @@ export const linksKBC = [
   },
 ];
 
-export const linkOrientation = 'https://dhbw-loerrach.de/anfahrt';
+export const linkOrientation = 'https://dhbw-loerrach.de/kontakt/anreise-mit-der-bahn';
