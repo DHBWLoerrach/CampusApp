@@ -57,7 +57,7 @@ const Styles = StyleSheet.create({
     },
   },
 
-  //Migrated Stypes
+  //Migrated Styles
   General: {
     topTabBar: {
       tabBarActiveTintColor: 'white',
