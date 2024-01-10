@@ -218,6 +218,9 @@ const Styles = StyleSheet.create({
       justifyContent: 'center',
       paddingHorizontal: Constants.listViewRowPaddingHorizontal,
     },
+    title: {
+      fontSize: Constants.bigFont,
+    },
   },
   CommonCell: {
     entry: {
