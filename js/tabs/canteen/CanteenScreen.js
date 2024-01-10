@@ -3,9 +3,8 @@ import { View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import { de } from 'date-fns/locale';
-import isToday from 'date-fns/isToday';
 
 import { RoleContext } from '../../CampusApp';
 import Styles from '../../Styles/StyleSheet';
