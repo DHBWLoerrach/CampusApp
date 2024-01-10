@@ -4,7 +4,7 @@ import {
   TouchableNativeFeedback,
   View,
 } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Styles from '../Styles/StyleSheet';
 
 const Touchable =
@@ -18,7 +18,7 @@ export default function HeaderIcon({ icon, size, onPress }) {
       style={Styles.HeaderIcon.touchable}
     >
       <View>
-        <MaterialIcon
+        <FontAwesome6
           style={Styles.HeaderIcon.icon}
           name={icon}
           size={size || 24}

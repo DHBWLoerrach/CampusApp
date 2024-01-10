@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { Linking, ScrollView, Text, View } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-import Colors from '../../Styles/Colors';
 import Styles from '../../Styles/StyleSheet';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
@@ -147,9 +146,9 @@ export function TextAgreedDisclaimer() {
         </Text>
       </View>
       <View style={[Styles.Texts.block, { flexDirection: 'row' }]}>
-        <MaterialIcon
+        <FontAwesome6
           name="check"
-          size={24}
+          size={20}
           color={colorContext.colorScheme.icon}
         />
         <Text

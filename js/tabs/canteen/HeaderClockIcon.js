@@ -13,6 +13,6 @@ export default () => (
     onPress={() => {
       return Alert.alert('Mensa Hangstraße 46-50', textCanteenInfo);
     }}
-    icon="help-outline"
+    icon="clock"
   />
 );

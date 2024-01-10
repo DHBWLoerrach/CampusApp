@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Alert, Platform, Linking, Text, View } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import ListCellTouchable from '../../util/ListCellTouchable';
@@ -53,7 +52,7 @@ function Row(props) {
   let icon = null;
   if (tel) {
     icon = (
-      <MaterialIcon
+      <FontAwesome6
         name="phone"
         size={16}
         style={{
@@ -77,9 +76,9 @@ function Row(props) {
   }
   if (onPress || screen) {
     icon = (
-      <MaterialIcon
+      <FontAwesome6
         name="chevron-right"
-        size={24}
+        size={16}
         style={{
           color: colorContext.colorScheme.icon,
           backgroundColor: colorContext.colorScheme.background,

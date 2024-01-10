@@ -4,7 +4,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import { ColorSchemeContext } from './context/ColorSchemeContext';
@@ -16,7 +15,7 @@ import HeaderIcon from './util/HeaderIcon';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
-import HeaderHelpIcon from './tabs/canteen/HeaderHelpIcon';
+import HeaderClockIcon from './tabs/canteen/HeaderClockIcon';
 import NewsDetails from './tabs/news/NewsDetails';
 import EditCourse from './tabs/schedule/EditCourse';
 import InfoText from './tabs/service/InfoText';
@@ -87,7 +86,7 @@ export default function Navigator() {
       headerRight: () => (
         <HeaderIcon
           onPress={() => navigation.navigate('EditCourse')}
-          icon="edit"
+          icon="pen"
         />
       ),
       headerTitle,
@@ -95,7 +94,7 @@ export default function Navigator() {
         route.params?.course && (
           <HeaderIcon
             onPress={() => setReload(true)}
-            icon="refresh"
+            icon="arrow-rotate-right"
           />
         ),
     };
@@ -134,7 +133,7 @@ export default function Navigator() {
           component={CanteenScreen}
           options={{
             title: 'Speiseplan',
-            headerRight: HeaderHelpIcon,
+            headerRight: HeaderClockIcon,
           }}
         />
       </Stack.Navigator>
@@ -248,11 +247,11 @@ export default function Navigator() {
     return <Text style={style}>{title}</Text>;
   };
 
-  const tabBarIcon = (icon, size, { focused }) => {
+  const tabBarIcon = (icon, focused) => {
     return (
       <FontAwesome6
         name={icon}
-        size={size}
+        size={28}
         color={
           focused
             ? colorContext.colorScheme.dhbwRed
@@ -262,17 +261,8 @@ export default function Navigator() {
     );
   };
 
-  const tabsConfig = ({ route }) => ({
+  const tabsConfig = () => ({
     headerShown: false,
-    tabBarIcon: ({ color }) => {
-      const routeName = route.name;
-      let iconName;
-      if (routeName === 'DHBW') iconName = 'rss-feed';
-      else if (routeName === 'Schedule') iconName = 'school';
-      else if (routeName === 'Canteen') iconName = 'restaurant';
-      else if (routeName === 'Services') iconName = 'info-outline';
-      return <MaterialIcon name={iconName} size={32} color={color} />;
-    },
     tabBarStyle: {
       backgroundColor: colorContext.colorScheme.background,
     },
@@ -296,17 +286,7 @@ export default function Navigator() {
           options={{
             tabBarLabel: ({ focused }) =>
               tabBarLabel('DHBW', { focused }),
-            tabBarIcon: ({ focused }) => (
-              <MaterialIcon
-                name={'rss-feed'}
-                size={32}
-                color={
-                  focused
-                    ? colorContext.colorScheme.dhbwRed
-                    : colorContext.colorScheme.tabBarText
-                }
-              />
-            ),
+            tabBarIcon: ({ focused }) => tabBarIcon('rss', focused),
           }}
         />
         <Tab.Screen
@@ -316,7 +296,7 @@ export default function Navigator() {
             tabBarLabel: ({ focused }) =>
               tabBarLabel('Vorlesungen', { focused }),
             tabBarIcon: ({ focused }) =>
-              tabBarIcon('graduation-cap', 30, { focused }),
+              tabBarIcon('graduation-cap', focused),
           }}
         />
         <Tab.Screen
@@ -326,7 +306,7 @@ export default function Navigator() {
             tabBarLabel: ({ focused }) =>
               tabBarLabel('Mensa', { focused }),
             tabBarIcon: ({ focused }) =>
-              tabBarIcon('utensils', 25, { focused }),
+              tabBarIcon('utensils', focused),
           }}
         />
         <Tab.Screen
@@ -336,7 +316,7 @@ export default function Navigator() {
             tabBarLabel: ({ focused }) =>
               tabBarLabel('Services', { focused }),
             tabBarIcon: ({ focused }) =>
-              tabBarIcon('circle-info', 25, { focused }),
+              tabBarIcon('circle-info', focused),
           }}
         />
       </Tab.Navigator>

@@ -21,7 +21,7 @@ import {
   saveRecentCoursesToStore,
 } from './store';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export default function EditCourse() {
   const [course, setCourse] = useState('');
@@ -125,14 +125,14 @@ export default function EditCourse() {
         <Text style={{ color: title === course ? 'white' : 'black' }}>
           {title}
         </Text>
-        <MaterialIcon
+        <FontAwesome6
           style={{
             paddingLeft: 10,
             color: title === course ? 'white' : 'black',
           }}
           onPress={() => removeRecentCourseItem(title)}
-          name="close"
-          size={30}
+          name="xmark"
+          size={24}
         />
       </Pressable>
     );
