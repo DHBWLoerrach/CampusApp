@@ -80,8 +80,8 @@ android {
         applicationId "de.dhbwloe.loerrach.campusapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 97
-        versionName "2.9.3"
+        versionCode 98
+        versionName "2.9.4"
         multiDexEnabled true
     }
     signingConfigs {
