@@ -66,19 +66,13 @@ export default function getLecturesFromiCalData(iCalendarData) {
             location: recurrenceEvent.location,
           });
         }
-      } else {
-        events.push({
-          description: event.summary,
-          startDate: event.startDate.toJSDate(),
-          startTime: event.startDate.toJSDate().getTime(),
-          endDate: event.endDate.toJSDate(),
-          endTime: event.endDate.toJSDate().getTime(),
-          location: event.location,
-        });
+      } else if (event.duration.days > 1) {
         // if event lasts longer than one day add an extra event for each day
-        for (let day = 1; day < event.duration.days; day++) {
+        // start and end time for each day are determined by
+        // start time of first day and end time of last day
+        for (let day = 0; day <= event.duration.days; day++) {
           const startDate = event.startDate.toJSDate();
-          startDate.setDate(startDate.getDate() + 1);
+          startDate.setDate(startDate.getDate() + day);
           events.push({
             description: event.summary,
             startDate: startDate,
@@ -88,6 +82,15 @@ export default function getLecturesFromiCalData(iCalendarData) {
             location: event.location,
           });
         }
+      } else {
+        events.push({
+          description: event.summary,
+          startDate: event.startDate.toJSDate(),
+          startTime: event.startDate.toJSDate().getTime(),
+          endDate: event.endDate.toJSDate(),
+          endTime: event.endDate.toJSDate().getTime(),
+          location: event.location,
+        });
       }
     }
   }
@@ -96,7 +99,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
   const rangeStart = addDays(startOfToday(), -180);
   const rangeEnd = addDays(startOfToday(), 180);
 
-  const filteredEvents = events.filter(function (filterEvent, index) {
+  const filteredEvents = events.filter(function (filterEvent) {
     return (
       filterEvent.startTime >= rangeStart.getTime() &&
       filterEvent.endDate <= rangeEnd // use end date because of recurring events
