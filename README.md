@@ -26,9 +26,7 @@ Danach sind folgende Schritte durchzuführen:
 
 3. Die Abhängigkeiten bzw. npm-Pakete in NodeJS installieren, idealerweise mit `yarn`:
 
-   `yarn`
-
-   (`npm install` funktioniert wohl auch)
+   `npm install`
 
 4. Kopiere `env.example.js` als neue Datei `env.js`:
 
@@ -40,9 +38,7 @@ Danach sind folgende Schritte durchzuführen:
 
 Mit dem Befehl
 
-`react-native start`
-
-(oder `yarn start`)
+`npm start`
 
 wird der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet mit dem sich die App vom Emulator/Simulator oder von einem Smartphone verbindet (siehe folgende Abschnitte).
 
