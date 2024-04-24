@@ -1,4 +1,4 @@
-import React, { Component, useContext } from 'react';
+import { useContext } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 
 import {
@@ -39,6 +39,11 @@ export default function ServiceScreen(props) {
         label: 'Gebäude Hangstraße',
         iconName: 'map',
         onPress: () => navigate('CampusHangstr'),
+      },
+      {
+        label: 'Hausordnung',
+        iconName: 'building-columns',
+        onPress: () => navigate('HouseRules'),
       },
       {
         label: 'Service-Zugänge',

@@ -12,6 +12,7 @@ import {
   useReloadData,
 } from './context/ReloadContext';
 import HeaderIcon from './util/HeaderIcon';
+import PDFViewer from './util/PDFViewer';
 import NewsScreen from './tabs/news/NewsScreen';
 import ScheduleScreen from './tabs/schedule/ScheduleScreen';
 import CanteenScreen from './tabs/canteen/CanteenScreen';
@@ -28,6 +29,10 @@ import ServiceScreen from './tabs/service/ServiceScreen';
 import CampusTour from './tabs/service/CampusTour';
 
 const ROUTE_KEY = 'selectedRoute';
+
+const HouseRules = () => (
+  <PDFViewer source="https://dhbw-loerrach.de/fileadmin/standards_homepage/dhbw-loe_allgemeine-inhalte/240415_Hausordnung_DHBW_Loerrach.pdf" />
+);
 
 export default function Navigator() {
   const colorContext = useContext(ColorSchemeContext);
@@ -225,6 +230,11 @@ export default function Navigator() {
           name="CampusTour"
           component={CampusTour}
           options={{ title: '360°-Tour' }}
+        />
+        <Stack.Screen
+          name="HouseRules"
+          component={HouseRules}
+          options={{ title: 'Hausordnung' }}
         />
       </Stack.Navigator>
     );
