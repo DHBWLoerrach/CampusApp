@@ -31,7 +31,7 @@ import CampusTour from './tabs/service/CampusTour';
 const ROUTE_KEY = 'selectedRoute';
 
 const HouseRules = () => (
-  <PDFViewer source="https://dhbw-loerrach.de/fileadmin/standards_homepage/dhbw-loe_allgemeine-inhalte/240415_Hausordnung_DHBW_Loerrach.pdf" />
+  <PDFViewer source="https://dhbw-loerrach.de/hausordnung" />
 );
 
 export default function Navigator() {
