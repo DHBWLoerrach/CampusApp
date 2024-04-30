@@ -51,16 +51,18 @@ function onEventPress(event) {
   Alert.alert(event.title_heading, body);
 }
 
-function ScheduleCalendarView({ viewMode = 'week' }) {
+function ScheduleCalendarView({ viewMode = 'workWeek' }) {
   const [calHeading, setCalHeading] = useState('');
   const colorContext = useContext(ColorSchemeContext);
   const { lectureCalData, isLoading } = useContext(LecturesContext);
 
   const calendarRef = useRef(null);
-
   const calendar = useMemo(() => {
+    let hasEventsOnSaturday = false;
     const weekViewLectures = lectureCalData?.map(
       ({ startDate, startTime, endTime, title, key, location }) => {
+        const dateObj = new Date(startDate);
+        if (dateObj?.getDay() === 6) hasEventsOnSaturday = true;
         const endDate = new Date(startDate);
         endDate.setHours(endTime.split(':')[0]);
         endDate.setMinutes(endTime.split(':')[1]);
@@ -87,11 +89,15 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
       }
     );
 
+    // fall back to week mode if there are events on Saturday
+    let weekMode = null;
+    if (viewMode === 'workWeek' && hasEventsOnSaturday)
+      weekMode = 'week';
     return (
       <View style={{ flex: 1 }}>
         <TimelineCalendar
           ref={calendarRef}
-          viewMode={viewMode}
+          viewMode={weekMode || viewMode}
           locale="de"
           events={weekViewLectures}
           isLoading={isLoading}
@@ -217,7 +223,7 @@ function ScheduleCalendarView({ viewMode = 'week' }) {
 }
 
 export function ScheduleWeekView() {
-  return <ScheduleCalendarView viewMode="week" />;
+  return <ScheduleCalendarView viewMode="workWeek" />;
 }
 
 export function ScheduleThreeDaysView() {
