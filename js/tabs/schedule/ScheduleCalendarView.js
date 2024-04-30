@@ -61,15 +61,15 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
     let hasEventsOnSaturday = false;
     const weekViewLectures = lectureCalData?.map(
       ({ startDate, startTime, endTime, title, key, location }) => {
-        const dateObj = new Date(startDate);
-        if (dateObj?.getDay() === 6) hasEventsOnSaturday = true;
+        const startDateObj = new Date(startDate);
+        if (startDateObj?.getDay() === 6) hasEventsOnSaturday = true;
         let timeSpan = `${startTime} bis ${endTime}`;
         let endDate = new Date(startDate);
         endDate.setHours(endTime.split(':')[0]);
         endDate.setMinutes(endTime.split(':')[1]);
         if (startTime === endTime) {
           timeSpan = 'Ganzer Tag';
-          startDate.setHours(8);
+          startDateObj.setHours(8);
           endDate.setHours(17);
         }
         const formattedTitle = (
@@ -88,7 +88,7 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
           title_heading: title,
           location: location,
           color: dhbwRed,
-          start: startDate,
+          start: startDateObj,
           end: endDate,
         };
       }
