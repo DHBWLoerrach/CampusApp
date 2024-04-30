@@ -47,9 +47,7 @@ function onEventPress(event) {
   const endHours = end.getHours().toString().padStart(2, '0');
   const endMinutes = end.getMinutes().toString().padStart(2, '0');
 
-  let body = `${dayOfWeek}, ${day}. ${month} · ${hours}:${minutes} - ${endHours}:${endMinutes} ${'\n'} ${
-    event.location
-  }`;
+  let body = `${dayOfWeek}, ${day}. ${month} · ${hours}:${minutes} - ${endHours}:${endMinutes} ${'\n'} ${event.location}`;
   Alert.alert(event.title_heading, body);
 }
 
