@@ -63,16 +63,21 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
       ({ startDate, startTime, endTime, title, key, location }) => {
         const dateObj = new Date(startDate);
         if (dateObj?.getDay() === 6) hasEventsOnSaturday = true;
-        const endDate = new Date(startDate);
+        let timeSpan = `${startTime} bis ${endTime}`;
+        let endDate = new Date(startDate);
         endDate.setHours(endTime.split(':')[0]);
         endDate.setMinutes(endTime.split(':')[1]);
+        if (startTime === endTime) {
+          timeSpan = 'Ganzer Tag';
+          startDate.setHours(8);
+          endDate.setHours(17);
+        }
         const formattedTitle = (
           <>
-            <Text style={{ fontWeight: 'bold' }}>
-              {title}
-              {'\n'}
-            </Text>
-            <Text>{`${startTime} bis ${endTime} \n`}</Text>
+            <Text
+              style={{ fontWeight: 'bold' }}
+            >{`${title} \n`}</Text>
+            <Text>{`${timeSpan} \n`}</Text>
             <Text>{location}</Text>
           </>
         );
@@ -147,8 +152,8 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
           showNowIndicator={false}
           scrollToNow={false}
           timeZone={'Europe/Berlin'}
-          start={6}
-          end={21}
+          start={7}
+          end={20}
           onChange={(date) => {
             // set date in header of calendar to current month and year like: "September 2020"
             date = new Date(date.date);
