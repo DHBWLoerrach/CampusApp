@@ -24,7 +24,7 @@ Danach sind folgende Schritte durchzuführen:
 
    `cd CampusApp`
 
-3. Die Abhängigkeiten bzw. npm-Pakete in NodeJS installieren, idealerweise mit `yarn`:
+3. Die Abhängigkeiten bzw. npm-Pakete in Node.js installieren:
 
    `npm install`
 
