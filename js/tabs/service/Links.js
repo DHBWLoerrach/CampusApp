@@ -129,4 +129,33 @@ export const linksKBC = [
   },
 ];
 
-export const linkOrientation = 'https://dhbw-loerrach.de/kontakt/anreise-mit-der-bahn';
+export const linkOrientation =
+  'https://dhbw-loerrach.de/kontakt/anreise-mit-der-bahn';
+
+export const linksSecurity = [
+  {
+    title: 'Herzlich Willkommen',
+    url: 'https://video.dhbw.de/videos/video-1_9se923y8gn/',
+    img: require('./img/security/1.jpg'),
+  },
+  {
+    title: 'Sicherheit an der DHBW Lörrach',
+    url: 'https://video.dhbw.de/videos/video-2_3jlqt4t17l/',
+    img: require('./img/security/2.jpg'),
+  },
+  {
+    title: 'Notfalleinrichtungen',
+    url: 'https://video.dhbw.de/videos/video-3_m885vwgf9y/',
+    img: require('./img/security/3.jpg'),
+  },
+  {
+    title: 'Arbeits- und Wegeunfälle',
+    url: 'https://video.dhbw.de/videos/video-4_9kjeusngm4/',
+    img: require('./img/security/4.jpg'),
+  },
+  {
+    title: 'Brandschutz',
+    url: 'https://video.dhbw.de/videos/video-5_befqkvvxdz/',
+    img: require('./img/security/5.jpg'),
+  },
+];

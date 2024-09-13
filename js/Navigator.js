@@ -22,6 +22,7 @@ import EditCourse from './tabs/schedule/EditCourse';
 import InfoText from './tabs/service/InfoText';
 import InfoImage from './tabs/service/InfoImage';
 import LinksList from './tabs/service/LinksList';
+import LinkTiles from './tabs/service/LinkTiles';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
@@ -235,6 +236,11 @@ export default function Navigator() {
           name="HouseRules"
           component={HouseRules}
           options={{ title: 'Hausordnung' }}
+        />
+        <Stack.Screen
+          name="Security"
+          component={LinkTiles}
+          options={{ title: 'Sicherheit' }}
         />
       </Stack.Navigator>
     );

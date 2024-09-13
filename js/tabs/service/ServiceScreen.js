@@ -8,6 +8,7 @@ import {
   linksFreetime,
   linksKBC,
   linkOrientation,
+  linksSecurity,
   linksStudy,
 } from './Links';
 import Submenu from './menu/Submenu';
@@ -39,6 +40,15 @@ export default function ServiceScreen(props) {
         label: 'Gebäude Hangstraße',
         iconName: 'map',
         onPress: () => navigate('CampusHangstr'),
+      },
+      {
+        label: 'Sicherheit',
+        iconName: 'building-shield',
+        onPress: () =>
+          navigate('Security', {
+            links: linksSecurity,
+            text: 'Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos zusammengestellt, in dem wir Sie über verschiedene Sicherheitshemen an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor Unfällen schützen können und welche Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!',
+          }),
       },
       {
         label: 'Hausordnung',
