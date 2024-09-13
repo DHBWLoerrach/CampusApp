@@ -4,10 +4,7 @@ import { DOMParser } from '@xmldom/xmldom';
 
 export default function fetchNewsData(newsXMLData) {
   var domParser = new DOMParser();
-  var xmlDOM = domParser.parseFromString(
-    newsXMLData,
-    'application/xhtml'
-  );
+  var xmlDOM = domParser.parseFromString(newsXMLData, 'text/xml');
   var newsItems = xmlDOM.getElementsByTagName('item');
   var newsList = [];
   for (var i = 0; i < newsItems.length; i++) {
@@ -20,7 +17,6 @@ export default function fetchNewsData(newsXMLData) {
     var contentElement = newsItem
       .getElementsByTagName('content:encoded')
       .item(0);
-
     let imageElement = newsItem
       .getElementsByTagName('enclosure')
       .item(0);
@@ -37,9 +33,8 @@ export default function fetchNewsData(newsXMLData) {
     for (var j = 0; j < cdataElements.length; j++) {
       var cdataElem = cdataElements.item(j);
       // check if CDATA element contains a file attribute
-      var imageFileAttribute = cdataElem.nodeValue.match(
-        /(file=)(.*?)(?=")/g
-      );
+      var imageFileAttribute =
+        cdataElem.nodeValue.match(/(file=)(.*?)(?=")/g);
       // a CDATA element may contain an image element or just text
       if (!newsImage && imageFileAttribute !== null) {
         newsImage = websiteUrl + imageFileAttribute[0].substring(5);
@@ -62,9 +57,8 @@ export default function fetchNewsData(newsXMLData) {
       .item(0)
       .childNodes.item(0);
 
-    let attachmentElements = newsItem.getElementsByTagName(
-      'attachment'
-    );
+    let attachmentElements =
+      newsItem.getElementsByTagName('attachment');
     for (let i = 0; i < attachmentElements.length; i++) {
       let attachment = attachmentElements.item(i);
       const url = attachment
