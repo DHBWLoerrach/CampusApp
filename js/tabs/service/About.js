@@ -55,7 +55,7 @@ export default function About() {
           { color: colorContext.colorScheme.text },
         ]}
       >
-        Version (App): 2.9.7
+        Version (App): 2.9.8
       </Text>
     </ScrollView>
   );

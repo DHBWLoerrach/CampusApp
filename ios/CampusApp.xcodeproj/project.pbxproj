@@ -53,7 +53,7 @@
 		80ED16A02E992893CA961C5D /* libPods-CampusApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CampusApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CampusApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		EF0A5F1D3F2E831A52F48539 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CampusApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		EF0A5F1D3F2E831A52F48539 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = CampusApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -596,7 +596,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CampusApp/CampusApp.entitlements;
-				CURRENT_PROJECT_VERSION = 2.9.7;
+				CURRENT_PROJECT_VERSION = 2.9.8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 54EE35UAFF;
 				ENABLE_BITCODE = NO;
@@ -610,7 +610,7 @@
 				INFOPLIST_FILE = CampusApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.9.7;
+				MARKETING_VERSION = 2.9.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.loerrach.campusapp;
 				PRODUCT_NAME = CampusApp;
@@ -629,14 +629,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = CampusApp/CampusApp.entitlements;
-				CURRENT_PROJECT_VERSION = 2.9.7;
+				CURRENT_PROJECT_VERSION = 2.9.8;
 				DEVELOPMENT_TEAM = 54EE35UAFF;
 				EXCLUDED_ARCHS = "";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = CampusApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.9.7;
+				MARKETING_VERSION = 2.9.8;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = de.dhbw.loerrach.campusapp;
 				PRODUCT_NAME = CampusApp;
