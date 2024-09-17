@@ -47,7 +47,7 @@ export default function ServiceScreen(props) {
         onPress: () =>
           navigate('Security', {
             links: linksSecurity,
-            text: 'Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos zusammengestellt, in dem wir Sie über verschiedene Sicherheitshemen an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor Unfällen schützen können und welche Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!',
+            text: 'Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos zusammengestellt, in denen wir Sie über verschiedene Sicherheitshemen an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor Unfällen schützen können und welche Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!',
           }),
       },
       {
