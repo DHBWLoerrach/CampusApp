@@ -276,6 +276,7 @@ const Styles = StyleSheet.create({
       marginBottom: 10,
     },
     container: {
+      minHeight: 100,
       borderRadius: 5,
       alignItems: 'center',
       justifyContent: 'center',
