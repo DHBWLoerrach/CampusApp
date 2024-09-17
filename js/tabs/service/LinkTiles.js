@@ -1,12 +1,19 @@
 import { useContext } from 'react';
-import { Image, Linking, Pressable, Text, View } from 'react-native';
+import {
+  Image,
+  Linking,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
 import Styles from '../../Styles/StyleSheet';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 
 export default function LinkTiles({ route }) {
   const colorContext = useContext(ColorSchemeContext);
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         padding: 10,
@@ -47,6 +54,6 @@ export default function LinkTiles({ route }) {
           );
         })}
       </View>
-    </View>
+    </ScrollView>
   );
 }
