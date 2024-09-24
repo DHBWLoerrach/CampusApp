@@ -34,7 +34,9 @@ class MainActivity : ReactActivity() {
     private lateinit var nfcBadgeListener: NfcBadgeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+	// We need to call super.onCreate(null), see
+	// https://github.com/software-mansion/react-native-screens#android
+        super.onCreate(null)
         val dfs = DecimalFormatSymbols.getInstance()
         dfs.decimalSeparator = ','
         val euroFormat = DecimalFormat("0.00€", dfs)
