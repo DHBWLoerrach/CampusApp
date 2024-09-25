@@ -93,11 +93,13 @@ export default function Safety({ navigation }) {
           );
         })}
       </View>
-      <Button
-        title="Brandschutzordnung (PDF)"
-        color={colorContext.colorScheme.dhbwRed}
-        onPress={() => navigation.navigate('FireSafety')}
-      />
+      <View style={{ alignItems: 'center' }}>
+        <Button
+          title="Brandschutzordnung (PDF)"
+          color={colorContext.colorScheme.dhbwRed}
+          onPress={() => navigation.navigate('FireSafety')}
+        />
+      </View>
     </ScrollView>
   );
 }
