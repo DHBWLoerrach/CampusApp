@@ -76,7 +76,13 @@ export default function Safety({ navigation }) {
             <Pressable
               key={index}
               onPress={() => Linking.openURL(link.url)}
-              style={Styles.General.cardShadow}
+              style={[
+                {
+                  borderRadius: 10,
+                  backgroundColor: colorContext.colorScheme.card,
+                },
+                Styles.General.cardShadow,
+              ]}
             >
               <Image
                 style={{ borderRadius: 10 }}
