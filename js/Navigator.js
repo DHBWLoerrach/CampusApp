@@ -22,7 +22,7 @@ import EditCourse from './tabs/schedule/EditCourse';
 import InfoText from './tabs/service/InfoText';
 import InfoImage from './tabs/service/InfoImage';
 import LinksList from './tabs/service/LinksList';
-import LinkTiles from './tabs/service/LinkTiles';
+import Safety from './tabs/service/Safety';
 import About from './tabs/service/About';
 import Feedback from './tabs/service/Feedback';
 import Settings from './tabs/service/Settings';
@@ -33,6 +33,10 @@ const ROUTE_KEY = 'selectedRoute';
 
 const HouseRules = () => (
   <PDFViewer source="https://dhbw-loerrach.de/hausordnung" />
+);
+
+const FireSafety = () => (
+  <PDFViewer source="https://dhbw-loerrach.de/brandschutz" />
 );
 
 export default function Navigator() {
@@ -238,8 +242,13 @@ export default function Navigator() {
           options={{ title: 'Hausordnung' }}
         />
         <Stack.Screen
+          name="FireSafety"
+          component={FireSafety}
+          options={{ title: 'Brandschutz' }}
+        />
+        <Stack.Screen
           name="Security"
-          component={LinkTiles}
+          component={Safety}
           options={{ title: 'Sicherheit' }}
         />
       </Stack.Navigator>

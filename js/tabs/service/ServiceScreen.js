@@ -8,7 +8,6 @@ import {
   linksFreetime,
   linksKBC,
   linkOrientation,
-  linksSecurity,
   linksStudy,
 } from './Links';
 import Submenu from './menu/Submenu';
@@ -44,11 +43,7 @@ export default function ServiceScreen(props) {
       {
         label: 'Sicherheit',
         iconName: 'building-shield',
-        onPress: () =>
-          navigate('Security', {
-            links: linksSecurity,
-            text: 'Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos zusammengestellt, in denen wir Sie über verschiedene Sicherheitshemen an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor Unfällen schützen können und welche Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!',
-          }),
+        onPress: () => navigate('Security'),
       },
       {
         label: 'Hausordnung',
