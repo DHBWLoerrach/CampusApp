@@ -1,6 +1,6 @@
 {
   "name": "campusapp",
-  "version": "2.9.10",
+  "version": "2.9.11",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
