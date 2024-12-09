@@ -75,9 +75,9 @@ export default function getLecturesFromiCalData(iCalendarData) {
           startDate.setDate(startDate.getDate() + day);
           events.push({
             description: event.summary,
-            startDate: startDate,
+            startDate,
             startTime: event.startDate.toJSDate().getTime(),
-            endDate: event.endDate.toJSDate(),
+            endDate: startDate,
             endTime: event.endDate.toJSDate().getTime(),
             location: event.location,
           });
@@ -120,6 +120,7 @@ export default function getLecturesFromiCalData(iCalendarData) {
       title: event.description,
       startDate: event.startDate,
       startTime: startTime,
+      endDate: event.endDate,
       endTime: endTime,
       location: event.location,
       equals: (otherItem) =>

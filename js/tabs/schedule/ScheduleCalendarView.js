@@ -1,181 +1,167 @@
-import { useContext, useMemo, useRef, useState } from 'react';
+import {
+  useContext,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { TimelineCalendar, MomentConfig } from '@howljs/calendar-kit';
-import 'moment/locale/de'; // needed by calendar-kit, otherwise ScheduleScreen crashes in release builds!1!
+import {
+  CalendarBody,
+  CalendarContainer,
+  CalendarHeader,
+} from '@howljs/calendar-kit';
 import Styles from '../../Styles/StyleSheet';
 import { dhbwRed } from '../../Styles/Colors';
 import { ColorSchemeContext } from '../../context/ColorSchemeContext';
 import { LecturesContext } from '../../context/LecturesContext';
 
-MomentConfig.updateLocale('de', {
-  weekdaysShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
-});
+const initialLocales = {
+  de: {
+    weekDayShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'), // Text in day header (Sun, Mon, etc.),
+    meridiem: { ante: 'am', post: 'pm' }, // Hour format (hh:mm a)
+    more: 'mehr', // Text for "more" button (All day events)
+  },
+};
 
-function onEventPress(event) {
-  const daysOfWeek = [
-    'Sonntag',
-    'Montag',
-    'Dienstag',
-    'Mittwoch',
-    'Donnerstag',
-    'Freitag',
-    'Samstag',
-  ];
-  const monthsOfYear = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-  ];
-
-  const start = new Date(event.start);
-  const dayOfWeek = daysOfWeek[start.getDay()];
-  const day = start.getDate().toString().padStart(2, '0');
-  const month = monthsOfYear[start.getMonth()];
-  const hours = start.getHours().toString().padStart(2, '0');
-  const minutes = start.getMinutes().toString().padStart(2, '0');
-
-  const end = new Date(event.end);
-  const endHours = end.getHours().toString().padStart(2, '0');
-  const endMinutes = end.getMinutes().toString().padStart(2, '0');
-
-  let body = `${dayOfWeek}, ${day}. ${month} · ${hours}:${minutes} - ${endHours}:${endMinutes} ${'\n'} ${event.location}`;
-  Alert.alert(event.title_heading, body);
+function getCurrentMonth(date) {
+  return new Date(date).toLocaleDateString('de-DE', {
+    year: 'numeric',
+    month: 'long',
+  });
 }
 
-function ScheduleCalendarView({ viewMode = 'workWeek' }) {
-  const [calHeading, setCalHeading] = useState('');
+function onEventPress(event) {
+  const { dateTime: startTime } = event.start;
+  const { dateTime: endTime } = event.end;
+
+  const locale = 'de-DE';
+  const dateOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  const timeOptions = { hour: 'numeric', minute: 'numeric' };
+
+  const startDate = new Date(startTime);
+  const endDate = new Date(endTime);
+
+  const d = startDate.toLocaleDateString(locale, dateOptions);
+  const t = startDate.toLocaleTimeString(locale, timeOptions);
+  const t2 = endDate.toLocaleTimeString(locale, timeOptions);
+
+  const body = `${d}\n${t} - ${t2} Uhr\n${event.location}`;
+  Alert.alert(event.title, body);
+}
+
+function ScheduleCalendarView({ numDays = 5 }) {
+  const [calHeading, setCalHeading] = useState(
+    getCurrentMonth(new Date())
+  );
   const colorContext = useContext(ColorSchemeContext);
   const { lectureCalData, isLoading } = useContext(LecturesContext);
+
+  const renderEvent = useCallback(
+    (event) => (
+      <View style={{ height: '100%', padding: 4 }}>
+        <Text
+          style={{ fontWeight: 'bold', color: 'white', fontSize: 12 }}
+        >
+          {event.title}
+        </Text>
+        <Text style={{ color: 'white', fontSize: 12 }}>
+          {event.location}
+        </Text>
+      </View>
+    ),
+    []
+  );
 
   const calendarRef = useRef(null);
   const calendar = useMemo(() => {
     let hasEventsOnSaturday = false;
     const weekViewLectures = lectureCalData?.map(
-      ({ startDate, startTime, endTime, title, key, location }) => {
+      ({
+        startDate,
+        startTime,
+        endDate,
+        endTime,
+        title,
+        key,
+        location,
+      }) => {
+        let endDate2 = new Date(endDate);
+        if (startDate.toString() === endDate2.toString()) {
+          endDate2 = new Date(startDate);
+          endDate2.setHours(endTime.split(':')[0]);
+          endDate2.setMinutes(endTime.split(':')[1]);
+        }
         const startDateObj = new Date(startDate);
         if (startDateObj?.getDay() === 6) hasEventsOnSaturday = true;
-        let timeSpan = `${startTime} bis ${endTime}`;
-        let endDate = new Date(startDate);
-        endDate.setHours(endTime.split(':')[0]);
-        endDate.setMinutes(endTime.split(':')[1]);
-        if (startTime === endTime) {
-          timeSpan = 'Ganzer Tag';
-          startDateObj.setHours(8);
-          endDate.setHours(17);
-        }
-        const formattedTitle = (
-          <>
-            <Text
-              style={{ fontWeight: 'bold' }}
-            >{`${title} \n`}</Text>
-            <Text>{`${timeSpan} \n`}</Text>
-            <Text>{location}</Text>
-          </>
-        );
 
         return {
           id: key,
-          title: formattedTitle,
-          title_heading: title,
-          location: location,
+          title,
+          location,
           color: dhbwRed,
-          start: startDateObj,
-          end: endDate,
+          start: { dateTime: startDate },
+          end: { dateTime: endDate2.toISOString() },
         };
       }
     );
 
     // fall back to week mode if there are events on Saturday
-    let weekMode = null;
-    if (viewMode === 'workWeek' && hasEventsOnSaturday)
-      weekMode = 'week';
+    const days = numDays === 5 && hasEventsOnSaturday ? 6 : numDays;
     return (
       <View style={{ flex: 1 }}>
-        <TimelineCalendar
+        <CalendarContainer
+          numberOfDays={days}
+          scrollByDay={false}
+          hideWeekDays={hasEventsOnSaturday ? [7] : [6, 7]}
+          allowPinchToZoom={true}
           ref={calendarRef}
-          viewMode={weekMode || viewMode}
+          initialLocales={initialLocales}
           locale="de"
           events={weekViewLectures}
           isLoading={isLoading}
           onPressEvent={onEventPress}
           theme={{
-            //today style
+            colors: {
+              background: colorContext.colorScheme.background,
+              border: colorContext.colorScheme.veryLightGray,
+            },
+            nowIndicatorColor: 'blue',
+            headerBackgroundColor:
+              colorContext.colorScheme.background,
+            hourTextStyle: { color: colorContext.colorScheme.text },
+            hourBackgroundColor: colorContext.colorScheme.background,
             todayName: { color: colorContext.colorScheme.dhbwRed },
             todayNumber: { color: 'white' },
             todayNumberContainer: {
               backgroundColor: colorContext.colorScheme.dhbwRed,
             },
-            //normal style
             dayName: { color: colorContext.colorScheme.text },
             dayNumber: { color: colorContext.colorScheme.tabBarText },
             dayNumberContainer: {
               backgroundColor:
                 colorContext.colorScheme.scheduleHeader,
             },
-            //Saturday style
-            saturdayName: {
-              color: colorContext.colorScheme.dhbwGray,
-            },
-            saturdayNumber: {
-              color: colorContext.colorScheme.dhbwGray,
-            },
-            saturdayNumberContainer: {
-              backgroundColor:
-                colorContext.colorScheme.scheduleHeader,
-            },
-            //Sunday style
-            sundayName: { color: colorContext.colorScheme.dhbwGray },
-            sundayNumber: {
-              color: colorContext.colorScheme.dhbwGray,
-            },
-            sundayNumberContainer: {
-              backgroundColor:
-                colorContext.colorScheme.scheduleHeader,
-            },
-            allowFontScaling: false,
-            nowIndicatorColor: colorContext.colorScheme.dhbwRed,
-            eventTitle: { color: 'white' },
-            loadingBarColor: colorContext.colorScheme.dhbwRed,
-            backgroundColor: colorContext.colorScheme.background,
-            cellBorderColor: colorContext.colorScheme.cellBorder,
-            hourText: { color: colorContext.colorScheme.text },
           }}
-          showNowIndicator={false}
           scrollToNow={false}
           timeZone={'Europe/Berlin'}
-          start={7}
-          end={20}
+          start={420}
+          end={1200}
           onChange={(date) => {
-            // set date in header of calendar to current month and year like: "September 2020"
-            date = new Date(date.date);
-            const monthsOfYear = [
-              'Januar',
-              'Februar',
-              'März',
-              'April',
-              'Mai',
-              'Juni',
-              'Juli',
-              'August',
-              'September',
-              'Oktober',
-              'November',
-              'Dezember',
-            ];
-            const month = monthsOfYear[date.getMonth()];
-            const year = date.getFullYear();
-            setTimeout(() => setCalHeading(`${month} ${year}`), 100);
+            setTimeout(
+              () => setCalHeading(getCurrentMonth(date)),
+              100
+            );
           }}
-        />
+        >
+          <CalendarHeader />
+          <CalendarBody renderEvent={renderEvent} />
+        </CalendarContainer>
       </View>
     );
   }, [isLoading, colorContext.colorScheme]);
@@ -189,7 +175,7 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
       <Text
         style={{
           color: colorContext.colorScheme.dhbwRed,
-          fontSize: 12,
+          fontSize: 14,
         }}
       >
         Heute
@@ -208,14 +194,16 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          padding: 5,
+          paddingVertical: 10,
+          paddingHorizontal: 4,
           backgroundColor: colorContext.colorScheme.scheduleHeader,
         }}
       >
         <Text
           style={{
             color: colorContext.colorScheme.tabBarText,
-            fontSize: 12,
+            fontWeight: 'bold',
+            fontSize: 14,
           }}
         >
           {calHeading}
@@ -228,13 +216,9 @@ function ScheduleCalendarView({ viewMode = 'workWeek' }) {
 }
 
 export function ScheduleWeekView() {
-  return <ScheduleCalendarView viewMode="workWeek" />;
-}
-
-export function ScheduleThreeDaysView() {
-  return <ScheduleCalendarView viewMode="threeDays" />;
+  return <ScheduleCalendarView numDays={5} />;
 }
 
 export function ScheduleDayView() {
-  return <ScheduleCalendarView viewMode="day" />;
+  return <ScheduleCalendarView numDays={1} />;
 }

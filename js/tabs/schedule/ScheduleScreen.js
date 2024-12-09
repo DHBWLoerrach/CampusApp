@@ -141,8 +141,7 @@ export default function ScheduleScreen({ navigation }) {
           component={ScheduleSectionListView}
         />
         <Tab.Screen name="Woche" component={ScheduleWeekView} />
-        <Tab.Screen name="3 Tage" component={ScheduleThreeDaysView} />
-        <Tab.Screen name="1 Tag" component={ScheduleDayView} />
+        <Tab.Screen name="Tag" component={ScheduleDayView} />
       </Tab.Navigator>
     </LecturesContext.Provider>
   );
