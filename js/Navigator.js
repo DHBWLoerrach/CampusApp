@@ -257,10 +257,9 @@ export default function Navigator() {
 
   const tabBarLabel = (title, { focused }) => {
     const style = {
-      color: focused
-        ? colorContext.colorScheme.dhbwRed
-        : colorContext.colorScheme.tabBarText,
+      color: getFocusedColor(focused),
     };
+
     if (Platform.isPad) {
       // on iPad, tab bar labels are places beside icon: add some margin
       style.marginLeft = 20;
@@ -269,6 +268,7 @@ export default function Navigator() {
       // to prevent line breaks in "Vorlesungen"
       style.fontSize = PixelRatio.get() <= 2 ? 8 : 10;
     }
+
     return <Text style={style}>{title}</Text>;
   };
 
@@ -277,13 +277,16 @@ export default function Navigator() {
       <FontAwesome6
         name={icon}
         size={28}
-        color={
-          focused
-            ? colorContext.colorScheme.dhbwRed
-            : colorContext.colorScheme.tabBarText
-        }
+        color={getFocusedColor(focused)}
       />
     );
+  };
+
+  const getFocusedColor = (focused) => {
+    return focused
+        ? colorContext.colorScheme.dhbwRed
+        : colorContext.colorScheme.tabBarText
+
   };
 
   const tabsConfig = () => ({
