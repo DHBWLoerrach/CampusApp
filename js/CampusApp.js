@@ -30,9 +30,9 @@ export default function CampusApp() {
       const manualSetting = await AsyncStorage.getItem(
         'manualDarkMode'
       );
-      setOverrideSystemScheme(override === 'true' ? true : false);
+      setOverrideSystemScheme(override === 'true');
       if (override !== null) {
-        setManualDarkMode(manualSetting === 'true' ? true : false);
+        setManualDarkMode(manualSetting === 'true');
       }
 
       if (override === 'true') {
