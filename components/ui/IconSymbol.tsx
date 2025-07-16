@@ -13,7 +13,7 @@ type IconMapping = Record<
   SymbolViewProps['name'],
   ComponentProps<typeof MaterialIcons>['name']
 >;
-type IconSymbolName = keyof typeof MAPPING;
+export type IconSymbolName = keyof typeof MAPPING;
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
@@ -25,7 +25,23 @@ const MAPPING = {
   calendar: 'calendar-month',
   'fork.knife': 'restaurant',
   'info.circle': 'info-outline',
-  'chevron.left.forwardslash.chevron.right': 'code',
+  location: 'pin-drop',
+  binoculars: '360',
+  map: 'map',
+  shield: 'security',
+  'building.columns': 'home-work',
+  link: 'link',
+  phone: 'call',
+  graduationcap: 'school',
+  'books.vertical': 'menu-book',
+  building: 'warehouse',
+  'sun.max': 'wb-sunny',
+  envelope: 'mail-outline',
+  gearshape: 'settings',
+  'info.square': 'perm-device-info',
+  'exclamationmark.triangle': 'warning-amber',
+  'text.page': 'description',
+  eye: 'visibility',
   'chevron.right': 'chevron-right',
 } as IconMapping;
 
