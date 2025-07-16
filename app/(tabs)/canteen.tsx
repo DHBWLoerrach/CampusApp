@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
+import NfcButton from '@/components/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 
@@ -9,6 +10,7 @@ export default function CanteenScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Mensa</ThemedText>
       </ThemedView>
+      {['android', 'ios'].includes(Platform.OS) && <NfcButton />}
     </ThemedView>
   );
 }
