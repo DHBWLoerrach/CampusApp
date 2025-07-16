@@ -37,6 +37,8 @@
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This permission stems from a library we use and will never be called anyway. If you see this, deny access.</string>
+	<key>RCTNewArchEnabled</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome6_Brands.ttf</string>

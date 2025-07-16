@@ -46,6 +46,7 @@ env.js
 
 *.keystore
 !debug.keystore
+.kotlin/
 
 # fastlane
 #
