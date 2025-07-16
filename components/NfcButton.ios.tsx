@@ -1,7 +1,7 @@
-import convertBytesToDouble from '@/lib/Nfc_helper';
 import { useEffect } from 'react';
 import { Button } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import convertBytesToDouble from '@/lib/Nfc_helper';
 
 export default function NfcButton() {
   useEffect(() => {

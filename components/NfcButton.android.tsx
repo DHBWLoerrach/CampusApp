@@ -1,4 +1,3 @@
-import convertBytesToDouble from '@/lib/Nfc_helper';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import convertBytesToDouble from '@/lib/Nfc_helper';
 
 export default function NfcButton() {
   const [isScanning, setIsScanning] = useState(false);
