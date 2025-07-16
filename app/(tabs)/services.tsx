@@ -6,6 +6,8 @@ import {
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 // Karte mit Icon und Titel für den Services-Bildschirm
 function ServiceCard({
@@ -15,11 +17,17 @@ function ServiceCard({
   title: string;
   icon: IconSymbolName;
 }) {
+  const colorScheme = useColorScheme();
+
   return (
     <View
       style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
     >
-      <IconSymbol size={28} name={icon} color="black" />
+      <IconSymbol
+        size={28}
+        name={icon}
+        color={Colors[colorScheme ?? 'light'].icon}
+      />
       <ThemedText>{title}</ThemedText>
     </View>
   );
