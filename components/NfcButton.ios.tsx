@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button } from 'react-native';
+import { Alert, Button } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/Nfc_helper';
 
@@ -11,6 +11,18 @@ export default function NfcButton() {
   }, []);
 
   const onPress = async () => {
+    const isNfcAvailable =
+      (await NfcManager.isSupported()) &&
+      (await NfcManager.isEnabled());
+
+    if (!isNfcAvailable) {
+      Alert.alert(
+        'Guthaben-Info',
+        'NFC scheint von deinem Gerät nicht unterstützt zu werden.'
+      );
+      return;
+    }
+
     try {
       await NfcManager.requestTechnology(NfcTech.MifareIOS, {
         alertMessage:
@@ -38,6 +50,10 @@ export default function NfcButton() {
         (!ex.message || ex.message.toLowerCase().includes('cancel'));
 
       if (!isCancelledByUser) {
+        Alert.alert(
+          'Fehler',
+          'Beim Auslesen deiner Karte ist ein Problem aufgetreten.'
+        );
         console.warn('NFC Fehler (iOS):', ex);
       }
     } finally {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   Modal,
   StyleSheet,
@@ -23,6 +24,18 @@ export default function NfcButton() {
   }, []);
 
   const onPress = async () => {
+    const isNfcAvailable =
+      (await NfcManager.isSupported()) &&
+      (await NfcManager.isEnabled());
+
+    if (!isNfcAvailable) {
+      Alert.alert(
+        'Guthaben-Info',
+        'NFC scheint von deinem Gerät nicht unterstützt zu werden.'
+      );
+      return;
+    }
+
     let timeoutHandle: number | null = null;
     let timedOut = false;
 
