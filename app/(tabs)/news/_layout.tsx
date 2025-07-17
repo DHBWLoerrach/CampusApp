@@ -5,7 +5,7 @@ import { topTabBarOptions } from '@/constants/Navigation';
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = withLayoutContext(Tab.Navigator);
 
-export default function CalendarLayout() {
+export default function NewsLayout() {
   return (
     <TopTabs screenOptions={topTabBarOptions}>
       <TopTabs.Screen name="index" options={{ title: 'Aktuelles' }} />

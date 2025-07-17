@@ -9,7 +9,7 @@ export default function TabLayout() {
   return (
     <Tabs screenOptions={bottomTabBarOptions}>
       <Tabs.Screen
-        name="index"
+        name="news"
         options={{
           title: 'Neuigkeiten und Termine',
           tabBarIcon: ({ color }) => (
