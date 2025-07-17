@@ -6,9 +6,6 @@ import {
   Pressable,
   StyleSheet,
 } from 'react-native';
-import { HelloWave } from '@/components/HelloWave';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
 
 export default function NewsListScreen() {
   const newsItems = [
@@ -29,46 +26,29 @@ export default function NewsListScreen() {
   ]; // Deine RSS-Feed Daten
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-
-      <FlatList
-        data={newsItems}
-        renderItem={({ item }) => (
-          <Link href={`/news/${item.id}`} asChild>
-            <Pressable style={styles.newsItem}>
-              <View>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.summary}>{item.summary}</Text>
-                <Text style={styles.date}>
-                  {new Date(item.publishedAt).toLocaleDateString(
-                    'de-DE'
-                  )}
-                </Text>
-              </View>
-            </Pressable>
-          </Link>
-        )}
-        keyExtractor={(item) => item.id}
-      />
-    </ThemedView>
+    <FlatList
+      data={newsItems}
+      renderItem={({ item }) => (
+        <Link href={`/news/${item.id}`} asChild>
+          <Pressable style={styles.newsItem}>
+            <View>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.summary}>{item.summary}</Text>
+              <Text style={styles.date}>
+                {new Date(item.publishedAt).toLocaleDateString(
+                  'de-DE'
+                )}
+              </Text>
+            </View>
+          </Pressable>
+        </Link>
+      )}
+      keyExtractor={(item) => item.id}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   newsItem: {
     padding: 16,
     borderBottomWidth: 1,
