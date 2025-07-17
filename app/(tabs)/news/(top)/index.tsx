@@ -1,71 +1,118 @@
-import { Link } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
+  Image,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
   Text,
   View,
-  Pressable,
-  StyleSheet,
 } from 'react-native';
+import { Link } from 'expo-router';
+import RSSParser from 'react-native-rss-parser';
+import { formatDistanceToNow } from 'date-fns';
+import { de } from 'date-fns/locale';
+import { dhbwRed } from '@/constants/Colors';
 
-export default function NewsListScreen() {
-  const newsItems = [
-    {
-      id: '1',
-      title: 'Neuigkeiten aus der CampusApp',
-      summary:
-        'Erfahren Sie mehr über die neuesten Funktionen und Updates der CampusApp.',
-      publishedAt: '2023-10-01T12:00:00Z',
-    },
-    {
-      id: '2',
-      title: 'Campus Veranstaltungen im Oktober',
-      summary:
-        'Alle wichtigen Termine und Veranstaltungen auf dem Campus im Oktober.',
-      publishedAt: '2023-10-02T08:00:00Z',
-    },
-  ]; // Deine RSS-Feed Daten
+const FEED_URL = 'https://dhbw-loerrach.de/rss-campus-app-aktuell';
+
+type Item = {
+  id: string;
+  title: string;
+  published: string;
+  enclosures?: { url: string }[];
+};
+
+export default function NewsList() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const loadFeed = async () => {
+    try {
+      const xml = await fetch(FEED_URL).then((r) => r.text());
+      const parsed = await RSSParser.parse(xml);
+      setItems(parsed.items as Item[]);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => void loadFeed(), []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    void loadFeed();
+  }, []);
+
+  const renderItem = ({ item }: { item: Item }) => {
+    const thumb = item.enclosures?.[0]?.url;
+    const date = formatDistanceToNow(new Date(item.published), {
+      addSuffix: true,
+      locale: de,
+    });
+
+    return (
+      <Link
+        href={{
+          pathname: '/(tabs)/news/[id]',
+          params: { id: item.id },
+        }}
+        asChild
+      >
+        <Pressable style={styles.card}>
+          {!!thumb && (
+            <Image source={{ uri: thumb }} style={styles.thumb} />
+          )}
+          <View style={styles.text}>
+            <Text numberOfLines={3} style={styles.title}>
+              {item.title}
+            </Text>
+            <Text style={styles.date}>{date}</Text>
+          </View>
+        </Pressable>
+      </Link>
+    );
+  };
+
+  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
   return (
     <FlatList
-      data={newsItems}
-      renderItem={({ item }) => (
-        <Link href={`/news/${item.id}`} asChild>
-          <Pressable style={styles.newsItem}>
-            <View>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.summary}>{item.summary}</Text>
-              <Text style={styles.date}>
-                {new Date(item.publishedAt).toLocaleDateString(
-                  'de-DE'
-                )}
-              </Text>
-            </View>
-          </Pressable>
-        </Link>
-      )}
-      keyExtractor={(item) => item.id}
+      data={items}
+      keyExtractor={(i) => i.id}
+      renderItem={renderItem}
+      contentContainerStyle={styles.list}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
     />
   );
 }
 
+const CARD_H = 110;
 const styles = StyleSheet.create({
-  newsItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+  list: { padding: 16 },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginBottom: 16,
+    elevation: 3,
+    shadowOpacity: 0.05,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
+  thumb: {
+    width: CARD_H,
+    height: CARD_H,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
   },
-  summary: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-  },
-  date: {
-    fontSize: 12,
-    color: '#999',
-  },
+  text: { flex: 1, padding: 12 },
+  title: { fontSize: 18, fontWeight: '700', color: dhbwRed },
+  date: { marginTop: 4, fontSize: 14, color: '#555' },
 });
