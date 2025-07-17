@@ -3,6 +3,8 @@ import { Tabs } from 'expo-router';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 
+const ICON_SIZE = 28;
+
 export default function TabLayout() {
   return (
     <Tabs screenOptions={bottomTabBarOptions}>
@@ -11,7 +13,7 @@ export default function TabLayout() {
         options={{
           title: 'Neuigkeiten und Termine',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house" color={color} />
+            <IconSymbol size={ICON_SIZE} name="house" color={color} />
           ),
           tabBarLabel: 'DHBW',
         }}
@@ -21,7 +23,11 @@ export default function TabLayout() {
         options={{
           title: 'Vorlesungen',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="calendar" color={color} />
+            <IconSymbol
+              size={ICON_SIZE}
+              name="calendar"
+              color={color}
+            />
           ),
         }}
       />
@@ -30,7 +36,11 @@ export default function TabLayout() {
         options={{
           title: 'Speiseplan',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="fork.knife" color={color} />
+            <IconSymbol
+              size={ICON_SIZE}
+              name="fork.knife"
+              color={color}
+            />
           ),
         }}
       />
@@ -39,7 +49,11 @@ export default function TabLayout() {
         options={{
           title: 'Services',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="info.circle" color={color} />
+            <IconSymbol
+              size={ICON_SIZE}
+              name="info.circle"
+              color={color}
+            />
           ),
         }}
       />
