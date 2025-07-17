@@ -6,13 +6,16 @@ import {
   Pressable,
   RefreshControl,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { Link } from 'expo-router';
 import RSSParser from 'react-native-rss-parser';
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
+
+import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedView } from '@/components/ui/ThemedView';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
 
 const FEED_URL = 'https://dhbw-loerrach.de/rss-campus-app-aktuell';
@@ -24,10 +27,56 @@ type Item = {
   enclosures?: { url: string }[];
 };
 
+function ListItem({ item }: { item: Item }) {
+  const thumb = item.enclosures?.[0]?.url;
+  const date = formatDistanceToNow(new Date(item.published), {
+    addSuffix: true,
+    locale: de,
+  });
+  const shadowColor = useThemeColor({}, 'text');
+
+  return (
+    <Link
+      href={{
+        pathname: '/(tabs)/news/[id]',
+        params: { id: item.id },
+      }}
+      asChild
+    >
+      <Pressable>
+        <ThemedView
+          style={[styles.card, { shadowColor }]}
+          lightColor="#fff"
+          darkColor="#333"
+        >
+          {!!thumb && (
+            <Image source={{ uri: thumb }} style={styles.thumb} />
+          )}
+          <View style={styles.textContainer}>
+            <ThemedText
+              numberOfLines={3}
+              style={styles.title}
+              lightColor={dhbwRed}
+              darkColor={dhbwRed}
+            >
+              {item.title}
+            </ThemedText>
+            <ThemedText style={styles.date} type="defaultSemiBold">
+              {date}
+            </ThemedText>
+          </View>
+        </ThemedView>
+      </Pressable>
+    </Link>
+  );
+}
+
 export default function NewsList() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const tintColor = useThemeColor({}, 'tint');
+  const backgroundColor = useThemeColor({}, 'background');
 
   const loadFeed = async () => {
     try {
@@ -47,64 +96,55 @@ export default function NewsList() {
     void loadFeed();
   }, []);
 
-  const renderItem = ({ item }: { item: Item }) => {
-    const thumb = item.enclosures?.[0]?.url;
-    const date = formatDistanceToNow(new Date(item.published), {
-      addSuffix: true,
-      locale: de,
-    });
-
+  if (loading) {
     return (
-      <Link
-        href={{
-          pathname: '/(tabs)/news/[id]',
-          params: { id: item.id },
-        }}
-        asChild
-      >
-        <Pressable style={styles.card}>
-          {!!thumb && (
-            <Image source={{ uri: thumb }} style={styles.thumb} />
-          )}
-          <View style={styles.text}>
-            <Text numberOfLines={3} style={styles.title}>
-              {item.title}
-            </Text>
-            <Text style={styles.date}>{date}</Text>
-          </View>
-        </Pressable>
-      </Link>
+      <ThemedView style={styles.centered}>
+        <ActivityIndicator color={tintColor} />
+      </ThemedView>
     );
-  };
-
-  if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+  }
 
   return (
-    <FlatList
-      data={items}
-      keyExtractor={(i) => i.id}
-      renderItem={renderItem}
-      contentContainerStyle={styles.list}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    />
+    <ThemedView style={styles.container}>
+      <FlatList
+        data={items}
+        keyExtractor={(i) => i.id}
+        renderItem={({ item }) => <ListItem item={item} />}
+        contentContainerStyle={styles.listContent}
+        style={{ backgroundColor }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={tintColor}
+          />
+        }
+      />
+    </ThemedView>
   );
 }
 
 const CARD_H = 110;
 const styles = StyleSheet.create({
-  list: { padding: 16 },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+  },
+  listContent: {
+    padding: 16,
+  },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderRadius: 12,
     marginBottom: 16,
-    elevation: 3,
-    shadowOpacity: 0.05,
+    elevation: 5,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
   },
   thumb: {
     width: CARD_H,
@@ -112,7 +152,16 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
-  text: { flex: 1, padding: 12 },
-  title: { fontSize: 18, fontWeight: '700', color: dhbwRed },
-  date: { marginTop: 4, fontSize: 14, color: '#555' },
+  textContainer: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  date: {
+    fontSize: 14,
+  },
 });
