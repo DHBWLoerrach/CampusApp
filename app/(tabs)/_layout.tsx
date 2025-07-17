@@ -11,7 +11,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="news"
         options={{
-          title: 'Neuigkeiten und Termine',
+          title: 'DHBW News',
           tabBarIcon: ({ color }) => (
             <IconSymbol size={ICON_SIZE} name="house" color={color} />
           ),
