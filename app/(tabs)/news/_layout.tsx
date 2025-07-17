@@ -1,15 +1,29 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { withLayoutContext } from 'expo-router';
-import { topTabBarOptions } from '@/constants/Navigation';
+import { Stack, useRouter } from 'expo-router';
+import { Pressable, Text } from 'react-native';
+import { dhbwRed } from '@/constants/Colors';
 
-const Tab = createMaterialTopTabNavigator();
-const TopTabs = withLayoutContext(Tab.Navigator);
+export default function NewsStack() {
+  const router = useRouter();
 
-export default function NewsLayout() {
   return (
-    <TopTabs screenOptions={topTabBarOptions}>
-      <TopTabs.Screen name="index" options={{ title: 'Aktuelles' }} />
-      <TopTabs.Screen name="events" options={{ title: 'Termine' }} />
-    </TopTabs>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(top)" />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: true,
+          presentation: 'modal',
+          title: 'News Detail',
+          headerBackVisible: false,
+          headerRight: () => (
+            <Pressable onPress={() => router.back()}>
+              <Text style={{ color: dhbwRed, fontSize: 16 }}>
+                Fertig
+              </Text>
+            </Pressable>
+          ),
+        }}
+      />
+    </Stack>
   );
 }
