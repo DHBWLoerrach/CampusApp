@@ -4,8 +4,8 @@
  */
 
 export const dhbwRed = '#E2001A';
-export const dhbwGray = '#5C6971';
-export const lightGray = '#DADADA';
+const dhbwGray = '#5C6971';
+const lightGray = '#DADADA';
 
 export const Colors = {
   light: {

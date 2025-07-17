@@ -1,26 +1,19 @@
 import { Tabs } from 'expo-router';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { bottomTabBarOptions } from '@/constants/Navigation';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}
-    >
+    <Tabs screenOptions={bottomTabBarOptions}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'DHBW',
+          title: 'Neuigkeiten und Termine',
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house" color={color} />
           ),
+          tabBarLabel: 'DHBW',
         }}
       />
       <Tabs.Screen
@@ -35,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="canteen"
         options={{
-          title: 'Mensa',
+          title: 'Speiseplan',
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="fork.knife" color={color} />
           ),

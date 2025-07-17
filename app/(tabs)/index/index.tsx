@@ -4,7 +4,7 @@ import { HelloWave } from '@/components/HelloWave';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 
-export default function HomeScreen() {
+export default function NewsScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.titleContainer}>
