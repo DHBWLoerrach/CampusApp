@@ -2,65 +2,10 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { XMLParser } from 'fast-xml-parser';
 import { dhbwRed } from '@/constants/Colors';
+import { parseRSSItem } from '@/lib/rssParser';
 
 const FEED_URL = 'https://dhbw-loerrach.de/rss-campus-app-aktuell';
-
-// XML parser configuration
-const parserOptions = {
-  ignoreAttributes: false,
-  attributeNamePrefix: '@_',
-  parseAttributeValue: true,
-  trimValues: true,
-  parseTrueNumberOnly: false,
-  parseNodeValue: true,
-  parseTagValue: true,
-  textNodeName: '#text',
-  cdataPropName: '#cdata',
-};
-
-// RSS parser for detail view that extracts content
-function parseRSSItem(xmlString: string, targetId: string) {
-  const parser = new XMLParser(parserOptions);
-  const result = parser.parse(xmlString);
-
-  // Navigate to RSS items
-  const rssItems = result?.rss?.channel?.item || [];
-  const itemsArray = Array.isArray(rssItems) ? rssItems : [rssItems];
-
-  const item = itemsArray.find((item: any) => {
-    const id = item.guid?.['#text'] || item.guid || item.link;
-    return id === targetId;
-  });
-
-  if (!item) return null;
-
-  return {
-    id: item.guid?.['#text'] || item.guid || item.link,
-    title:
-      item.title?.['#cdata'] ||
-      item.title?.['#text'] ||
-      item.title ||
-      '',
-    content:
-      item.description?.['#cdata'] ||
-      item.description?.['#text'] ||
-      item['content:encoded']?.['#cdata'] ||
-      item['content:encoded']?.['#text'] ||
-      '',
-    enclosures: item.enclosure
-      ? [
-          {
-            url:
-              typeof item.enclosure === 'object'
-                ? item.enclosure['@_url']
-                : item.enclosure,
-          },
-        ]
-      : undefined,
-  };
-}
 
 export default function NewsDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -89,17 +34,32 @@ export default function NewsDetail() {
         <html>
           <head>
             <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta charset="utf-8" />
             <style>
-              body{font-family:-apple-system,Roboto,Arial,sans-serif;padding:16px;line-height:1.55}
-              h1{color:${dhbwRed};font-size:20px;margin-bottom:16px}
-              img{max-width:100%;height:auto;margin:16px 0}
-              p{margin:0 0 14px}
+              body{font-family:-apple-system,Roboto,Arial,sans-serif;padding:16px;line-height:1.6;color:#333}
+              h1{color:${dhbwRed};font-size:20px;margin-bottom:16px;line-height:1.3}
+              h2,h3,h4,h5,h6{color:#444;margin-top:20px;margin-bottom:10px}
+              img{max-width:100%;height:auto;margin:16px 0;border-radius:8px}
+              p{margin:0 0 16px;text-align:justify}
+              a{color:${dhbwRed};text-decoration:none}
+              a:hover{text-decoration:underline}
+              blockquote{border-left:4px solid ${dhbwRed};margin:16px 0;padding-left:16px;font-style:italic}
+              ul,ol{margin:16px 0;padding-left:20px}
+              li{margin-bottom:8px}
+              strong{font-weight:600}
+              em{font-style:italic}
             </style>
           </head>
           <body>
             <h1>${entry.title}</h1>
-            ${firstImg ? `<img src="${firstImg}"/>` : ''}
-            ${contentWithoutHeading}
+            ${
+              firstImg
+                ? `<img src="${firstImg}" alt="${entry.title}"/>`
+                : ''
+            }
+            <div class="content">
+              ${contentWithoutHeading}
+            </div>
           </body>
         </html>`;
       setHtml(htmlDoc);
