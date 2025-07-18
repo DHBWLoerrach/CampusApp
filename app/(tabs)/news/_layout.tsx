@@ -13,7 +13,7 @@ export default function NewsStack() {
         options={{
           headerShown: true,
           presentation: 'modal',
-          title: 'News Detail',
+          title: '', // No title in modal
           headerBackVisible: false,
           headerRight: () => (
             <Pressable onPress={() => router.back()}>
