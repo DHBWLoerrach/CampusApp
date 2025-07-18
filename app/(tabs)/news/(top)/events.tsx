@@ -1,5 +1,13 @@
-import { ThemedText } from '@/components/ui/ThemedText';
+import RSSFeedList from '@/components/RSSFeedList';
+
+const EVENTS_FEED_URL =
+  'https://dhbw-loerrach.de/rss-campus-app-termine';
 
 export default function Events() {
-  return <ThemedText>Termine</ThemedText>;
+  return (
+    <RSSFeedList
+      feedUrl={EVENTS_FEED_URL}
+      linkPath="/(tabs)/news/[id]"
+    />
+  );
 }

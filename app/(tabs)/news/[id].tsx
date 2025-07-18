@@ -6,17 +6,24 @@ import { dhbwRed, Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { parseRSSItem } from '@/lib/rssParser';
 
-const FEED_URL = 'https://dhbw-loerrach.de/rss-campus-app-aktuell';
+const NEWS_FEED_URL =
+  'https://dhbw-loerrach.de/rss-campus-app-aktuell';
 
 export default function NewsDetail() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, feedUrl } = useLocalSearchParams<{
+    id: string;
+    feedUrl?: string;
+  }>();
   const [html, setHtml] = useState<string | null>(null);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
+  // Fallback auf News-Feed, falls kein feedUrl Parameter vorhanden ist
+  const actualFeedUrl = feedUrl || NEWS_FEED_URL;
+
   useEffect(() => {
     (async () => {
-      const xml = await fetch(FEED_URL).then((r) => r.text());
+      const xml = await fetch(actualFeedUrl).then((r) => r.text());
       const entry = parseRSSItem(xml, id);
       if (!entry) return;
 
@@ -73,7 +80,7 @@ export default function NewsDetail() {
         </html>`;
       setHtml(htmlDoc);
     })();
-  }, [id, colorScheme]);
+  }, [id, colorScheme, actualFeedUrl]);
 
   if (!html)
     return (
