@@ -23,12 +23,6 @@ export default function NewsDetail() {
 
   useEffect(() => {
     (async () => {
-      console.log(
-        '🔄 Loading item from Detail:',
-        id,
-        'from feed:',
-        actualFeedUrl
-      );
       const entry = await fetchRSSItem(actualFeedUrl, id); // uses XML and feed caching
       if (!entry) return;
 
@@ -53,7 +47,9 @@ export default function NewsDetail() {
             <style>
               body{font-family:-apple-system,Roboto,Arial,sans-serif;padding:16px;line-height:1.6;color:${
                 colors.text
-              };background-color:${colors.background}}
+              };background-color:${
+        colors.background
+      }}                            
               h1{color:${dhbwRed};font-size:20px;margin-bottom:16px;line-height:1.3}
               h2,h3,h4,h5,h6{color:${
                 colorScheme === 'dark' ? '#CCCCCC' : '#444'
@@ -91,6 +87,7 @@ export default function NewsDetail() {
     return (
       <ActivityIndicator
         style={{ flex: 1, backgroundColor: colors.background }}
+        size="large"
         color={colors.tint}
       />
     );
@@ -99,8 +96,10 @@ export default function NewsDetail() {
     <WebView
       originWhitelist={['*']}
       source={{ html }}
-      startInLoadingState
+      androidHardwareAccelerationDisabled={true}
+      overScrollMode="never"
       style={{ flex: 1, backgroundColor: colors.background }}
+      backgroundColor={colors.background}
     />
   );
 }

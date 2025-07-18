@@ -1,24 +1,34 @@
 import { Stack, useRouter } from 'expo-router';
-import { Pressable, Text } from 'react-native';
+import { Platform, Pressable, Text } from 'react-native';
 import { dhbwRed } from '@/constants/Colors';
 
 export default function NewsStack() {
   const router = useRouter();
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(top)" />
+    <Stack>
+      <Stack.Screen name="(top)" options={{ headerShown: false }} />
       <Stack.Screen
         name="[id]"
         options={{
           headerShown: true,
           presentation: 'modal',
-          title: '', // No title in modal
+          title: 'Beitrag ansehen',
           headerBackVisible: false,
           headerRight: () => (
-            <Pressable onPress={() => router.back()}>
-              <Text style={{ color: dhbwRed, fontSize: 16 }}>
-                Fertig
+            <Pressable
+              onPress={() => router.back()}
+              hitSlop={{
+                top: 10,
+                bottom: 10,
+                left: 10,
+                right: 10,
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Modal schließen"
+            >
+              <Text style={{ color: dhbwRed, fontSize: 18 }}>
+                {Platform.OS === 'android' ? 'FERTIG' : 'Fertig'}
               </Text>
             </Pressable>
           ),
