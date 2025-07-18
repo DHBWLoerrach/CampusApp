@@ -9,9 +9,9 @@ import {
   View,
 } from 'react-native';
 import { Link } from 'expo-router';
-import RSSParser from 'react-native-rss-parser';
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { XMLParser } from 'fast-xml-parser';
 
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -19,6 +19,55 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
 
 const FEED_URL = 'https://dhbw-loerrach.de/rss-campus-app-aktuell';
+
+// XML parser configuration
+const parserOptions = {
+  ignoreAttributes: false,
+  attributeNamePrefix: '@_',
+  parseAttributeValue: true,
+  trimValues: true,
+  parseTrueNumberOnly: false,
+  parseNodeValue: true,
+  parseTagValue: true,
+  textNodeName: '#text',
+  cdataPropName: '#cdata',
+};
+
+// RSS parser function using fast-xml-parser
+function parseRSSFeed(xmlString: string): { items: Item[] } {
+  const parser = new XMLParser(parserOptions);
+  const result = parser.parse(xmlString);
+
+  // Navigate to RSS items
+  const rssItems = result?.rss?.channel?.item || [];
+  const itemsArray = Array.isArray(rssItems) ? rssItems : [rssItems];
+
+  const items: Item[] = itemsArray
+    .filter(
+      (item: any) => item && item.title && (item.guid || item.link)
+    )
+    .map((item: any) => ({
+      id: item.guid?.['#text'] || item.guid || item.link,
+      title:
+        item.title?.['#cdata'] ||
+        item.title?.['#text'] ||
+        item.title ||
+        '',
+      published: item.pubDate || '',
+      enclosures: item.enclosure
+        ? [
+            {
+              url:
+                typeof item.enclosure === 'object'
+                  ? item.enclosure['@_url']
+                  : item.enclosure,
+            },
+          ]
+        : undefined,
+    }));
+
+  return { items };
+}
 
 type Item = {
   id: string;
@@ -81,8 +130,8 @@ export default function NewsList() {
   const loadFeed = async () => {
     try {
       const xml = await fetch(FEED_URL).then((r) => r.text());
-      const parsed = await RSSParser.parse(xml);
-      setItems(parsed.items as Item[]);
+      const parsed = parseRSSFeed(xml);
+      setItems(parsed.items);
     } finally {
       setLoading(false);
       setRefreshing(false);
