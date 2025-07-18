@@ -4,7 +4,7 @@ import { ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { dhbwRed, Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { parseRSSItem } from '@/lib/rssParser';
+import { fetchRSSItem } from '@/lib/rssParser';
 
 const NEWS_FEED_URL =
   'https://dhbw-loerrach.de/rss-campus-app-aktuell';
@@ -18,22 +18,27 @@ export default function NewsDetail() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
-  // Fallback auf News-Feed, falls kein feedUrl Parameter vorhanden ist
+  // Fallback to default feed URL if none provided
   const actualFeedUrl = feedUrl || NEWS_FEED_URL;
 
   useEffect(() => {
     (async () => {
-      const xml = await fetch(actualFeedUrl).then((r) => r.text());
-      const entry = parseRSSItem(xml, id);
+      console.log(
+        '🔄 Loading item from Detail:',
+        id,
+        'from feed:',
+        actualFeedUrl
+      );
+      const entry = await fetchRSSItem(actualFeedUrl, id); // uses XML and feed caching
       if (!entry) return;
 
-      // Bildquelle: zuerst enclosure, sonst erstes <img> aus dem Content
+      // image source: first enclosure, otherwise first <img> from content
       const enclosureImg = entry.enclosures?.[0]?.url;
       const content = entry.content || '';
       const matchImg = content.match(/<img[^>]+src="([^"]+)"/i);
       const firstImg = enclosureImg ?? matchImg?.[1];
 
-      // ggf. doppeltes <h1> aus content entfernen
+      // remove duplicate <h1> from content
       const contentWithoutHeading = content.replace(
         /<h\d[^>]*>.*?<\/h\d>/i,
         ''

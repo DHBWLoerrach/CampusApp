@@ -16,7 +16,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
-import { parseRSSFeed, type RSSItem } from '@/lib/rssParser';
+import { fetchAndParseRSSFeed, type RSSItem } from '@/lib/rssParser';
 
 interface RSSFeedListProps {
   feedUrl: string;
@@ -89,8 +89,8 @@ export default function RSSFeedList({
 
   const loadFeed = async () => {
     try {
-      const xml = await fetch(feedUrl).then((r) => r.text());
-      const parsed = parseRSSFeed(xml);
+      console.log('🔄 Loading feed from RSSFeedList:', feedUrl);
+      const parsed = await fetchAndParseRSSFeed(feedUrl);
       setItems(parsed.items);
     } finally {
       setLoading(false);
