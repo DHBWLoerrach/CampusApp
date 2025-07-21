@@ -18,7 +18,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["NFC"],
+      "permissions": [
+        "NFC"
+      ],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "web": {
@@ -37,7 +39,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "react-native-nfc-manager"
+      "react-native-nfc-manager",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

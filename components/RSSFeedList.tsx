@@ -8,10 +8,9 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Link } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
-
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -20,20 +19,22 @@ import { fetchAndParseRSSFeed, type RSSItem } from '@/lib/rssParser';
 
 interface RSSFeedListProps {
   feedUrl: string;
-  linkPath: string; // e.g., '/(tabs)/news/[id]' or '/(tabs)/events/[id]'
 }
 
 type Item = RSSItem;
 
-function ListItem({
-  item,
-  linkPath,
-  feedUrl,
-}: {
-  item: Item;
-  linkPath: string;
-  feedUrl: string;
-}) {
+const handleOpen = async (url: string) => {
+  if (!url) return;
+  await WebBrowser.openBrowserAsync(url + '#inhalt', {
+    presentationStyle:
+      WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
+    controlsColor: dhbwRed, // iOS
+    createTask: false, // Android
+    showTitle: false, // Android
+  });
+};
+
+function ListItem({ item }: { item: Item }) {
   const thumb = item.enclosures?.[0]?.url;
   const publishedDate = new Date(item.published);
   const now = new Date();
@@ -49,68 +50,65 @@ function ListItem({
   const shadowColor = useThemeColor({}, 'text');
 
   return (
-    <Link
-      href={{
-        pathname: linkPath as any,
-        params: { id: item.id, feedUrl },
-      }}
-      asChild
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={`Beitrag öffnen: ${item.title}`}
+      onPress={() => handleOpen(item.link || '')}
+      hitSlop={8}
     >
-      <Pressable>
-        <ThemedView
-          style={[styles.card, { shadowColor }]}
-          lightColor="#fff"
-          darkColor="#333"
-        >
-          {thumb && (
-            <Image source={{ uri: thumb }} style={styles.thumb} />
-          )}
-          <View style={styles.textContainer}>
-            <ThemedText
-              numberOfLines={3}
-              style={styles.title}
-              lightColor={dhbwRed}
-              darkColor={dhbwRed}
-            >
-              {item.title}
-            </ThemedText>
-            <ThemedText style={styles.date} type="defaultSemiBold">
-              {date}
-            </ThemedText>
-          </View>
-        </ThemedView>
-      </Pressable>
-    </Link>
+      <ThemedView
+        style={[styles.card, { shadowColor }]}
+        lightColor="#fff"
+        darkColor="#333"
+      >
+        {thumb && (
+          <Image source={{ uri: thumb }} style={styles.thumb} />
+        )}
+        <View style={styles.textContainer}>
+          <ThemedText
+            numberOfLines={3}
+            style={styles.title}
+            lightColor={dhbwRed}
+            darkColor={dhbwRed}
+          >
+            {item.title}
+          </ThemedText>
+          <ThemedText style={styles.date} type="defaultSemiBold">
+            {date}
+          </ThemedText>
+        </View>
+      </ThemedView>
+    </Pressable>
   );
 }
 
-export default function RSSFeedList({
-  feedUrl,
-  linkPath,
-}: RSSFeedListProps) {
+export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const tintColor = useThemeColor({}, 'tint');
   const backgroundColor = useThemeColor({}, 'background');
 
-  const loadFeed = async () => {
+  const loadFeed = useCallback(async () => {
     try {
-      console.log('🔄 Loading feed from RSSFeedList:', feedUrl);
+      setError(null);
       const parsed = await fetchAndParseRSSFeed(feedUrl);
       setItems(parsed.items);
+    } catch (err) {
+      setError('Fehler beim Laden des RSS-Feeds');
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [feedUrl]);
 
   useEffect(() => void loadFeed(), [feedUrl]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     void loadFeed();
-  }, []);
+  }, [loadFeed]);
 
   if (loading) {
     return (
@@ -120,18 +118,33 @@ export default function RSSFeedList({
     );
   }
 
+  if (error) {
+    return (
+      <ThemedView style={styles.centered}>
+        <ThemedText style={styles.errorText}>{error}</ThemedText>
+        <Pressable
+          style={[styles.retryButton, { borderColor: tintColor }]}
+          onPress={() => {
+            setLoading(true);
+            void loadFeed();
+          }}
+        >
+          <ThemedText
+            style={[styles.retryText, { color: tintColor }]}
+          >
+            Erneut versuchen
+          </ThemedText>
+        </Pressable>
+      </ThemedView>
+    );
+  }
+
   return (
     <ThemedView style={styles.container}>
       <FlatList
         data={items}
         keyExtractor={(i) => i.id}
-        renderItem={({ item }) => (
-          <ListItem
-            item={item}
-            linkPath={linkPath}
-            feedUrl={feedUrl}
-          />
-        )}
+        renderItem={({ item }) => <ListItem item={item} />}
         contentContainerStyle={styles.listContent}
         style={{ backgroundColor }}
         refreshControl={
@@ -186,5 +199,20 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 14,
+  },
+  errorText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  retryButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  retryText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
