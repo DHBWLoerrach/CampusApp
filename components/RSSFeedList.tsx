@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Platform,
   Pressable,
   RefreshControl,
   StyleSheet,
@@ -27,13 +28,18 @@ const blurhash = 'L|Ps0IwJxujtsUozW;Rj?^OXR*n%';
 
 const handleOpen = async (url: string) => {
   if (!url) return;
-  await WebBrowser.openBrowserAsync(url + '#inhalt', {
-    presentationStyle:
-      WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
-    controlsColor: dhbwRed, // iOS
-    createTask: false, // Android
-    showTitle: false, // Android
-  });
+
+  if (Platform.OS === 'web') {
+    window.open(url, '_blank');
+  } else {
+    await WebBrowser.openBrowserAsync(url + '#inhalt', {
+      presentationStyle:
+        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
+      controlsColor: dhbwRed, // iOS
+      createTask: false, // Android
+      showTitle: false, // Android
+    });
+  }
 };
 
 function ListItem({ item }: { item: Item }) {

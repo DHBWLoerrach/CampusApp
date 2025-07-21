@@ -18,14 +18,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": [
-        "NFC"
-      ],
+      "permissions": ["NFC"],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [

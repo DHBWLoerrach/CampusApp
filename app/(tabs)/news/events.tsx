@@ -1,8 +1,11 @@
+import { Platform } from 'react-native';
 import RSSFeedList from '@/components/RSSFeedList';
 
-const EVENTS_FEED_URL =
-  'https://dhbw-loerrach.de/rss-campus-app-termine';
+const feedUrl =
+  Platform.OS === 'web'
+    ? '/rss/events'
+    : 'https://dhbw-loerrach.de/rss-campus-app-termine';
 
 export default function Events() {
-  return <RSSFeedList feedUrl={EVENTS_FEED_URL} />;
+  return <RSSFeedList feedUrl={feedUrl} />;
 }
