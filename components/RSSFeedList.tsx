@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Pressable,
   RefreshControl,
   StyleSheet,
   View,
 } from 'react-native';
+import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -22,6 +22,8 @@ interface RSSFeedListProps {
 }
 
 type Item = RSSItem;
+
+const blurhash = 'L|Ps0IwJxujtsUozW;Rj?^OXR*n%';
 
 const handleOpen = async (url: string) => {
   if (!url) return;
@@ -62,7 +64,12 @@ function ListItem({ item }: { item: Item }) {
         darkColor="#333"
       >
         {thumb && (
-          <Image source={{ uri: thumb }} style={styles.thumb} />
+          <Image
+            style={styles.thumb}
+            source={thumb}
+            placeholder={{ blurhash }}
+            transition={1000}
+          />
         )}
         <View style={styles.textContainer}>
           <ThemedText
