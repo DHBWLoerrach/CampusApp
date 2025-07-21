@@ -29,6 +29,7 @@ export interface RSSItem {
   title: string;
   published: string;
   content?: string;
+  description?: string;
   enclosures?: { url: string }[];
 }
 
@@ -45,24 +46,12 @@ function extractText(value: any): string {
 
 // Helper function to extract content from various RSS fields
 function extractContent(item: any): string {
-  // Try multiple content fields in order of preference
-  const contentFields = [
-    item['content:encoded'],
-    item.content,
-    item.description,
-    item.summary,
-  ];
+  return extractText(item['content:encoded']).trim();
+}
 
-  // Find the longest content (most complete)
-  let bestContent = '';
-  for (const field of contentFields) {
-    const text = extractText(field);
-    if (text && text.trim().length > bestContent.length) {
-      bestContent = text.trim();
-    }
-  }
-
-  return bestContent;
+// Helper function to extract description from item
+function extractDescription(item: any): string {
+  return extractText(item.description).trim();
 }
 
 // Helper function to extract ID from item
@@ -136,6 +125,7 @@ function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
       title: extractText(item.title),
       published: item.pubDate || '',
       content: extractContent(item),
+      description: extractDescription(item),
       enclosures: extractEnclosures(item),
     }));
 
