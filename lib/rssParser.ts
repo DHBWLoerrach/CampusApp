@@ -31,6 +31,7 @@ export interface RSSItem {
   content?: string;
   description?: string;
   enclosures?: { url: string }[];
+  link?: string; // optional link field
 }
 
 export interface RSSFeed {
@@ -127,6 +128,7 @@ function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
       content: extractContent(item),
       description: extractDescription(item),
       enclosures: extractEnclosures(item),
+      link: item.link || '',
     }));
 
   const feed = { items };
