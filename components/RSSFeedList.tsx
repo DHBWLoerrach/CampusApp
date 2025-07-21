@@ -55,7 +55,7 @@ function ListItem({
           lightColor="#fff"
           darkColor="#333"
         >
-          {!!thumb && (
+          {thumb && (
             <Image source={{ uri: thumb }} style={styles.thumb} />
           )}
           <View style={styles.textContainer}>
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 12,
     marginBottom: 16,
+    height: CARD_H,
     elevation: 5,
     shadowOpacity: 0.15,
     shadowRadius: 10,
