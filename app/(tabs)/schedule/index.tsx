@@ -67,7 +67,9 @@ const AgendaScreen = () => {
   if (isError) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Ein Fehler ist aufgetreten:</Text>
+        <Text style={styles.errorText}>
+          Ein Fehler ist aufgetreten:
+        </Text>
         <Text style={styles.errorText}>{error.message}</Text>
       </View>
     );
@@ -86,12 +88,14 @@ const AgendaScreen = () => {
         )}
         ListEmptyComponent={() => (
           <View style={styles.center}>
-            <Text>Keine anstehenden Termine gefunden. Vielleicht Ferien? 🏖️</Text>
+            <Text>
+              Keine anstehenden Termine gefunden. Vielleicht Ferien?
+              🏖️
+            </Text>
           </View>
         )}
         // Add some spacing between items
-        contentContainerStyle={{ paddingHorizontal: 16 }}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
       />
     </View>
   );
@@ -115,6 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
+    paddingHorizontal: 16,
   },
   center: {
     flex: 1,
@@ -124,12 +129,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   sectionHeader: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     backgroundColor: '#F5F5F5', // Match the container background
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+    // Horizontal padding comes from container
   },
   errorText: {
     color: 'red',
