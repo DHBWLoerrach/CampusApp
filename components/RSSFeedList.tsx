@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { Link } from 'expo-router';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
 import { ThemedText } from '@/components/ui/ThemedText';
@@ -35,10 +35,17 @@ function ListItem({
   feedUrl: string;
 }) {
   const thumb = item.enclosures?.[0]?.url;
-  const date = formatDistanceToNow(new Date(item.published), {
-    addSuffix: true,
-    locale: de,
-  });
+  const publishedDate = new Date(item.published);
+  const now = new Date();
+
+  const date =
+    publishedDate > now
+      ? format(publishedDate, 'EEEE, dd.MM.yyyy', { locale: de })
+      : formatDistanceToNow(publishedDate, {
+          addSuffix: true,
+          locale: de,
+        });
+
   const shadowColor = useThemeColor({}, 'text');
 
   return (
@@ -103,7 +110,7 @@ export default function RSSFeedList({
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     void loadFeed();
-  }, [loadFeed]);
+  }, []);
 
   if (loading) {
     return (
