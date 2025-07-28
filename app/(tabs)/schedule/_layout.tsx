@@ -10,7 +10,7 @@ export default function ScheduleLayout() {
     <TopTabs screenOptions={topTabBarOptions}>
       <TopTabs.Screen name="index" options={{ title: 'Liste' }} />
       <TopTabs.Screen name="week" options={{ title: 'Woche' }} />
-      <TopTabs.Screen name="days" options={{ title: '3 / 1 Tag' }} />
+      <TopTabs.Screen name="day" options={{ title: 'Tag' }} />
     </TopTabs>
   );
 }
