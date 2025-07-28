@@ -1,6 +1,16 @@
-import { useCallback, useRef } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { useCallback, useMemo, useRef } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import {
   CalendarBody,
   CalendarContainer,
@@ -10,8 +20,12 @@ import {
   OnEventResponse,
   PackedEvent,
 } from '@howljs/calendar-kit';
+import { useTimetable } from '@/hooks/useTimetable';
 import Header from '@/components/CalendarHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+// Create a query client instance for React Query
+const queryClient = new QueryClient();
 
 interface CalendarEvent {
   id: string;
@@ -21,9 +35,8 @@ interface CalendarEvent {
   location?: string;
 }
 
-interface CalendarViewProps {
-  numberOfDays?: number;
-  events?: CalendarEvent[];
+interface ScheduleCalendarViewProps {
+  numberOfDays: number;
 }
 
 const now = new Date();
@@ -41,10 +54,10 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   },
 };
 
-export default function CalendarView({
-  numberOfDays = 7,
-  events = [],
-}: CalendarViewProps) {
+const ScheduleCalendarViewInner = ({
+  numberOfDays,
+}: ScheduleCalendarViewProps) => {
+  const { data, isLoading, isError, error } = useTimetable();
   const calendarRef = useRef<CalendarKitHandle>(null);
   const currentDate = useSharedValue(INITIAL_DATE);
 
@@ -54,6 +67,28 @@ export default function CalendarView({
   const dayNumberContainer = useThemeColor({}, 'dayNumberContainer');
   const dayTextColor = useThemeColor({}, 'dayTextColor');
   const textColor = useThemeColor({}, 'text');
+
+  // Transform timetable data to CalendarView format
+  const events = useMemo((): CalendarEvent[] => {
+    if (!data) return [];
+
+    // Get all events (past and future) for full navigation
+    const allEvents: CalendarEvent[] = [];
+
+    Object.keys(data).forEach((dateKey) => {
+      data[dateKey].forEach((event) => {
+        allEvents.push({
+          id: event.uid,
+          title: event.title,
+          start: { dateTime: event.start.toISOString() },
+          end: { dateTime: event.end.toISOString() },
+          location: event.location,
+        });
+      });
+    });
+
+    return allEvents;
+  }, [data]);
 
   const _onChange = useCallback((date: string) => {
     currentDate.value = date;
@@ -120,6 +155,26 @@ export default function CalendarView({
     []
   );
 
+  if (isLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+        <Text>Stundenplan wird geladen...</Text>
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>
+          Ein Fehler ist aufgetreten:
+        </Text>
+        <Text style={styles.errorText}>{error.message}</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <Header
@@ -169,4 +224,32 @@ export default function CalendarView({
       </CalendarContainer>
     </>
   );
+};
+
+export default function ScheduleCalendarView({
+  numberOfDays,
+}: ScheduleCalendarViewProps) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <View style={styles.container}>
+        <ScheduleCalendarViewInner numberOfDays={numberOfDays} />
+      </View>
+    </QueryClientProvider>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+  },
+});
