@@ -8,10 +8,6 @@ import {
 } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-import {
   CalendarBody,
   CalendarContainer,
   CalendarHeader,
@@ -23,9 +19,6 @@ import {
 import { useTimetable } from '@/hooks/useTimetable';
 import Header from '@/components/CalendarHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
-
-// Create a query client instance for React Query
-const queryClient = new QueryClient();
 
 interface CalendarEvent {
   id: string;
@@ -54,9 +47,9 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   },
 };
 
-const ScheduleCalendarViewInner = ({
+export default function ScheduleCalendarView({
   numberOfDays,
-}: ScheduleCalendarViewProps) => {
+}: ScheduleCalendarViewProps) {
   const { data, isLoading, isError, error } = useTimetable();
   const calendarRef = useRef<CalendarKitHandle>(null);
   const currentDate = useSharedValue(INITIAL_DATE);
@@ -176,7 +169,7 @@ const ScheduleCalendarViewInner = ({
   }
 
   return (
-    <>
+    <View style={styles.container}>
       <Header
         currentDate={currentDate}
         onPressToday={_onPressToday}
@@ -222,19 +215,7 @@ const ScheduleCalendarViewInner = ({
         <CalendarHeader />
         <CalendarBody renderEvent={renderEvent} />
       </CalendarContainer>
-    </>
-  );
-};
-
-export default function ScheduleCalendarView({
-  numberOfDays,
-}: ScheduleCalendarViewProps) {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <View style={styles.container}>
-        <ScheduleCalendarViewInner numberOfDays={numberOfDays} />
-      </View>
-    </QueryClientProvider>
+    </View>
   );
 }
 

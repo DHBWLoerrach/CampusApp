@@ -6,15 +6,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
 import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/LectureCard';
-
-// Create a query client instance for React Query
-const queryClient = new QueryClient();
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -102,16 +95,13 @@ const AgendaScreen = () => {
 };
 
 /**
- * Main schedule component that provides React Query context
- * Wraps the ScheduleDisplay component with QueryClientProvider
+ * Main schedule component - now uses shared QueryClient from layout
  */
 export default function ScheduleList() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <View style={styles.container}>
-        <AgendaScreen />
-      </View>
-    </QueryClientProvider>
+    <View style={styles.container}>
+      <AgendaScreen />
+    </View>
   );
 }
 
