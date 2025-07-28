@@ -13,6 +13,7 @@
 ## Schedule screen
 
 - Achtung: Bug bei Serienterminen beachten!
+- Web: webmail-Kalender als iframe einbetten?
 
 ## Canteen screen
 

@@ -43,6 +43,7 @@ const MAPPING = {
   'text.page': 'description',
   eye: 'visibility',
   'chevron.right': 'chevron-right',
+  'chevron.left': 'chevron-left',
 } as IconMapping;
 
 /**

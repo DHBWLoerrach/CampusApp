@@ -6,6 +6,7 @@
 export const dhbwRed = '#E2001A';
 const dhbwGray = '#5C6971';
 const lightGray = '#DADADA';
+const veryLightGray = 'rgb(233,233,233)';
 
 export const Colors = {
   light: {
@@ -15,6 +16,9 @@ export const Colors = {
     icon: dhbwGray,
     tabIconDefault: dhbwGray,
     tabIconSelected: dhbwRed,
+    border: lightGray,
+    dayNumberContainer: veryLightGray,
+    dayTextColor: dhbwGray,
   },
   dark: {
     text: '#ECEDEE',
@@ -23,5 +27,8 @@ export const Colors = {
     icon: lightGray,
     tabIconDefault: lightGray,
     tabIconSelected: dhbwRed,
+    border: dhbwGray,
+    dayNumberContainer: 'rgb(64, 62, 62)',
+    dayTextColor: lightGray,
   },
 };

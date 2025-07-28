@@ -10,6 +10,7 @@ export const bottomTabBarOptions = {
 };
 
 export const topTabBarOptions = {
+  swipeEnabled: false,
   tabBarActiveTintColor: 'white',
   tabBarInactiveTintColor: 'white',
   tabBarIndicatorStyle: { backgroundColor: 'white', height: 3 },
