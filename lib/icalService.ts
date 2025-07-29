@@ -1,8 +1,5 @@
 import ICAL from 'ical.js';
 
-const course = 'tif24a';
-const ICAL_URL = `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
-
 // --- Type Definitions ---
 
 // Defines the structure of a single parsed event.
@@ -21,10 +18,38 @@ export interface StructuredTimetable {
 }
 
 /**
- * Fetches the raw iCal data from the specified URL.
+ * Generates the iCal URL for a given course.
  */
-async function fetchRawIcalData(): Promise<string> {
-  const response = await fetch(ICAL_URL);
+function generateIcalUrl(course: string): string {
+  return `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
+}
+
+/**
+ * Validates if a course exists by checking if the iCal URL is accessible.
+ */
+export async function validateCourse(
+  course: string
+): Promise<boolean> {
+  if (!course || course.trim() === '') {
+    return false;
+  }
+
+  try {
+    const icalUrl = generateIcalUrl(course.trim());
+    const response = await fetch(icalUrl, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    console.warn('Course validation failed:', error);
+    return false;
+  }
+}
+
+/**
+ * Fetches the raw iCal data from the specified URL for a given course.
+ */
+async function fetchRawIcalData(course: string): Promise<string> {
+  const icalUrl = generateIcalUrl(course);
+  const response = await fetch(icalUrl);
   if (!response.ok) {
     throw new Error(
       `Network response was not ok: ${response.statusText}`
@@ -191,10 +216,16 @@ function structureEventsByDay(
 }
 
 /**
- * Orchestrator – fetches, parses and structures the course timetable.
+ * Orchestrator – fetches, parses and structures the course timetable for a specific course.
  */
-export async function getStructuredTimetable(): Promise<StructuredTimetable> {
-  const raw = await fetchRawIcalData();
+export async function getStructuredTimetable(
+  course: string
+): Promise<StructuredTimetable> {
+  if (!course || course.trim() === '') {
+    throw new Error('Kurs muss angegeben werden');
+  }
+
+  const raw = await fetchRawIcalData(course.trim());
   const flatEvents = parseAndTransformIcal(raw);
   return structureEventsByDay(flatEvents);
 }

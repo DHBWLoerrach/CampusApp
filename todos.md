@@ -15,6 +15,10 @@
 - Achtung: Bug bei Serienterminen beachten!
 - Web: webmail-Kalender als iframe einbetten?
 
+- Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
+- Kurse speichern und Möglichkeit, Kurse zu löschen
+- zwischen gespeicherten Kursen wechseln können
+
 ## Canteen screen
 
 ## Services screen
