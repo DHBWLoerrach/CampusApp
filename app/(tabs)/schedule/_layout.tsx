@@ -162,13 +162,11 @@ export default function ScheduleLayout() {
     }) => (
       <Text
         style={{
-          color: focused ? 'white' : 'white',
-          fontSize: 14,
+          color: 'white',
           opacity: focused ? 1 : 0.7,
         }}
       >
         {children}
-        {selectedCourse ? ` (${selectedCourse.toUpperCase()})` : ''}
       </Text>
     ),
   };
