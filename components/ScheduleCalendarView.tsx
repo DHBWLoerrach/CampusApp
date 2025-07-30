@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import {
@@ -17,6 +18,7 @@ import {
   PackedEvent,
 } from '@howljs/calendar-kit';
 import { useTimetable } from '@/hooks/useTimetable';
+import { useCourseContext } from '@/app/(tabs)/schedule/_layout';
 import Header from '@/components/CalendarHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -50,7 +52,10 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
 export default function ScheduleCalendarView({
   numberOfDays,
 }: ScheduleCalendarViewProps) {
-  const { data, isLoading, isError, error } = useTimetable();
+  const { selectedCourse, setSelectedCourse } = useCourseContext();
+  const { data, isLoading, isError, error } = useTimetable(
+    selectedCourse || undefined
+  );
   const calendarRef = useRef<CalendarKitHandle>(null);
   const currentDate = useSharedValue(INITIAL_DATE);
 
@@ -148,6 +153,24 @@ export default function ScheduleCalendarView({
     []
   );
 
+  const handleChangeCourse = () => {
+    Alert.alert(
+      'Kurs ändern',
+      `Möchten Sie den aktuellen Kurs "${selectedCourse}" verlassen und einen neuen Kurs auswählen?`,
+      [
+        {
+          text: 'Abbrechen',
+          style: 'cancel',
+        },
+        {
+          text: 'Kurs ändern',
+          style: 'destructive',
+          onPress: () => setSelectedCourse(null),
+        },
+      ]
+    );
+  };
+
   if (isLoading) {
     return (
       <View style={styles.center}>
@@ -215,6 +238,14 @@ export default function ScheduleCalendarView({
         <CalendarHeader />
         <CalendarBody renderEvent={renderEvent} />
       </CalendarContainer>
+
+      {/* Floating Action Button for changing course */}
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={handleChangeCourse}
+      >
+        <Text style={styles.floatingButtonText}>Kurs ändern</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -232,5 +263,24 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 16,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  floatingButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
