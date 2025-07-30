@@ -16,6 +16,9 @@
 
 ## Canteen screen
 
+- Mensa bis einschl. 14.09.25 geschlossen --> release mit Infoscreen
+  - umsetzen und testen: rechtzeitig am 10.09.25 Update mit Speiseplan
+
 ## Services screen
 
 ## Automatisierte Tests
