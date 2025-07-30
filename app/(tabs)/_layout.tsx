@@ -2,10 +2,21 @@ import { Tabs } from 'expo-router';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { bottomTabBarOptions } from '@/constants/Navigation';
+import {
+  CourseProvider,
+  useCourseContext,
+} from '@/app/context/CourseContext';
 
 const ICON_SIZE = 28;
 
-export default function TabLayout() {
+function TabsContent() {
+  const { selectedCourse } = useCourseContext();
+
+  // Generate dynamic title: Course name in uppercase or fallback to "Stundenplan"
+  const scheduleTitle = selectedCourse
+    ? selectedCourse.toUpperCase()
+    : 'Stundenplan';
+
   return (
     <Tabs screenOptions={bottomTabBarOptions}>
       <Tabs.Screen
@@ -21,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="schedule"
         options={{
-          title: 'Stundenplan',
+          title: scheduleTitle,
           tabBarIcon: ({ color }) => (
             <IconSymbol
               size={ICON_SIZE}
@@ -58,5 +69,13 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+  );
+}
+
+export default function TabLayout() {
+  return (
+    <CourseProvider>
+      <TabsContent />
+    </CourseProvider>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/LectureCard';
-import { useCourseContext } from './_layout';
+import { useCourseContext } from '@/app/context/CourseContext';
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {

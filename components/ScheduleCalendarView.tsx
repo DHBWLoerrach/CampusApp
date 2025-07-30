@@ -18,7 +18,7 @@ import {
   PackedEvent,
 } from '@howljs/calendar-kit';
 import { useTimetable } from '@/hooks/useTimetable';
-import { useCourseContext } from '@/app/(tabs)/schedule/_layout';
+import { useCourseContext } from '@/app/context/CourseContext';
 import Header from '@/components/CalendarHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
