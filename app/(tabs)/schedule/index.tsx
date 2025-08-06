@@ -5,8 +5,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/LectureCard';
@@ -32,7 +30,7 @@ const formatDateHeader = (dateString: string): string => {
  * Main schedule component - now uses shared QueryClient from layout
  */
 export default function ScheduleList() {
-  const { selectedCourse, setSelectedCourse } = useCourseContext();
+  const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error } = useTimetable(
     selectedCourse || undefined
   );
@@ -56,24 +54,6 @@ export default function ScheduleList() {
 
     return futureSections;
   }, [data]);
-
-  const handleChangeCourse = () => {
-    Alert.alert(
-      'Kurs ändern',
-      `Möchten Sie den aktuellen Kurs "${selectedCourse}" verlassen und einen neuen Kurs auswählen?`,
-      [
-        {
-          text: 'Abbrechen',
-          style: 'cancel',
-        },
-        {
-          text: 'Kurs ändern',
-          style: 'destructive',
-          onPress: () => setSelectedCourse(null),
-        },
-      ]
-    );
-  };
 
   if (isLoading) {
     return (
@@ -117,14 +97,6 @@ export default function ScheduleList() {
         // Add some spacing between items
         ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
       />
-
-      {/* Floating Action Button for changing course */}
-      <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={handleChangeCourse}
-      >
-        <Text style={styles.floatingButtonText}>Kurs ändern</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -155,24 +127,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginTop: 10,
-  },
-  floatingButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  floatingButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
   },
 });

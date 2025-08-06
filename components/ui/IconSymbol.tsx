@@ -44,6 +44,7 @@ const MAPPING = {
   eye: 'visibility',
   'chevron.right': 'chevron-right',
   'chevron.left': 'chevron-left',
+  pencil: 'edit',
 } as IconMapping;
 
 /**

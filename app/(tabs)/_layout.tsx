@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router';
+import { TouchableOpacity, Alert } from 'react-native';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { bottomTabBarOptions } from '@/constants/Navigation';
@@ -10,12 +11,32 @@ import {
 const ICON_SIZE = 28;
 
 function TabsContent() {
-  const { selectedCourse } = useCourseContext();
+  const { selectedCourse, setSelectedCourse } = useCourseContext();
 
   // Generate dynamic title: Course name in uppercase or fallback to "Stundenplan"
   const scheduleTitle = selectedCourse
     ? selectedCourse.toUpperCase()
     : 'Stundenplan';
+
+  const handleChangeCourse = () => {
+    if (selectedCourse) {
+      Alert.alert(
+        'Kurs ändern',
+        `Möchten Sie den aktuellen Kurs "${selectedCourse}" verlassen und einen neuen Kurs auswählen?`,
+        [
+          {
+            text: 'Abbrechen',
+            style: 'cancel',
+          },
+          {
+            text: 'Kurs ändern',
+            style: 'destructive',
+            onPress: () => setSelectedCourse(null),
+          },
+        ]
+      );
+    }
+  };
 
   return (
     <Tabs screenOptions={bottomTabBarOptions}>
@@ -40,6 +61,20 @@ function TabsContent() {
               color={color}
             />
           ),
+          headerRight: selectedCourse
+            ? () => (
+                <TouchableOpacity
+                  onPress={handleChangeCourse}
+                  hitSlop={8}
+                  style={{ marginRight: 16 }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Kurs bearbeiten"
+                  accessibilityHint="Öffnet den Bearbeitungsbildschirm für diesen Kurs"
+                >
+                  <IconSymbol size={20} name="pencil" color="white" />
+                </TouchableOpacity>
+              )
+            : undefined,
         }}
       />
       <Tabs.Screen
