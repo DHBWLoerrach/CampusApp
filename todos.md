@@ -1,5 +1,9 @@
 # TODOS
 
+- Welcome screen
+- App icons
+- Splash screen
+
 ## DHBW screen
 
 - Testen: neue News/Termin - refresh bei App-Neustart?
@@ -16,8 +20,8 @@
 
 ## Canteen screen
 
-- Mensa bis einschl. 14.09.25 geschlossen --> release mit Infoscreen
-  - umsetzen und testen: rechtzeitig am 10.09.25 Update mit Speiseplan
+- Speiseplan aus SWFR-API
+- rechtzeitig am 10.09.25 Update mit Speiseplan
 
 ## Services screen
 
