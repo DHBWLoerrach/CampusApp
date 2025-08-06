@@ -8,7 +8,12 @@ export default function CanteenScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Mensa</ThemedText>
+        <ThemedText
+          type="defaultSemiBold"
+          style={{ fontSize: 18, textAlign: 'center' }}
+        >
+          Die Mensa ist bis einschließlich 14.09.25 geschlossen.
+        </ThemedText>
       </ThemedView>
       {['android', 'ios'].includes(Platform.OS) && <NfcButton />}
     </ThemedView>

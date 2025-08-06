@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Alert, Button } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
+import { dhbwRed } from '@/constants/Colors';
 
 export default function NfcButton() {
   useEffect(() => {
@@ -61,5 +62,11 @@ export default function NfcButton() {
     }
   };
 
-  return <Button title="NFC" onPress={onPress} />;
+  return (
+    <Button
+      color={dhbwRed}
+      title="Guthaben auf der CampusCard abfragen"
+      onPress={onPress}
+    />
+  );
 }
