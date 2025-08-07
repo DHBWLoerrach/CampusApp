@@ -3,11 +3,13 @@
 - Welcome screen
 - App icons
 - Splash screen
+- Update App Store screenshots and description?
 
 ## Chores
 
 - Brauchen wir noch ThemedView und ThemedText?
   - allgemeine UI-Komponenten extrahieren
+- Alten Code in JS-Ordner löschen
 
 ## DHBW screen
 
