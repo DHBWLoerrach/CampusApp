@@ -3,6 +3,8 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Pressable,
+  Platform,
 } from 'react-native';
 import {
   type IconSymbolName,
@@ -24,8 +26,8 @@ function ServiceCard({
   const colorScheme = useColorScheme();
 
   return (
-    <TouchableOpacity
-      style={[
+    <Pressable
+      style={({ pressed }) => [
         styles.serviceCard,
         {
           backgroundColor:
@@ -34,10 +36,19 @@ function ServiceCard({
               : '#ffffff',
           borderColor: Colors[colorScheme ?? 'light'].border,
           shadowColor: colorScheme === 'dark' ? '#000' : '#000',
+          opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
       onPress={onPress}
-      activeOpacity={0.7}
+      android_ripple={{
+        color: Colors[colorScheme ?? 'light'].tint + '30',
+        borderless: false,
+        radius: 120,
+      }}
+      accessible={true}
+      accessibilityLabel={`${title} Service`}
+      accessibilityHint={`Öffnet den ${title} Service`}
+      accessibilityRole="button"
     >
       <View style={styles.cardContent}>
         <IconSymbol
@@ -47,7 +58,7 @@ function ServiceCard({
         />
         <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
