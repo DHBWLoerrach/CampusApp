@@ -4,6 +4,8 @@
 - App icons
 - Splash screen
 - Update App Store screenshots and description?
+- Dark mode und andere Styles konsistent umsetzen
+- Webapp immer wieder checken, ob sie noch funktioniert
 
 ## Chores
 
