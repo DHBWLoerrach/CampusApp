@@ -58,7 +58,7 @@ function ServiceCard({
         <IconSymbol
           size={32}
           name={icon}
-          color={Colors[scheme ?? 'light'].tint}
+          color={Colors[scheme ?? 'light'].icon}
         />
         <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       </View>
