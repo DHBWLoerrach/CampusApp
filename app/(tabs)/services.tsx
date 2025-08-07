@@ -5,11 +5,9 @@ import {
   IconSymbol,
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Karte mit Icon und Titel für den Services-Bildschirm
 function ServiceCard({
   title,
   icon,
@@ -35,10 +33,7 @@ function ServiceCard({
 
 export default function ServicesScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Services</ThemedText>
-      </ThemedView>
+    <View style={styles.container}>
       <ServiceCard title="Anreise" icon="mappin.and.ellipse" />
       <ServiceCard title="360°-Tour" icon="binoculars" />
       <ServiceCard title="Gebäude Hangstraße" icon="map" />
@@ -59,7 +54,7 @@ export default function ServicesScreen() {
       <ServiceCard title="Haftung" icon="exclamationmark.triangle" />
       <ServiceCard title="Impressum" icon="text.page" />
       <ServiceCard title="Datenschutz" icon="eye" />
-    </ThemedView>
+    </View>
   );
 }
 
