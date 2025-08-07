@@ -94,7 +94,7 @@ const serviceGroups: ServiceGroup[] = [
     title: 'Rund ums Studium',
     services: [
       { title: 'Studium', icon: 'graduationcap' },
-      { title: 'Links zu DHBW-Diensten', icon: 'link' },
+      { title: 'DHBW Service-Links', icon: 'link' },
       { title: 'Katalog Bibliothek', icon: 'books.vertical' },
       { title: 'Mittagessen bei der KBC', icon: 'building' },
 
