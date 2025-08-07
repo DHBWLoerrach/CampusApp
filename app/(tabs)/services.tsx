@@ -39,11 +39,14 @@ export default function ServicesScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Services</ThemedText>
       </ThemedView>
-      <ServiceCard title="Anreise" icon="location" />
+      <ServiceCard title="Anreise" icon="mappin.and.ellipse" />
       <ServiceCard title="360°-Tour" icon="binoculars" />
       <ServiceCard title="Gebäude Hangstraße" icon="map" />
       <ServiceCard title="Sicherheit" icon="shield" />
-      <ServiceCard title="Hausordnung" icon="building.columns" />
+      <ServiceCard
+        title="Hausordnung"
+        icon="exclamationmark.triangle.text.page"
+      />
       <ServiceCard title="Service-Zugänge" icon="link" />
       <ServiceCard title="Hilfe im Notfall" icon="phone" />
       <ServiceCard title="Studium" icon="graduationcap" />

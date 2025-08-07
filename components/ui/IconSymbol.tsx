@@ -1,6 +1,7 @@
-// Fallback for using MaterialIcons on Android and web.
+// Fallback for using MaterialIcons and MaterialCommunityIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
 import { ComponentProps } from 'react';
 import {
@@ -9,48 +10,64 @@ import {
   type TextStyle,
 } from 'react-native';
 
-type IconMapping = Record<
-  SymbolViewProps['name'],
-  ComponentProps<typeof MaterialIcons>['name']
->;
+type IconSource = 'material' | 'community';
+
+type IconConfig = {
+  name:
+    | ComponentProps<typeof MaterialIcons>['name']
+    | ComponentProps<typeof MaterialCommunityIcons>['name'];
+  source: IconSource;
+};
+
 export type IconSymbolName = keyof typeof MAPPING;
 
 /**
  * Add your SF Symbols to Material Icons mappings here.
  * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
+ * - Use 'material' for MaterialIcons, 'community' for MaterialCommunityIcons
  */
 const MAPPING = {
-  house: 'home',
-  calendar: 'calendar-month',
-  'fork.knife': 'restaurant',
-  'info.circle': 'info-outline',
-  location: 'pin-drop',
-  binoculars: '360',
-  map: 'map',
-  shield: 'security',
-  'building.columns': 'home-work',
-  link: 'link',
-  phone: 'call',
-  graduationcap: 'school',
-  'books.vertical': 'menu-book',
-  building: 'warehouse',
-  'sun.max': 'wb-sunny',
-  envelope: 'mail-outline',
-  gearshape: 'settings',
-  'info.square': 'perm-device-info',
-  'exclamationmark.triangle': 'warning-amber',
-  'text.page': 'description',
-  eye: 'visibility',
-  'chevron.right': 'chevron-right',
-  'chevron.left': 'chevron-left',
-  pencil: 'edit',
-} as IconMapping;
+  house: { name: 'home', source: 'material' },
+  calendar: { name: 'calendar-month', source: 'material' },
+  'fork.knife': { name: 'restaurant', source: 'material' },
+  'info.circle': { name: 'info-outline', source: 'material' },
+  map: { name: 'map', source: 'material' },
+  phone: { name: 'call', source: 'material' },
+  graduationcap: { name: 'school', source: 'material' },
+  'sun.max': { name: 'wb-sunny', source: 'material' },
+  envelope: { name: 'mail-outline', source: 'material' },
+  gearshape: { name: 'settings', source: 'material' },
+  'info.square': { name: 'perm-device-info', source: 'material' },
+  'exclamationmark.triangle': {
+    name: 'warning-amber',
+    source: 'material',
+  },
+  'text.page': { name: 'description', source: 'material' },
+  eye: { name: 'visibility', source: 'material' },
+  'chevron.right': { name: 'chevron-right', source: 'material' },
+  'chevron.left': { name: 'chevron-left', source: 'material' },
+  pencil: { name: 'edit', source: 'material' },
+  binoculars: { name: 'binoculars', source: 'community' },
+  'mappin.and.ellipse': {
+    name: 'map-marker-radius',
+    source: 'community',
+  },
+  shield: { name: 'shield-outline', source: 'community' },
+  link: { name: 'link-variant', source: 'community' },
+  'books.vertical': { name: 'bookshelf', source: 'community' },
+  'exclamationmark.triangle.text.page': {
+    name: 'text-box-check-outline',
+    source: 'community',
+  },
+  building: { name: 'office-building', source: 'community' },
+} as Record<string, IconConfig>;
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
  * This ensures a consistent look across platforms, and optimal resource usage.
  * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
+ * Falls back to MaterialCommunityIcons if the icon is not available in MaterialIcons.
  */
 export function IconSymbol({
   name,
@@ -64,11 +81,32 @@ export function IconSymbol({
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
 }) {
+  const iconConfig = MAPPING[name];
+
+  if (iconConfig.source === 'community') {
+    return (
+      <MaterialCommunityIcons
+        color={color}
+        size={size}
+        name={
+          iconConfig.name as ComponentProps<
+            typeof MaterialCommunityIcons
+          >['name']
+        }
+        style={style}
+      />
+    );
+  }
+
   return (
     <MaterialIcons
       color={color}
       size={size}
-      name={MAPPING[name]}
+      name={
+        iconConfig.name as ComponentProps<
+          typeof MaterialIcons
+        >['name']
+      }
       style={style}
     />
   );
