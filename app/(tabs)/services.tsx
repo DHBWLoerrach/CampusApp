@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
   ScrollView,
   Pressable,
   Platform,
@@ -62,6 +61,34 @@ function ServiceCard({
   );
 }
 
+type Service = {
+  title: string;
+  icon: IconSymbolName;
+};
+
+const services: Service[] = [
+  { title: 'Anreise', icon: 'mappin.and.ellipse' },
+  { title: '360°-Tour', icon: 'binoculars' },
+  { title: 'Gebäude Hangstraße', icon: 'map' },
+  { title: 'Sicherheit', icon: 'shield' },
+  {
+    title: 'Hausordnung',
+    icon: 'exclamationmark.triangle.text.page',
+  },
+  { title: 'Service-Zugänge', icon: 'link' },
+  { title: 'Hilfe im Notfall', icon: 'phone' },
+  { title: 'Studium', icon: 'graduationcap' },
+  { title: 'Katalog Bibliothek', icon: 'books.vertical' },
+  { title: 'Angebote bei der KBC', icon: 'building' },
+  { title: 'Freizeit', icon: 'sun.max' },
+  { title: 'Feedback', icon: 'envelope' },
+  { title: 'Einstellungen', icon: 'gearshape' },
+  { title: 'Über', icon: 'info.square' },
+  { title: 'Haftung', icon: 'exclamationmark.triangle' },
+  { title: 'Impressum', icon: 'text.page' },
+  { title: 'Datenschutz', icon: 'eye' },
+] as const;
+
 export default function ServicesScreen() {
   const handleServicePress = (serviceName: string) => {
     // TODO: Navigation zu den entsprechenden Unterseiten
@@ -76,91 +103,14 @@ export default function ServicesScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.grid}>
-          <ServiceCard
-            title="Anreise"
-            icon="mappin.and.ellipse"
-            onPress={() => handleServicePress('Anreise')}
-          />
-          <ServiceCard
-            title="360°-Tour"
-            icon="binoculars"
-            onPress={() => handleServicePress('360°-Tour')}
-          />
-          <ServiceCard
-            title="Gebäude Hangstraße"
-            icon="map"
-            onPress={() => handleServicePress('Gebäude Hangstraße')}
-          />
-          <ServiceCard
-            title="Sicherheit"
-            icon="shield"
-            onPress={() => handleServicePress('Sicherheit')}
-          />
-          <ServiceCard
-            title="Hausordnung"
-            icon="exclamationmark.triangle.text.page"
-            onPress={() => handleServicePress('Hausordnung')}
-          />
-          <ServiceCard
-            title="Service-Zugänge"
-            icon="link"
-            onPress={() => handleServicePress('Service-Zugänge')}
-          />
-          <ServiceCard
-            title="Hilfe im Notfall"
-            icon="phone"
-            onPress={() => handleServicePress('Hilfe im Notfall')}
-          />
-          <ServiceCard
-            title="Studium"
-            icon="graduationcap"
-            onPress={() => handleServicePress('Studium')}
-          />
-          <ServiceCard
-            title="Katalog Bibliothek"
-            icon="books.vertical"
-            onPress={() => handleServicePress('Katalog Bibliothek')}
-          />
-          <ServiceCard
-            title="Angebote bei der KBC"
-            icon="building"
-            onPress={() => handleServicePress('Angebote bei der KBC')}
-          />
-          <ServiceCard
-            title="Freizeit"
-            icon="sun.max"
-            onPress={() => handleServicePress('Freizeit')}
-          />
-          <ServiceCard
-            title="Feedback"
-            icon="envelope"
-            onPress={() => handleServicePress('Feedback')}
-          />
-          <ServiceCard
-            title="Einstellungen"
-            icon="gearshape"
-            onPress={() => handleServicePress('Einstellungen')}
-          />
-          <ServiceCard
-            title="Über"
-            icon="info.square"
-            onPress={() => handleServicePress('Über')}
-          />
-          <ServiceCard
-            title="Haftung"
-            icon="exclamationmark.triangle"
-            onPress={() => handleServicePress('Haftung')}
-          />
-          <ServiceCard
-            title="Impressum"
-            icon="text.page"
-            onPress={() => handleServicePress('Impressum')}
-          />
-          <ServiceCard
-            title="Datenschutz"
-            icon="eye"
-            onPress={() => handleServicePress('Datenschutz')}
-          />
+          {services.map(({ title, icon }) => (
+            <ServiceCard
+              key={title}
+              title={title}
+              icon={icon}
+              onPress={() => handleServicePress(title)}
+            />
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -189,7 +139,6 @@ const styles = StyleSheet.create({
     minHeight: 100,
     borderRadius: 12,
     borderWidth: 0.5,
-    overflow: 'hidden', // important for rounded corners
     shadowOffset: {
       width: 0,
       height: 6,
@@ -209,10 +158,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
 });
