@@ -61,12 +61,16 @@ function ServiceCard({
       accessibilityRole="button"
     >
       <View style={styles.cardContent}>
-        <IconSymbol
-          size={32}
-          name={icon}
-          color={Colors[scheme ?? 'light'].icon}
-        />
-        <ThemedText style={styles.cardTitle}>{title}</ThemedText>
+        <View style={styles.iconContainer}>
+          <IconSymbol
+            size={32}
+            name={icon}
+            color={Colors[scheme ?? 'light'].icon}
+          />
+        </View>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.cardTitle}>{title}</ThemedText>
+        </View>
       </View>
     </Pressable>
   );
@@ -187,17 +191,27 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   card: {
-    width: 98,
-    height: 98,
+    width: 108,
+    height: 88,
     borderRadius: 12,
     borderWidth: 0.5,
   },
   cardContent: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
-    gap: 4,
+    paddingTop: 12,
+  },
+  iconContainer: {
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardTitle: {
     fontSize: 12,
