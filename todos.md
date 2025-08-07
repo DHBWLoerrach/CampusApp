@@ -4,6 +4,11 @@
 - App icons
 - Splash screen
 
+## Chores
+
+- Brauchen wir noch ThemedView und ThemedText?
+  - allgemeine UI-Komponenten extrahieren
+
 ## DHBW screen
 
 - Testen: neue News/Termin - refresh bei App-Neustart?
