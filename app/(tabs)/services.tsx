@@ -38,9 +38,9 @@ function ServiceCard({
             : Colors[scheme ?? 'light'].border,
           /* iOS */
           shadowColor: isDark ? '#FFFFFF' : '#000000',
-          shadowOpacity: isDark ? 0.12 : 0.25,
-          shadowRadius: isDark ? 4 : 8,
-          shadowOffset: { width: 0, height: isDark ? 2 : 6 },
+          shadowOpacity: 0.15,
+          shadowRadius: 10,
+          shadowOffset: { width: 0, height: 4 },
           /* Android */
           elevation: Platform.OS === 'android' && !isDark ? 12 : 0,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
