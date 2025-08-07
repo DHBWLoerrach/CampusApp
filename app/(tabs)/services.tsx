@@ -6,8 +6,8 @@ import {
   Platform,
 } from 'react-native';
 import {
-  type IconSymbolName,
   IconSymbol,
+  type IconSymbolName,
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors } from '@/constants/Colors';
@@ -22,29 +22,34 @@ function ServiceCard({
   icon: IconSymbolName;
   onPress?: () => void;
 }) {
-  const colorScheme = useColorScheme();
+  const scheme = useColorScheme();
+  const isDark = scheme === 'dark';
 
   return (
     <Pressable
       style={({ pressed }) => [
-        styles.serviceCard,
+        styles.card,
         {
-          backgroundColor:
-            colorScheme === 'dark'
-              ? 'rgba(255, 255, 255, 0.08)'
-              : '#ffffff',
-          borderColor: Colors[colorScheme ?? 'light'].border,
-          shadowColor: colorScheme === 'dark' ? '#000' : '#000',
+          backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+          borderColor: isDark
+            ? 'rgba(255,255,255,0.12)'
+            : Colors[scheme ?? 'light'].border,
+          /* iOS */
+          shadowColor: isDark ? '#FFFFFF' : '#000000',
+          shadowOpacity: isDark ? 0.12 : 0.25,
+          shadowRadius: isDark ? 4 : 8,
+          shadowOffset: { width: 0, height: isDark ? 2 : 6 },
+          /* Android */
+          elevation: Platform.OS === 'android' && !isDark ? 12 : 0,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
       onPress={onPress}
       android_ripple={{
-        color: Colors[colorScheme ?? 'light'].tint + '30',
-        borderless: false,
+        color: Colors[scheme ?? 'light'].tint + '30',
         radius: 120,
       }}
-      accessible={true}
+      accessible
       accessibilityLabel={`${title} Service`}
       accessibilityHint={`Öffnet den ${title} Service`}
       accessibilityRole="button"
@@ -53,7 +58,7 @@ function ServiceCard({
         <IconSymbol
           size={32}
           name={icon}
-          color={Colors[colorScheme ?? 'light'].tint}
+          color={Colors[scheme ?? 'light'].tint}
         />
         <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       </View>
@@ -61,12 +66,7 @@ function ServiceCard({
   );
 }
 
-type Service = {
-  title: string;
-  icon: IconSymbolName;
-};
-
-const services: Service[] = [
+const services = [
   { title: 'Anreise', icon: 'mappin.and.ellipse' },
   { title: '360°-Tour', icon: 'binoculars' },
   { title: 'Gebäude Hangstraße', icon: 'map' },
@@ -90,10 +90,8 @@ const services: Service[] = [
 ] as const;
 
 export default function ServicesScreen() {
-  const handleServicePress = (serviceName: string) => {
-    // TODO: Navigation zu den entsprechenden Unterseiten
-    console.log(`Pressed: ${serviceName}`);
-  };
+  const handlePress = (name: string) =>
+    console.log(`Pressed: ${name}`);
 
   return (
     <View style={styles.container}>
@@ -108,7 +106,7 @@ export default function ServicesScreen() {
               key={title}
               title={title}
               icon={icon}
-              onPress={() => handleServicePress(title)}
+              onPress={() => handlePress(title)}
             />
           ))}
         </View>
@@ -118,34 +116,20 @@ export default function ServicesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 32, // extra space at the bottom
-  },
+  container: { flex: 1 },
+  scrollView: { flex: 1 },
+  scrollContent: { padding: 16, paddingBottom: 32 },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     gap: 12,
   },
-  serviceCard: {
+  card: {
     width: '48%',
-    minHeight: 100,
+    height: 110,
     borderRadius: 12,
     borderWidth: 0.5,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 12,
   },
   cardContent: {
     flex: 1,
