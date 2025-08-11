@@ -8,7 +8,7 @@
 
 ## Chores
 
-- refactor `handleOpen` in `Services` und `RSSFeedList` to `lib`
+- refactor `handleOpen` in `Services` und `RSSFeedList` to `lib` (Achtung: `#inhalt`)
 - Brauchen wir noch ThemedView und ThemedText?
   - allgemeine UI-Komponenten extrahieren
 - Alten Code in JS-Ordner löschen

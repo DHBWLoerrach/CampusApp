@@ -23,7 +23,7 @@ const handleOpen = async (url: string) => {
   if (Platform.OS === 'web') {
     window.open(url, '_blank');
   } else {
-    await WebBrowser.openBrowserAsync(url + '#inhalt', {
+    await WebBrowser.openBrowserAsync(url, {
       presentationStyle:
         WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
       controlsColor: dhbwRed, // iOS
@@ -114,7 +114,7 @@ const serviceGroups: ServiceGroup[] = [
       {
         title: 'Standorte und Anreise',
         icon: 'mappin.and.ellipse',
-        url: 'https://dhbw-loerrach.de/kontakt/standorte',
+        url: 'https://dhbw-loerrach.de/kontakt/standorte#inhalt',
       },
       {
         title: 'Gebäude Hangstraße',
@@ -127,26 +127,76 @@ const serviceGroups: ServiceGroup[] = [
   {
     title: 'Rund ums Studium',
     services: [
-      { title: 'Studium', icon: 'graduationcap' },
-      { title: 'DHBW Service-Links', icon: 'link' },
       {
-        title: 'Katalog Bibliothek',
+        title: 'Webmail',
+        icon: 'envelope.open',
+        url: 'https://webmail.dhbw-loerrach.de',
+      },
+      {
+        title: 'Moodle',
+        icon: 'graduationcap',
+        url: 'https://moodle.loerrach.dhbw.de',
+      },
+      {
+        title: 'DUALIS (Noten)',
+        icon: 'chart.bar',
+        url: 'https://dualis.dhbw.de/',
+      },
+      {
+        title: 'StuV',
+        icon: 'person.3',
+        url: 'https://stuv-loerrach.de',
+      },
+      {
+        title: 'Katalog der Bibliothek',
         icon: 'books.vertical',
         url: 'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18',
       },
-      { title: 'Mittagessen bei der KBC', icon: 'building' },
-
-      { title: 'Freizeit', icon: 'sun.max' },
+      {
+        title: 'Studienkosten',
+        icon: 'eurosign',
+        url: 'https://www.dhbw.de/informationen/studieninteressierte#studienkosten-und-finanzierung',
+      },
+      {
+        title: 'Finanzierung & Stipendien',
+        icon: 'wallet.bifold',
+        url: 'https://dhbw-loerrach.de/studierendenservice/studienfinanzierung#inhalt',
+      },
+      {
+        title: 'IT-Services Wiki',
+        icon: 'book.pages',
+        url: 'https://go.dhbw-loerrach.de/its',
+      },
+      {
+        title: 'Handbuch DHBW-IT',
+        icon: 'doc.text.magnifyingglass',
+        url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
+      },
+      {
+        title: 'Wohnungen',
+        icon: 'house',
+        url: 'https://dhbw-loerrach.de/wohnungen#inhalt',
+      },
+      {
+        title: 'Hochschulsport',
+        icon: 'figure.run',
+        url: 'https://dhbw-loerrach.de/hochschulsport#inhalt',
+      },
+      {
+        title: 'Sprachen lernen',
+        icon: 'translate',
+        url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
+      },
     ],
   },
   {
     title: 'Sicherheit',
     services: [
-      { title: 'Sicherheit', icon: 'shield' },
       { title: 'Hilfe im Notfall', icon: 'phone', important: true },
+      { title: 'Sicherheit', icon: 'shield' },
       {
         title: 'Hausordnung',
-        icon: 'exclamationmark.triangle.text.page',
+        icon: 'building',
         url: 'https://dhbw-loerrach.de/hausordnung',
       },
     ],
@@ -282,7 +332,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   card: {
-    width: 108,
+    width: 116,
     height: 88,
     borderRadius: 12,
     borderWidth: 0.5,
