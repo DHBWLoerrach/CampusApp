@@ -8,6 +8,7 @@
 
 ## Chores
 
+- refactor `handleOpen` in `Services` und `RSSFeedList` to `lib`
 - Brauchen wir noch ThemedView und ThemedText?
   - allgemeine UI-Komponenten extrahieren
 - Alten Code in JS-Ordner löschen
@@ -33,7 +34,8 @@
 
 ## Services screen
 
-- nach Mensa-Update: Einstellungen
+- nach Mensa-Update: Rollenwechsel in Einstellungen
+- Modal für "Gebäude Hangstraße" im Web oder andere Lösung?
 
 ## Automatisierte Tests
 

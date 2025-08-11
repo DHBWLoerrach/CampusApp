@@ -129,7 +129,11 @@ const serviceGroups: ServiceGroup[] = [
     services: [
       { title: 'Studium', icon: 'graduationcap' },
       { title: 'DHBW Service-Links', icon: 'link' },
-      { title: 'Katalog Bibliothek', icon: 'books.vertical' },
+      {
+        title: 'Katalog Bibliothek',
+        icon: 'books.vertical',
+        url: 'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18',
+      },
       { title: 'Mittagessen bei der KBC', icon: 'building' },
 
       { title: 'Freizeit', icon: 'sun.max' },
@@ -143,6 +147,7 @@ const serviceGroups: ServiceGroup[] = [
       {
         title: 'Hausordnung',
         icon: 'exclamationmark.triangle.text.page',
+        url: 'https://dhbw-loerrach.de/hausordnung',
       },
     ],
   },
