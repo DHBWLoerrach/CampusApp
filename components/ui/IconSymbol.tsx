@@ -59,6 +59,7 @@ const MAPPING = {
   },
   'book.pages': { name: 'menu-book', source: 'material' },
   'doc.text.magnifyingglass': { name: 'article', source: 'material' },
+  link: { name: 'link-variant', source: 'community' },
   'envelope.open': {
     name: 'email-open-outline',
     source: 'community',

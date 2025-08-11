@@ -2,7 +2,7 @@
 
 - Welcome screen
 - Update App Store screenshots and description?
-- Dark mode und andere Styles konsistent umsetzen
+- Dark mode und andere Styles konsistent umsetzen (Suche z.B. nach `isDark`)
 - Webapp immer wieder checken, ob sie noch funktioniert
 - letzten Screen merken
 

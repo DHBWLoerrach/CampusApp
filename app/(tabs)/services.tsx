@@ -16,6 +16,7 @@ import {
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useRouter } from 'expo-router';
 
 const handleOpen = async (url: string) => {
   if (!url) return;
@@ -157,39 +158,8 @@ const serviceGroups: ServiceGroup[] = [
         url: 'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18',
       },
       {
-        title: 'Studienkosten',
-        icon: 'eurosign',
-        url: 'https://www.dhbw.de/informationen/studieninteressierte#studienkosten-und-finanzierung',
-      },
-      {
-        title: 'Finanzierung & Stipendien',
-        icon: 'wallet.bifold',
-        url: 'https://dhbw-loerrach.de/studierendenservice/studienfinanzierung#inhalt',
-      },
-      {
-        title: 'IT-Services Wiki',
-        icon: 'book.pages',
-        url: 'https://go.dhbw-loerrach.de/its',
-      },
-      {
-        title: 'Handbuch DHBW-IT',
-        icon: 'doc.text.magnifyingglass',
-        url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
-      },
-      {
-        title: 'Wohnungen',
-        icon: 'house',
-        url: 'https://dhbw-loerrach.de/wohnungen#inhalt',
-      },
-      {
-        title: 'Hochschulsport',
-        icon: 'figure.run',
-        url: 'https://dhbw-loerrach.de/hochschulsport#inhalt',
-      },
-      {
-        title: 'Sprachen lernen',
-        icon: 'translate',
-        url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
+        title: 'Weitere Links…',
+        icon: 'link',
       },
     ],
   },
@@ -221,8 +191,14 @@ const serviceGroups: ServiceGroup[] = [
 export default function ServicesScreen() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
-  const handlePress = (name: string) =>
-    console.log(`Pressed: ${name}`);
+  const router = useRouter();
+  const handlePress = (name: string) => {
+    if (name === 'Weitere Links…') {
+      router.push('/services/more');
+    } else {
+      console.log(`Pressed: ${name}`);
+    }
+  };
 
   const [imageModal, setImageModal] = useState<{
     title: string;
