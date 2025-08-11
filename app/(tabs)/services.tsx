@@ -1,17 +1,37 @@
+import { useState } from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
   Pressable,
   Platform,
+  Image,
+  Modal,
 } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 import {
   IconSymbol,
   type IconSymbolName,
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { Colors } from '@/constants/Colors';
+import { Colors, dhbwRed } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+const handleOpen = async (url: string) => {
+  if (!url) return;
+
+  if (Platform.OS === 'web') {
+    window.open(url, '_blank');
+  } else {
+    await WebBrowser.openBrowserAsync(url + '#inhalt', {
+      presentationStyle:
+        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
+      controlsColor: dhbwRed, // iOS
+      createTask: false, // Android
+      showTitle: false, // Android
+    });
+  }
+};
 
 function ServiceCard({
   title,
@@ -82,6 +102,8 @@ type ServiceGroup = {
     title: string;
     icon: IconSymbolName;
     important?: boolean;
+    url?: string;
+    image?: any;
   }[];
 };
 
@@ -89,8 +111,16 @@ const serviceGroups: ServiceGroup[] = [
   {
     title: 'Campus-Orientierung',
     services: [
-      { title: 'Anreise', icon: 'mappin.and.ellipse' },
-      { title: 'Gebäude Hangstraße', icon: 'map' },
+      {
+        title: 'Standorte und Anreise',
+        icon: 'mappin.and.ellipse',
+        url: 'https://dhbw-loerrach.de/kontakt/standorte',
+      },
+      {
+        title: 'Gebäude Hangstraße',
+        icon: 'map',
+        image: require('@/assets/images/app/campus-hangstr.jpg'),
+      },
       { title: '360°-Tour', icon: 'binoculars' },
     ],
   },
@@ -135,6 +165,11 @@ export default function ServicesScreen() {
   const handlePress = (name: string) =>
     console.log(`Pressed: ${name}`);
 
+  const [imageModal, setImageModal] = useState<{
+    title: string;
+    source: any;
+  } | null>(null);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -153,19 +188,70 @@ export default function ServicesScreen() {
               {group.title}
             </ThemedText>
             <View style={styles.grid}>
-              {group.services.map(({ title, icon, important }) => (
-                <ServiceCard
-                  key={title}
-                  title={title}
-                  icon={icon}
-                  onPress={() => handlePress(title)}
-                  important={important}
-                />
-              ))}
+              {group.services.map(
+                ({ title, icon, important, url, image }) => (
+                  <ServiceCard
+                    key={title}
+                    title={title}
+                    icon={icon}
+                    onPress={() => {
+                      if (image) {
+                        setImageModal({ title, source: image });
+                      } else if (url) {
+                        handleOpen(url);
+                      } else {
+                        handlePress(title);
+                      }
+                    }}
+                    important={important}
+                  />
+                )
+              )}
             </View>
           </View>
         ))}
       </ScrollView>
+
+      <Modal
+        visible={!!imageModal}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setImageModal(null)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: isDark ? '#121212' : '#FFFFFF' },
+            ]}
+          >
+            <Pressable
+              onPress={() => setImageModal(null)}
+              style={styles.closeButton}
+              accessibilityRole="button"
+              accessibilityLabel="Schließen"
+            >
+              <IconSymbol
+                name="xmark.circle.fill"
+                size={32}
+                color={isDark ? '#FFFFFF' : '#333333'}
+              />
+            </Pressable>
+            {imageModal && (
+              <Image
+                source={imageModal.source}
+                style={styles.modalImage}
+                resizeMode="contain"
+                accessible
+                accessibilityLabel={imageModal.title}
+              />
+            )}
+            <ThemedText style={styles.modalCaption}>
+              {imageModal?.title}
+            </ThemedText>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -218,5 +304,36 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     lineHeight: 13,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  modalContent: {
+    borderRadius: 16,
+    padding: 12,
+    maxHeight: '85%',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  modalImage: {
+    width: '100%',
+    height: '75%',
+    borderRadius: 12,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    padding: 4,
+    zIndex: 10,
+  },
+  modalCaption: {
+    marginTop: 12,
+    fontSize: 14,
+    textAlign: 'center',
+    fontWeight: '600',
   },
 });

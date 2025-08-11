@@ -4,6 +4,7 @@
 - Update App Store screenshots and description?
 - Dark mode und andere Styles konsistent umsetzen
 - Webapp immer wieder checken, ob sie noch funktioniert
+- letzten Screen merken
 
 ## Chores
 
@@ -31,6 +32,8 @@
 - rechtzeitig am 10.09.25 Update mit Speiseplan
 
 ## Services screen
+
+- nach Mensa-Update: Einstellungen
 
 ## Automatisierte Tests
 

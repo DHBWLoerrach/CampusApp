@@ -61,6 +61,7 @@ const MAPPING = {
     source: 'community',
   },
   building: { name: 'office-building', source: 'community' },
+  'xmark.circle.fill': { name: 'close', source: 'community' },
 } as Record<string, IconConfig>;
 
 /**
