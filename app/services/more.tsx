@@ -38,6 +38,11 @@ const moreLinks: {
   url: string;
 }[] = [
   {
+    title: 'Wohnungen',
+    icon: 'house',
+    url: 'https://dhbw-loerrach.de/wohnungen#inhalt',
+  },
+  {
     title: 'Studienkosten',
     icon: 'eurosign',
     url: 'https://www.dhbw.de/informationen/studieninteressierte#studienkosten-und-finanzierung',
@@ -48,21 +53,6 @@ const moreLinks: {
     url: 'https://dhbw-loerrach.de/studierendenservice/studienfinanzierung#inhalt',
   },
   {
-    title: 'IT-Services Wiki',
-    icon: 'book.pages',
-    url: 'https://go.dhbw-loerrach.de/its',
-  },
-  {
-    title: 'Handbuch DHBW-IT',
-    icon: 'doc.text.magnifyingglass',
-    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
-  },
-  {
-    title: 'Wohnungen',
-    icon: 'house',
-    url: 'https://dhbw-loerrach.de/wohnungen#inhalt',
-  },
-  {
     title: 'Hochschulsport',
     icon: 'figure.run',
     url: 'https://dhbw-loerrach.de/hochschulsport#inhalt',
@@ -71,6 +61,16 @@ const moreLinks: {
     title: 'Sprachen lernen',
     icon: 'translate',
     url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
+  },
+  {
+    title: 'IT-Services Wiki',
+    icon: 'book.pages',
+    url: 'https://go.dhbw-loerrach.de/its',
+  },
+  {
+    title: 'Handbuch DHBW-IT',
+    icon: 'doc.text.magnifyingglass',
+    url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=184',
   },
 ];
 
