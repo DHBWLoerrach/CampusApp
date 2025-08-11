@@ -121,7 +121,11 @@ const serviceGroups: ServiceGroup[] = [
         icon: 'map',
         image: require('@/assets/images/app/campus-hangstr.jpg'),
       },
-      { title: '360°-Tour', icon: 'binoculars' },
+      {
+        title: '360°-Tour',
+        icon: 'binoculars',
+        url: 'https://dhbw-loerrach.de/player360',
+      },
     ],
   },
   {
