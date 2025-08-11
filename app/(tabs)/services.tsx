@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   },
   modalCaption: {
     marginTop: 12,
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'center',
     fontWeight: '600',
   },
