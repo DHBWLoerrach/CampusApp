@@ -1,10 +1,11 @@
 import {
-  FlatList,
+  Button,
   Platform,
   Pressable,
   StyleSheet,
   View,
   Image,
+  ScrollView,
 } from 'react-native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors, dhbwRed } from '@/constants/Colors';
@@ -79,50 +80,57 @@ export default function SafetyScreen() {
           ...bottomTabBarOptions,
         }}
       />
-      <FlatList
-        data={links}
-        keyExtractor={(item) => item.title}
-        numColumns={2}
-        columnWrapperStyle={styles.row}
-        contentContainerStyle={styles.listContent}
-        ListHeaderComponent={() => (
-          <ThemedText style={styles.introText}>
-            Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir
-            diese Videos zusammengestellt, in denen wir Sie über
-            verschiedene Sicherheitshemen an der DHBW Lörrach
-            informieren. Sie erfahren, wie Sie sich vor Unfällen
-            schützen können und welche Sicherheitseinrichtungen es an
-            den Standorten gibt. Viel Spaß!
-          </ThemedText>
-        )}
-        renderItem={({ item, index }) => (
-          <Pressable
-            onPress={() => handleOpen(item.url)}
-            style={({ pressed }) => [
-              styles.card,
-              index % 2 === 0 && styles.cardLeft,
-              {
-                backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
-                opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
-              },
-            ]}
-            android_ripple={{
-              color: Colors[scheme ?? 'light'].tint + '30',
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={`${item.title} Video`}
-            accessibilityHint="Öffnet das Video in einem Browser"
-          >
-            <Image
-              source={item.img}
-              style={styles.image}
-              resizeMode="cover"
-              accessible
-              accessibilityLabel={item.title}
-            />
-          </Pressable>
-        )}
-      />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ThemedText style={styles.introText}>
+          Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese
+          Videos zusammengestellt, in denen wir Sie über verschiedene
+          Sicherheitshemen an der DHBW Lörrach informieren. Sie
+          erfahren, wie Sie sich vor Unfällen schützen können und
+          welche Sicherheitseinrichtungen es an den Standorten gibt.
+          Viel Spaß!
+        </ThemedText>
+        <View style={styles.grid}>
+          {links.map((item) => (
+            <Pressable
+              key={item.title}
+              onPress={() => handleOpen(item.url)}
+              style={({ pressed }) => [
+                styles.card,
+                {
+                  backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+                  opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
+                },
+              ]}
+              android_ripple={{
+                color: Colors[scheme ?? 'light'].tint + '30',
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.title} Video`}
+              accessibilityHint="Öffnet das Video in einem Browser"
+            >
+              <Image
+                source={item.img}
+                style={styles.image}
+                resizeMode="cover"
+                accessible
+                accessibilityLabel={item.title}
+              />
+            </Pressable>
+          ))}
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Brandschutzordnung (PDF)"
+            color={dhbwRed}
+            onPress={() =>
+              handleOpen('https://dhbw-loerrach.de/brandschutz')
+            }
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -131,12 +139,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  listContent: {
+  scrollContent: {
     padding: 16,
     paddingBottom: 32,
-  },
-  row: {
-    marginBottom: 12,
   },
   introText: {
     fontSize: 16,
@@ -144,18 +149,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontWeight: '400',
   },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 10,
+  },
   card: {
-    flex: 1,
+    width: '48%',
     borderRadius: 14,
     overflow: 'hidden',
-    height: 130,
-    justifyContent: 'flex-end',
-    marginLeft: 12,
+    height: 100,
   },
-  cardLeft: { marginLeft: 0 },
   image: {
-    ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
