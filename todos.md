@@ -35,7 +35,7 @@
 ## Services screen
 
 - nach Mensa-Update: Rollenwechsel in Einstellungen
-- Modal für "Gebäude Hangstraße" im Web oder andere Lösung?
+- Webversion: Modal für "Gebäude Hangstraße" oder andere Lösung?
 
 ## Automatisierte Tests
 

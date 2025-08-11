@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
+import { InfoModal } from '@/components/ui/InfoModal';
+import { infoTexts, InfoKey } from '@/constants/InfoTexts';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRouter } from 'expo-router';
 
@@ -179,8 +181,8 @@ const serviceGroups: ServiceGroup[] = [
     title: 'App-Infos',
     services: [
       { title: 'Einstellungen', icon: 'gearshape' },
-      { title: 'Über', icon: 'info.square' },
       { title: 'Feedback', icon: 'envelope' },
+      { title: 'Über', icon: 'info.square' },
       { title: 'Haftung', icon: 'exclamationmark.triangle' },
       { title: 'Impressum', icon: 'text.page' },
       { title: 'Datenschutz', icon: 'eye' },
@@ -206,6 +208,7 @@ export default function ServicesScreen() {
     title: string;
     source: any;
   } | null>(null);
+  const [infoKey, setInfoKey] = useState<InfoKey | null>(null);
 
   return (
     <View style={styles.container}>
@@ -237,7 +240,17 @@ export default function ServicesScreen() {
                       } else if (url) {
                         handleOpen(url);
                       } else {
-                        handlePress(title);
+                        // Open generic info modal for legal/info pages
+                        if (
+                          title === 'Über' ||
+                          title === 'Haftung' ||
+                          title === 'Impressum' ||
+                          title === 'Datenschutz'
+                        ) {
+                          setInfoKey(title as InfoKey);
+                        } else {
+                          handlePress(title);
+                        }
                       }
                     }}
                     important={important}
@@ -289,6 +302,19 @@ export default function ServicesScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Generic info/legal modal */}
+      <InfoModal
+        visible={infoKey !== null}
+        title={infoKey ? infoTexts[infoKey].title : ''}
+        onClose={() => setInfoKey(null)}
+      >
+        {infoKey && (
+          <ThemedText style={{ fontSize: 14, lineHeight: 20 }}>
+            {infoTexts[infoKey].body}
+          </ThemedText>
+        )}
+      </InfoModal>
     </View>
   );
 }
