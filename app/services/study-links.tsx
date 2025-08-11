@@ -32,7 +32,7 @@ const handleOpen = async (url: string) => {
   }
 };
 
-const moreLinks: {
+const links: {
   title: string;
   icon: IconSymbolName;
   url: string;
@@ -113,7 +113,7 @@ function LinkItem({
   );
 }
 
-export default function MoreLinksScreen() {
+export default function StudyLinksScreen() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
 
@@ -132,7 +132,7 @@ export default function MoreLinksScreen() {
         }}
       />
       <FlatList
-        data={moreLinks}
+        data={links}
         renderItem={({ item }) => <LinkItem item={item} />}
         keyExtractor={(item) => item.title}
         contentContainerStyle={styles.listContent}

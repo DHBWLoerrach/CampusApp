@@ -194,7 +194,7 @@ export default function ServicesScreen() {
   const router = useRouter();
   const handlePress = (name: string) => {
     if (name === 'Weitere Links…') {
-      router.push('/services/more');
+      router.push('/services/study-links');
     } else {
       console.log(`Pressed: ${name}`);
     }
