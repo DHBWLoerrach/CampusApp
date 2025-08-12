@@ -26,12 +26,10 @@ function ServiceCard({
   title,
   icon,
   onPress,
-  important,
 }: {
   title: string;
   icon: IconSymbolName;
   onPress?: () => void;
-  important?: boolean;
 }) {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
@@ -53,10 +51,6 @@ function ServiceCard({
           /* Android */
           elevation: Platform.OS === 'android' && !isDark ? 12 : 0,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
-        },
-        important && {
-          borderColor: Colors[scheme ?? 'light'].tint,
-          borderWidth: StyleSheet.hairlineWidth,
         },
       ]}
       onPress={onPress}
@@ -90,7 +84,6 @@ type ServiceGroup = {
   services: {
     title: string;
     icon: IconSymbolName;
-    important?: boolean;
     url?: string;
     image?: any;
     content?: InfoKey;
@@ -153,9 +146,9 @@ const serviceGroups: ServiceGroup[] = [
     ],
   },
   {
-    title: 'Sicherheit',
+    title: 'Hilfe und Regeln',
     services: [
-      { title: 'Hilfe im Notfall', icon: 'phone', important: true },
+      { title: 'Beratung und Hilfe', icon: 'phone' },
       { title: 'Sicherheit', icon: 'shield' },
       {
         title: 'Hausordnung',
@@ -190,6 +183,8 @@ export default function ServicesScreen() {
       router.push('/services/study-links');
     } else if (name === 'Sicherheit') {
       router.push('/services/safety');
+    } else if (name === 'Beratung und Hilfe') {
+      router.push('/services/help-links');
     } else {
       console.log(`Pressed: ${name}`);
     }
@@ -225,7 +220,7 @@ export default function ServicesScreen() {
             </ThemedText>
             <View style={styles.grid}>
               {group.services.map(
-                ({ title, icon, important, url, image, content }) => (
+                ({ title, icon, url, image, content }) => (
                   <ServiceCard
                     key={title}
                     title={title}
@@ -241,7 +236,6 @@ export default function ServicesScreen() {
                         handlePress(title);
                       }
                     }}
-                    important={important}
                   />
                 )
               )}

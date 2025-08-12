@@ -75,8 +75,20 @@ const MAPPING = {
   },
   'books.vertical': { name: 'bookshelf', source: 'community' },
   shield: { name: 'shield-outline', source: 'community' },
+  'shield.lefthalf.filled': {
+    name: 'shield-half-full',
+    source: 'community',
+  },
   building: { name: 'office-building', source: 'community' },
+  'person.2.wave.2': {
+    name: 'human-greeting-proximity',
+    source: 'community',
+  },
   'xmark.circle.fill': { name: 'close', source: 'community' },
+  'person.crop.circle.badge.questionmark': {
+    name: 'account-question',
+    source: 'community',
+  },
 } as Record<string, IconConfig>;
 
 /**
