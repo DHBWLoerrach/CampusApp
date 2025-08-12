@@ -1,16 +1,10 @@
 import { ReactNode } from 'react';
-import {
-  Modal,
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from 'react-native';
+import { Modal, View, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Generic reusable modal for displaying long-form text content.
+// Generic reusable modal
 export default function InfoModal({
   visible,
   title,
@@ -52,15 +46,7 @@ export default function InfoModal({
             />
           </Pressable>
           <ThemedText style={styles.title}>{title}</ThemedText>
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={true}
-            // Using persistentScrollbar can help debugging layout
-            persistentScrollbar={false}
-          >
-            {children}
-          </ScrollView>
+          {children}
         </View>
       </View>
     </Modal>
@@ -100,13 +86,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 12,
-  },
-  scroll: {
-    // Ensure the scroll view can grow but does not collapse to zero height
-    alignSelf: 'stretch',
-    maxHeight: '100%',
-  },
-  scrollContent: {
-    paddingBottom: 12,
   },
 });

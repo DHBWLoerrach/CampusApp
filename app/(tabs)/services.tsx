@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
 import {
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
   StyleSheet,
   View,
-  ScrollView,
-  Pressable,
-  Platform,
-  Image,
-  Modal,
 } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import {
@@ -16,7 +15,6 @@ import {
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import InfoModal from '@/components/services/InfoModal';
-import ImageModal from '@/components/services/ImageModal';
 import {
   INFO_PAGES,
   type InfoKey,
@@ -268,62 +266,49 @@ export default function ServicesScreen() {
         ))}
       </ScrollView>
 
-      <Modal
+      <InfoModal
         visible={!!imageModal}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setImageModal(null)}
+        title={imageModal?.title || ''}
+        onClose={() => setImageModal(null)}
       >
-        <View style={styles.modalBackdrop}>
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: isDark ? '#121212' : '#FFFFFF' },
-            ]}
-          >
-            <Pressable
-              onPress={() => setImageModal(null)}
-              style={styles.closeButton}
-              accessibilityRole="button"
-              accessibilityLabel="Schließen"
-            >
-              <IconSymbol
-                name="xmark.circle.fill"
-                size={32}
-                color={isDark ? '#FFFFFF' : '#333333'}
-              />
-            </Pressable>
-            {imageModal && (
-              <Image
-                source={imageModal.source}
-                style={styles.modalImage}
-                resizeMode="contain"
-                accessible
-                accessibilityLabel={imageModal.title}
-              />
-            )}
-            <ThemedText style={styles.modalCaption}>
-              {imageModal?.title}
-            </ThemedText>
-          </View>
-        </View>
-      </Modal>
+        <Image
+          source={imageModal?.source}
+          style={styles.modalImage}
+          resizeMode="contain"
+          accessible
+          accessibilityLabel={imageModal?.title || ''}
+        />
+      </InfoModal>
 
-      {/* Generic info modal */}
       <InfoModal
         visible={!!infoKey}
         title={title}
         onClose={() => setInfoKey(null)}
       >
-        {Active ? <Active /> : null}
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={true}
+        >
+          {Active ? <Active /> : null}
+        </ScrollView>
       </InfoModal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollView: { flex: 1 },
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scroll: {
+    // Ensure the scroll view can grow but does not collapse to zero height
+    alignSelf: 'stretch',
+    maxHeight: '100%',
+  },
   scrollContent: {
     padding: 16,
     paddingBottom: 32,
@@ -370,35 +355,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 13,
   },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    justifyContent: 'center',
-    padding: 16,
-  },
-  modalContent: {
-    borderRadius: 16,
-    padding: 12,
-    maxHeight: '85%',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
   modalImage: {
     width: '100%',
-    height: '75%',
+    height: '70%',
     borderRadius: 12,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    padding: 4,
-    zIndex: 10,
-  },
-  modalCaption: {
-    marginTop: 12,
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: '600',
   },
 });
