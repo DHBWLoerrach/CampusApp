@@ -18,6 +18,7 @@
 
 ## Schedule screen
 
+- Layout: Sections für Tage hat spitze Ecken, Events mit runden Ecken
 - Achtung: Bug bei Serienterminen beachten!
 - Web: webmail-Kalender als iframe einbetten?
 - Test: win25a-a/b u.a.
