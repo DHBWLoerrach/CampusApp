@@ -55,7 +55,8 @@ const AboutBody = () => {
         </Link>
       </InfoText>
       <InfoText>
-        Diese App ist ein Open Source Projekt:
+        Diese App ist ein Open Source Projekt. Der Quellcode ist
+        verfügbar unter:
         {'\n'}
         <Link href="https://github.com/DHBWLoerrach/CampusApp">
           <InfoText isLink>
