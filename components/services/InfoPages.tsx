@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
 import * as Application from 'expo-application';
 import { disclaimerText } from '@/constants/InfoTexts';
@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { openLink } from '@/lib/utils';
 
 export type InfoKey = 'about' | 'imprint' | 'disclaimer' | 'privacy';
 
@@ -54,11 +55,19 @@ const AboutBody = () => {
         Diese App ist ein Open Source Projekt. Der Quellcode ist
         verfügbar unter:
         {'\n'}
-        <Link href="https://github.com/DHBWLoerrach/CampusApp">
+        <Pressable
+          onPress={() =>
+            openLink('https://github.com/DHBWLoerrach/CampusApp')
+          }
+          accessible
+          accessibilityLabel={`Quellcode der App`}
+          accessibilityHint={`Öffnet den Quellcode der App auf GitHub im Browser`}
+          accessibilityRole="link"
+        >
           <InfoText isLink>
             https://github.com/DHBWLoerrach/CampusApp
           </InfoText>
-        </Link>
+        </Pressable>
       </InfoText>
       <InfoText>
         Version der Campus App: {`${versionString}`}
@@ -88,9 +97,15 @@ const ImprintBody = () => (
         <InfoText isLink>info@dhbw-loerrach.de</InfoText>
       </Link>
       {'\n'}
-      <Link href="https://www.dhbw-loerrach.de">
+      <Pressable
+        onPress={() => openLink('https://www.dhbw-loerrach.de')}
+        accessible
+        accessibilityLabel={`Webseite der DHBW Lörrach`}
+        accessibilityHint={`Öffnet die Webseite der DHBW Lörrach im Browser`}
+        accessibilityRole="link"
+      >
         <InfoText isLink>www.dhbw-loerrach.de</InfoText>
-      </Link>
+      </Pressable>
     </InfoText>
     <InfoText>
       Die Duale Hochschule Baden-Württemberg ist eine rechtsfähige
@@ -125,9 +140,15 @@ const ImprintBody = () => (
         <InfoText isLink>poststelle@mwk.bwl.de</InfoText>
       </Link>
       {'\n'}
-      <Link href="https://www.mwk.bwl.de">
-        <InfoText isLink>www.mwk.bwl.de</InfoText>
-      </Link>
+      <Pressable
+        onPress={() => openLink('https://mwk.baden-wuerttemberg.de')}
+        accessible
+        accessibilityLabel={`Webseite des Ministeriums für Wissenschaft, Forschung und Kunst des Landes Baden-Württemberg`}
+        accessibilityHint={`Öffnet die Webseite des Ministeriums für Wissenschaft, Forschung und Kunst des Landes Baden-Württemberg im Browser`}
+        accessibilityRole="link"
+      >
+        <InfoText isLink>mwk.baden-wuerttemberg.de</InfoText>
+      </Pressable>
     </InfoText>
     <ThemedText style={styles.heading}>
       Redaktionelle und technische Verantwortung
@@ -231,9 +252,17 @@ const PrivacyBody = () => (
     <InfoText>
       Unsere Datenschutzerklärung finden Sie unter:
       {'\n'}
-      <Link href="https://www.dhbw-loerrach.de/datenschutz">
-        <InfoText isLink> www.dhbw-loerrach.de/datenschutz</InfoText>
-      </Link>
+      <Pressable
+        onPress={() =>
+          openLink('https://www.dhbw-loerrach.de/datenschutz#inhalt')
+        }
+        accessible
+        accessibilityLabel={`Webseite zum Datenschutz der DHBW Lörrach`}
+        accessibilityHint={`Öffnet die Webseite zum Datenschutz der DHBW Lörrach im Browser`}
+        accessibilityRole="link"
+      >
+        <InfoText isLink>www.dhbw-loerrach.de/datenschutz</InfoText>
+      </Pressable>
     </InfoText>
   </>
 );
@@ -241,7 +270,7 @@ const PrivacyBody = () => (
 export const INFO_PAGES: Record<InfoKey, InfoDef> = {
   about: { title: 'Über diese App', Body: AboutBody },
   imprint: { title: 'Impressum', Body: ImprintBody },
-  disclaimer: { title: 'Disclaimer', Body: DisclaimerBody },
+  disclaimer: { title: 'Haftung', Body: DisclaimerBody },
   privacy: { title: 'Datenschutz', Body: PrivacyBody },
 };
 
