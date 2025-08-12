@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  Platform,
 } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -32,9 +31,6 @@ export function InfoModal({
       animationType="slide"
       transparent
       onRequestClose={onClose}
-      presentationStyle={
-        Platform.OS === 'ios' ? 'pageSheet' : 'overFullScreen'
-      }
     >
       <View style={styles.backdrop}>
         <View
