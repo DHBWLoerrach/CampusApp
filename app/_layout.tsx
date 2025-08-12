@@ -1,13 +1,22 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import {
+  ColorSchemeProvider,
+  useColorSchemeOverride,
+} from '@/context/ColorSchemeContext';
 
-export default function RootLayout() {
+function RootNavigator() {
   const colorScheme = useColorScheme();
+  const { alwaysDark, isReady } = useColorSchemeOverride();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -17,13 +26,31 @@ export default function RootLayout() {
     return null;
   }
 
+  if (!isReady) {
+    // Wait until AsyncStorage has hydrated to avoid theme flicker
+    return null;
+  }
+
+  const isDark = alwaysDark || colorScheme === 'dark';
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
     </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ColorSchemeProvider>
+      <RootNavigator />
+    </ColorSchemeProvider>
   );
 }

@@ -1,14 +1,17 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Switch } from 'react-native';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
-import { Colors, dhbwRed } from '@/constants/Colors';
+import { dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 
 export default function PreferencesScreen() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
+  const { alwaysDark, setAlwaysDark, isReady } =
+    useColorSchemeOverride();
 
   return (
     <View
@@ -24,12 +27,25 @@ export default function PreferencesScreen() {
           ...bottomTabBarOptions,
         }}
       />
-      <ThemedView style={styles.centered}>
+      <ThemedView style={styles.content}>
         <ThemedText style={styles.introText}>
-          Hier kannst du manuell den Dark Mode der App aktivieren.
-          Dafür muss die Verwendung der Systemeinstellung deaktiviert
-          werden.
+          Manuell den Dark Mode aktivieren. Bei Aktivierung wird die
+          Systemeinstellung ignoriert und die App immer dunkel
+          angezeigt.
         </ThemedText>
+
+        <View style={styles.row}>
+          <ThemedText style={styles.label}>
+            App immer im Dark Mode ausführen
+          </ThemedText>
+          <Switch
+            value={alwaysDark}
+            onValueChange={setAlwaysDark}
+            disabled={!isReady}
+            thumbColor={alwaysDark ? dhbwRed : undefined}
+            trackColor={{ false: '#767577', true: '#cfd2d4' }}
+          />
+        </View>
       </ThemedView>
     </View>
   );
@@ -39,15 +55,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  centered: {
+  content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 16,
+    gap: 12,
   },
   introText: {
     fontSize: 16,
     lineHeight: 22,
     marginBottom: 16,
     fontWeight: '400',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  label: {
+    fontSize: 16,
   },
 });
