@@ -15,11 +15,12 @@ import {
 } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
-import { InfoModal } from '@/components/sevices/InfoModal';
+import InfoModal from '@/components/services/InfoModal';
+import ImageModal from '@/components/services/ImageModal';
 import {
   INFO_PAGES,
   type InfoKey,
-} from '@/components/sevices/InfoPages';
+} from '@/components/services/InfoPages';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRouter } from 'expo-router';
 

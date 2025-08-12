@@ -16,7 +16,7 @@
 ## DHBW screen
 
 - Testen: neue News/Termin - refresh bei App-Neustart?
-- mit IT-Sevices (AR) sprechen, um ggf. RSS zu vereinfachen
+- mit ITS (A.R.) sprechen, um ggf. RSS zu vereinfachen
 
 ## Schedule screen
 

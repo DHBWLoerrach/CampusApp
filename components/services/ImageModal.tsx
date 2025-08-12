@@ -10,8 +10,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Generic reusable modal for displaying long-form text content.
-export function InfoModal({
+export default function ImageModal({
   visible,
   title,
   children,
