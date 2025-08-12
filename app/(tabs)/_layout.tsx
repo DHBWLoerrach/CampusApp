@@ -6,7 +6,7 @@ import { bottomTabBarOptions } from '@/constants/Navigation';
 import {
   CourseProvider,
   useCourseContext,
-} from '@/app/context/CourseContext';
+} from '@/context/CourseContext';
 
 const ICON_SIZE = 28;
 

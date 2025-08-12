@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
 import CourseSetup from '@/components/CourseSetup';
-import { useCourseContext } from '@/app/context/CourseContext';
+import { useCourseContext } from '@/context/CourseContext';
 
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = withLayoutContext(Tab.Navigator);
