@@ -8,9 +8,7 @@
 
 ## Chores
 
-- refactor `handleOpen` in `Services`, `RSSFeedList` u.a. to `lib` (Achtung: `#inhalt`)
-- Brauchen wir noch ThemedView und ThemedText?
-  - allgemeine UI-Komponenten extrahieren
+- allgemeine UI-Komponenten extrahieren
 - Alten Code in JS-Ordner löschen
 
 ## DHBW screen

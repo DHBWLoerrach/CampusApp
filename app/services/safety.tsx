@@ -7,28 +7,12 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Stack } from 'expo-router';
+import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
-import { ThemedText } from '@/components/ui/ThemedText';
-import * as WebBrowser from 'expo-web-browser';
-import { Stack } from 'expo-router';
-
-const handleOpen = async (url: string) => {
-  if (!url) return;
-
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
-  } else {
-    await WebBrowser.openBrowserAsync(url, {
-      presentationStyle:
-        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
-      controlsColor: dhbwRed, // iOS
-      createTask: false, // Android
-      showTitle: false, // Android
-    });
-  }
-};
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { openLink } from '@/lib/utils';
 
 const links: {
   title: string;
@@ -96,7 +80,7 @@ export default function SafetyScreen() {
           {links.map((item) => (
             <Pressable
               key={item.title}
-              onPress={() => handleOpen(item.url)}
+              onPress={() => openLink(item.url)}
               style={({ pressed }) => [
                 styles.card,
                 {
@@ -126,7 +110,7 @@ export default function SafetyScreen() {
             title="Brandschutzordnung (PDF)"
             color={dhbwRed}
             onPress={() =>
-              handleOpen('https://dhbw-loerrach.de/brandschutz')
+              openLink('https://dhbw-loerrach.de/brandschutz')
             }
           />
         </View>

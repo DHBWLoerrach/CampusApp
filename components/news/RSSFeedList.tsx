@@ -2,14 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Platform,
   Pressable,
   RefreshControl,
   StyleSheet,
   View,
 } from 'react-native';
 import { Image } from 'expo-image';
-import * as WebBrowser from 'expo-web-browser';
 import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { ThemedText } from '@/components/ui/ThemedText';
@@ -17,6 +15,7 @@ import { ThemedView } from '@/components/ui/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
 import { fetchAndParseRSSFeed, type RSSItem } from '@/lib/rssParser';
+import { openLink } from '@/lib/utils';
 
 interface RSSFeedListProps {
   feedUrl: string;
@@ -28,18 +27,7 @@ const blurhash = 'L|Ps0IwJxujtsUozW;Rj?^OXR*n%';
 
 const handleOpen = async (url: string) => {
   if (!url) return;
-
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
-  } else {
-    await WebBrowser.openBrowserAsync(url + '#inhalt', {
-      presentationStyle:
-        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
-      controlsColor: dhbwRed, // iOS
-      createTask: false, // Android
-      showTitle: false, // Android
-    });
-  }
+  await openLink(url + '#inhalt'); // Append anchor to focus main content
 };
 
 function ListItem({ item }: { item: Item }) {

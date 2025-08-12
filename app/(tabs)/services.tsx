@@ -7,36 +7,20 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
+import { useRouter } from 'expo-router';
 import {
   IconSymbol,
   type IconSymbolName,
 } from '@/components/ui/IconSymbol';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { Colors, dhbwRed } from '@/constants/Colors';
 import InfoModal from '@/components/services/InfoModal';
 import {
   INFO_PAGES,
   type InfoKey,
 } from '@/components/services/InfoPages';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { Colors, dhbwRed } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useRouter } from 'expo-router';
-
-const handleOpen = async (url: string) => {
-  if (!url) return;
-
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
-  } else {
-    await WebBrowser.openBrowserAsync(url, {
-      presentationStyle:
-        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
-      controlsColor: dhbwRed, // iOS
-      createTask: false, // Android
-      showTitle: false, // Android
-    });
-  }
-};
+import { openLink } from '@/lib/utils';
 
 function ServiceCard({
   title,
@@ -250,7 +234,7 @@ export default function ServicesScreen() {
                       if (image) {
                         setImageModal({ title, source: image });
                       } else if (url) {
-                        handleOpen(url);
+                        openLink(url);
                       } else if (content) {
                         setInfoKey(content);
                       } else {
