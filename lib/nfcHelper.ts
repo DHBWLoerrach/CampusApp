@@ -1,4 +1,9 @@
-function convertFourHexBytesToIntLE(b1, b2, b3, b4) {
+function convertFourHexBytesToIntLE(
+  b1: number,
+  b2: number,
+  b3: number,
+  b4: number
+): number {
   const hex = [b1, b2, b3, b4]
     .map((b) => b.toString(16).padStart(2, '0'))
     .reverse()
@@ -6,7 +11,11 @@ function convertFourHexBytesToIntLE(b1, b2, b3, b4) {
   return parseInt(hex, 16);
 }
 
-function extractAmount(bytes, startIndex, negate = false) {
+function extractAmount(
+  bytes: number[],
+  startIndex: number,
+  negate = false
+): number {
   const val = convertFourHexBytesToIntLE(
     bytes[startIndex + 3],
     bytes[startIndex + 2],
@@ -16,7 +25,10 @@ function extractAmount(bytes, startIndex, negate = false) {
   return (negate ? -val : val) / 1000; // tag contains the amount in euro cent * 10
 }
 
-function convertBytesToDouble(balanceBytes, lastTransactionBytes) {
+function convertBytesToDouble(
+  balanceBytes: number[],
+  lastTransactionBytes: number[]
+): { balance: number; lastTransaction: number } {
   if (balanceBytes.length < 5 || lastTransactionBytes.length < 17) {
     throw new Error('Invalid byte array length');
   }
