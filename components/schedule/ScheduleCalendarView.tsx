@@ -18,7 +18,7 @@ import {
 } from '@howljs/calendar-kit';
 import { useTimetable } from '@/hooks/useTimetable';
 import { useCourseContext } from '@/context/CourseContext';
-import Header from '@/components/CalendarHeader';
+import Header from '@/components/schedule/CalendarHeader';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface CalendarEvent {

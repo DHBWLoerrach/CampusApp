@@ -1,6 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 
-import NfcButton from '@/components/NfcButton';
+import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 

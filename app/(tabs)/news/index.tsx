@@ -1,5 +1,5 @@
 import { Platform } from 'react-native';
-import RSSFeedList from '@/components/RSSFeedList';
+import RSSFeedList from '@/components/news/RSSFeedList';
 
 const feedUrl =
   Platform.OS === 'web'
