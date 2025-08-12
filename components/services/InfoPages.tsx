@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
 import * as Application from 'expo-application';
-import Constants from 'expo-constants';
 import { disclaimerText } from '@/constants/InfoTexts';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -32,10 +31,7 @@ const InfoText = ({
 };
 
 const AboutBody = () => {
-  let versionString = `Version: ${Application.nativeApplicationVersion} (${Application.nativeBuildVersion})`;
-  if (Constants.expoVersion) {
-    versionString = `App runs in Expo version ${Constants.expoVersion}`;
-  }
+  let versionString = `${Application.nativeApplicationVersion} (${Application.nativeBuildVersion})`;
   return (
     <>
       <InfoText>
@@ -64,7 +60,9 @@ const AboutBody = () => {
           </InfoText>
         </Link>
       </InfoText>
-      <InfoText>Version (App): 3.0.0</InfoText>
+      <InfoText>
+        Version der Campus App: {`${versionString}`}
+      </InfoText>
     </>
   );
 };
