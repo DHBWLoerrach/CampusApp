@@ -185,6 +185,8 @@ export default function ServicesScreen() {
       router.push('/services/safety');
     } else if (name === 'Beratung und Hilfe') {
       router.push('/services/help-links');
+    } else if (name === 'Einstellungen') {
+      router.push('/services/preferences');
     } else {
       console.log(`Pressed: ${name}`);
     }
