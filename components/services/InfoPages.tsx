@@ -8,7 +8,12 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { openLink } from '@/lib/utils';
 
-export type InfoKey = 'about' | 'imprint' | 'disclaimer' | 'privacy';
+export type InfoKey =
+  | 'about'
+  | 'imprint'
+  | 'disclaimer'
+  | 'privacy'
+  | 'feedback';
 
 type InfoDef = { title: string; Body: React.ComponentType };
 
@@ -238,6 +243,21 @@ const DisclaimerBody = () => {
   );
 };
 
+const FeedbackBody = () => (
+  <>
+    <InfoText>
+      Falls du Fehler oder Verbesserungsvorschläge melden möchtest,
+      dann erreichst du uns per E-Mail:
+    </InfoText>
+    <InfoText>
+      <Link href="mailto:apps@dhbw-loerrach.de">
+        <InfoText isLink>apps@dhbw-loerrach.de</InfoText>
+      </Link>
+    </InfoText>
+    <InfoText>Wir freuen uns über dein Feedback.</InfoText>
+  </>
+);
+
 const PrivacyBody = () => (
   <>
     <InfoText>
@@ -272,6 +292,7 @@ export const INFO_PAGES: Record<InfoKey, InfoDef> = {
   imprint: { title: 'Impressum', Body: ImprintBody },
   disclaimer: { title: 'Haftung', Body: DisclaimerBody },
   privacy: { title: 'Datenschutz', Body: PrivacyBody },
+  feedback: { title: 'Feedback', Body: FeedbackBody },
 };
 
 const styles = StyleSheet.create({

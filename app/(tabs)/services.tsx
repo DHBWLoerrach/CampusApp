@@ -168,7 +168,7 @@ const serviceGroups: ServiceGroup[] = [
     title: 'App-Infos',
     services: [
       { title: 'Einstellungen', icon: 'gearshape' },
-      { title: 'Feedback', icon: 'envelope' },
+      { title: 'Feedback', icon: 'envelope', content: 'feedback' },
       { title: 'Über', icon: 'info.square', content: 'about' },
       {
         title: 'Haftung',
