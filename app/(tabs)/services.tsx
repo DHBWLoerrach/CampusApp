@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -16,7 +16,7 @@ import {
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import { InfoModal } from '@/components/ui/InfoModal';
-import { infoTexts, InfoKey } from '@/constants/InfoTexts';
+import { INFO_PAGES, type InfoKey } from '@/components/InfoPages';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useRouter } from 'expo-router';
 
@@ -107,6 +107,7 @@ type ServiceGroup = {
     important?: boolean;
     url?: string;
     image?: any;
+    content?: InfoKey;
   }[];
 };
 
@@ -182,10 +183,14 @@ const serviceGroups: ServiceGroup[] = [
     services: [
       { title: 'Einstellungen', icon: 'gearshape' },
       { title: 'Feedback', icon: 'envelope' },
-      { title: 'Über', icon: 'info.square' },
-      { title: 'Haftung', icon: 'exclamationmark.triangle' },
-      { title: 'Impressum', icon: 'text.page' },
-      { title: 'Datenschutz', icon: 'eye' },
+      { title: 'Über', icon: 'info.square', content: 'about' },
+      {
+        title: 'Haftung',
+        icon: 'exclamationmark.triangle',
+        content: 'disclaimer',
+      },
+      { title: 'Impressum', icon: 'text.page', content: 'imprint' },
+      { title: 'Datenschutz', icon: 'eye', content: 'privacy' },
     ],
   },
 ] as const;
@@ -209,6 +214,11 @@ export default function ServicesScreen() {
     source: any;
   } | null>(null);
   const [infoKey, setInfoKey] = useState<InfoKey | null>(null);
+  const Active = useMemo(
+    () => (infoKey ? INFO_PAGES[infoKey].Body : null),
+    [infoKey]
+  );
+  const title = infoKey ? INFO_PAGES[infoKey].title : '';
 
   return (
     <View style={styles.container}>
@@ -229,7 +239,7 @@ export default function ServicesScreen() {
             </ThemedText>
             <View style={styles.grid}>
               {group.services.map(
-                ({ title, icon, important, url, image }) => (
+                ({ title, icon, important, url, image, content }) => (
                   <ServiceCard
                     key={title}
                     title={title}
@@ -239,18 +249,10 @@ export default function ServicesScreen() {
                         setImageModal({ title, source: image });
                       } else if (url) {
                         handleOpen(url);
+                      } else if (content) {
+                        setInfoKey(content);
                       } else {
-                        // Open generic info modal for legal/info pages
-                        if (
-                          title === 'Über' ||
-                          title === 'Haftung' ||
-                          title === 'Impressum' ||
-                          title === 'Datenschutz'
-                        ) {
-                          setInfoKey(title as InfoKey);
-                        } else {
-                          handlePress(title);
-                        }
+                        handlePress(title);
                       }
                     }}
                     important={important}
@@ -303,17 +305,13 @@ export default function ServicesScreen() {
         </View>
       </Modal>
 
-      {/* Generic info/legal modal */}
+      {/* Generic info modal */}
       <InfoModal
-        visible={infoKey !== null}
-        title={infoKey ? infoTexts[infoKey].title : ''}
+        visible={!!infoKey}
+        title={title}
         onClose={() => setInfoKey(null)}
       >
-        {infoKey && (
-          <ThemedText style={{ fontSize: 14, lineHeight: 20 }}>
-            {infoTexts[infoKey].body}
-          </ThemedText>
-        )}
+        {Active ? <Active /> : null}
       </InfoModal>
     </View>
   );
