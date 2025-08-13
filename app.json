@@ -24,7 +24,10 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["NFC", "android.permission.NFC"],
+      "permissions": [
+        "NFC",
+        "android.permission.NFC"
+      ],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "web": {
@@ -54,7 +57,8 @@
           "includeNdefEntitlement": false
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,65 +1,13 @@
 import {
   createContext,
+  ReactNode,
   useContext,
   useState,
   useEffect,
 } from 'react';
+import Storage from 'expo-sqlite/kv-store';
 
-// Storage key for persisting the course
-const COURSE_STORAGE_KEY = '@schedule_course';
-
-// Simple storage fallback if AsyncStorage fails
-let memoryStorage: { [key: string]: string } = {};
-
-const safeStorage = {
-  async getItem(key: string): Promise<string | null> {
-    try {
-      // Try AsyncStorage first
-      const AsyncStorage =
-        require('@react-native-async-storage/async-storage').default;
-      return await AsyncStorage.getItem(key);
-    } catch (error) {
-      // Fallback to memory storage
-      console.warn(
-        'AsyncStorage failed, using memory storage:',
-        error
-      );
-      return memoryStorage[key] || null;
-    }
-  },
-
-  async setItem(key: string, value: string): Promise<void> {
-    try {
-      // Try AsyncStorage first
-      const AsyncStorage =
-        require('@react-native-async-storage/async-storage').default;
-      await AsyncStorage.setItem(key, value);
-    } catch (error) {
-      // Fallback to memory storage
-      console.warn(
-        'AsyncStorage failed, using memory storage:',
-        error
-      );
-      memoryStorage[key] = value;
-    }
-  },
-
-  async removeItem(key: string): Promise<void> {
-    try {
-      // Try AsyncStorage first
-      const AsyncStorage =
-        require('@react-native-async-storage/async-storage').default;
-      await AsyncStorage.removeItem(key);
-    } catch (error) {
-      // Fallback to memory storage
-      console.warn(
-        'AsyncStorage failed, using memory storage:',
-        error
-      );
-      delete memoryStorage[key];
-    }
-  },
-};
+const STORAGE_KEY = 'scheduleCourse';
 
 // Course Context for sharing course state across the app
 interface CourseContextType {
@@ -83,7 +31,7 @@ export function useCourseContext() {
 }
 
 interface CourseProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function CourseProvider({ children }: CourseProviderProps) {
@@ -96,9 +44,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
   useEffect(() => {
     const loadCourse = async () => {
       try {
-        const savedCourse = await safeStorage.getItem(
-          COURSE_STORAGE_KEY
-        );
+        const savedCourse = await Storage.getItem(STORAGE_KEY);
         if (savedCourse) {
           setSelectedCourseInternal(savedCourse);
         }
@@ -117,9 +63,9 @@ export function CourseProvider({ children }: CourseProviderProps) {
     setSelectedCourseInternal(course);
     try {
       if (course) {
-        await safeStorage.setItem(COURSE_STORAGE_KEY, course);
+        await Storage.setItem(STORAGE_KEY, course);
       } else {
-        await safeStorage.removeItem(COURSE_STORAGE_KEY);
+        await Storage.removeItem(STORAGE_KEY);
       }
     } catch (error) {
       console.warn('Failed to save course to storage:', error);

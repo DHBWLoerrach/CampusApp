@@ -5,6 +5,8 @@
 - Dark mode und andere Styles konsistent umsetzen (Suche z.B. nach `isDark`)
 - Webapp immer wieder checken, ob sie noch funktioniert
 - letzten Screen merken
+- iPad?
+- EAS updates: https://expo.dev/blog/6-reasons-to-use-eas-update
 
 ## Chores
 

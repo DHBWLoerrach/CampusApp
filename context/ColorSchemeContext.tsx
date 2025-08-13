@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Storage from 'expo-sqlite/kv-store';
 
 // Centralized color scheme override state. When alwaysDark is true,
 // the app should render in dark mode regardless of the OS setting.
@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type ColorSchemeContextValue = {
   alwaysDark: boolean;
   setAlwaysDark: (value: boolean) => void;
-  isReady: boolean; // Indicates AsyncStorage has been read at least once
+  isReady: boolean; // Indicates Storage has been read at least once
 };
 
 const defaultValue: ColorSchemeContextValue = {
@@ -25,7 +25,7 @@ const defaultValue: ColorSchemeContextValue = {
   isReady: false,
 };
 
-const STORAGE_KEY = 'pref:alwaysDark';
+const STORAGE_KEY = 'alwaysDark';
 
 const ColorSchemeContext =
   createContext<ColorSchemeContextValue>(defaultValue);
@@ -44,7 +44,7 @@ export function ColorSchemeProvider({
   useEffect(() => {
     (async () => {
       try {
-        const raw = await AsyncStorage.getItem(STORAGE_KEY);
+        const raw = await Storage.getItem(STORAGE_KEY);
         if (raw != null) {
           setAlwaysDarkState(raw === '1');
         }
@@ -60,7 +60,7 @@ export function ColorSchemeProvider({
   const setAlwaysDark = useCallback((value: boolean) => {
     setAlwaysDarkState(value);
     // Fire and forget persistence
-    AsyncStorage.setItem(STORAGE_KEY, value ? '1' : '0').catch(() => {
+    Storage.setItem(STORAGE_KEY, value ? '1' : '0').catch(() => {
       // Ignore persistence errors
     });
   }, []);

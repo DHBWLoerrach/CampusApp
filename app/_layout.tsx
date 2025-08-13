@@ -27,7 +27,7 @@ function RootNavigator() {
   }
 
   if (!isReady) {
-    // Wait until AsyncStorage has hydrated to avoid theme flicker
+    // Wait until Storage has hydrated to avoid theme flicker
     return null;
   }
 
