@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -33,6 +33,18 @@ export default function CourseSetup({
   const placeholderColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
 
+  // Keep previous courses sorted ascending for display
+  const sortedPreviousCourses = useMemo(
+    () =>
+      [...previousCourses].sort((a, b) =>
+        a.localeCompare(b, 'de', {
+          sensitivity: 'base',
+          numeric: true,
+        })
+      ),
+    [previousCourses]
+  );
+
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
       Alert.alert('Fehler', 'Bitte geben Sie einen Kursnamen ein.');
@@ -54,7 +66,7 @@ export default function CourseSetup({
           `Der Kurs "${inputValue.trim()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`
         );
       }
-    } catch (error) {
+  } catch {
       Alert.alert(
         'Fehler',
         'Bei der Validierung des Kurses ist ein Fehler aufgetreten.'
@@ -109,7 +121,7 @@ export default function CourseSetup({
               Zuvor ausgewählte Kurse
             </ThemedText>
             <View style={styles.historyList}>
-              {previousCourses.map((course) => (
+              {sortedPreviousCourses.map((course) => (
                 <View
                   key={course}
                   style={[styles.historyItem, { borderColor }]}
