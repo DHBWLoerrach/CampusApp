@@ -2,11 +2,11 @@ export type Role =
   | 'Studierende'
   | 'Lehrbeauftragte'
   | 'Mitarbeitende'
-  | 'Gäste';
+  | 'Gast';
 
 export const roles: Role[] = [
   'Studierende',
   'Lehrbeauftragte',
   'Mitarbeitende',
-  'Gäste',
+  'Gast',
 ];
