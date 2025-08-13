@@ -156,7 +156,7 @@ export default function ScheduleCalendarView({
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
-        <Text>Stundenplan wird geladen...</Text>
+        <Text>Vorlesungsplan wird geladen...</Text>
       </View>
     );
   }

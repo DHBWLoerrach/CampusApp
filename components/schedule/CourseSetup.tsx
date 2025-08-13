@@ -64,7 +64,7 @@ export default function CourseSetup({
     <ThemedView style={styles.container}>
       <View style={styles.content}>
         <ThemedText type="title" style={styles.title}>
-          Stundenplan
+          Vorlesungsplan
         </ThemedText>
         <View style={styles.inputContainer}>
           <TextInput
