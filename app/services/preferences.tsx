@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
-import { dhbwRed } from '@/constants/Colors';
+import { Colors, dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 import { useRoleContext } from '@/context/RoleContext';
@@ -14,8 +14,7 @@ export default function PreferencesScreen() {
   const isDark = scheme === 'dark';
   const { alwaysDark, setAlwaysDark, isReady } =
     useColorSchemeOverride();
-  const { selectedRole, setSelectedRole, acceptedTerms } =
-    useRoleContext();
+  const { selectedRole, setSelectedRole } = useRoleContext();
 
   return (
     <View
@@ -31,34 +30,62 @@ export default function PreferencesScreen() {
           ...bottomTabBarOptions,
         }}
       />
-      <ThemedView style={styles.content}>
-        <ThemedText style={styles.introText}>
-          Manuell den Dark Mode aktivieren. Bei Aktivierung wird die
-          Systemeinstellung ignoriert und die App immer dunkel
-          angezeigt.
-        </ThemedText>
-
-        <View style={styles.row}>
-          <ThemedText style={styles.label}>
-            App immer im Dark Mode ausführen
+      <View style={styles.content}>
+        {/* Card: Dark Mode preference */}
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              borderColor: isDark
+                ? Colors.dark.border
+                : Colors.light.border,
+            },
+          ]}
+        >
+          <ThemedText style={styles.cardTitle}>
+            Darstellung
           </ThemedText>
-          <Switch
-            value={alwaysDark}
-            onValueChange={setAlwaysDark}
-            disabled={!isReady}
-            thumbColor={alwaysDark ? dhbwRed : undefined}
-            trackColor={{ false: '#767577', true: '#cfd2d4' }}
-          />
-        </View>
+          <ThemedText style={styles.cardDescription}>
+            Bei Aktivierung wird die Systemeinstellung ignoriert und
+            die App immer dunkel angezeigt.
+          </ThemedText>
+          <View style={styles.row}>
+            <ThemedText style={styles.label}>
+              App immer im Dark Mode ausführen
+            </ThemedText>
+            <Switch
+              value={alwaysDark}
+              onValueChange={setAlwaysDark}
+              disabled={!isReady}
+              thumbColor={alwaysDark ? dhbwRed : undefined}
+              trackColor={{ false: '#767577', true: '#cfd2d4' }}
+            />
+          </View>
+        </ThemedView>
 
-        <ThemedText style={[styles.introText, { marginTop: 16 }]}>
-          Preisgruppe für die Mensa:
-        </ThemedText>
-        <RoleSelection
-          role={selectedRole}
-          onRoleChange={(r) => setSelectedRole(r)}
-        />
-      </ThemedView>
+        {/* Card: Mensa price group */}
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              borderColor: isDark
+                ? Colors.dark.border
+                : Colors.light.border,
+            },
+          ]}
+        >
+          <ThemedText style={styles.cardTitle}>
+            Mensa-Preisgruppe
+          </ThemedText>
+          <ThemedText style={styles.cardDescription}>
+            Bestimmt die Preisgruppe für die Mensa.
+          </ThemedText>
+          <RoleSelection
+            role={selectedRole}
+            onRoleChange={(r) => setSelectedRole(r)}
+          />
+        </ThemedView>
+      </View>
     </View>
   );
 }
@@ -70,19 +97,34 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
-    gap: 12,
+    gap: 16,
   },
-  introText: {
+  // Card base style used to visually separate settings
+  card: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    // Subtle shadow for iOS and elevation for Android
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  cardTitle: {
     fontSize: 16,
-    lineHeight: 22,
-    marginBottom: 16,
-    fontWeight: '400',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  cardDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 12,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
   },
   label: {
     fontSize: 16,
