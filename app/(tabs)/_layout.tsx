@@ -1,12 +1,13 @@
-import { Tabs } from 'expo-router';
 import { TouchableOpacity, Alert } from 'react-native';
-
+import { Tabs } from 'expo-router';
+import Storage from 'expo-sqlite/kv-store';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { bottomTabBarOptions } from '@/constants/Navigation';
 import {
   CourseProvider,
   useCourseContext,
 } from '@/context/CourseContext';
+import { LAST_TAB_KEY } from '@/constants/StorageKeys';
+import { bottomTabBarOptions } from '@/constants/Navigation';
 
 const ICON_SIZE = 28;
 
@@ -48,6 +49,12 @@ function TabsContent() {
           ),
           tabBarLabel: 'DHBW',
         }}
+        listeners={{
+          focus: () => {
+            // Persist last active tab for next launch
+            Storage.setItem(LAST_TAB_KEY, 'news').catch(() => {});
+          },
+        }}
       />
       <Tabs.Screen
         name="schedule"
@@ -75,6 +82,11 @@ function TabsContent() {
               )
             : undefined,
         }}
+        listeners={{
+          focus: () => {
+            Storage.setItem(LAST_TAB_KEY, 'schedule').catch(() => {});
+          },
+        }}
       />
       <Tabs.Screen
         name="canteen"
@@ -88,6 +100,11 @@ function TabsContent() {
             />
           ),
         }}
+        listeners={{
+          focus: () => {
+            Storage.setItem(LAST_TAB_KEY, 'canteen').catch(() => {});
+          },
+        }}
       />
       <Tabs.Screen
         name="services"
@@ -100,6 +117,11 @@ function TabsContent() {
               color={color}
             />
           ),
+        }}
+        listeners={{
+          focus: () => {
+            Storage.setItem(LAST_TAB_KEY, 'services').catch(() => {});
+          },
         }}
       />
     </Tabs>
