@@ -23,12 +23,10 @@
 
 ## Schedule screen
 
+- Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
 - Achtung: Bug bei Serienterminen beachten!
 - Web: webmail-Kalender als iframe einbetten?
-- Test: win25a-a/b u.a.
 - Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
-- Liste der zuletzt gesehenen Kurse speichern und Möglichkeit, Kurse zu löschen
-- zwischen gespeicherten Kursen wechseln können
 
 ## Canteen screen
 
