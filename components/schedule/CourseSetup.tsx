@@ -80,6 +80,22 @@ export default function CourseSetup({
     }
   };
 
+  // Confirm before removing a course from the history list
+  const handleRemoveCourse = (course: string) => {
+    Alert.alert(
+      'Kurs entfernen',
+      `Möchten Sie den Kurs "${course}" aus der Liste entfernen?`,
+      [
+        { text: 'Abbrechen', style: 'cancel' },
+        {
+          text: 'Entfernen',
+          style: 'destructive',
+          onPress: () => removeCourseFromHistory(course),
+        },
+      ]
+    );
+  };
+
   return (
     <ThemedView style={styles.container}>
       <View style={styles.content}>
@@ -141,7 +157,7 @@ export default function CourseSetup({
                     </ThemedText>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => removeCourseFromHistory(course)}
+                    onPress={() => handleRemoveCourse(course)}
                     accessibilityRole="button"
                     accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
                     hitSlop={8}
