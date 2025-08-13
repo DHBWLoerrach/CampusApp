@@ -13,10 +13,9 @@ const ICON_SIZE = 28;
 function TabsContent() {
   const { selectedCourse, setSelectedCourse } = useCourseContext();
 
-  // Generate dynamic title: Course name in uppercase or fallback to "Stundenplan"
   const scheduleTitle = selectedCourse
     ? selectedCourse.toUpperCase()
-    : 'Stundenplan';
+    : 'Vorlesungsplan';
 
   const handleChangeCourse = () => {
     if (selectedCourse) {

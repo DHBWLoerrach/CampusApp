@@ -15,9 +15,14 @@ import { useRoleContext } from '@/context/RoleContext';
 import { dhbwRed } from '@/constants/Colors';
 import { disclaimerText } from '@/constants/InfoTexts';
 import type { Role } from '@/constants/Roles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function WelcomeScreen() {
+  const insets = useSafeAreaInsets();
+
   const [disclaimerChecked, setDisclaimerChecked] = useState(false);
+  const [showDisclaimerDetails, setShowDisclaimerDetails] =
+    useState(false);
   const { setSelectedRole, setAcceptedTerms } = useRoleContext();
   const [pendingRole, setPendingRole] = useState<Role | null>(null);
 
@@ -30,101 +35,183 @@ export default function WelcomeScreen() {
     router.replace('/(tabs)/news');
   };
 
+  const disabled = !disclaimerChecked || !pendingRole;
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ title: 'Willkommen' }} />
 
-      <Image
-        source={require('../assets/images/app/welcome-header.png')}
-        style={styles.logo}
-        resizeMode="cover"
-      />
-
-      <ThemedText style={styles.heading}>
-        Willkommen an der DHBW Lörrach
-      </ThemedText>
-
-      <ThemedText style={styles.body}>
-        News, Vorlesungsplan, Mensa — alles im Blick.
-      </ThemedText>
-
-      <ThemedView style={styles.card}>
-        <ThemedText style={styles.label}>Rolle auswählen:</ThemedText>
-        <RoleSelection
-          role={pendingRole}
-          onRoleChange={setPendingRole as any}
-        />
-      </ThemedView>
-
-      <ThemedView style={styles.card}>
-        <ThemedText style={styles.label}>{disclaimerText}</ThemedText>
-        <View style={styles.switchRow}>
-          <Checkbox
-            value={disclaimerChecked}
-            onValueChange={setDisclaimerChecked}
-            color={disclaimerChecked ? dhbwRed : undefined}
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          { paddingBottom: insets.bottom + 96 },
+        ]}
+      >
+        <View style={styles.headerImageContainer}>
+          <Image
+            source={require('../assets/images/app/welcome-header.png')}
+            style={styles.headerImage}
+            resizeMode="cover"
           />
+        </View>
+
+        <ThemedText style={styles.heading}>
+          Willkommen an der DHBW Lörrach
+        </ThemedText>
+
+        <ThemedText style={styles.body}>
+          News, Vorlesungsplan, Mensa - alles im Blick.
+        </ThemedText>
+
+        <ThemedView style={styles.card}>
+          <ThemedText style={styles.label}>
+            Rolle auswählen
+          </ThemedText>
+          <RoleSelection
+            role={pendingRole}
+            onRoleChange={setPendingRole as any}
+          />
+        </ThemedView>
+
+        <ThemedView style={styles.card}>
+          <ThemedText style={styles.disclaimerShort}>
+            Hinweis: Inhalte werden sorgfältig gepflegt, Abweichungen
+            sind möglich. Im Zweifel gilt der Online-Vorlesungsplan.
+          </ThemedText>
+
+          {showDisclaimerDetails ? (
+            <ThemedText style={styles.disclaimerDetails}>
+              {disclaimerText}
+            </ThemedText>
+          ) : null}
+
           <Pressable
-            onPress={() => setDisclaimerChecked((v) => !v)}
+            onPress={() => setShowDisclaimerDetails((v) => !v)}
             accessibilityRole="button"
-            accessibilityState={{ checked: disclaimerChecked }}
-            style={styles.checkboxLabel}
             hitSlop={8}
           >
-            <ThemedText>
-              Ich habe die Hinweise gelesen und stimme zu.
+            <ThemedText style={styles.disclaimerLink}>
+              {showDisclaimerDetails
+                ? 'Details ausblenden'
+                : 'Details anzeigen'}
             </ThemedText>
           </Pressable>
-        </View>
-      </ThemedView>
 
-      <ThemedView style={styles.footer}>
-        <ThemedText
+          <View style={styles.switchRow}>
+            <Checkbox
+              value={disclaimerChecked}
+              onValueChange={setDisclaimerChecked}
+              color={disclaimerChecked ? dhbwRed : undefined}
+            />
+            <Pressable
+              onPress={() => setDisclaimerChecked((v) => !v)}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: disclaimerChecked }}
+              style={styles.checkboxLabel}
+              hitSlop={8}
+            >
+              <ThemedText>
+                Ich habe die Hinweise gelesen und stimme zu.
+              </ThemedText>
+            </Pressable>
+          </View>
+        </ThemedView>
+      </ScrollView>
+
+      <ThemedView
+        style={[
+          styles.footer,
+          {
+            paddingBottom: insets.bottom + 12,
+            paddingHorizontal: 16,
+          },
+        ]}
+      >
+        <Pressable
           onPress={onStart}
+          disabled={disabled}
           style={[
             styles.startButton,
-            !disclaimerChecked || !pendingRole
-              ? styles.disabled
-              : null,
+            disabled && styles.startButtonDisabled,
           ]}
+          accessibilityRole="button"
+          accessibilityState={{ disabled }}
         >
-          Weiter
-        </ThemedText>
+          <ThemedText style={styles.startButtonLabel}>
+            Weiter
+          </ThemedText>
+        </Pressable>
       </ThemedView>
-    </ScrollView>
+    </View>
   );
 }
 
+const SPACING = 20;
+
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    gap: 16,
+  screen: {
+    flex: 1,
   },
-  logo: {
-    height: 120,
+  container: {
+    paddingHorizontal: 12,
+    gap: SPACING,
+  },
+  headerImageContainer: {
+    position: 'relative',
     width: '100%',
-    marginTop: 16,
+    height: 140,
+    overflow: 'hidden',
+    borderRadius: 12,
+    marginTop: 8,
+  },
+  headerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  headerGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
   },
   heading: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginTop: 8,
+    fontSize: 20,
+    fontWeight: '700',
+    marginTop: 4,
+    lineHeight: 30,
   },
   body: {
     fontSize: 16,
+    lineHeight: 22,
   },
   card: {
     padding: 16,
     borderRadius: 12,
+    gap: 12,
   },
   label: {
     fontSize: 16,
-    marginBottom: 8,
+    fontWeight: '600',
+    marginBottom: 4,
+    lineHeight: 20,
+  },
+  disclaimerShort: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  disclaimerDetails: {
+    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  disclaimerLink: {
+    marginTop: 8,
+    textDecorationLine: 'underline',
+    fontSize: 14,
   },
   switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     marginTop: 12,
     gap: 12,
   },
@@ -132,17 +219,26 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   footer: {
-    alignItems: 'flex-end',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   startButton: {
+    width: '100%',
+    height: 52,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: dhbwRed,
-    color: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    overflow: 'hidden',
   },
-  disabled: {
-    opacity: 0.5,
+  startButtonDisabled: {
+    opacity: 0.5, // nicht nur Farbe als Hinweis
+  },
+  startButtonLabel: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
