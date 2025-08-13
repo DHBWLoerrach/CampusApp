@@ -2,13 +2,12 @@ import { StyleSheet, View, Switch } from 'react-native';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import RoleSelection from '@/components/services/RoleSelection';
 import { dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
-import RoleSelection from '@/components/services/RoleSelection';
 import { useRoleContext } from '@/context/RoleContext';
-import { disclaimerText } from '@/constants/InfoTexts';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function PreferencesScreen() {
   const scheme = useColorScheme();
@@ -53,25 +52,12 @@ export default function PreferencesScreen() {
         </View>
 
         <ThemedText style={[styles.introText, { marginTop: 16 }]}>
-          Personengruppe für Mensa-Preise:
+          Preisgruppe für die Mensa:
         </ThemedText>
         <RoleSelection
           role={selectedRole}
           onRoleChange={(r) => setSelectedRole(r)}
         />
-
-        <ThemedText style={[styles.introText, { marginTop: 24 }]}>
-          Nutzungsbedingungen
-        </ThemedText>
-        <ThemedText style={{ marginBottom: 8 }}>
-          {disclaimerText}
-        </ThemedText>
-        <View style={styles.row}>
-          <ThemedText style={styles.label}>
-            Zustimmung erteilt
-          </ThemedText>
-          <Switch value={acceptedTerms} disabled />
-        </View>
       </ThemedView>
     </View>
   );
