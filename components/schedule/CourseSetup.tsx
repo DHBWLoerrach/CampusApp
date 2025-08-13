@@ -113,7 +113,7 @@ export default function CourseSetup({
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <ThemedText style={styles.validateButtonText}>
-                Anzeigen
+                Ok
               </ThemedText>
             )}
           </TouchableOpacity>
@@ -134,16 +134,16 @@ export default function CourseSetup({
                     style={styles.historyItemButton}
                     onPress={() => onCourseSelected(course)}
                     accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course.toUpperCase()} auswählen`}
+                    accessibilityLabel={`Kurs ${course} auswählen`}
                   >
                     <ThemedText style={styles.historyItemText}>
-                      {course.toUpperCase()}
+                      {course}
                     </ThemedText>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => removeCourseFromHistory(course)}
                     accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course.toUpperCase()} aus Liste entfernen`}
+                    accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
                     hitSlop={8}
                     style={styles.removeButton}
                   >
