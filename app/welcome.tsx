@@ -66,7 +66,7 @@ export default function WelcomeScreen() {
         </ThemedText>
 
         <ThemedText style={styles.body}>
-          News, Vorlesungsplan, Mensa - alles im Blick.
+          News, Vorlesungsplan, Mensa – alles im Blick.
         </ThemedText>
 
         <ThemedView style={styles.card}>
@@ -103,7 +103,7 @@ export default function WelcomeScreen() {
             </ThemedText>
           </Pressable>
 
-          <View style={styles.switchRow}>
+          <View style={styles.acceptTermsRow}>
             <Checkbox
               value={disclaimerChecked}
               onValueChange={setDisclaimerChecked}
@@ -152,14 +152,14 @@ export default function WelcomeScreen() {
   );
 }
 
-const SPACING = 20;
+const SPACING = 12;
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
   container: {
-    paddingHorizontal: 12,
+    paddingHorizontal: SPACING,
     gap: SPACING,
   },
   headerImageContainer: {
@@ -168,17 +168,10 @@ const styles = StyleSheet.create({
     height: 140,
     overflow: 'hidden',
     borderRadius: 12,
-    marginTop: 8,
   },
   headerImage: {
     width: '100%',
     height: '100%',
-  },
-  headerGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
   },
   headerLogo: {
     position: 'absolute',
@@ -189,11 +182,11 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     borderColor: '#fff',
+    opacity: 0.8,
   },
   heading: {
     fontSize: 20,
     fontWeight: '700',
-    marginTop: 4,
     lineHeight: 30,
   },
   body: {
@@ -203,12 +196,11 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
     borderRadius: 12,
-    gap: 12,
+    gap: 8,
   },
   label: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 4,
     lineHeight: 20,
   },
   disclaimerShort: {
@@ -216,16 +208,14 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   disclaimerDetails: {
-    marginTop: 8,
     fontSize: 14,
     lineHeight: 20,
   },
   disclaimerLink: {
-    marginTop: 8,
     textDecorationLine: 'underline',
     fontSize: 14,
   },
-  switchRow: {
+  acceptTermsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 12,
@@ -239,7 +229,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    borderTopWidth: StyleSheet.hairlineWidth,
   },
   startButton: {
     width: '100%',
