@@ -1,6 +1,6 @@
 # TODOS
 
-- Welcome screen
+- Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 - Update App Store screenshots and description?
 - Dark mode und andere Styles konsistent umsetzen (Suche z.B. nach `isDark`)
 - Webapp immer wieder checken, ob sie noch funktioniert

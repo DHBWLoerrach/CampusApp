@@ -13,10 +13,12 @@ import {
   ColorSchemeProvider,
   useColorSchemeOverride,
 } from '@/context/ColorSchemeContext';
+import { RoleProvider, useRoleContext } from '@/context/RoleContext';
 
 function RootNavigator() {
   const colorScheme = useColorScheme();
   const { alwaysDark, isReady } = useColorSchemeOverride();
+  const { selectedRole, acceptedTerms, isLoading } = useRoleContext();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -26,7 +28,7 @@ function RootNavigator() {
     return null;
   }
 
-  if (!isReady) {
+  if (!isReady || isLoading) {
     // Wait until Storage has hydrated to avoid theme flicker
     return null;
   }
@@ -35,13 +37,22 @@ function RootNavigator() {
 
   return (
     <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      {!selectedRole || !acceptedTerms ? (
+        <Stack>
+          <Stack.Screen
+            name="welcome"
+            options={{ headerShown: false }}
+          />
+        </Stack>
+      ) : (
+        <Stack>
+          <Stack.Screen
+            name="(tabs)"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      )}
       <StatusBar style={isDark ? 'light' : 'dark'} />
     </ThemeProvider>
   );
@@ -50,7 +61,9 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <ColorSchemeProvider>
-      <RootNavigator />
+      <RoleProvider>
+        <RootNavigator />
+      </RoleProvider>
     </ColorSchemeProvider>
   );
 }

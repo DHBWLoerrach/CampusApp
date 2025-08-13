@@ -41,7 +41,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-web": "~0.20.0",
     "expo-application": "~6.1.5",
-    "expo-sqlite": "~15.2.14"
+    "expo-sqlite": "~15.2.14",
+    "expo-checkbox": "~4.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

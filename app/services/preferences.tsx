@@ -6,12 +6,17 @@ import { dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
+import RoleSelection from '@/components/services/RoleSelection';
+import { useRoleContext } from '@/context/RoleContext';
+import { disclaimerText } from '@/constants/InfoTexts';
 
 export default function PreferencesScreen() {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
   const { alwaysDark, setAlwaysDark, isReady } =
     useColorSchemeOverride();
+  const { selectedRole, setSelectedRole, acceptedTerms } =
+    useRoleContext();
 
   return (
     <View
@@ -45,6 +50,27 @@ export default function PreferencesScreen() {
             thumbColor={alwaysDark ? dhbwRed : undefined}
             trackColor={{ false: '#767577', true: '#cfd2d4' }}
           />
+        </View>
+
+        <ThemedText style={[styles.introText, { marginTop: 16 }]}>
+          Personengruppe für Mensa-Preise:
+        </ThemedText>
+        <RoleSelection
+          role={selectedRole}
+          onRoleChange={(r) => setSelectedRole(r)}
+        />
+
+        <ThemedText style={[styles.introText, { marginTop: 24 }]}>
+          Nutzungsbedingungen
+        </ThemedText>
+        <ThemedText style={{ marginBottom: 8 }}>
+          {disclaimerText}
+        </ThemedText>
+        <View style={styles.row}>
+          <ThemedText style={styles.label}>
+            Zustimmung erteilt
+          </ThemedText>
+          <Switch value={acceptedTerms} disabled />
         </View>
       </ThemedView>
     </View>
