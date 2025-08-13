@@ -53,6 +53,12 @@ export default function WelcomeScreen() {
             style={styles.headerImage}
             resizeMode="cover"
           />
+          {/* Circular DHBW logo overlay at the top-left */}
+          <Image
+            source={require('../assets/images/icon.png')}
+            style={styles.headerLogo}
+            accessibilityLabel="DHBW Logo"
+          />
         </View>
 
         <ThemedText style={styles.heading}>
@@ -75,8 +81,8 @@ export default function WelcomeScreen() {
 
         <ThemedView style={styles.card}>
           <ThemedText style={styles.disclaimerShort}>
-            Hinweis: Inhalte werden sorgfältig gepflegt, Abweichungen
-            sind möglich. Im Zweifel gilt der Online-Vorlesungsplan.
+            Hinweis: Abweichungen in den Inhalten sind möglich.
+            Maßgeblich ist der Online-Vorlesungsplan.
           </ThemedText>
 
           {showDisclaimerDetails ? (
@@ -173,6 +179,16 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+  },
+  headerLogo: {
+    position: 'absolute',
+    right: 12,
+    bottom: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
   heading: {
     fontSize: 20,
