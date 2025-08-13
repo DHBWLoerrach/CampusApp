@@ -10,6 +10,7 @@
 
 ## Chores
 
+- Gelegentlich `npm run lint` ausführen
 - allgemeine UI-Komponenten extrahieren
 - Alten Code in JS-Ordner löschen
 
