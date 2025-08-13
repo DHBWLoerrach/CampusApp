@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import { ThemedView } from '@/components/ui/ThemedView';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { validateCourse } from '@/lib/icalService';
 
 interface CourseSetupProps {
@@ -19,6 +21,13 @@ export default function CourseSetup({
 }: CourseSetupProps) {
   const [inputValue, setInputValue] = useState('');
   const [isValidating, setIsValidating] = useState(false);
+
+  // Resolve theme-aware colors
+  const textColor = useThemeColor({}, 'text');
+  const borderColor = useThemeColor({}, 'border');
+  const inputBgColor = useThemeColor({}, 'dayNumberContainer');
+  const placeholderColor = useThemeColor({}, 'icon');
+  const tintColor = useThemeColor({}, 'tint');
 
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
@@ -52,28 +61,33 @@ export default function CourseSetup({
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Stundenplan</Text>
-        <Text style={styles.subtitle}>
-          Geben Sie Ihren Kursnamen ein, um Ihren Stundenplan zu
-          laden.
-        </Text>
-
+        <ThemedText type="title" style={styles.title}>
+          Stundenplan
+        </ThemedText>
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.courseInput}
+            style={[
+              styles.courseInput,
+              {
+                color: textColor,
+                borderColor,
+                backgroundColor: inputBgColor,
+              },
+            ]}
             value={inputValue}
             onChangeText={setInputValue}
             placeholder="Kursname eingeben"
-            placeholderTextColor="#999"
+            placeholderTextColor={placeholderColor}
             autoCapitalize="none"
             autoCorrect={false}
           />
           <TouchableOpacity
             style={[
               styles.validateButton,
-              isValidating && styles.validateButtonDisabled,
+              { backgroundColor: tintColor },
+              isValidating && { backgroundColor: placeholderColor },
             ]}
             onPress={handleValidateAndSetCourse}
             disabled={isValidating}
@@ -81,19 +95,20 @@ export default function CourseSetup({
             {isValidating ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <Text style={styles.validateButtonText}>Laden</Text>
+              <ThemedText style={styles.validateButtonText}>
+                Laden
+              </ThemedText>
             )}
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
@@ -103,15 +118,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
     marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 40,
-    lineHeight: 24,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -123,23 +130,17 @@ const styles = StyleSheet.create({
   courseInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ddd',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 18,
-    backgroundColor: '#fff',
   },
   validateButton: {
-    backgroundColor: '#007AFF',
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 8,
     minWidth: 90,
     alignItems: 'center',
-  },
-  validateButtonDisabled: {
-    backgroundColor: '#999',
   },
   validateButtonText: {
     color: '#fff',
