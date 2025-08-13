@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TimetableEvent } from '@/lib/icalService';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -20,23 +23,45 @@ const formatTimeRange = (start: Date, end: Date) => {
 };
 
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
+  // Theme-aware colors
+  const scheme = useColorScheme() ?? 'light';
+  const cardBg = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const secondaryText = Colors[scheme].icon;
+  const borderColor = Colors[scheme].border;
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.timeText}>
+    <View
+      style={[
+        styles.card,
+        {
+          backgroundColor: cardBg,
+          borderColor,
+          // In dark mode, avoid strong shadows; rely on border
+          shadowOpacity:
+            scheme === 'dark' ? 0 : styles.card.shadowOpacity,
+        },
+      ]}
+    >
+      <Text style={[styles.timeText, { color: secondaryText }]}>
         {formatTimeRange(event.start, event.end)}
       </Text>
-      <Text style={styles.title}>{event.title}</Text>
-      <Text style={styles.location}>{event.location}</Text>
+      <Text style={[styles.title, { color: textColor }]}>
+        {event.title}
+      </Text>
+      <Text style={[styles.location, { color: secondaryText }]}>
+        {event.location}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
@@ -45,7 +70,6 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 13,
-    color: '#666',
     marginBottom: 2,
   },
   title: {
@@ -55,7 +79,6 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 13,
-    color: '#666',
   },
 });
 
