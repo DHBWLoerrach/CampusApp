@@ -7,6 +7,21 @@ const links: {
   url: string;
 }[] = [
   {
+    title: 'Moodle',
+    icon: 'graduationcap',
+    url: 'https://moodle.loerrach.dhbw.de',
+  },
+  {
+    title: 'DUALIS (Noten)',
+    icon: 'chart.bar',
+    url: 'https://dualis.dhbw.de/',
+  },
+  {
+    title: 'Katalog der Bibliothek',
+    icon: 'books.vertical',
+    url: 'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18',
+  },
+  {
     title: 'Wohnungen',
     icon: 'house',
     url: 'https://dhbw-loerrach.de/wohnungen#inhalt',

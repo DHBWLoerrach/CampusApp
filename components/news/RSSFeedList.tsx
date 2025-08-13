@@ -160,7 +160,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   );
 }
 
-const CARD_H = 110;
+const CARD_H = 120;
 const styles = StyleSheet.create({
   centered: {
     flex: 1,

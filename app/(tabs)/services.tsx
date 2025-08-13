@@ -71,9 +71,7 @@ function ServiceCard({
             color={Colors[scheme ?? 'light'].icon}
           />
         </View>
-        <View style={styles.titleContainer}>
-          <ThemedText style={styles.cardTitle}>{title}</ThemedText>
-        </View>
+        <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       </View>
     </Pressable>
   );
@@ -120,24 +118,9 @@ const serviceGroups: ServiceGroup[] = [
         url: 'https://webmail.dhbw-loerrach.de',
       },
       {
-        title: 'Moodle',
-        icon: 'graduationcap',
-        url: 'https://moodle.loerrach.dhbw.de',
-      },
-      {
-        title: 'DUALIS (Noten)',
-        icon: 'chart.bar',
-        url: 'https://dualis.dhbw.de/',
-      },
-      {
         title: 'StuV',
         icon: 'person.3',
         url: 'https://stuv-loerrach.de',
-      },
-      {
-        title: 'Katalog der Bibliothek',
-        icon: 'books.vertical',
-        url: 'https://bsz.ibs-bw.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC18',
       },
       {
         title: 'Weitere Links…',
@@ -307,7 +290,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   card: {
-    width: 116,
+    width: 108,
     height: 88,
     borderRadius: 12,
     borderWidth: 0.5,
@@ -323,11 +306,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
-  },
-  titleContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   cardTitle: {
     fontSize: 12,
