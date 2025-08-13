@@ -2,9 +2,14 @@ import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -80,112 +85,132 @@ export default function CourseSetup({
     }
   };
 
-  // Confirm before removing a course from the history list
-  const handleRemoveCourse = (course: string) => {
-    Alert.alert(
-      'Kurs entfernen',
-      `Möchten Sie den Kurs "${course}" aus der Liste entfernen?`,
-      [
-        { text: 'Abbrechen', style: 'cancel' },
-        {
-          text: 'Entfernen',
-          style: 'destructive',
-          onPress: () => removeCourseFromHistory(course),
-        },
-      ]
-    );
-  };
-
   return (
-    <ThemedView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[
-              styles.courseInput,
-              {
-                color: textColor,
-                borderColor,
-                backgroundColor: inputBgColor,
-              },
-            ]}
-            value={inputValue}
-            onChangeText={setInputValue}
-            placeholder="Kursname eingeben"
-            placeholderTextColor={placeholderColor}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-          <TouchableOpacity
-            style={[
-              styles.validateButton,
-              { backgroundColor: tintColor },
-              isValidating && { backgroundColor: placeholderColor },
-            ]}
-            onPress={handleValidateAndSetCourse}
-            disabled={isValidating}
-          >
-            {isValidating ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <ThemedText style={styles.validateButtonText}>
-                Ok
-              </ThemedText>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        {previousCourses.length > 0 && (
-          <View style={styles.historySection}>
-            <ThemedText type="subtitle" style={styles.historyTitle}>
-              Zuvor ausgewählte Kurse
-            </ThemedText>
-            <View style={styles.historyList}>
-              {sortedPreviousCourses.map((course) => (
-                <View
-                  key={course}
-                  style={[styles.historyItem, { borderColor }]}
+    <TouchableWithoutFeedback
+      onPress={Keyboard.dismiss}
+      accessible={false}
+    >
+      <ThemedView style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
+          <View style={styles.contentContainer}>
+            <View style={styles.content}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[
+                    styles.courseInput,
+                    {
+                      color: textColor,
+                      borderColor,
+                      backgroundColor: inputBgColor,
+                    },
+                  ]}
+                  value={inputValue}
+                  onChangeText={setInputValue}
+                  placeholder="Kursname eingeben"
+                  placeholderTextColor={placeholderColor}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="done"
+                  onSubmitEditing={handleValidateAndSetCourse}
+                  blurOnSubmit
+                />
+                <TouchableOpacity
+                  style={[
+                    styles.validateButton,
+                    { backgroundColor: tintColor },
+                    isValidating && {
+                      backgroundColor: placeholderColor,
+                    },
+                  ]}
+                  onPress={handleValidateAndSetCourse}
+                  disabled={isValidating}
                 >
-                  <TouchableOpacity
-                    style={styles.historyItemButton}
-                    onPress={() => onCourseSelected(course)}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course} auswählen`}
-                  >
-                    <ThemedText style={styles.historyItemText}>
-                      {course}
+                  {isValidating ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <ThemedText style={styles.validateButtonText}>
+                      Ok
                     </ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleRemoveCourse(course)}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
-                    hitSlop={8}
-                    style={styles.removeButton}
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              {previousCourses.length > 0 && (
+                <View style={styles.historySection}>
+                  <ThemedText
+                    type="subtitle"
+                    style={styles.historyTitle}
                   >
-                    <IconSymbol
-                      name="xmark.circle.fill"
-                      size={20}
-                      color={placeholderColor}
-                    />
-                  </TouchableOpacity>
+                    Zuvor ausgewählte Kurse
+                  </ThemedText>
+                  <ScrollView
+                    style={styles.historyScroll}
+                    contentContainerStyle={styles.historyList}
+                    keyboardShouldPersistTaps="handled"
+                    keyboardDismissMode="on-drag"
+                  >
+                    {sortedPreviousCourses.map((course) => (
+                      <View
+                        key={course}
+                        style={[styles.historyItem, { borderColor }]}
+                      >
+                        <TouchableOpacity
+                          style={styles.historyItemButton}
+                          onPress={() => {
+                            Keyboard.dismiss();
+                            onCourseSelected(course);
+                          }}
+                          accessibilityRole="button"
+                          accessibilityLabel={`Kurs ${course} auswählen`}
+                        >
+                          <ThemedText style={styles.historyItemText}>
+                            {course}
+                          </ThemedText>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            removeCourseFromHistory(course)
+                          }
+                          accessibilityRole="button"
+                          accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
+                          hitSlop={8}
+                          style={styles.removeButton}
+                        >
+                          <IconSymbol
+                            name="xmark.circle.fill"
+                            size={20}
+                            color={placeholderColor}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
                 </View>
-              ))}
+              )}
             </View>
           </View>
-        )}
-      </View>
-    </ThemedView>
+        </KeyboardAvoidingView>
+      </ThemedView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  flex: { flex: 1 },
+  contentContainer: {
+    flex: 1,
     paddingHorizontal: 32,
+    paddingVertical: 24,
   },
   content: {
+    flex: 1,
     alignItems: 'center',
   },
   title: {
@@ -224,6 +249,11 @@ const styles = StyleSheet.create({
     marginTop: 28,
     width: '100%',
     maxWidth: 400,
+    flex: 1,
+    minHeight: 0,
+  },
+  historyScroll: {
+    flex: 1,
   },
   historyTitle: {
     marginBottom: 8,
