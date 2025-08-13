@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import {
-  View,
+  ActivityIndicator,
+  Alert,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
-  Alert,
+  View,
 } from 'react-native';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { validateCourse } from '@/lib/icalService';
+import { useCourseContext } from '@/context/CourseContext';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface CourseSetupProps {
   onCourseSelected: (course: string) => void;
@@ -21,6 +23,8 @@ export default function CourseSetup({
 }: CourseSetupProps) {
   const [inputValue, setInputValue] = useState('');
   const [isValidating, setIsValidating] = useState(false);
+  const { previousCourses, removeCourseFromHistory } =
+    useCourseContext();
 
   // Resolve theme-aware colors
   const textColor = useThemeColor({}, 'text');
@@ -63,9 +67,6 @@ export default function CourseSetup({
   return (
     <ThemedView style={styles.container}>
       <View style={styles.content}>
-        <ThemedText type="title" style={styles.title}>
-          Vorlesungsplan
-        </ThemedText>
         <View style={styles.inputContainer}>
           <TextInput
             style={[
@@ -96,11 +97,51 @@ export default function CourseSetup({
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <ThemedText style={styles.validateButtonText}>
-                Laden
+                Anzeigen
               </ThemedText>
             )}
           </TouchableOpacity>
         </View>
+
+        {previousCourses.length > 0 && (
+          <View style={styles.historySection}>
+            <ThemedText type="subtitle" style={styles.historyTitle}>
+              Zuvor ausgewählte Kurse
+            </ThemedText>
+            <View style={styles.historyList}>
+              {previousCourses.map((course) => (
+                <View
+                  key={course}
+                  style={[styles.historyItem, { borderColor }]}
+                >
+                  <TouchableOpacity
+                    style={styles.historyItemButton}
+                    onPress={() => onCourseSelected(course)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Kurs ${course} auswählen`}
+                  >
+                    <ThemedText style={styles.historyItemText}>
+                      {course}
+                    </ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => removeCourseFromHistory(course)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
+                    hitSlop={8}
+                    style={styles.removeButton}
+                  >
+                    <IconSymbol
+                      name="xmark.circle.fill"
+                      size={20}
+                      color={placeholderColor}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
       </View>
     </ThemedView>
   );
@@ -146,5 +187,37 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+  },
+  historySection: {
+    marginTop: 28,
+    width: '100%',
+    maxWidth: 400,
+  },
+  historyTitle: {
+    marginBottom: 8,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  historyList: {
+    gap: 8,
+  },
+  historyItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  historyItemButton: {
+    flex: 1,
+  },
+  historyItemText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  removeButton: {
+    marginLeft: 12,
   },
 });
