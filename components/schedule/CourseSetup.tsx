@@ -58,15 +58,19 @@ export default function CourseSetup({
         onCourseSelected(inputValue.trim());
         Alert.alert(
           'Erfolg',
-          `Kurs "${inputValue.trim()}" wurde erfolgreich geladen.`
+          `Kurs "${inputValue
+            .trim()
+            .toUpperCase()}" wurde erfolgreich geladen.`
         );
       } else {
         Alert.alert(
           'Ungültiger Kurs',
-          `Der Kurs "${inputValue.trim()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`
+          `Der Kurs "${inputValue
+            .trim()
+            .toUpperCase()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`
         );
       }
-  } catch {
+    } catch {
       Alert.alert(
         'Fehler',
         'Bei der Validierung des Kurses ist ein Fehler aufgetreten.'
@@ -130,16 +134,16 @@ export default function CourseSetup({
                     style={styles.historyItemButton}
                     onPress={() => onCourseSelected(course)}
                     accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course} auswählen`}
+                    accessibilityLabel={`Kurs ${course.toUpperCase()} auswählen`}
                   >
                     <ThemedText style={styles.historyItemText}>
-                      {course}
+                      {course.toUpperCase()}
                     </ThemedText>
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => removeCourseFromHistory(course)}
                     accessibilityRole="button"
-                    accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
+                    accessibilityLabel={`Kurs ${course.toUpperCase()} aus Liste entfernen`}
                     hitSlop={8}
                     style={styles.removeButton}
                   >

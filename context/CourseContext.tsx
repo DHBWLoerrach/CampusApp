@@ -51,27 +51,51 @@ export function CourseProvider({ children }: CourseProviderProps) {
     const loadCourse = async () => {
       try {
         const savedCourse = await Storage.getItem(COURSE_KEY);
-        if (savedCourse) {
-          setSelectedCourseInternal(savedCourse);
+        const savedCourseUpper = savedCourse
+          ? savedCourse.toUpperCase()
+          : null;
+        if (savedCourseUpper) {
+          // Normalize state to uppercase
+          setSelectedCourseInternal(savedCourseUpper);
+          // If value in storage was not uppercase, rewrite
+          if (savedCourse !== savedCourseUpper) {
+            await Storage.setItem(COURSE_KEY, savedCourseUpper);
+          }
         }
         const historyRaw = await Storage.getItem(HISTORY_KEY);
         if (historyRaw) {
           try {
             const parsed: unknown = JSON.parse(historyRaw);
             if (Array.isArray(parsed)) {
-              // ensure string[]
-              const list = parsed.filter(
+              // Ensure string[] and normalize to uppercase, de-duplicate while preserving order
+              const rawList = parsed.filter(
                 (x) => typeof x === 'string'
               ) as string[];
-              setPreviousCourses(list);
-              // if there is a saved course but it's not in history yet (from older app version), add it to front
-              if (savedCourse && !list.includes(savedCourse)) {
-                const next = [savedCourse, ...list];
+              const upperList: string[] = [];
+              const seen = new Set<string>();
+              for (const c of rawList) {
+                const up = c.toUpperCase();
+                if (!seen.has(up)) {
+                  seen.add(up);
+                  upperList.push(up);
+                }
+              }
+              // If there is a saved course but it's not in history yet, add it to front
+              if (
+                savedCourseUpper &&
+                !upperList.includes(savedCourseUpper)
+              ) {
+                upperList.unshift(savedCourseUpper);
+              }
+              setPreviousCourses(upperList);
+              // Persist normalized list if any changes from original
+              if (
+                JSON.stringify(rawList) !== JSON.stringify(upperList)
+              ) {
                 await Storage.setItem(
                   HISTORY_KEY,
-                  JSON.stringify(next)
+                  JSON.stringify(upperList)
                 );
-                setPreviousCourses(next);
               }
             }
           } catch (err) {
@@ -106,7 +130,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
 
   // Add a course to history (most recent first, unique)
   const addCourseToHistory = async (course: string) => {
-    const trimmed = course.trim();
+    const trimmed = course.trim().toUpperCase();
     if (!trimmed) return;
     const next = [
       trimmed,
@@ -117,12 +141,13 @@ export function CourseProvider({ children }: CourseProviderProps) {
 
   // Save course to storage whenever it changes
   const setSelectedCourse = async (course: string | null) => {
-    setSelectedCourseInternal(course);
+    const normalized = course ? course.toUpperCase() : null;
+    setSelectedCourseInternal(normalized);
     try {
-      if (course) {
-        await Storage.setItem(COURSE_KEY, course);
+      if (normalized) {
+        await Storage.setItem(COURSE_KEY, normalized);
         // maintain history list
-        await addCourseToHistory(course);
+        await addCourseToHistory(normalized);
       } else {
         await Storage.removeItem(COURSE_KEY);
       }
@@ -132,7 +157,8 @@ export function CourseProvider({ children }: CourseProviderProps) {
   };
 
   const removeCourseFromHistory = async (course: string) => {
-    const next = previousCourses.filter((c) => c !== course);
+    const target = course.toUpperCase();
+    const next = previousCourses.filter((c) => c !== target);
     await persistHistory(next);
   };
 

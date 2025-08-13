@@ -21,7 +21,7 @@ function TabsContent() {
     if (selectedCourse) {
       Alert.alert(
         'Kurs ändern',
-        `Möchten Sie den aktuellen Kurs "${selectedCourse}" verlassen und einen neuen Kurs auswählen?`,
+        `Möchten Sie den aktuellen Kurs "${selectedCourse.toUpperCase()}" verlassen und einen neuen Kurs auswählen?`,
         [
           {
             text: 'Abbrechen',
