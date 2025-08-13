@@ -4,7 +4,6 @@
 - Update App Store screenshots and description?
 - Dark mode und andere Styles konsistent umsetzen (Suche z.B. nach `isDark`)
 - Webapp immer wieder checken, ob sie noch funktioniert
-- letzten Screen merken
 - iPad?
 - EAS updates:
   - https://expo.dev/blog/6-reasons-to-use-eas-update
@@ -14,7 +13,6 @@
 
 - Gelegentlich `npm run lint` ausführen
 - allgemeine UI-Komponenten extrahieren
-- Alten Code in JS-Ordner löschen
 
 ## DHBW screen
 
@@ -23,7 +21,7 @@
 
 ## Schedule screen
 
-- Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
+- vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
 - Achtung: Bug bei Serienterminen beachten!
 - Web: webmail-Kalender als iframe einbetten?
 - Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
@@ -35,7 +33,6 @@
 
 ## Services screen
 
-- nach Mensa-Update: Rollenwechsel in Einstellungen
 - Webversion: Modal für "Gebäude Hangstraße" oder andere Lösung?
 
 ## Automatisierte Tests
