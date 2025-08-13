@@ -6,7 +6,9 @@
 - Webapp immer wieder checken, ob sie noch funktioniert
 - letzten Screen merken
 - iPad?
-- EAS updates: https://expo.dev/blog/6-reasons-to-use-eas-update
+- EAS updates:
+  - https://expo.dev/blog/6-reasons-to-use-eas-update
+  - https://expo.dev/blog/eas-update-best-practices
 
 ## Chores
 
@@ -46,6 +48,8 @@
 
 ## Stuff to check
 
+- Export Router UI (anstelle react navigation?) https://docs.expo.dev/versions/latest/sdk/router-ui/
+- Expo UI (native components) https://docs.expo.dev/versions/latest/sdk/ui/
 - check common navigation patterns: https://docs.expo.dev/router/basics/common-navigation-patterns/
 - Check unistyles?
 
