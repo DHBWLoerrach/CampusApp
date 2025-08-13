@@ -71,7 +71,7 @@ export default function WelcomeScreen() {
 
         <ThemedView style={styles.card}>
           <ThemedText style={styles.label}>
-            Rolle auswählen
+            Preisgruppe für die Mensa auswählen
           </ThemedText>
           <RoleSelection
             role={pendingRole}
