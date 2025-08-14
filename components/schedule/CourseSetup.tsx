@@ -57,7 +57,10 @@ export default function CourseSetup({
       return;
     }
 
+    // Prevent multiple validations and disable the button immediately
+    if (isValidating) return;
     setIsValidating(true);
+
     try {
       const isValid = await validateCourse(inputValue.trim());
       if (isValid) {
