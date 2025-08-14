@@ -1,23 +1,22 @@
-import { StyleSheet, View, Switch } from 'react-native';
+import { StyleSheet, Switch, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
-import { Colors, dhbwRed } from '@/constants/Colors';
+import { dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 import { useRoleContext } from '@/context/RoleContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function PreferencesScreen() {
-  const pageBg = useThemeColor({}, 'background');
   const borderColor = useThemeColor({}, 'border');
   const { alwaysDark, setAlwaysDark, isReady } =
     useColorSchemeOverride();
   const { selectedRole, setSelectedRole } = useRoleContext();
 
   return (
-    <View style={[styles.container, { backgroundColor: pageBg }]}>
+    <ThemedView style={styles.container}>
       <Stack.Screen
         options={{
           title: 'Einstellungen',
@@ -25,7 +24,7 @@ export default function PreferencesScreen() {
           ...bottomTabBarOptions,
         }}
       />
-      <View style={styles.content}>
+      <ThemedView style={styles.content}>
         {/* Card: Dark Mode preference */}
         <ThemedView style={[styles.card, { borderColor }]}>
           <ThemedText style={styles.cardTitle}>
@@ -62,8 +61,8 @@ export default function PreferencesScreen() {
             onRoleChange={(r) => setSelectedRole(r)}
           />
         </ThemedView>
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 }
 

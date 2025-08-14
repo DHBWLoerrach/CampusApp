@@ -2,7 +2,6 @@
 
 - Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 - Update App Store screenshots and description?
-- Dark mode und andere Styles konsistent umsetzen (Suche z.B. nach `isDark`)
 - Webapp immer wieder checken, ob sie noch funktioniert
 - iPad?
 - EAS updates:
@@ -11,6 +10,8 @@
 
 ## Chores
 
+- GPT5 im Webbrowser als Design-Experte nutzen
+- GPT5 im Beast Mode in VS Code den Code konsistent machen lassen, best practices beachten, usw.
 - Gelegentlich `npm run lint` ausführen
 - allgemeine UI-Komponenten extrahieren
 

@@ -3,10 +3,10 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  View,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedView } from '@/components/ui/ThemedView';
 import {
   IconSymbol,
   type IconSymbolName,
@@ -23,7 +23,7 @@ function LinkItem({
 }) {
   const schemeBg = useThemeColor({}, 'background');
   const iconColor = useThemeColor({}, 'icon');
-  const borderColor = useThemeColor({}, 'border');
+  const borderColor = useThemeColor({}, 'border'); // Use borderColor for subtle separator
 
   return (
     <Pressable
@@ -32,6 +32,7 @@ function LinkItem({
         styles.itemContainer,
         {
           backgroundColor: schemeBg,
+          borderColor, // Added borderColor to itemContainer style
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
@@ -63,10 +64,8 @@ export default function LinksScreen({
   links: { title: string; icon: IconSymbolName; url: string }[];
   title: string;
 }) {
-  const pageBg = useThemeColor({}, 'background');
-
   return (
-    <View style={[styles.container, { backgroundColor: pageBg }]}>
+    <ThemedView style={styles.container}>
       <Stack.Screen
         options={{
           title: title,
@@ -80,7 +79,7 @@ export default function LinksScreen({
         keyExtractor={(item) => item.title}
         contentContainerStyle={styles.listContent}
       />
-    </View>
+    </ThemedView>
   );
 }
 
@@ -97,6 +96,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   icon: {
     marginRight: 16,

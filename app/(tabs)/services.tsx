@@ -18,6 +18,7 @@ import {
   type InfoKey,
 } from '@/components/services/InfoPages';
 import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
@@ -180,7 +181,7 @@ export default function ServicesScreen() {
   const title = infoKey ? INFO_PAGES[infoKey].title : '';
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -244,7 +245,7 @@ export default function ServicesScreen() {
           {Active ? <Active /> : null}
         </ScrollView>
       </InfoModal>
-    </View>
+    </ThemedView>
   );
 }
 

@@ -3,12 +3,12 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  View,
   Image,
   ScrollView,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -50,7 +50,7 @@ export default function SafetyScreen() {
   const pageBg = useThemeColor({}, 'background');
 
   return (
-    <View style={[styles.container, { backgroundColor: pageBg }]}>
+    <ThemedView style={styles.container}>
       <Stack.Screen
         options={{
           title: 'Sicherheit',
@@ -70,7 +70,7 @@ export default function SafetyScreen() {
           welche Sicherheitseinrichtungen es an den Standorten gibt.
           Viel Spaß!
         </ThemedText>
-        <View style={styles.grid}>
+        <ThemedView style={styles.grid}>
           {links.map((item) => (
             <Pressable
               key={item.title}
@@ -98,8 +98,8 @@ export default function SafetyScreen() {
               />
             </Pressable>
           ))}
-        </View>
-        <View style={styles.buttonContainer}>
+        </ThemedView>
+        <ThemedView style={styles.buttonContainer}>
           <Button
             title="Brandschutzordnung (PDF)"
             color={dhbwRed}
@@ -107,9 +107,9 @@ export default function SafetyScreen() {
               openLink('https://dhbw-loerrach.de/brandschutz')
             }
           />
-        </View>
+        </ThemedView>
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 }
 
