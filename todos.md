@@ -6,6 +6,7 @@ Check logs:
  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
 ```
 
+- dev setup in README dokumentieren
 - Design Review (siehe GPT-5) für alle Screens?
 - Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 - Update App Store screenshots and description?
@@ -43,6 +44,10 @@ Check logs:
 
 - Speiseplan aus SWFR-API
 - rechtzeitig am 10.09.25 Update mit Speiseplan
+- Update des Screenshots in den App Stores
+- Uhricon oben rechts zeig Alert mit Öffnungszeiten:
+  - Mo-Fr XX-YY, Mittagessen: AA-BB Uhr
+  - Preise richten sich nach Personengruppen (-> Einstellungen)
 
 ## Services screen
 
