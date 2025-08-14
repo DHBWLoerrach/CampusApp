@@ -114,7 +114,6 @@ export default function CourseSetup({
                   autoCorrect={false}
                   returnKeyType="done"
                   onSubmitEditing={handleValidateAndSetCourse}
-                  blurOnSubmit
                 />
                 {/** Disable button until text was entered */}
                 {(() => {
@@ -156,7 +155,7 @@ export default function CourseSetup({
                     type="subtitle"
                     style={styles.historyTitle}
                   >
-                    Zuvor ausgewählte Kurse
+                    Zuletzt angezeigt
                   </ThemedText>
                   <ScrollView
                     style={styles.historyScroll}
@@ -193,7 +192,7 @@ export default function CourseSetup({
                         >
                           <IconSymbol
                             name="xmark.circle.fill"
-                            size={20}
+                            size={22}
                             color={placeholderColor}
                           />
                         </TouchableOpacity>
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   contentContainer: {
     flex: 1,
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
     paddingVertical: 24,
   },
   content: {
@@ -234,7 +233,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     width: '100%',
-    maxWidth: 400,
   },
   courseInput: {
     flex: 1,
