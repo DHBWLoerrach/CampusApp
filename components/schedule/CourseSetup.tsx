@@ -97,59 +97,67 @@ export default function CourseSetup({
           <View style={styles.contentContainer}>
             <View style={styles.content}>
               <View style={styles.inputContainer}>
-                <TextInput
+                {/* Input with trailing action button inside */}
+                <View
                   style={[
-                    styles.courseInput,
-                    {
-                      color: textColor,
-                      borderColor,
-                      backgroundColor: inputBgColor,
-                    },
+                    styles.inputWrapper,
+                    { borderColor, backgroundColor: inputBgColor },
                   ]}
-                  value={inputValue}
-                  onChangeText={setInputValue}
-                  placeholder="Kursname eingeben"
-                  placeholderTextColor={placeholderColor}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  returnKeyType="done"
-                  onSubmitEditing={handleValidateAndSetCourse}
-                />
-                {/** Disable button until text was entered */}
-                {(() => {
-                  const isInputEmpty = inputValue.trim().length === 0;
-                  const isButtonDisabled =
-                    isValidating || isInputEmpty;
-                  return (
-                    <TouchableOpacity
-                      style={[
-                        styles.validateButton,
-                        { backgroundColor: tintColor },
-                        isButtonDisabled &&
-                          styles.validateButtonDisabled,
-                      ]}
-                      onPress={handleValidateAndSetCourse}
-                      disabled={isButtonDisabled}
-                      accessibilityState={{
-                        disabled: isButtonDisabled,
-                      }}
-                    >
-                      {isValidating ? (
-                        <ActivityIndicator
-                          size="small"
-                          color={textColor}
-                        />
-                      ) : (
-                        <ThemedText
-                          style={styles.validateButtonText}
-                          numberOfLines={1}
-                        >
-                          Anzeigen
-                        </ThemedText>
-                      )}
-                    </TouchableOpacity>
-                  );
-                })()}
+                >
+                  <TextInput
+                    style={[
+                      styles.courseInput,
+                      {
+                        color: textColor,
+                      },
+                    ]}
+                    value={inputValue}
+                    onChangeText={setInputValue}
+                    placeholder="Kursname eingeben"
+                    placeholderTextColor={placeholderColor}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    returnKeyType="search"
+                    onSubmitEditing={handleValidateAndSetCourse}
+                  />
+                  {(() => {
+                    const isInputEmpty =
+                      inputValue.trim().length === 0;
+                    const isButtonDisabled =
+                      isValidating || isInputEmpty;
+                    const iconColor = isButtonDisabled
+                      ? placeholderColor
+                      : tintColor;
+                    return (
+                      <TouchableOpacity
+                        onPress={handleValidateAndSetCourse}
+                        disabled={isButtonDisabled}
+                        accessibilityRole="button"
+                        accessibilityLabel="Kurs anzeigen"
+                        accessibilityHint="Tippen, um den eingegebenen Kurs zu prüfen und anzuzeigen"
+                        accessibilityState={{
+                          disabled: isButtonDisabled,
+                          busy: isValidating,
+                        }}
+                        style={styles.trailingAction}
+                        hitSlop={8}
+                      >
+                        {isValidating ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={iconColor}
+                          />
+                        ) : (
+                          <IconSymbol
+                            name="magnifyingglass"
+                            size={22}
+                            color={iconColor}
+                          />
+                        )}
+                      </TouchableOpacity>
+                    );
+                  })()}
+                </View>
               </View>
 
               {previousCourses.length > 0 && (
@@ -237,32 +245,29 @@ const styles = StyleSheet.create({
     gap: 12,
     width: '100%',
   },
-  courseInput: {
+  inputWrapper: {
     flex: 1,
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 18,
     height: 54,
-  },
-  validateButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 8,
-    // Fixed size ensures identical layout for spinner vs. label
-    width: 128,
-    height: 54,
+    paddingLeft: 16,
+    // Reserve space for the trailing action
+    paddingRight: 44,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  validateButtonDisabled: {
-    opacity: 0.5,
-  },
-  validateButtonText: {
-    color: '#fff',
+  courseInput: {
+    flex: 1,
+    paddingVertical: 14,
     fontSize: 18,
-    fontWeight: '600',
+  },
+  trailingAction: {
+    position: 'absolute',
+    right: 10,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 28,
   },
   historySection: {
     marginTop: 28,

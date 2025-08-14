@@ -2,7 +2,6 @@
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
 import { ComponentProps } from 'react';
 import {
   OpaqueColorValue,
@@ -43,6 +42,7 @@ const MAPPING = {
     name: 'warning-amber',
     source: 'material',
   },
+  magnifyingglass: { name: 'search', source: 'material' },
   'chart.bar': { name: 'insert-chart-outlined', source: 'material' },
   'person.3': { name: 'groups', source: 'material' },
   'text.page': { name: 'description', source: 'material' },
@@ -107,7 +107,8 @@ export function IconSymbol({
   size?: number;
   color: string | OpaqueColorValue;
   style?: StyleProp<TextStyle>;
-  weight?: SymbolWeight;
+  // Keep signature compatible with iOS variant which supports `weight`
+  weight?: any;
 }) {
   const iconConfig = MAPPING[name];
 
