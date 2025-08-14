@@ -52,9 +52,8 @@ export default function ScheduleCalendarView({
   numberOfDays,
 }: ScheduleCalendarViewProps) {
   const { selectedCourse } = useCourseContext();
-  const { data, isLoading, isError, error } = useTimetable(
-    selectedCourse || undefined
-  );
+  const { data, isLoading, isError, error, refetch, isFetching } =
+    useTimetable(selectedCourse || undefined);
   const calendarRef = useRef<CalendarKitHandle>(null);
   const currentDate = useSharedValue(INITIAL_DATE);
 
@@ -184,6 +183,10 @@ export default function ScheduleCalendarView({
         ref={calendarRef}
         numberOfDays={numberOfDays}
         onChange={_onChange}
+        onRefresh={() => {
+          void refetch();
+        }}
+        isLoading={isFetching}
         allowPinchToZoom={true}
         hourWidth={50}
         initialLocales={initialLocales}

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   ActivityIndicator,
+  RefreshControl,
   SectionList,
   StyleSheet,
   View,
@@ -35,9 +36,8 @@ const formatDateHeader = (dateString: string): string => {
  */
 export default function ScheduleList() {
   const { selectedCourse } = useCourseContext();
-  const { data, isLoading, isError, error } = useTimetable(
-    selectedCourse || undefined
-  );
+  const { data, isLoading, isError, error, refetch, isFetching } =
+    useTimetable(selectedCourse || undefined);
 
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -117,6 +117,13 @@ export default function ScheduleList() {
         )}
         // Add some spacing between items
         ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={refetch}
+            tintColor={tintColor}
+          />
+        }
       />
     </ThemedView>
   );
