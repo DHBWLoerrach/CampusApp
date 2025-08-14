@@ -37,7 +37,7 @@ export default function PreferencesScreen() {
           </ThemedText>
           <View style={styles.row}>
             <ThemedText style={styles.label}>
-              App immer im Dark Mode ausführen
+              App stets im Dark Mode
             </ThemedText>
             <Switch
               value={alwaysDark}
