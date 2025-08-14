@@ -1,5 +1,6 @@
 # TODOS
 
+- Design Review (siehe GPT-5) für alle Screens?
 - Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 - Update App Store screenshots and description?
 - Webapp immer wieder checken, ob sie noch funktioniert
@@ -25,6 +26,9 @@
 - vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
   - IDEE: ics-Daten aus OWA mit JS-Daten in App von KI vergleichen lassen… (oder Screenshots von OWA-Web)
   - Achtung: Bug bei Serienterminen beachten!
+- Online-Termine farblich markieren?
+- BBB-Links u.a. (Zoom?) klickbar machen?
+- "Ganzer Tag" z.B. bei 3. Oktober in TIF-Kalendern
 - verberge Sa/So in Kurskalender (außer bei Sa-Termine)
 - Web: webmail-Kalender als iframe einbetten?
 - Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
