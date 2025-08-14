@@ -23,7 +23,8 @@
 ## Schedule screen
 
 - vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
-- Achtung: Bug bei Serienterminen beachten!
+  - Achtung: Bug bei Serienterminen beachten!
+- verberge Sa/So in Kurskalender (außer bei Sa-Termine)
 - Web: webmail-Kalender als iframe einbetten?
 - Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
 
