@@ -19,6 +19,7 @@ import {
 import { useTimetable } from '@/hooks/useTimetable';
 import { useCourseContext } from '@/context/CourseContext';
 import Header from '@/components/schedule/CalendarHeader';
+import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface CalendarEvent {
@@ -162,12 +163,11 @@ export default function ScheduleCalendarView({
 
   if (isError) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.errorText}>
-          Ein Fehler ist aufgetreten:
-        </Text>
-        <Text style={styles.errorText}>{error.message}</Text>
-      </View>
+      <ErrorWithReloadButton
+        error={error as Error}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     );
   }
 
@@ -235,9 +235,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
   },
 });

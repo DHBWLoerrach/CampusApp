@@ -14,6 +14,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -77,14 +78,11 @@ export default function ScheduleList() {
 
   if (isError) {
     return (
-      <ThemedView style={styles.center}>
-        <ThemedText style={[styles.errorText, { color: tintColor }]}>
-          Ein Fehler ist aufgetreten:
-        </ThemedText>
-        <ThemedText style={[styles.errorText, { color: tintColor }]}>
-          {error.message}
-        </ThemedText>
-      </ThemedView>
+      <ErrorWithReloadButton
+        error={error as Error}
+        isFetching={isFetching}
+        refetch={refetch}
+      />
     );
   }
 
@@ -140,10 +138,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     marginTop: 50,
-  },
-  errorText: {
-    textAlign: 'center',
-    margin: 10,
   },
   sectionHeader: {
     borderRadius: 8,
