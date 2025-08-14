@@ -37,6 +37,7 @@ export default function CourseSetup({
   const inputBgColor = useThemeColor({}, 'dayNumberContainer');
   const placeholderColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
+  // Disabled button uses same tint color with reduced opacity (see Welcome screen)
 
   // Keep previous courses sorted ascending for display
   const sortedPreviousCourses = useMemo(
@@ -112,28 +113,38 @@ export default function CourseSetup({
                   onSubmitEditing={handleValidateAndSetCourse}
                   blurOnSubmit
                 />
-                <TouchableOpacity
-                  style={[
-                    styles.validateButton,
-                    { backgroundColor: tintColor },
-                    isValidating && {
-                      backgroundColor: placeholderColor,
-                    },
-                  ]}
-                  onPress={handleValidateAndSetCourse}
-                  disabled={isValidating}
-                >
-                  {isValidating ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={textColor}
-                    />
-                  ) : (
-                    <ThemedText style={styles.validateButtonText}>
-                      Ok
-                    </ThemedText>
-                  )}
-                </TouchableOpacity>
+                {/** Disable button until text was entered */}
+                {(() => {
+                  const isInputEmpty = inputValue.trim().length === 0;
+                  const isButtonDisabled =
+                    isValidating || isInputEmpty;
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        styles.validateButton,
+                        { backgroundColor: tintColor },
+                        isButtonDisabled &&
+                          styles.validateButtonDisabled,
+                      ]}
+                      onPress={handleValidateAndSetCourse}
+                      disabled={isButtonDisabled}
+                      accessibilityState={{
+                        disabled: isButtonDisabled,
+                      }}
+                    >
+                      {isValidating ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={textColor}
+                        />
+                      ) : (
+                        <ThemedText style={styles.validateButtonText}>
+                          Anzeigen
+                        </ThemedText>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })()}
               </View>
 
               {previousCourses.length > 0 && (
@@ -236,6 +247,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     minWidth: 90,
     alignItems: 'center',
+  },
+  validateButtonDisabled: {
+    opacity: 0.5,
   },
   validateButtonText: {
     color: '#fff',
