@@ -1,4 +1,73 @@
 {
-  "name": "CampusApp",
-  "displayName": "CampusApp"
+  "expo": {
+    "name": "Campus LÖ",
+    "slug": "CampusApp",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "scheme": "campusapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "de.dhbw.loerrach.campusapp",
+      "icon": {
+        "light": "./assets/images/icon.png",
+        "dark": "./assets/images/icon-dark.png"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "NFC",
+        "android.permission.NFC"
+      ],
+      "package": "de.dhbwloe.loerrach.campusapp"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "server",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "cover",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000",
+            "image": "./assets/images/splash-icon.png"
+          }
+        }
+      ],
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "NFC wird für das Guthaben der DHBW CampusCard benötigt.",
+          "includeNdefEntitlement": false
+        }
+      ],
+      "expo-web-browser",
+      "expo-sqlite"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f592e73b-a85a-4e4a-a57c-60af8029cd87"
+      }
+    }
+  }
 }
