@@ -23,6 +23,7 @@
 ## Schedule screen
 
 - vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
+  - IDEE: ics-Daten aus OWA mit JS-Daten in App von KI vergleichen lassen… (oder Screenshots von OWA-Web)
   - Achtung: Bug bei Serienterminen beachten!
 - verberge Sa/So in Kurskalender (außer bei Sa-Termine)
 - Web: webmail-Kalender als iframe einbetten?
