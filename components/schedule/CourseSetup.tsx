@@ -61,12 +61,6 @@ export default function CourseSetup({
       const isValid = await validateCourse(inputValue.trim());
       if (isValid) {
         onCourseSelected(inputValue.trim());
-        Alert.alert(
-          'Erfolg',
-          `Kurs "${inputValue
-            .trim()
-            .toUpperCase()}" wurde erfolgreich geladen.`
-        );
       } else {
         Alert.alert(
           'Ungültiger Kurs',
