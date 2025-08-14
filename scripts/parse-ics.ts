@@ -1,9 +1,13 @@
 import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { __parseIcalForTest } from '../lib/icalService';
 
-const ics = readFileSync(
-  new URL('./sample-recurring.ics', import.meta.url)
-).toString();
+// Resolve sample file path in a Node-compatible way (avoids DOM URL type)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const samplePath = resolve(__dirname, './sample-recurring.ics');
+const ics = readFileSync(samplePath).toString();
 const events = __parseIcalForTest(ics);
 
 // Filter occurrences for the first two months to keep output small

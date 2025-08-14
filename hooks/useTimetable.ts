@@ -24,6 +24,11 @@ export function useTimetable(course?: string) {
 
     // Caching configuration:
     staleTime: 1000 * 60 * 60 * 4, // Data is considered "fresh" for 4 hours. No refetch on mount.
-    gcTime: 1000 * 60 * 60 * 24, // Data stays in cache for 24 hours after being unused.
+    gcTime: 1000 * 60 * 60 * 12, // Data stays in cache for 12 hours after being unused.
+
+    // Always refetch when a component mounts/subscribes (e.g., after switching courses),
+    // even if cache is still fresh according to staleTime. This guarantees up-to-date data
+    // when the user switches between different courses.
+    refetchOnMount: 'always',
   });
 }
