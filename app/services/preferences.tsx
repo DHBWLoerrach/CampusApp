@@ -7,22 +7,17 @@ import { Colors, dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 import { useRoleContext } from '@/context/RoleContext';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function PreferencesScreen() {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const pageBg = useThemeColor({}, 'background');
+  const borderColor = useThemeColor({}, 'border');
   const { alwaysDark, setAlwaysDark, isReady } =
     useColorSchemeOverride();
   const { selectedRole, setSelectedRole } = useRoleContext();
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: isDark ? '#000000' : '#F2F2F7' },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: pageBg }]}>
       <Stack.Screen
         options={{
           title: 'Einstellungen',
@@ -32,16 +27,7 @@ export default function PreferencesScreen() {
       />
       <View style={styles.content}>
         {/* Card: Dark Mode preference */}
-        <ThemedView
-          style={[
-            styles.card,
-            {
-              borderColor: isDark
-                ? Colors.dark.border
-                : Colors.light.border,
-            },
-          ]}
-        >
+        <ThemedView style={[styles.card, { borderColor }]}>
           <ThemedText style={styles.cardTitle}>
             Darstellung
           </ThemedText>
@@ -64,16 +50,7 @@ export default function PreferencesScreen() {
         </ThemedView>
 
         {/* Card: Mensa price group */}
-        <ThemedView
-          style={[
-            styles.card,
-            {
-              borderColor: isDark
-                ? Colors.dark.border
-                : Colors.light.border,
-            },
-          ]}
-        >
+        <ThemedView style={[styles.card, { borderColor }]}>
           <ThemedText style={styles.cardTitle}>
             Mensa-Preisgruppe
           </ThemedText>

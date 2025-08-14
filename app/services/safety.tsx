@@ -11,7 +11,7 @@ import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { Colors, dhbwRed } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
 const links: {
@@ -47,16 +47,10 @@ const links: {
 ];
 
 export default function SafetyScreen() {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const pageBg = useThemeColor({}, 'background');
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: isDark ? '#000000' : '#F2F2F7' },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: pageBg }]}>
       <Stack.Screen
         options={{
           title: 'Sicherheit',
@@ -84,12 +78,12 @@ export default function SafetyScreen() {
               style={({ pressed }) => [
                 styles.card,
                 {
-                  backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+                  backgroundColor: pageBg,
                   opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
                 },
               ]}
               android_ripple={{
-                color: Colors[scheme ?? 'light'].tint + '30',
+                color: Colors.light.tint + '30',
               }}
               accessibilityRole="button"
               accessibilityLabel={`${item.title} Video`}

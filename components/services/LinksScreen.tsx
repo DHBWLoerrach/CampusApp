@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { bottomTabBarOptions } from '@/constants/Navigation';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
 function LinkItem({
@@ -21,8 +21,9 @@ function LinkItem({
 }: {
   item: { title: string; icon: IconSymbolName; url: string };
 }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const schemeBg = useThemeColor({}, 'background');
+  const iconColor = useThemeColor({}, 'icon');
+  const borderColor = useThemeColor({}, 'border');
 
   return (
     <Pressable
@@ -30,25 +31,25 @@ function LinkItem({
       style={({ pressed }) => [
         styles.itemContainer,
         {
-          backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+          backgroundColor: schemeBg,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
       android_ripple={{
-        color: Colors[scheme ?? 'light'].tint + '30',
+        color: Colors.light.tint + '30',
       }}
     >
       <IconSymbol
         name={item.icon}
         size={24}
-        color={Colors[scheme ?? 'light'].icon}
+        color={iconColor}
         style={styles.icon}
       />
       <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
       <IconSymbol
         name="chevron.right"
         size={16}
-        color={Colors[scheme ?? 'light'].icon}
+        color={iconColor}
         style={styles.chevron}
       />
     </Pressable>
@@ -62,16 +63,10 @@ export default function LinksScreen({
   links: { title: string; icon: IconSymbolName; url: string }[];
   title: string;
 }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const pageBg = useThemeColor({}, 'background');
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: isDark ? '#000000' : '#F2F2F7' },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: pageBg }]}>
       <Stack.Screen
         options={{
           title: title,

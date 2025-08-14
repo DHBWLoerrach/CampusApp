@@ -5,7 +5,6 @@ import { disclaimerText } from '@/constants/InfoTexts';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { openLink } from '@/lib/utils';
 
 export type InfoKey =
@@ -216,8 +215,7 @@ const ImprintBody = () => (
 );
 
 const DisclaimerBody = () => {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const textColor = useThemeColor({}, 'text');
 
   return (
     <>
@@ -228,7 +226,7 @@ const DisclaimerBody = () => {
       <View style={styles.disclaimerContainer}>
         <IconSymbol
           name="checkmark.circle"
-          color={isDark ? '#FFFFFF' : '#333333'}
+          color={textColor}
           style={styles.disclaimerIcon}
         />
         <InfoText style={styles.disclaimerText}>

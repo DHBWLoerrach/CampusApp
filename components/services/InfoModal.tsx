@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Modal, View, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 // Generic reusable modal
 export default function InfoModal({
@@ -16,8 +16,8 @@ export default function InfoModal({
   children: ReactNode;
   onClose: () => void;
 }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const background = useThemeColor({}, 'background');
+  const iconColor = useThemeColor({}, 'text');
 
   return (
     <Modal
@@ -28,10 +28,7 @@ export default function InfoModal({
     >
       <View style={styles.backdrop}>
         <View
-          style={[
-            styles.content,
-            { backgroundColor: isDark ? '#121212' : '#FFFFFF' },
-          ]}
+          style={[styles.content, { backgroundColor: background }]}
         >
           <Pressable
             onPress={onClose}
@@ -42,7 +39,7 @@ export default function InfoModal({
             <IconSymbol
               name="xmark.circle.fill"
               size={32}
-              color={isDark ? '#FFFFFF' : '#333333'}
+              color={iconColor}
             />
           </Pressable>
           <ThemedText style={styles.title}>{title}</ThemedText>

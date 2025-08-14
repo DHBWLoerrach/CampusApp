@@ -18,8 +18,8 @@ import {
   type InfoKey,
 } from '@/components/services/InfoPages';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { Colors, dhbwRed } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
 function ServiceCard({
@@ -31,31 +31,30 @@ function ServiceCard({
   icon: IconSymbolName;
   onPress?: () => void;
 }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const cardBg = useThemeColor({}, 'background');
+  const iconColor = useThemeColor({}, 'icon');
+  const borderColor = useThemeColor({}, 'border');
 
   return (
     <Pressable
       style={({ pressed }) => [
         styles.card,
         {
-          backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
-          borderColor: isDark
-            ? 'rgba(255,255,255,0.12)'
-            : Colors[scheme ?? 'light'].border,
+          backgroundColor: cardBg,
+          borderColor: borderColor,
           /* iOS */
-          shadowColor: isDark ? '#FFFFFF' : '#000000',
+          shadowColor: '#000000',
           shadowOpacity: 0.15,
           shadowRadius: 10,
           shadowOffset: { width: 0, height: 4 },
           /* Android */
-          elevation: Platform.OS === 'android' && !isDark ? 12 : 0,
+          elevation: Platform.OS === 'android' ? 4 : 0,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
       onPress={onPress}
       android_ripple={{
-        color: Colors[scheme ?? 'light'].tint + '30',
+        color: Colors.light.tint + '30',
         radius: 120,
       }}
       accessible
@@ -65,11 +64,7 @@ function ServiceCard({
     >
       <View style={styles.cardContent}>
         <View style={styles.iconContainer}>
-          <IconSymbol
-            size={32}
-            name={icon}
-            color={Colors[scheme ?? 'light'].icon}
-          />
+          <IconSymbol size={32} name={icon} color={iconColor} />
         </View>
         <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       </View>
@@ -158,8 +153,6 @@ const serviceGroups: ServiceGroup[] = [
 ] as const;
 
 export default function ServicesScreen() {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
   const router = useRouter();
   const handlePress = (name: string) => {
     if (name === 'Weitere Links…') {
@@ -195,12 +188,7 @@ export default function ServicesScreen() {
       >
         {serviceGroups.map((group) => (
           <View key={group.title} style={styles.section}>
-            <ThemedText
-              style={[
-                styles.sectionTitle,
-                { color: isDark ? '#FFFFFF' : '#333333' },
-              ]}
-            >
+            <ThemedText style={styles.sectionTitle}>
               {group.title}
             </ThemedText>
             <View style={styles.grid}>

@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import { TimetableEvent } from '@/lib/icalService';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { Colors } from '@/constants/Colors';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -27,8 +26,8 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const scheme = useColorScheme() ?? 'light';
   const cardBg = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
-  const secondaryText = Colors[scheme].icon;
-  const borderColor = Colors[scheme].border;
+  const secondaryText = useThemeColor({}, 'icon');
+  const borderColor = useThemeColor({}, 'border');
 
   return (
     <View
@@ -40,6 +39,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
           // In dark mode, avoid strong shadows; rely on border
           shadowOpacity:
             scheme === 'dark' ? 0 : styles.card.shadowOpacity,
+          elevation: scheme === 'dark' ? 0 : styles.card.elevation,
         },
       ]}
     >

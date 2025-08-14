@@ -11,8 +11,11 @@ import {
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
 import { dhbwRed } from '@/constants/Colors';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function NfcButton() {
+  const modalBg = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
   const [isScanning, setIsScanning] = useState(false);
   const [modalMessage, setModalMessage] = useState<string | null>(
     null
@@ -98,10 +101,12 @@ export default function NfcButton() {
         animationType="fade"
       >
         <View style={styles.overlay}>
-          <View style={styles.modal}>
+          <View style={[styles.modal, { backgroundColor: modalBg }]}>
             {modalMessage ? (
               <>
-                <Text style={styles.text}>{modalMessage}</Text>
+                <Text style={[styles.text, { color: textColor }]}>
+                  {modalMessage}
+                </Text>
                 <View style={{ marginTop: 16 }}>
                   <Button title="OK" onPress={handleModalClose} />
                 </View>
@@ -109,7 +114,7 @@ export default function NfcButton() {
             ) : (
               <>
                 <ActivityIndicator size="large" color="#007aff" />
-                <Text style={styles.text}>
+                <Text style={[styles.text, { color: textColor }]}>
                   Halte deine CampusCard an das Gerät…
                 </Text>
               </>

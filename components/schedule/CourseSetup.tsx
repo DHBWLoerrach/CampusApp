@@ -130,7 +130,10 @@ export default function CourseSetup({
                   disabled={isValidating}
                 >
                   {isValidating ? (
-                    <ActivityIndicator size="small" color="#fff" />
+                    <ActivityIndicator
+                      size="small"
+                      color={textColor}
+                    />
                   ) : (
                     <ThemedText style={styles.validateButtonText}>
                       Ok

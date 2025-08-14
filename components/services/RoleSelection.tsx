@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View, Platform } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { roles, type Role } from '@/constants/Roles';
 
 function RadioItem({
@@ -12,8 +12,9 @@ function RadioItem({
   selected: boolean;
   onPress: () => void;
 }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const background = useThemeColor({}, 'background');
+  const border = useThemeColor({}, 'border');
+  const text = useThemeColor({}, 'text');
 
   return (
     <Pressable
@@ -21,24 +22,19 @@ function RadioItem({
       style={({ pressed }) => [
         styles.item,
         {
-          backgroundColor: isDark ? '#1A1A1A' : '#FFFFFF',
+          backgroundColor: background,
           opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
     >
-      <View
-        style={[
-          styles.outerCircle,
-          { borderColor: isDark ? '#AAA' : '#555' },
-        ]}
-      >
+      <View style={[styles.outerCircle, { borderColor: border }]}>
         {selected ? (
           <View
             style={{
               width: 10,
               height: 10,
               borderRadius: 5,
-              backgroundColor: isDark ? '#FFF' : '#000',
+              backgroundColor: text,
             }}
           />
         ) : null}

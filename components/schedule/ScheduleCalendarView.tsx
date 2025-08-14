@@ -138,12 +138,12 @@ export default function ScheduleCalendarView({
     (event: PackedEvent) => (
       <View style={{ height: '100%', padding: 4 }}>
         <Text
-          style={{ fontWeight: 'bold', color: 'white', fontSize: 12 }}
+          style={{ fontWeight: 'bold', color: '#fff', fontSize: 12 }}
         >
           {event.title || ''}
         </Text>
         {event.location && (
-          <Text style={{ color: 'white', fontSize: 12 }}>
+          <Text style={{ color: '#fff', fontSize: 12 }}>
             {event.location}
           </Text>
         )}
