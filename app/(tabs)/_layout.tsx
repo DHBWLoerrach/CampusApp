@@ -20,21 +20,7 @@ function TabsContent() {
 
   const handleChangeCourse = () => {
     if (selectedCourse) {
-      Alert.alert(
-        'Kurs ändern',
-        `Möchten Sie den aktuellen Kurs "${selectedCourse}" verlassen und einen neuen Kurs auswählen?`,
-        [
-          {
-            text: 'Abbrechen',
-            style: 'cancel',
-          },
-          {
-            text: 'Kurs ändern',
-            style: 'destructive',
-            onPress: () => setSelectedCourse(null),
-          },
-        ]
-      );
+      setSelectedCourse(null);
     }
   };
 
