@@ -59,23 +59,115 @@ async function fetchRawIcalData(course: string): Promise<string> {
 }
 
 /**
+ * Mapping of common Windows time zone IDs (as emitted by MS Exchange) to IANA TZIDs.
+ * We only map those that we expect from DHBW calendars. Extend as needed.
+ */
+const WINDOWS_TO_IANA_TZID: Record<string, string> = {
+  // Germany/Switzerland/Austria
+  'W. Europe Standard Time': 'Europe/Berlin',
+  'Central European Standard Time': 'Europe/Warsaw', // fallback; not expected for DHBW
+};
+
+/**
+ * Minimal but robust VTIMEZONE component for Europe/Berlin covering DST rules since 1970.
+ * Injected when no compatible VTIMEZONE exists and events reference Europe/Berlin.
+ */
+const EUROPE_BERLIN_VTIMEZONE = [
+  'BEGIN:VTIMEZONE',
+  'TZID:Europe/Berlin',
+  'X-LIC-LOCATION:Europe/Berlin',
+  'BEGIN:DAYLIGHT',
+  'TZOFFSETFROM:+0100',
+  'TZOFFSETTO:+0200',
+  'TZNAME:CEST',
+  'DTSTART:19700329T020000',
+  'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
+  'END:DAYLIGHT',
+  'BEGIN:STANDARD',
+  'TZOFFSETFROM:+0200',
+  'TZOFFSETTO:+0100',
+  'TZNAME:CET',
+  'DTSTART:19701025T030000',
+  'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
+  'END:STANDARD',
+  'END:VTIMEZONE',
+].join('\n');
+
+/**
+ * Normalizes Windows TZIDs to IANA and ensures a suitable VTIMEZONE is available.
+ * This helps ical.js to compute correct offsets for DTSTART/DTEND/EXDATE, even when
+ * Exchange uses Windows TZIDs that are not known to iCal.js by default.
+ */
+function normalizeTimezones(icalText: string): string {
+  let normalized = icalText;
+
+  // Replace TZID parameters and values used by event properties (DTSTART;TZID=..., EXDATE;TZID=...)
+  for (const [winTz, ianaTz] of Object.entries(
+    WINDOWS_TO_IANA_TZID
+  )) {
+    // Parameter form: TZID=W. Europe Standard Time
+    const paramRe = new RegExp(
+      `(TZID=)${winTz.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
+      )}(?=[;:])`,
+      'g'
+    );
+    normalized = normalized.replace(paramRe, `$1${ianaTz}`);
+
+    // Property form inside VTIMEZONE: TZID:W. Europe Standard Time
+    const propRe = new RegExp(
+      `(TZID:)${winTz.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
+      )}(?=\r?\n)`,
+      'g'
+    );
+    normalized = normalized.replace(propRe, `$1${ianaTz}`);
+  }
+
+  // If events now reference Europe/Berlin but no such VTIMEZONE exists, inject one.
+  const referencesBerlin =
+    /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(normalized);
+  const hasBerlinVTimezone =
+    /BEGIN:VTIMEZONE[\s\S]*?TZID:Europe\/Berlin[\s\S]*?END:VTIMEZONE/.test(
+      normalized
+    );
+  if (referencesBerlin && !hasBerlinVTimezone) {
+    // Insert after BEGIN:VCALENDAR to keep calendar valid.
+    normalized = normalized.replace(
+      /BEGIN:VCALENDAR\r?\n/,
+      (match) => `${match}${EUROPE_BERLIN_VTIMEZONE}\n`
+    );
+  }
+
+  return normalized;
+}
+
+/**
  * Registers the first VTIMEZONE found in the calendar with the ICAL TimezoneService.
  * MS Exchange calendars almost always include exactly one VTIMEZONE component.
  * Doing this once up‑front ensures that all date conversions are interpreted in
  * the calendar's native timezone instead of defaulting to local/UTC.
  */
 function registerTimezone(vcalendar: ICAL.Component): void {
-  const timezoneComp = vcalendar.getFirstSubcomponent('vtimezone');
-  if (!timezoneComp) return;
+  const tzComps = vcalendar.getAllSubcomponents('vtimezone');
+  if (!tzComps || tzComps.length === 0) return;
 
-  const tzid = timezoneComp.getFirstPropertyValue('tzid');
-  if (!tzid) return;
-
-  const timezone = new (ICAL as any).Timezone({
-    component: timezoneComp,
-    tzid,
+  tzComps.forEach((timezoneComp) => {
+    const tzid = timezoneComp.getFirstPropertyValue('tzid');
+    if (!tzid) return;
+    try {
+      const timezone = new (ICAL as any).Timezone({
+        component: timezoneComp,
+        tzid,
+      });
+      (ICAL as any).TimezoneService.register(tzid, timezone);
+    } catch (e) {
+      // If registration fails, ignore and continue with others
+      console.warn('Failed to register VTIMEZONE for tzid', tzid, e);
+    }
   });
-  (ICAL as any).TimezoneService.register(tzid, timezone);
 }
 
 /**
@@ -110,7 +202,9 @@ function getRecurrenceExceptions(
  * splits multi‑day events, and returns a flat list.
  */
 function parseAndTransformIcal(icalText: string): TimetableEvent[] {
-  const jcalData = ICAL.parse(icalText);
+  // Normalize Windows TZIDs to IANA and ensure necessary VTIMEZONEs exist
+  const prepared = normalizeTimezones(icalText);
+  const jcalData = ICAL.parse(prepared);
   const vcalendar = new ICAL.Component(jcalData);
 
   // Ensure calendar timezone is registered before touching dates
@@ -130,19 +224,21 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
 
     // 1️⃣ Recurring master events
     if (event.isRecurring()) {
-      const iterator = event.iterator(ICAL.Time.fromJSDate(now));
+      // Expand from DTSTART to preserve original timezone and time-of-day
+      const windowStart = new Date(now);
+      windowStart.setDate(windowStart.getDate() - 7);
+      const iterator = event.iterator();
       let next: ICAL.Time | null;
 
-      // eslint‑disable‑next‑line no‑cond‑assign
-      while (
-        (next = iterator.next()) &&
-        next &&
-        next.toJSDate() < rangeEnd
-      ) {
+      // eslint-disable-next-line no-cond-assign
+      while ((next = iterator.next())) {
+        const nextDate = next.toJSDate();
+        if (nextDate > rangeEnd) break;
+        if (nextDate < windowStart) continue;
         // Skip buggy Exchange duplicates – the real exception VEVENT will follow.
         if (
           recurrenceExceptions[event.uid]?.has(
-            next.toJSDate().toDateString()
+            nextDate.toDateString()
           )
         ) {
           continue;
@@ -206,8 +302,16 @@ function structureEventsByDay(
   // Chronological order makes UI rendering trivial
   events.sort((a, b) => a.start.getTime() - b.start.getTime());
 
+  // Ensure grouping by calendar date follows the same timezone as rendering (Europe/Berlin)
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
   events.forEach((event) => {
-    const dateKey = event.start.toLocaleDateString('en-CA'); // → YYYY‑MM‑DD
+    const dateKey = fmt.format(event.start); // → YYYY‑MM‑DD in Europe/Berlin
     if (!structured[dateKey]) structured[dateKey] = [];
     structured[dateKey].push(event);
   });
@@ -228,4 +332,11 @@ export async function getStructuredTimetable(
   const raw = await fetchRawIcalData(course.trim());
   const flatEvents = parseAndTransformIcal(raw);
   return structureEventsByDay(flatEvents);
+}
+
+// Test helper: parse raw ICS to flat events (used by local verification script)
+export function __parseIcalForTest(
+  icalText: string
+): TimetableEvent[] {
+  return parseAndTransformIcal(icalText);
 }
