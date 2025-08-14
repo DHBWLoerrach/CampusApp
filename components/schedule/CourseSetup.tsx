@@ -140,7 +140,10 @@ export default function CourseSetup({
                           color={textColor}
                         />
                       ) : (
-                        <ThemedText style={styles.validateButtonText}>
+                        <ThemedText
+                          style={styles.validateButtonText}
+                          numberOfLines={1}
+                        >
                           Anzeigen
                         </ThemedText>
                       )}
@@ -241,13 +244,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 18,
+    height: 54,
   },
   validateButton: {
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 8,
-    minWidth: 90,
+    // Fixed size ensures identical layout for spinner vs. label
+    width: 128,
+    height: 54,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   validateButtonDisabled: {
     opacity: 0.5,
