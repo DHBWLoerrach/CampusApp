@@ -1,6 +1,6 @@
 # TODOS
 
-Check logs:
+Check logs (werden verursacht durch ScheduleCalendarView):
 
 ```
  WARN  [Reanimated] Reading from `value` during component render. Please ensure that you don't access the `value` property nor use `get` method of a shared value while React is rendering a component.
