@@ -63,7 +63,11 @@ function TabsContent() {
                   accessibilityLabel="Kurs bearbeiten"
                   accessibilityHint="Öffnet den Bearbeitungsbildschirm für diesen Kurs"
                 >
-                  <IconSymbol size={20} name="pencil" color="white" />
+                  <IconSymbol
+                    size={20}
+                    name="rectangle.stack"
+                    color="white"
+                  />
                 </TouchableOpacity>
               )
             : undefined,
