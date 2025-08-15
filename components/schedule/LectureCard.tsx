@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { TimetableEvent } from '@/lib/icalService';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import LinkifiedText from '@/components/ui/LinkifiedText';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -49,9 +50,10 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
       <Text style={[styles.title, { color: textColor }]}>
         {event.title}
       </Text>
-      <Text style={[styles.location, { color: secondaryText }]}>
-        {event.location}
-      </Text>
+      <LinkifiedText
+        value={event.location}
+        style={[styles.location, { color: secondaryText }]}
+      />
     </View>
   );
 };

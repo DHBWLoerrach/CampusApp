@@ -21,6 +21,7 @@ import { useCourseContext } from '@/context/CourseContext';
 import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import LinkifiedText from '@/components/ui/LinkifiedText';
 
 interface CalendarEvent {
   id: string;
@@ -143,9 +144,10 @@ export default function ScheduleCalendarView({
           {event.title || ''}
         </Text>
         {event.location && (
-          <Text style={{ color: '#fff', fontSize: 12 }}>
-            {event.location}
-          </Text>
+          <LinkifiedText
+            value={event.location as string}
+            style={{ color: '#fff', fontSize: 12 }}
+          />
         )}
       </View>
     ),
