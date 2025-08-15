@@ -6,13 +6,24 @@ import {
   type TextProps,
   type StyleProp,
   type TextStyle,
-  View,
 } from 'react-native';
 
 interface LinkifiedTextProps extends Omit<TextProps, 'children'> {
   value?: string | null;
   style?: StyleProp<TextStyle>;
 }
+
+interface LinkifiedTextProps extends Omit<TextProps, 'children'> {
+  value?: string | null;
+  style?: StyleProp<TextStyle>;
+}
+
+// Shorten links to display e.g. https://bbb.dhbw.de/…
+const URL_SCHEME_HOST = /^(https?:\/\/)([^/\s]+)/i;
+const formatUrlLabel = (rawUrl: string) => {
+  const m = URL_SCHEME_HOST.exec(rawUrl);
+  return m ? `${m[1]}${m[2]}/…` : rawUrl;
+};
 
 const URL_REGEX = /(https?:\/\/[^\s]+)/gi;
 
@@ -45,6 +56,7 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
             return <Text key={`t-${index}`}>{part}</Text>;
           }
           const cleanUrl = trimTrailingPunctuation(part);
+          const label = formatUrlLabel(cleanUrl);
           return (
             <Text
               key={`u-${index}`}
@@ -54,7 +66,7 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
               accessibilityRole="link"
               accessibilityHint="Öffnet den Link in einem Browser"
             >
-              {cleanUrl}
+              {label}
             </Text>
           );
         })}
