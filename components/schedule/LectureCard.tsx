@@ -4,6 +4,7 @@ import { TimetableEvent } from '@/lib/icalService';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LinkifiedText from '@/components/ui/LinkifiedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -22,6 +23,28 @@ const formatTimeRange = (start: Date, end: Date) => {
   return `${startTime}–${endTime}`;
 };
 
+// --- Local helpers for readability ---
+const URL_REGEX = /(https?:\/\/[^\s]+)/i;
+const ONLINE_WORD_REGEX = /\bonline\b/i;
+
+function splitLocation(location?: string | null) {
+  const text = (location || '').trim();
+  const m = text.match(URL_REGEX);
+  const url = m ? m[0] : null;
+  const room = url ? text.replace(url, '').trim() : text;
+  return { url, room } as const;
+}
+
+function isOnlineEvent(
+  title?: string | null,
+  location?: string | null,
+  url?: string | null
+) {
+  if (url) return true;
+  const haystack = `${title || ''} ${location || ''}`;
+  return ONLINE_WORD_REGEX.test(haystack);
+}
+
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   // Theme-aware colors
   const scheme = useColorScheme() ?? 'light';
@@ -29,6 +52,19 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const textColor = useThemeColor({}, 'text');
   const secondaryText = useThemeColor({}, 'icon');
   const borderColor = useThemeColor({}, 'border');
+  // Subtle filled background for chips (keeps contrast in both themes)
+  const chipBg =
+    scheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+
+  // Derive room and online link from the location, then decide if event is online
+  const rawLocation = event.location || '';
+  const { url: onlineLink, room: roomText } =
+    splitLocation(rawLocation);
+  const isOnline = isOnlineEvent(
+    event.title,
+    rawLocation,
+    onlineLink
+  );
 
   return (
     <View
@@ -45,20 +81,72 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
       ]}
     >
       <View style={styles.metaRow}>
-        <Text style={[styles.metaRowText, { color: secondaryText }]}>
-          <Text style={styles.timeText}>
+        {/* Time chunk with clock icon */}
+        <View style={styles.metaChunk}>
+          <IconSymbol
+            name="clock"
+            size={14}
+            color={secondaryText}
+            style={styles.metaIcon}
+          />
+          <Text style={[styles.timeText, { color: secondaryText }]}>
             {formatTimeRange(event.start, event.end)}
           </Text>
-          {!!event.location && event.location.trim().length > 0 && (
-            <>
-              <Text style={styles.bullet}>{` • `}</Text>
+        </View>
+
+        {/* Room chunk (if room text is present) */}
+        {!isOnline && !!roomText && (
+          <View
+            style={[
+              styles.metaChunk,
+              styles.chip,
+              { backgroundColor: chipBg, borderColor },
+            ]}
+            accessibilityRole="text"
+            accessibilityLabel={`Ort ${roomText}`}
+          >
+            <IconSymbol
+              name="door.left.hand.open"
+              size={14}
+              color={secondaryText}
+              style={styles.metaIcon}
+            />
+            <Text style={[styles.chipText, { color: secondaryText }]}>
+              {roomText}
+            </Text>
+          </View>
+        )}
+
+        {/* Online chunk (shown if event is online; optional link) */}
+        {isOnline && (
+          <View
+            style={[
+              styles.metaChunk,
+              styles.chip,
+              { backgroundColor: chipBg, borderColor },
+            ]}
+            accessibilityRole="text"
+            accessibilityLabel={
+              onlineLink ? `Online ${onlineLink}` : 'Online'
+            }
+          >
+            <IconSymbol
+              name="video"
+              size={14}
+              color={secondaryText}
+              style={styles.metaIcon}
+            />
+            <Text style={[styles.chipText, { color: secondaryText }]}>
+              {onlineLink ? 'Online: ' : 'Online'}
+            </Text>
+            {!!onlineLink && (
               <LinkifiedText
-                value={event.location}
-                style={[styles.location]}
+                value={onlineLink}
+                style={[styles.chipText, { color: secondaryText }]}
               />
-            </>
-          )}
-        </Text>
+            )}
+          </View>
+        )}
       </View>
       <Text style={[styles.title, { color: textColor }]}>
         {event.title}
@@ -83,15 +171,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 2,
+    flexWrap: 'wrap',
   },
   metaRowText: {
     flexShrink: 1,
   },
-  timeText: {
-    fontSize: 13,
+  metaChunk: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+    marginBottom: 2,
   },
-  bullet: {
-    marginHorizontal: 6,
+  chip: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderWidth: 1,
+  },
+  metaIcon: {
+    marginRight: 6,
+  },
+  timeText: {
     fontSize: 13,
   },
   title: {
@@ -100,6 +200,9 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   location: {
+    fontSize: 13,
+  },
+  chipText: {
     fontSize: 13,
   },
 });

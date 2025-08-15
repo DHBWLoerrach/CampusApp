@@ -63,6 +63,9 @@ const MAPPING = {
     source: 'material',
   },
   'doc.text.magnifyingglass': { name: 'article', source: 'material' },
+  clock: { name: 'schedule', source: 'material' },
+  video: { name: 'videocam', source: 'material' },
+  'door.left.hand.open': { name: 'door-open', source: 'material' },
   link: { name: 'link-variant', source: 'community' },
   'envelope.open': {
     name: 'email-open-outline',
