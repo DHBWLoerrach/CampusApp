@@ -45,20 +45,20 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
       ]}
     >
       <View style={styles.metaRow}>
-        <Text style={[styles.timeText, { color: secondaryText }]}>
-          {formatTimeRange(event.start, event.end)}
+        <Text style={[styles.metaRowText, { color: secondaryText }]}>
+          <Text style={styles.timeText}>
+            {formatTimeRange(event.start, event.end)}
+          </Text>
+          {!!event.location && event.location.trim().length > 0 && (
+            <>
+              <Text style={styles.bullet}>{` • `}</Text>
+              <LinkifiedText
+                value={event.location}
+                style={[styles.location]}
+              />
+            </>
+          )}
         </Text>
-        {!!event.location && event.location.trim().length > 0 && (
-          <>
-            <Text style={[styles.bullet, { color: secondaryText }]}>
-              •
-            </Text>
-            <LinkifiedText
-              value={event.location}
-              style={[styles.location, { color: secondaryText }]}
-            />
-          </>
-        )}
       </View>
       <Text style={[styles.title, { color: textColor }]}>
         {event.title}
@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 2,
+  },
+  metaRowText: {
+    flexShrink: 1,
   },
   timeText: {
     fontSize: 13,

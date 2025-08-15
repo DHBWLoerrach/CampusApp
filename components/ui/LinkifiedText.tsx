@@ -37,23 +37,18 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
     const parts = value.split(URL_REGEX);
 
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <Text style={[style]}>
         {parts.map((part, index) => {
-          if (part.trim().length == 0) return null;
+          if (part.length === 0) return null; // nicht trimmen -> Spaces/Zeilenumbrüche bleiben erhalten
           const isUrl = /^https?:\/\//i.test(part);
           if (!isUrl) {
-            return (
-              <Text key={`t-${index}`} style={style}>
-                {part}
-              </Text>
-            );
+            return <Text key={`t-${index}`}>{part}</Text>;
           }
-
           const cleanUrl = trimTrailingPunctuation(part);
           return (
             <Text
               key={`u-${index}`}
-              style={[{ textDecorationLine: 'underline' }, style]}
+              style={{ textDecorationLine: 'underline' }}
               onPress={() => openLink(cleanUrl)}
               suppressHighlighting
               accessibilityRole="link"
@@ -63,7 +58,7 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
             </Text>
           );
         })}
-      </View>
+      </Text>
     );
   }
 );
