@@ -9,7 +9,7 @@ interface LectureCardProps {
   event: TimetableEvent;
 }
 
-// Helper to format time range in German format with "Uhr" (e.g., 09:00–12:15 Uhr)
+// Helper to format time range in German format (e.g., 09:00–12:15)
 const formatTimeRange = (start: Date, end: Date) => {
   const startTime = start.toLocaleTimeString('de-DE', {
     hour: '2-digit',
@@ -19,7 +19,7 @@ const formatTimeRange = (start: Date, end: Date) => {
     hour: '2-digit',
     minute: '2-digit',
   });
-  return `${startTime}–${endTime} Uhr`;
+  return `${startTime}–${endTime}`;
 };
 
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
@@ -44,16 +44,25 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         },
       ]}
     >
-      <Text style={[styles.timeText, { color: secondaryText }]}>
-        {formatTimeRange(event.start, event.end)}
-      </Text>
+      <View style={styles.metaRow}>
+        <Text style={[styles.timeText, { color: secondaryText }]}>
+          {formatTimeRange(event.start, event.end)}
+        </Text>
+        {!!event.location && event.location.trim().length > 0 && (
+          <>
+            <Text style={[styles.bullet, { color: secondaryText }]}>
+              •
+            </Text>
+            <LinkifiedText
+              value={event.location}
+              style={[styles.location, { color: secondaryText }]}
+            />
+          </>
+        )}
+      </View>
       <Text style={[styles.title, { color: textColor }]}>
         {event.title}
       </Text>
-      <LinkifiedText
-        value={event.location}
-        style={[styles.location, { color: secondaryText }]}
-      />
     </View>
   );
 };
@@ -70,9 +79,17 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
   },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
   timeText: {
     fontSize: 13,
-    marginBottom: 2,
+  },
+  bullet: {
+    marginHorizontal: 6,
+    fontSize: 13,
   },
   title: {
     fontSize: 15,
