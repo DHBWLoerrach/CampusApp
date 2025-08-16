@@ -153,7 +153,9 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
                 {/* Chevron only when truncated */}
                 <IconSymbol
-                  name={isRoomExpanded ? 'chevron.down' : 'chevron.right'}
+                  name={
+                    isRoomExpanded ? 'chevron.down' : 'chevron.right'
+                  }
                   size={14}
                   color={secondaryText}
                   style={styles.trailingIcon}
@@ -164,7 +166,6 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 style={[
                   styles.metaChunk,
                   styles.chip,
-                  styles.pillGrow,
                   { backgroundColor: chipBg, borderColor },
                 ]}
                 accessibilityRole="text"
@@ -176,7 +177,6 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                   color={secondaryText}
                   style={styles.metaIcon}
                 />
-
                 {!roomMeasured && (
                   <Text
                     onTextLayout={(e) => {
@@ -209,7 +209,6 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
             style={[
               styles.metaChunk,
               styles.chip,
-              styles.pillGrow,
               { backgroundColor: chipBg, borderColor },
             ]}
             accessibilityRole="text"
@@ -236,6 +235,14 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 />
               )}
             </Text>
+            {onlineLink && (
+              <IconSymbol
+                name="chevron.right"
+                size={14}
+                color={secondaryText}
+                style={styles.trailingIcon}
+              />
+            )}
           </View>
         )}
       </View>
