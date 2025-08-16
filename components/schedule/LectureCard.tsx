@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { TimetableEvent } from '@/lib/icalService';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -72,6 +66,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);
+  const [isRoomExpanded, setIsRoomExpanded] = useState(false);
 
   return (
     <View
@@ -115,16 +110,18 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                     opacity: pressed ? 0.9 : 1,
                   },
                 ]}
-                onPress={() =>
-                  Alert.alert('Infos zum Raum', roomText)
-                }
+                onPress={() => setIsRoomExpanded((v) => !v)}
                 accessibilityRole="button"
                 accessibilityLabel={`Ort ${roomText}`}
-                accessibilityHint="Tippen zeigt den vollständigen Text"
+                accessibilityHint={
+                  isRoomExpanded
+                    ? 'Tippen klappt den Text zu'
+                    : 'Tippen zeigt den vollständigen Text'
+                }
                 hitSlop={6}
               >
                 <IconSymbol
-                  name="building"
+                  name="door.left.hand.open"
                   size={14}
                   color={secondaryText}
                   style={styles.metaIcon}
@@ -147,8 +144,8 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
                 {/* Visible text (1 line) */}
                 <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
+                  numberOfLines={isRoomExpanded ? undefined : 1}
+                  ellipsizeMode={isRoomExpanded ? 'clip' : 'tail'}
                   style={[styles.chipText, { color: secondaryText }]}
                 >
                   {roomText}
@@ -156,7 +153,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
                 {/* Chevron only when truncated */}
                 <IconSymbol
-                  name="chevron.right"
+                  name={isRoomExpanded ? 'chevron.down' : 'chevron.right'}
                   size={14}
                   color={secondaryText}
                   style={styles.trailingIcon}
@@ -174,7 +171,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 accessibilityLabel={`Ort ${roomText}`}
               >
                 <IconSymbol
-                  name="building"
+                  name="door.left.hand.open"
                   size={14}
                   color={secondaryText}
                   style={styles.metaIcon}

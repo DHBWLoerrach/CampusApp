@@ -50,6 +50,7 @@ const MAPPING = {
   eye: { name: 'visibility', source: 'material' },
   'chevron.right': { name: 'chevron-right', source: 'material' },
   'chevron.left': { name: 'chevron-left', source: 'material' },
+  'chevron.down': { name: 'expand-more', source: 'material' },
   'rectangle.stack': { name: 'layers', source: 'material' },
   'figure.run': { name: 'directions-run', source: 'material' },
   eurosign: { name: 'euro-symbol', source: 'material' },
