@@ -9,6 +9,8 @@ export interface TimetableEvent {
   start: Date;
   end: Date;
   location: string;
+  // True when the source ICS used a DATE (all-day) rather than DATE-TIME
+  allDay?: boolean;
 }
 
 // Defines the final data structure for the UI: a key‑value map
@@ -245,12 +247,15 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         }
 
         const occurrence = event.getOccurrenceDetails(next);
+        const occStart = occurrence.startDate;
+        const occEnd = occurrence.endDate;
         allEvents.push({
           uid: `${event.uid}-${next.toString()}`,
           title: occurrence.item.summary,
-          start: occurrence.startDate.toJSDate(),
-          end: occurrence.endDate.toJSDate(),
+          start: occStart.toJSDate(),
+          end: occEnd.toJSDate(),
           location: occurrence.item.location || '',
+          allDay: !!occStart.isDate,
         });
       }
       return; // ✅ done with recurring master; skip normal processing.
@@ -273,6 +278,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: startDate,
           end: endDate,
           location: event.location || '',
+          allDay: !!event.startDate.isDate,
         });
       }
       return;
@@ -285,6 +291,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       start: event.startDate.toJSDate(),
       end: event.endDate.toJSDate(),
       location: event.location || '',
+      allDay: !!event.startDate.isDate,
     });
   });
 

@@ -90,7 +90,9 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
             style={styles.metaIcon}
           />
           <Text style={[styles.timeText, { color: secondaryText }]}>
-            {formatTimeRange(event.start, event.end)}
+            {event.allDay
+              ? 'Ganzer Tag'
+              : formatTimeRange(event.start, event.end)}
           </Text>
         </View>
 

@@ -122,16 +122,25 @@ export default function ScheduleCalendarView({
       day: 'numeric',
       weekday: 'long',
     });
-    const t = startDate.toLocaleTimeString('de-DE', {
-      hour: 'numeric',
-      minute: 'numeric',
-    });
-    const t2 = endDate.toLocaleTimeString('de-DE', {
-      hour: 'numeric',
-      minute: 'numeric',
-    });
+    const msInDay = 24 * 60 * 60 * 1000;
+    const isAllDay =
+      startDate.getHours() === 0 &&
+      startDate.getMinutes() === 0 &&
+      (endDate.getTime() - startDate.getTime()) % msInDay === 0;
 
-    const body = `${d}\n${t} - ${t2} Uhr\n${event.location || ''}`;
+    const body = isAllDay
+      ? `${d}\nGanzer Tag\n${event.location || ''}`
+      : (() => {
+          const t = startDate.toLocaleTimeString('de-DE', {
+            hour: 'numeric',
+            minute: 'numeric',
+          });
+          const t2 = endDate.toLocaleTimeString('de-DE', {
+            hour: 'numeric',
+            minute: 'numeric',
+          });
+          return `${d}\n${t} - ${t2} Uhr\n${event.location || ''}`;
+        })();
     Alert.alert(event.title || '', body);
   };
 
