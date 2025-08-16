@@ -261,24 +261,66 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       return; // ✅ done with recurring master; skip normal processing.
     }
 
-    // 2️⃣ Multi‑day single events → split into one per calendar day
-    if (event.duration && event.duration.days > 1) {
-      for (
-        let offset = 0;
-        offset <= event.duration.days;
-        offset += 1
-      ) {
-        const startDate = event.startDate.toJSDate();
-        startDate.setDate(startDate.getDate() + offset);
+    // 2️⃣ Multi‑day single events → split into one per calendar day with proper day slices
+    if (
+      event.duration &&
+      event.duration.days >= 1 &&
+      event.duration.hours > 0
+    ) {
+      if (event.summary.startsWith('Tag der Deu')) {
+        console.log(event.duration);
+      }
+      const jsStart = event.startDate.toJSDate();
+      const jsEnd = event.endDate.toJSDate();
 
-        const endDate = event.endDate.toJSDate();
+      // Helper: midnight of given date (local time)
+      const atMidnight = (d: Date) => {
+        const x = new Date(d);
+        x.setHours(0, 0, 0, 0);
+        return x;
+      };
+      const msPerDay = 24 * 60 * 60 * 1000;
+
+      // Adjust end by -1ms to include exact-midnight endings into previous day
+      const endAdj = new Date(jsEnd.getTime() - 1);
+      const startMid = atMidnight(jsStart);
+      const endMid = atMidnight(endAdj);
+      const totalDays = Math.floor(
+        (endMid.getTime() - startMid.getTime()) / msPerDay
+      );
+
+      // If something goes odd, fall back to previous behavior
+      const daysToSplit = Math.max(totalDays, event.duration.days);
+
+      for (let offset = 0; offset <= daysToSplit; offset += 1) {
+        // Day window: [sliceStart, sliceEnd)
+        const sliceDayStart = new Date(startMid);
+        sliceDayStart.setDate(sliceDayStart.getDate() + offset);
+        const sliceDayEnd = new Date(sliceDayStart);
+        sliceDayEnd.setDate(sliceDayEnd.getDate() + 1);
+
+        const isFirst = offset === 0;
+        const isLast = offset === daysToSplit;
+        const isAllDay = !!event.startDate.isDate;
+
+        const sliceStart = isAllDay
+          ? sliceDayStart
+          : isFirst
+          ? jsStart
+          : sliceDayStart;
+        const sliceEnd = isAllDay
+          ? sliceDayEnd
+          : isLast
+          ? jsEnd
+          : sliceDayEnd;
+
         allEvents.push({
           uid: `${event.uid}-${offset}`,
           title: event.summary,
-          start: startDate,
-          end: endDate,
+          start: sliceStart,
+          end: sliceEnd,
           location: event.location || '',
-          allDay: !!event.startDate.isDate,
+          allDay: isAllDay,
         });
       }
       return;
