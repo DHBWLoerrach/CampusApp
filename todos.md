@@ -8,13 +8,15 @@ Check logs (werden verursacht durch ScheduleCalendarView):
 
 - dev setup in README dokumentieren
 - Design Review (siehe GPT-5) für alle Screens?
-- Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
-- Update App Store screenshots and description?
-- Webapp immer wieder checken, ob sie noch funktioniert
 - iPad?
 - EAS updates:
   - https://expo.dev/blog/6-reasons-to-use-eas-update
   - https://expo.dev/blog/eas-update-best-practices
+
+## Webapp
+
+- Webapp immer wieder checken, ob sie noch funktioniert
+- Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 
 ## Chores
 
@@ -33,8 +35,7 @@ Check logs (werden verursacht durch ScheduleCalendarView):
 - vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
   - IDEE: ics-Daten aus OWA mit JS-Daten in App von KI vergleichen lassen… (oder Screenshots von OWA-Web)
   - Achtung: Bug bei Serienterminen beachten!
-- Online-Termine farblich markieren?
-- BBB-Links u.a. (Zoom?) klickbar machen?
+- Marker in Liste für heute/jetzt
 - "Ganzer Tag" z.B. bei 3. Oktober in TIF-Kalendern
 - verberge Sa/So in Kurskalender (außer bei Sa-Termine)
 - Web: webmail-Kalender als iframe einbetten?
