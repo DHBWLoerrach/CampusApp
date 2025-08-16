@@ -262,11 +262,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
     }
 
     // 2️⃣ Multi‑day single events → split into one per calendar day with proper day slices
-    if (
-      event.duration &&
-      event.duration.days >= 1 &&
-      event.duration.hours > 0
-    ) {
+    if (event.duration && event.duration.days >= 1) {
       const jsStart = event.startDate.toJSDate();
       const jsEnd = event.endDate.toJSDate();
 
@@ -287,12 +283,16 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       const startMid = atMidnight(jsStart);
       const endMid = atMidnight(endAdj);
 
-      // Number of calendar days covered (inclusive)
+      // Number of calendar days spanned between start midnight and (end - 1ms) midnight.
+      // 0 means: only one calendar day → exactly 1 slice.
       const totalDays = Math.floor(
         (endMid.getTime() - startMid.getTime()) /
           (24 * 60 * 60 * 1000)
       );
-      const daysToSplit = Math.max(totalDays, event.duration.days);
+
+      // Important: do not use event.duration.days here (for all-day events, DTEND is exclusive).
+      // Otherwise, a single-day holiday would be incorrectly split into two days.
+      const daysToSplit = Math.max(0, totalDays);
 
       const isAllDayEvent = !!event.startDate.isDate;
 
@@ -323,7 +323,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         // Per-slice allDay:
         // - Keep true for DATE-based (all-day) events
         // - Or mark as allDay when this slice cleanly spans one full calendar day
-        //   (00:00 → next 00:00), which also covers 23/25h DST shifts.
+        //   (00:00 → next 00:00), inklusive 23/25h wegen DST.
         const nextMidnightFromStart = atMidnight(
           new Date(sliceStart)
         );
