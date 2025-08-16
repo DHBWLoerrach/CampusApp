@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -29,7 +29,6 @@ const formatTimeRange = (start: Date, end: Date) => {
   return `${startTime}–${endTime}`;
 };
 
-// --- Local helpers for readability ---
 const URL_REGEX = /(https?:\/\/[^\s]+)/i;
 const ONLINE_WORD_REGEX = /\bonline\b/i;
 
@@ -52,7 +51,6 @@ function isOnlineEvent(
 }
 
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
-  // Theme-aware colors
   const scheme = useColorScheme() ?? 'light';
   const cardBg = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
@@ -72,6 +70,9 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
     onlineLink
   );
 
+  const [roomMeasured, setRoomMeasured] = useState(false);
+  const [isRoomTruncated, setIsRoomTruncated] = useState(false);
+
   return (
     <View
       style={[
@@ -79,7 +80,6 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         {
           backgroundColor: cardBg,
           borderColor,
-          // In dark mode, avoid strong shadows; rely on border
           shadowOpacity:
             scheme === 'dark' ? 0 : styles.card.shadowOpacity,
           elevation: scheme === 'dark' ? 0 : styles.card.elevation,
@@ -87,7 +87,6 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
       ]}
     >
       <View style={styles.metaRow}>
-        {/* Time chunk with clock icon */}
         <View style={styles.metaChunk}>
           <IconSymbol
             name="clock"
@@ -100,51 +99,120 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
           </Text>
         </View>
 
-        {/* Room chunk (if room text is present) */}
+        {/* Room-Pill */}
         {!isOnline && !!roomText && (
-          <Pressable
-            style={({ pressed }) => [
-              styles.metaChunk,
-              styles.chip,
-              {
-                backgroundColor: chipBg,
-                borderColor,
-                opacity: pressed ? 0.9 : 1,
-              },
-            ]}
-            onPress={() => Alert.alert('Infos zum Raum', roomText)}
-            accessibilityRole="button"
-            accessibilityLabel={`Ort ${roomText}`}
-            accessibilityHint="Zeigt den vollständigen Raumtext"
-          >
-            <IconSymbol
-              name="building"
-              size={14}
-              color={secondaryText}
-              style={styles.metaIcon}
-            />
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={[styles.chipText, { color: secondaryText }]}
-            >
-              {roomText}
-            </Text>
-            <IconSymbol
-              name="chevron.right"
-              size={14}
-              color={secondaryText}
-              style={styles.trailingIcon}
-            />
-          </Pressable>
+          <>
+            {/* Container: Pressable only when truncated */}
+            {isRoomTruncated ? (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.metaChunk,
+                  styles.chip,
+                  styles.pillGrow,
+                  {
+                    backgroundColor: chipBg,
+                    borderColor,
+                    opacity: pressed ? 0.9 : 1,
+                  },
+                ]}
+                onPress={() =>
+                  Alert.alert('Infos zum Raum', roomText)
+                }
+                accessibilityRole="button"
+                accessibilityLabel={`Ort ${roomText}`}
+                accessibilityHint="Tippen zeigt den vollständigen Text"
+                hitSlop={6}
+              >
+                <IconSymbol
+                  name="building"
+                  size={14}
+                  color={secondaryText}
+                  style={styles.metaIcon}
+                />
+
+                {/* Invisible measuring text: same width, without numberOfLines */}
+                {!roomMeasured && (
+                  <Text
+                    onTextLayout={(e) => {
+                      setIsRoomTruncated(
+                        e.nativeEvent.lines.length > 1
+                      );
+                      setRoomMeasured(true);
+                    }}
+                    style={[styles.chipText, styles.measureGhost]}
+                  >
+                    {roomText}
+                  </Text>
+                )}
+
+                {/* Visible text (1 line) */}
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={[styles.chipText, { color: secondaryText }]}
+                >
+                  {roomText}
+                </Text>
+
+                {/* Chevron only when truncated */}
+                <IconSymbol
+                  name="chevron.right"
+                  size={14}
+                  color={secondaryText}
+                  style={styles.trailingIcon}
+                />
+              </Pressable>
+            ) : (
+              <View
+                style={[
+                  styles.metaChunk,
+                  styles.chip,
+                  styles.pillGrow,
+                  { backgroundColor: chipBg, borderColor },
+                ]}
+                accessibilityRole="text"
+                accessibilityLabel={`Ort ${roomText}`}
+              >
+                <IconSymbol
+                  name="building"
+                  size={14}
+                  color={secondaryText}
+                  style={styles.metaIcon}
+                />
+
+                {!roomMeasured && (
+                  <Text
+                    onTextLayout={(e) => {
+                      setIsRoomTruncated(
+                        e.nativeEvent.lines.length > 1
+                      );
+                      setRoomMeasured(true);
+                    }}
+                    style={[styles.chipText, styles.measureGhost]}
+                  >
+                    {roomText}
+                  </Text>
+                )}
+
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={[styles.chipText, { color: secondaryText }]}
+                >
+                  {roomText}
+                </Text>
+              </View>
+            )}
+          </>
         )}
 
-        {/* Online chunk (shown if event is online; optional link) */}
+        {/* Online-Pill */}
         {isOnline && (
           <View
             style={[
               styles.metaChunk,
               styles.chip,
+              styles.pillGrow,
               { backgroundColor: chipBg, borderColor },
             ]}
             accessibilityRole="text"
@@ -174,6 +242,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
           </View>
         )}
       </View>
+
       <Text style={[styles.title, { color: textColor }]}>
         {event.title}
       </Text>
@@ -200,9 +269,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     minWidth: 0,
   },
-  metaRowText: {
-    flexShrink: 1,
-  },
+  metaRowText: { flexShrink: 1 },
   metaChunk: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -218,6 +285,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexShrink: 1,
     minWidth: 0,
+  },
+  pillGrow: {
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
+    overflow: 'hidden',
   },
   metaIcon: {
     marginRight: 6,
@@ -240,6 +313,14 @@ const styles = StyleSheet.create({
   trailingIcon: {
     marginLeft: 6,
     opacity: 0.6,
+  },
+  // Invisible measuring text (same width, without numberOfLines)
+  measureGhost: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    opacity: 0,
   },
 });
 
