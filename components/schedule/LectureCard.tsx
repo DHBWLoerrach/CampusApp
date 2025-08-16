@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Alert,
+} from 'react-native';
 import { TimetableEvent } from '@/lib/icalService';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -96,25 +102,41 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
         {/* Room chunk (if room text is present) */}
         {!isOnline && !!roomText && (
-          <View
-            style={[
+          <Pressable
+            style={({ pressed }) => [
               styles.metaChunk,
               styles.chip,
-              { backgroundColor: chipBg, borderColor },
+              {
+                backgroundColor: chipBg,
+                borderColor,
+                opacity: pressed ? 0.9 : 1,
+              },
             ]}
-            accessibilityRole="text"
+            onPress={() => Alert.alert('Infos zum Raum', roomText)}
+            accessibilityRole="button"
             accessibilityLabel={`Ort ${roomText}`}
+            accessibilityHint="Zeigt den vollständigen Raumtext"
           >
             <IconSymbol
-              name="door.left.hand.open"
+              name="building"
               size={14}
               color={secondaryText}
               style={styles.metaIcon}
             />
-            <Text style={[styles.chipText, { color: secondaryText }]}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={[styles.chipText, { color: secondaryText }]}
+            >
               {roomText}
             </Text>
-          </View>
+            <IconSymbol
+              name="chevron.right"
+              size={14}
+              color={secondaryText}
+              style={styles.trailingIcon}
+            />
+          </Pressable>
         )}
 
         {/* Online chunk (shown if event is online; optional link) */}
@@ -136,15 +158,19 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
               color={secondaryText}
               style={styles.metaIcon}
             />
-            <Text style={[styles.chipText, { color: secondaryText }]}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={[styles.chipText, { color: secondaryText }]}
+            >
               {onlineLink ? 'Online: ' : 'Online'}
+              {!!onlineLink && (
+                <LinkifiedText
+                  value={onlineLink}
+                  style={[styles.chipText, { color: secondaryText }]}
+                />
+              )}
             </Text>
-            {!!onlineLink && (
-              <LinkifiedText
-                value={onlineLink}
-                style={[styles.chipText, { color: secondaryText }]}
-              />
-            )}
           </View>
         )}
       </View>
@@ -169,9 +195,10 @@ const styles = StyleSheet.create({
   },
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'nowrap',
     alignItems: 'center',
     marginBottom: 2,
-    flexWrap: 'wrap',
+    minWidth: 0,
   },
   metaRowText: {
     flexShrink: 1,
@@ -181,12 +208,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
     marginBottom: 2,
+    maxWidth: '100%',
+    minWidth: 0,
   },
   chip: {
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderWidth: 1,
+    flexShrink: 1,
+    minWidth: 0,
   },
   metaIcon: {
     marginRight: 6,
@@ -204,6 +235,11 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 13,
+    flexShrink: 1,
+  },
+  trailingIcon: {
+    marginLeft: 6,
+    opacity: 0.6,
   },
 });
 
