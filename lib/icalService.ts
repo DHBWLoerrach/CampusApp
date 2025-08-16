@@ -267,9 +267,6 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       event.duration.days >= 1 &&
       event.duration.hours > 0
     ) {
-      if (event.summary.startsWith('Tag der Deu')) {
-        console.log(event.duration);
-      }
       const jsStart = event.startDate.toJSDate();
       const jsEnd = event.endDate.toJSDate();
 
@@ -279,40 +276,67 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         x.setHours(0, 0, 0, 0);
         return x;
       };
-      const msPerDay = 24 * 60 * 60 * 1000;
+      const isMidnight = (d: Date) =>
+        d.getHours() === 0 &&
+        d.getMinutes() === 0 &&
+        d.getSeconds() === 0 &&
+        d.getMilliseconds() === 0;
 
       // Adjust end by -1ms to include exact-midnight endings into previous day
       const endAdj = new Date(jsEnd.getTime() - 1);
       const startMid = atMidnight(jsStart);
       const endMid = atMidnight(endAdj);
-      const totalDays = Math.floor(
-        (endMid.getTime() - startMid.getTime()) / msPerDay
-      );
 
-      // If something goes odd, fall back to previous behavior
+      // Number of calendar days covered (inclusive)
+      const totalDays = Math.floor(
+        (endMid.getTime() - startMid.getTime()) /
+          (24 * 60 * 60 * 1000)
+      );
       const daysToSplit = Math.max(totalDays, event.duration.days);
 
+      const isAllDayEvent = !!event.startDate.isDate;
+
       for (let offset = 0; offset <= daysToSplit; offset += 1) {
-        // Day window: [sliceStart, sliceEnd)
+        // Day window: [sliceDayStart, sliceDayEnd)
         const sliceDayStart = new Date(startMid);
         sliceDayStart.setDate(sliceDayStart.getDate() + offset);
-        const sliceDayEnd = new Date(sliceDayStart);
+
+        const sliceDayEnd = atMidnight(new Date(sliceDayStart));
         sliceDayEnd.setDate(sliceDayEnd.getDate() + 1);
 
         const isFirst = offset === 0;
         const isLast = offset === daysToSplit;
-        const isAllDay = !!event.startDate.isDate;
 
-        const sliceStart = isAllDay
+        // Build start/end for this slice
+        const sliceStart = isAllDayEvent
           ? sliceDayStart
           : isFirst
           ? jsStart
           : sliceDayStart;
-        const sliceEnd = isAllDay
+
+        const sliceEnd = isAllDayEvent
           ? sliceDayEnd
           : isLast
           ? jsEnd
           : sliceDayEnd;
+
+        // Per-slice allDay:
+        // - Keep true for DATE-based (all-day) events
+        // - Or mark as allDay when this slice cleanly spans one full calendar day
+        //   (00:00 → next 00:00), which also covers 23/25h DST shifts.
+        const nextMidnightFromStart = atMidnight(
+          new Date(sliceStart)
+        );
+        nextMidnightFromStart.setDate(
+          nextMidnightFromStart.getDate() + 1
+        );
+
+        const isFullDayAligned =
+          isMidnight(sliceStart) &&
+          isMidnight(sliceEnd) &&
+          sliceEnd.getTime() === nextMidnightFromStart.getTime();
+
+        const sliceAllDay = isAllDayEvent || isFullDayAligned;
 
         allEvents.push({
           uid: `${event.uid}-${offset}`,
@@ -320,7 +344,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: sliceStart,
           end: sliceEnd,
           location: event.location || '',
-          allDay: isAllDay,
+          allDay: sliceAllDay,
         });
       }
       return;
