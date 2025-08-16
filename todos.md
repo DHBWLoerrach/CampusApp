@@ -35,6 +35,7 @@ Check logs (werden verursacht durch ScheduleCalendarView):
 - vor Release --> Test: Vergleich Campus App mit online Kalender (mehrere Kurse!)
   - IDEE: ics-Daten aus OWA mit JS-Daten in App von KI vergleichen lassen… (oder Screenshots von OWA-Web)
   - Achtung: Bug bei Serienterminen beachten!
+- Liste: komisches Scrollverhalten wenn man unten ankommt
 - Marker in Liste für heute/jetzt
 - "Ganzer Tag" z.B. bei 3. Oktober in TIF-Kalendern
 - verberge Sa/So in Kurskalender (außer bei Sa-Termine)
