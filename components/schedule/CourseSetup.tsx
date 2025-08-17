@@ -193,9 +193,24 @@ export default function CourseSetup({
                           </ThemedText>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={() =>
-                            removeCourseFromHistory(course)
-                          }
+                          onPress={() => {
+                            Alert.alert(
+                              'Entfernen bestätigen',
+                              `Möchten Sie den Kurs "${course}" aus der Liste entfernen?`,
+                              [
+                                {
+                                  text: 'Abbrechen',
+                                  style: 'cancel',
+                                },
+                                {
+                                  text: 'Entfernen',
+                                  style: 'destructive',
+                                  onPress: () =>
+                                    removeCourseFromHistory(course),
+                                },
+                              ]
+                            );
+                          }}
                           accessibilityRole="button"
                           accessibilityLabel={`Kurs ${course} aus Liste entfernen`}
                           hitSlop={8}
