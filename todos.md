@@ -30,10 +30,10 @@
   - IDEE: ics-Daten aus OWA mit JS-Daten in App von KI vergleichen lassen… (oder Screenshots von OWA-Web)
   - Achtung: Bug bei Serienterminen beachten!
 - Liste: komisches Scrollverhalten wenn man unten ankommt (nachladen?)
+- Tab merken (Liste/Woche/Tag) für App-Neustart und Kurswechsel
 - Marker in Liste für heute/jetzt
 - ScheduleView: Blättern im Header (< >) wechselt Monat?
 - Ganze Tage in ScheduleView nur oben im Header? (siehe WDS25A z.B. Klausurphase Dezember, vgl. mit Feiertagen)
-- verberge Sa/So in Kurskalender (außer bei Sa-Termine)
 - Web: webmail-Kalender als iframe einbetten?
 - Kursvalidierung: Unterschied zwischen Netzwerkfehler und Kurs nicht gefunden
 
