@@ -33,6 +33,7 @@ interface CalendarEvent {
 
 interface ScheduleCalendarViewProps {
   numberOfDays: number;
+  hideWeekDays?: number[];
 }
 
 const now = new Date();
@@ -52,6 +53,7 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
 
 export default function ScheduleCalendarView({
   numberOfDays,
+  hideWeekDays = [],
 }: ScheduleCalendarViewProps) {
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } =
@@ -193,6 +195,7 @@ export default function ScheduleCalendarView({
       <CalendarContainer
         ref={calendarRef}
         numberOfDays={numberOfDays}
+        hideWeekDays={hideWeekDays} // we hide Sundays in week view
         onChange={_onChange}
         onRefresh={() => {
           void refetch();
