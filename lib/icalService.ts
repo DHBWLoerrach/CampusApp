@@ -1,4 +1,5 @@
 import ICAL from 'ical.js';
+import { resolveCourseAlias } from '@/constants/CourseAliases';
 
 // --- Type Definitions ---
 
@@ -21,9 +22,12 @@ export interface StructuredTimetable {
 
 /**
  * Generates the iCal URL for a given course.
+ * Applies alias resolution and normalizes to lowercase for the mailbox name.
  */
 function generateIcalUrl(course: string): string {
-  return `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
+  // Resolve alias and ensure lowercase to match OWA mailbox naming
+  const canonical = resolveCourseAlias(course).toLowerCase();
+  return `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${canonical}@dhbw-loerrach.de/Kalender/calendar.ics`;
 }
 
 /**
