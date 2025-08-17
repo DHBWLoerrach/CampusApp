@@ -22,6 +22,7 @@ import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import LinkifiedText from '@/components/ui/LinkifiedText';
+import { toLocalISOString } from '@/lib/utils';
 
 interface CalendarEvent {
   id: string;
@@ -37,11 +38,20 @@ interface ScheduleCalendarViewProps {
 }
 
 const now = new Date();
-const INITIAL_DATE = new Date(
+// Build initial date at local midnight; if today is Sunday (0), advance to Monday
+const _initialAtMidnight = new Date(
   now.getFullYear(),
   now.getMonth(),
-  now.getDate()
-).toISOString();
+  now.getDate(),
+  0,
+  0,
+  0,
+  0
+);
+if (_initialAtMidnight.getDay() === 0) {
+  _initialAtMidnight.setDate(_initialAtMidnight.getDate() + 1);
+}
+const INITIAL_DATE = toLocalISOString(_initialAtMidnight);
 
 const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   de: {
@@ -80,8 +90,8 @@ export default function ScheduleCalendarView({
         allEvents.push({
           id: event.uid,
           title: event.title,
-          start: { dateTime: event.start.toISOString() },
-          end: { dateTime: event.end.toISOString() },
+          start: { dateTime: toLocalISOString(event.start) },
+          end: { dateTime: toLocalISOString(event.end) },
           location: event.location,
         });
       });
@@ -96,7 +106,7 @@ export default function ScheduleCalendarView({
 
   const _onPressToday = useCallback(() => {
     calendarRef.current?.goToDate({
-      date: new Date().toISOString(),
+      date: toLocalISOString(new Date()),
       animatedDate: true,
       hourScroll: true,
     });
@@ -196,6 +206,7 @@ export default function ScheduleCalendarView({
         ref={calendarRef}
         numberOfDays={numberOfDays}
         hideWeekDays={hideWeekDays} // we hide Sundays in week view
+        initialDate={INITIAL_DATE}
         onChange={_onChange}
         onRefresh={() => {
           void refetch();
