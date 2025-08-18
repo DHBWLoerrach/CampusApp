@@ -1,4 +1,5 @@
 import { Text } from 'react-native';
+import Storage from 'expo-sqlite/kv-store';
 import { withLayoutContext } from 'expo-router';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
@@ -8,6 +9,8 @@ import {
 import { topTabBarOptions } from '@/constants/Navigation';
 import CourseSetup from '@/components/schedule/CourseSetup';
 import { useCourseContext } from '@/context/CourseContext';
+import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
+import { useEffect, useState } from 'react';
 
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = withLayoutContext(Tab.Navigator);
@@ -24,9 +27,41 @@ const queryClient = new QueryClient({
   },
 });
 
+type SubTabName = 'index' | 'week' | 'day';
+
 export default function ScheduleLayout() {
   const { selectedCourse, setSelectedCourse, isLoading } =
     useCourseContext();
+  const [initialSubTab, setInitialSubTab] =
+    useState<SubTabName | null>(null);
+
+  // Read last opened schedule sub-tab so we can set it as initial route
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const saved = (await Storage.getItem(
+          LAST_SCHEDULE_SUBTAB_KEY
+        )) as string | null;
+        if (!mounted) return;
+        const allowed: readonly SubTabName[] = [
+          'index',
+          'week',
+          'day',
+        ];
+        setInitialSubTab(
+          saved && (allowed as readonly string[]).includes(saved)
+            ? (saved as SubTabName)
+            : 'index'
+        );
+      } catch (e) {
+        if (mounted) setInitialSubTab('index');
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Enhanced tab options with course display
   const enhancedTabBarOptions = {
@@ -50,7 +85,7 @@ export default function ScheduleLayout() {
   };
 
   // Show loading while reading from storage
-  if (isLoading) {
+  if (isLoading || initialSubTab === null) {
     return null; // Or a loading spinner if you prefer
   }
 
@@ -58,10 +93,46 @@ export default function ScheduleLayout() {
     <QueryClientProvider client={queryClient}>
       {selectedCourse ? (
         // Show tabs when course is selected
-        <TopTabs screenOptions={enhancedTabBarOptions}>
-          <TopTabs.Screen name="index" options={{ title: 'Liste' }} />
-          <TopTabs.Screen name="week" options={{ title: 'Woche' }} />
-          <TopTabs.Screen name="day" options={{ title: 'Tag' }} />
+        <TopTabs
+          screenOptions={enhancedTabBarOptions}
+          initialRouteName={initialSubTab}
+        >
+          <TopTabs.Screen
+            name="index"
+            options={{ title: 'Liste' }}
+            listeners={{
+              focus: () => {
+                Storage.setItem(
+                  LAST_SCHEDULE_SUBTAB_KEY,
+                  'index'
+                ).catch(() => {});
+              },
+            }}
+          />
+          <TopTabs.Screen
+            name="week"
+            options={{ title: 'Woche' }}
+            listeners={{
+              focus: () => {
+                Storage.setItem(
+                  LAST_SCHEDULE_SUBTAB_KEY,
+                  'week'
+                ).catch(() => {});
+              },
+            }}
+          />
+          <TopTabs.Screen
+            name="day"
+            options={{ title: 'Tag' }}
+            listeners={{
+              focus: () => {
+                Storage.setItem(
+                  LAST_SCHEDULE_SUBTAB_KEY,
+                  'day'
+                ).catch(() => {});
+              },
+            }}
+          />
         </TopTabs>
       ) : (
         // Show course setup when no course is selected
