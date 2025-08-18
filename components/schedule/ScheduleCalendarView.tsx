@@ -23,6 +23,7 @@ import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import LinkifiedText from '@/components/ui/LinkifiedText';
 import { toLocalISOString } from '@/lib/utils';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface CalendarEvent {
   id: string;
@@ -64,6 +65,28 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   },
 };
 
+// Helpers ported from LectureCard to detect Online vs Raum and extract URL
+const URL_REGEX = /(https?:\/\/[^\s]+)/i;
+const ONLINE_WORD_REGEX = /\bonline\b/i;
+
+function splitLocation(location?: string | null) {
+  const text = (location || '').trim();
+  const m = text.match(URL_REGEX);
+  const url = m ? m[0] : null;
+  const room = url ? text.replace(url, '').trim() : text;
+  return { url, room } as const;
+}
+
+function isOnlineEvent(
+  title?: string | null,
+  location?: string | null,
+  url?: string | null
+) {
+  if (url) return true;
+  const haystack = `${title || ''} ${location || ''}`;
+  return ONLINE_WORD_REGEX.test(haystack);
+}
+
 export default function ScheduleCalendarView({
   numberOfDays,
   hideWeekDays = [],
@@ -82,6 +105,7 @@ export default function ScheduleCalendarView({
   const textColor = useThemeColor({}, 'text');
   const eventBackground = useThemeColor({}, 'eventBackground');
   const eventTextColor = useThemeColor({}, 'eventTextColor');
+  const secondaryText = useThemeColor({}, 'icon');
 
   // Transform timetable data to CalendarView format
   const events = useMemo((): CalendarEvent[] => {
@@ -174,37 +198,90 @@ export default function ScheduleCalendarView({
   };
 
   const renderEvent = useCallback(
-    (event: PackedEvent) => (
-      <View style={{ height: '100%', padding: 4 }}>
-        <Text
-          numberOfLines={8}
-          style={[
-            {
-              fontSize: 12,
-              fontWeight: '600',
-              color: eventTextColor,
-            },
-            event.titleColor
-              ? { color: event.titleColor as string }
-              : null,
-          ]}
-        >
-          {event.title || ''}
-        </Text>
-        {event.location ? (
-          <LinkifiedText
-            value={event.location as string}
-            numberOfLines={3}
-            style={{
-              fontSize: 12,
-              color: eventTextColor,
-              opacity: 0.85,
-            }}
-          />
-        ) : null}
-      </View>
-    ),
-    [textColor]
+    (event: PackedEvent) => {
+      const rawLocation = (event.location as string) || '';
+      const { url: onlineLink, room: roomText } =
+        splitLocation(rawLocation);
+      const online = isOnlineEvent(
+        event.title as string,
+        rawLocation,
+        onlineLink
+      );
+
+      return (
+        <View style={{ height: '100%', padding: 4 }}>
+          <Text
+            numberOfLines={8}
+            style={[
+              {
+                fontSize: 12,
+                fontWeight: '600',
+                color: eventTextColor,
+              },
+              event.titleColor
+                ? { color: event.titleColor as string }
+                : null,
+            ]}
+          >
+            {event.title || ''}
+          </Text>
+
+          {/* Compact meta row with icon for Online/Raum */}
+          {online ? (
+            <View style={styles.metaRowSmall}>
+              <IconSymbol
+                name="video"
+                size={12}
+                color={secondaryText}
+                style={styles.metaIconSmall}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: 12,
+                  color: eventTextColor,
+                  opacity: 0.85,
+                }}
+              >
+                {onlineLink ? 'Online: ' : 'Online'}
+                {!!onlineLink && (
+                  <LinkifiedText
+                    value={onlineLink}
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 12,
+                      color: eventTextColor,
+                      opacity: 0.85,
+                    }}
+                  />
+                )}
+              </Text>
+            </View>
+          ) : roomText ? (
+            <View style={styles.metaRowSmall}>
+              <IconSymbol
+                name="door.left.hand.open"
+                size={12}
+                color={secondaryText}
+                style={styles.metaIconSmall}
+              />
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{
+                  fontSize: 12,
+                  color: eventTextColor,
+                  opacity: 0.85,
+                }}
+              >
+                {roomText}
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      );
+    },
+    [eventTextColor, secondaryText]
   );
 
   if (isLoading) {
@@ -295,5 +372,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  metaRowSmall: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 2,
+    minWidth: 0,
+  },
+  metaIconSmall: {
+    marginRight: 4,
   },
 });
