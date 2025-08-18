@@ -22,7 +22,11 @@ import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import LinkifiedText from '@/components/ui/LinkifiedText';
-import { toLocalISOString } from '@/lib/utils';
+import {
+  toLocalISOString,
+  isOnlineEvent,
+  splitLocation,
+} from '@/lib/utils';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface CalendarEvent {
@@ -64,28 +68,6 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
     more: 'mehr',
   },
 };
-
-// Helpers ported from LectureCard to detect Online vs Raum and extract URL
-const URL_REGEX = /(https?:\/\/[^\s]+)/i;
-const ONLINE_WORD_REGEX = /\bonline\b/i;
-
-function splitLocation(location?: string | null) {
-  const text = (location || '').trim();
-  const m = text.match(URL_REGEX);
-  const url = m ? m[0] : null;
-  const room = url ? text.replace(url, '').trim() : text;
-  return { url, room } as const;
-}
-
-function isOnlineEvent(
-  title?: string | null,
-  location?: string | null,
-  url?: string | null
-) {
-  if (url) return true;
-  const haystack = `${title || ''} ${location || ''}`;
-  return ONLINE_WORD_REGEX.test(haystack);
-}
 
 export default function ScheduleCalendarView({
   numberOfDays,

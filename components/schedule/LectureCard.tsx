@@ -5,6 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LinkifiedText from '@/components/ui/LinkifiedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { isOnlineEvent, splitLocation } from '@/lib/utils';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -22,27 +23,6 @@ const formatTimeRange = (start: Date, end: Date) => {
   });
   return `${startTime}–${endTime}`;
 };
-
-const URL_REGEX = /(https?:\/\/[^\s]+)/i;
-const ONLINE_WORD_REGEX = /\bonline\b/i;
-
-function splitLocation(location?: string | null) {
-  const text = (location || '').trim();
-  const m = text.match(URL_REGEX);
-  const url = m ? m[0] : null;
-  const room = url ? text.replace(url, '').trim() : text;
-  return { url, room } as const;
-}
-
-function isOnlineEvent(
-  title?: string | null,
-  location?: string | null,
-  url?: string | null
-) {
-  if (url) return true;
-  const haystack = `${title || ''} ${location || ''}`;
-  return ONLINE_WORD_REGEX.test(haystack);
-}
 
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const scheme = useColorScheme() ?? 'light';

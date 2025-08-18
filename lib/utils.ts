@@ -44,3 +44,26 @@ export const toLocalISOString = (date: Date): string => {
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetH}:${offsetM}`;
 };
+
+// --- Schedule/Event helpers ---
+// Extract URL and room text from a location string (first URL is considered the online link)
+const URL_REGEX_SINGLE = /(https?:\/\/[^\s]+)/i;
+const ONLINE_WORD_REGEX = /\bonline\b/i;
+
+export function splitLocation(location?: string | null) {
+  const text = (location || '').trim();
+  const m = text.match(URL_REGEX_SINGLE);
+  const url = m ? m[0] : null;
+  const room = url ? text.replace(url, '').trim() : text;
+  return { url, room } as const;
+}
+
+export function isOnlineEvent(
+  title?: string | null,
+  location?: string | null,
+  url?: string | null
+) {
+  if (url) return true;
+  const haystack = `${title || ''} ${location || ''}`;
+  return ONLINE_WORD_REGEX.test(haystack);
+}
