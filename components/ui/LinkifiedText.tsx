@@ -11,11 +11,7 @@ import {
 interface LinkifiedTextProps extends Omit<TextProps, 'children'> {
   value?: string | null;
   style?: StyleProp<TextStyle>;
-}
-
-interface LinkifiedTextProps extends Omit<TextProps, 'children'> {
-  value?: string | null;
-  style?: StyleProp<TextStyle>;
+  numberOfLines?: number;
 }
 
 // Shorten links to display e.g. https://bbb.dhbw.de/…
@@ -41,14 +37,14 @@ const openLink = (url: string) => {
 };
 
 const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
-  ({ value, style }) => {
+  ({ value, style, numberOfLines }) => {
     if (!value) {
       return null;
     }
     const parts = value.split(URL_REGEX);
 
     return (
-      <Text style={[style]}>
+      <Text style={[style]} numberOfLines={numberOfLines}>
         {parts.map((part, index) => {
           if (part.length === 0) return null; // nicht trimmen -> Spaces/Zeilenumbrüche bleiben erhalten
           const isUrl = /^https?:\/\//i.test(part);

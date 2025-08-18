@@ -80,6 +80,8 @@ export default function ScheduleCalendarView({
   const dayNumberContainer = useThemeColor({}, 'dayNumberContainer');
   const dayTextColor = useThemeColor({}, 'dayTextColor');
   const textColor = useThemeColor({}, 'text');
+  const eventBackground = useThemeColor({}, 'eventBackground');
+  const eventTextColor = useThemeColor({}, 'eventTextColor');
 
   // Transform timetable data to CalendarView format
   const events = useMemo((): CalendarEvent[] => {
@@ -90,6 +92,14 @@ export default function ScheduleCalendarView({
 
     Object.keys(data).forEach((dateKey) => {
       data[dateKey].forEach((event) => {
+        // Detect all‑day events by midnight alignment and full‑day multiples
+        const msInDay = 24 * 60 * 60 * 1000;
+        const isAllDay =
+          event.start.getHours() === 0 &&
+          event.start.getMinutes() === 0 &&
+          (event.end.getTime() - event.start.getTime()) % msInDay ===
+            0;
+
         allEvents.push({
           id: event.uid,
           title: event.title,
@@ -98,7 +108,8 @@ export default function ScheduleCalendarView({
           location: event.location,
           // Ensure All‑Day events (chips) adopt our brand tint color
           color: tintColor,
-          titleColor: '#fff',
+          // Keep white titles only for All‑Day chips
+          titleColor: isAllDay ? '#fff' : undefined,
         });
       });
     });
@@ -166,19 +177,34 @@ export default function ScheduleCalendarView({
     (event: PackedEvent) => (
       <View style={{ height: '100%', padding: 4 }}>
         <Text
-          style={{ fontWeight: 'bold', color: '#fff', fontSize: 12 }}
+          numberOfLines={8}
+          style={[
+            {
+              fontSize: 12,
+              fontWeight: '600',
+              color: eventTextColor,
+            },
+            event.titleColor
+              ? { color: event.titleColor as string }
+              : null,
+          ]}
         >
           {event.title || ''}
         </Text>
-        {event.location && (
+        {event.location ? (
           <LinkifiedText
             value={event.location as string}
-            style={{ color: '#fff', fontSize: 12 }}
+            numberOfLines={3}
+            style={{
+              fontSize: 12,
+              color: eventTextColor,
+              opacity: 0.85,
+            }}
           />
-        )}
+        ) : null}
       </View>
     ),
-    []
+    [textColor]
   );
 
   if (isLoading) {
@@ -234,7 +260,10 @@ export default function ScheduleCalendarView({
             border: borderColor,
           },
           eventContainerStyle: {
-            backgroundColor: tintColor,
+            backgroundColor: eventBackground,
+            borderColor: borderColor,
+            borderWidth: 1,
+            borderRadius: 8,
           },
           nowIndicatorColor: 'magenta',
           headerBackgroundColor: backgroundColor,

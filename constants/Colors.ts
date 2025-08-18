@@ -19,6 +19,8 @@ export const Colors = {
     border: lightGray,
     dayNumberContainer: veryLightGray,
     dayTextColor: dhbwGray,
+    eventBackground: '#E0E0E0',
+    eventTextColor: '#212121',
   },
   dark: {
     text: '#ECEDEE',
@@ -30,5 +32,7 @@ export const Colors = {
     border: dhbwGray,
     dayNumberContainer: 'rgb(64, 62, 62)',
     dayTextColor: lightGray,
+    eventBackground: '#2E2E2E',
+    eventTextColor: '#E0E0E0',
   },
 };
