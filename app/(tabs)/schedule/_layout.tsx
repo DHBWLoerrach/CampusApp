@@ -106,6 +106,9 @@ export default function ScheduleLayout() {
                   LAST_SCHEDULE_SUBTAB_KEY,
                   'index'
                 ).catch(() => {});
+                // Keep local state in sync so remounts (e.g., after course change)
+                // restore the last viewed sub-tab instead of defaulting unexpectedly.
+                setInitialSubTab('index');
               },
             }}
           />
@@ -118,6 +121,7 @@ export default function ScheduleLayout() {
                   LAST_SCHEDULE_SUBTAB_KEY,
                   'week'
                 ).catch(() => {});
+                setInitialSubTab('week');
               },
             }}
           />
@@ -130,6 +134,7 @@ export default function ScheduleLayout() {
                   LAST_SCHEDULE_SUBTAB_KEY,
                   'day'
                 ).catch(() => {});
+                setInitialSubTab('day');
               },
             }}
           />
