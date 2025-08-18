@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { useScrollToTop } from '@react-navigation/native';
 import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/schedule/LectureCard';
 import { useCourseContext } from '@/context/CourseContext';
@@ -36,6 +37,8 @@ const formatDateHeader = (dateString: string): string => {
  * Main schedule component - now uses shared QueryClient from layout
  */
 export default function ScheduleList() {
+  const ref = useRef<SectionList>(null);
+  useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } =
     useTimetable(selectedCourse || undefined);
@@ -89,6 +92,7 @@ export default function ScheduleList() {
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
       <SectionList
+        ref={ref}
         sections={sections}
         keyExtractor={(item) => item.uid}
         renderItem={({ item }) => <LectureCard event={item} />}

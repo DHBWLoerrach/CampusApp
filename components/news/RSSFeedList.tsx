@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { Image } from 'expo-image';
+import { useScrollToTop } from '@react-navigation/native';
 import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { ThemedText } from '@/components/ui/ThemedText';
@@ -84,6 +85,8 @@ function ListItem({ item }: { item: Item }) {
 }
 
 export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
+  const ref = useRef<FlatList>(null);
+  useScrollToTop(ref);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -143,6 +146,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   return (
     <ThemedView style={styles.container}>
       <FlatList
+        ref={ref}
         data={items}
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => <ListItem item={item} />}
