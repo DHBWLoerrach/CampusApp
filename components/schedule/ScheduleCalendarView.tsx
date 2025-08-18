@@ -30,6 +30,9 @@ interface CalendarEvent {
   start: { dateTime: string };
   end: { dateTime: string };
   location?: string;
+  // Calendar Kit supports per-event styling; use this to color All‑Day chips
+  color?: string;
+  titleColor?: string;
 }
 
 interface ScheduleCalendarViewProps {
@@ -93,12 +96,15 @@ export default function ScheduleCalendarView({
           start: { dateTime: toLocalISOString(event.start) },
           end: { dateTime: toLocalISOString(event.end) },
           location: event.location,
+          // Ensure All‑Day events (chips) adopt our brand tint color
+          color: tintColor,
+          titleColor: '#fff',
         });
       });
     });
 
     return allEvents;
-  }, [data]);
+  }, [data, tintColor]);
 
   const _onChange = useCallback((date: string) => {
     currentDate.value = date;
