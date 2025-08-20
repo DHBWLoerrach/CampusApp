@@ -60,5 +60,7 @@
 - check common navigation patterns: https://docs.expo.dev/router/basics/common-navigation-patterns/
 - Check unistyles?
 
+Siehe auch https://github.com/expo/examples
+
 - https://expo.dev/blog/unistyles-3-0-beyond-react-native-stylesheet
 - https://www.unistyl.es/v3/tutorial/intro
