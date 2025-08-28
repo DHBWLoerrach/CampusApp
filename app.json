@@ -7,7 +7,11 @@
     "scheme": "campusapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.dhbw.loerrach.campusapp",
@@ -25,7 +29,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": ["NFC", "android.permission.NFC"],
+      "permissions": [
+        "NFC",
+        "android.permission.NFC",
+        "NFC",
+        "android.permission.NFC"
+      ],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "web": {
@@ -66,6 +75,12 @@
       "eas": {
         "projectId": "f592e73b-a85a-4e4a-a57c-60af8029cd87"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f592e73b-a85a-4e4a-a57c-60af8029cd87"
     }
   }
 }
