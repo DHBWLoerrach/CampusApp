@@ -4,6 +4,7 @@
 - Design Review (siehe GPT-5) für alle Screens?
 - iPad?
 - EAS updates:
+  - https://docs.expo.dev/eas-update/introduction/
   - https://expo.dev/blog/6-reasons-to-use-eas-update
   - https://expo.dev/blog/eas-update-best-practices
 
