@@ -14,7 +14,6 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@howljs/calendar-kit": "^2.4.0",
-    "@react-navigation/bottom-tabs": "^7.4.6",
     "@react-navigation/material-top-tabs": "^7.3.6",
     "@react-navigation/native": "^7.1.17",
     "@tanstack/react-query": "^5.85.3",
