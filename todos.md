@@ -56,12 +56,12 @@
 
 ## Stuff to check
 
-- Export Router UI (anstelle react navigation?) https://docs.expo.dev/versions/latest/sdk/router-ui/
 - Expo UI (native components) https://docs.expo.dev/versions/latest/sdk/ui/
 - check common navigation patterns: https://docs.expo.dev/router/basics/common-navigation-patterns/
 - Check unistyles?
 
 Siehe auch https://github.com/expo/examples
 
+- https://www.youtube.com/live/TtmWw0NfsQk (NativeWind in Expo)
 - https://expo.dev/blog/unistyles-3-0-beyond-react-native-stylesheet
 - https://www.unistyl.es/v3/tutorial/intro
