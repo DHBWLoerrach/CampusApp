@@ -1,10 +1,8 @@
 import { StyleSheet, Switch, View } from 'react-native';
-import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
 import { dhbwRed } from '@/constants/Colors';
-import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 import { useRoleContext } from '@/context/RoleContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -17,13 +15,6 @@ export default function PreferencesScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: 'Einstellungen',
-          headerBackTitle: 'Services',
-          ...bottomTabBarOptions,
-        }}
-      />
       <ThemedView style={styles.content}>
         {/* Card: Dark Mode preference */}
         <ThemedView style={[styles.card, { borderColor }]}>

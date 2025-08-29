@@ -59,5 +59,5 @@ const links: {
 ];
 
 export default function StudyLinksScreen() {
-  return <LinksScreen links={links} title="Studium: Weitere Links" />;
+  return <LinksScreen links={links} />;
 }

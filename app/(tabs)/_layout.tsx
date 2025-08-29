@@ -7,7 +7,7 @@ import {
   useCourseContext,
 } from '@/context/CourseContext';
 import { LAST_TAB_KEY } from '@/constants/StorageKeys';
-import { bottomTabBarOptions } from '@/constants/Navigation';
+import { tabBarOptions } from '@/constants/Navigation';
 
 const ICON_SIZE = 28;
 
@@ -25,7 +25,7 @@ function TabsContent() {
   };
 
   return (
-    <Tabs screenOptions={bottomTabBarOptions}>
+    <Tabs screenOptions={tabBarOptions}>
       <Tabs.Screen
         name="news"
         options={{
@@ -100,6 +100,7 @@ function TabsContent() {
         name="services"
         options={{
           title: 'Services',
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol
               size={ICON_SIZE}

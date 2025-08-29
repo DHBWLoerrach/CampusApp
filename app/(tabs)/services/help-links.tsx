@@ -30,5 +30,5 @@ const links: {
 ];
 
 export default function HelpLinksScreen() {
-  return <LinksScreen links={links} title="Beratung und Hilfe" />;
+  return <LinksScreen links={links} />;
 }

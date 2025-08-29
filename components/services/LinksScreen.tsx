@@ -4,7 +4,6 @@ import {
   Pressable,
   StyleSheet,
 } from 'react-native';
-import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import {
@@ -12,7 +11,6 @@ import {
   type IconSymbolName,
 } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
-import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
@@ -59,20 +57,11 @@ function LinkItem({
 
 export default function LinksScreen({
   links,
-  title,
 }: {
   links: { title: string; icon: IconSymbolName; url: string }[];
-  title: string;
 }) {
   return (
     <ThemedView style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: title,
-          headerBackTitle: 'Services',
-          ...bottomTabBarOptions,
-        }}
-      />
       <FlatList
         data={links}
         renderItem={({ item }) => <LinkItem item={item} />}

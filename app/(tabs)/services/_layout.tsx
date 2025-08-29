@@ -1,6 +1,23 @@
 import { Stack } from 'expo-router';
-1;
+import { tabBarOptions } from '@/constants/Navigation';
 
 export default function Layout() {
-  return <Stack />;
+  return (
+    <Stack screenOptions={tabBarOptions}>
+      <Stack.Screen name="index" options={{ title: 'Services' }} />
+      <Stack.Screen
+        name="help-links"
+        options={{ title: 'Beratung und Hilfe' }}
+      />
+      <Stack.Screen
+        name="preferences"
+        options={{ title: 'Einstellungen' }}
+      />
+      <Stack.Screen name="safety" options={{ title: 'Sicherheit' }} />
+      <Stack.Screen
+        name="study-links"
+        options={{ title: 'Studium: Weitere Links' }}
+      />
+    </Stack>
+  );
 }

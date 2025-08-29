@@ -6,11 +6,9 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import { Stack } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors, dhbwRed } from '@/constants/Colors';
-import { bottomTabBarOptions } from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
@@ -51,13 +49,6 @@ export default function SafetyScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: 'Sicherheit',
-          headerBackTitle: 'Services',
-          ...bottomTabBarOptions,
-        }}
-      />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
