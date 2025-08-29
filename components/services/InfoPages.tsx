@@ -48,7 +48,7 @@ const AboutBody = () => {
       </InfoText>
       <InfoText>
         Die Campus App wird beständig weiterentwickelt. Dafür freuen
-        wir uns auf Euer Feedback und Eure Verbesserungsvorschläge per
+        wir uns auf euer Feedback und eure Verbesserungsvorschläge per
         E-Mail:
         {'\n'}
         <Link href="mailto:apps@dhbw-loerrach.de">
