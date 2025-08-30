@@ -4,6 +4,7 @@
 - Design Review (siehe GPT-5) für alle Screens?
 - iPad?
 - EAS updates: müssen wir nach jedem Store-Release auch einen update pushen?
+  - können wir das Update in "About" anzeigen?
 
 ## Webapp
 
