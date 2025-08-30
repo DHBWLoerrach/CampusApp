@@ -7,7 +7,7 @@ import {
   useCourseContext,
 } from '@/context/CourseContext';
 import { LAST_TAB_KEY } from '@/constants/StorageKeys';
-import { tabBarOptions } from '@/constants/Navigation';
+import { navBarOptions } from '@/constants/Navigation';
 
 const ICON_SIZE = 28;
 
@@ -25,7 +25,7 @@ function TabsContent() {
   };
 
   return (
-    <Tabs screenOptions={tabBarOptions}>
+    <Tabs screenOptions={navBarOptions}>
       <Tabs.Screen
         name="news"
         options={{

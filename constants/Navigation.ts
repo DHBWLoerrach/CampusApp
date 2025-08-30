@@ -1,6 +1,6 @@
 import { dhbwRed } from '@/constants/Colors';
 
-export const tabBarOptions = {
+export const navBarOptions = {
   headerTintColor: 'white',
   headerStyle: {
     backgroundColor: dhbwRed,

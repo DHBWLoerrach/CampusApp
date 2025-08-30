@@ -1,9 +1,9 @@
 import { Stack } from 'expo-router';
-import { tabBarOptions } from '@/constants/Navigation';
+import { navBarOptions } from '@/constants/Navigation';
 
 export default function Layout() {
   return (
-    <Stack screenOptions={tabBarOptions}>
+    <Stack screenOptions={navBarOptions}>
       <Stack.Screen name="index" options={{ title: 'Services' }} />
       <Stack.Screen
         name="help-links"
