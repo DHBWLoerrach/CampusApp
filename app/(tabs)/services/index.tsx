@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   card: {
-    width: 108,
+    width: 114,
     height: 88,
     borderRadius: 12,
     borderWidth: 0.5,
