@@ -2,16 +2,12 @@
   "expo": {
     "name": "Campus LÖ",
     "slug": "CampusApp",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "orientation": "portrait",
     "scheme": "campusapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.dhbw.loerrach.campusapp",
