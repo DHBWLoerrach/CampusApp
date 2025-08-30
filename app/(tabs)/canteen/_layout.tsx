@@ -3,6 +3,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { withLayoutContext } from 'expo-router';
 import { addDays, format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { weekdayDates } from '@/lib/canteenService';
 import {
   QueryClient,
   QueryClientProvider,
@@ -22,10 +23,15 @@ const queryClient = new QueryClient({
   },
 });
 
-function titleForOffset(offset: number) {
-  if (offset === 0) return 'Heute';
-  if (offset === 1) return 'Morgen';
-  const d = addDays(new Date(), offset);
+function titleForIndex(index: number) {
+  const dates = weekdayDates(5);
+  const d = dates[index];
+  if (!(d instanceof Date) || isNaN(d.getTime())) return '—';
+  const todayKey = format(new Date(), 'yyyy-MM-dd');
+  const tomorrowKey = format(addDays(new Date(), 1), 'yyyy-MM-dd');
+  const key = format(d, 'yyyy-MM-dd');
+  if (key === todayKey) return 'Heute';
+  if (key === tomorrowKey) return 'Morgen';
   return format(d, 'EEE dd.MM', { locale: de });
 }
 
@@ -50,23 +56,23 @@ export default function CanteenLayout() {
       <TopTabs screenOptions={enhancedTabBarOptions}>
         <TopTabs.Screen
           name="index"
-          options={{ title: titleForOffset(0) }}
+          options={{ title: titleForIndex(0) }}
         />
         <TopTabs.Screen
           name="day1"
-          options={{ title: titleForOffset(1) }}
+          options={{ title: titleForIndex(1) }}
         />
         <TopTabs.Screen
           name="day2"
-          options={{ title: titleForOffset(2) }}
+          options={{ title: titleForIndex(2) }}
         />
         <TopTabs.Screen
           name="day3"
-          options={{ title: titleForOffset(3) }}
+          options={{ title: titleForIndex(3) }}
         />
         <TopTabs.Screen
           name="day4"
-          options={{ title: titleForOffset(4) }}
+          options={{ title: titleForIndex(4) }}
         />
       </TopTabs>
     </QueryClientProvider>

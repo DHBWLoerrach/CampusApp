@@ -10,7 +10,6 @@ import { format } from 'date-fns';
 import {
   CanteenDay,
   CanteenMeal,
-  dateFromOffset,
   fetchCanteenRaw,
   mealsForDate,
   normalizeCanteenData,
@@ -19,12 +18,8 @@ import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 
-export default function CanteenDayView({
-  offset = 0,
-}: {
-  offset?: number;
-}) {
-  const date = dateFromOffset(offset);
+export default function CanteenDayView({ date }: { date: Date }) {
+  const safeDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
@@ -38,7 +33,7 @@ export default function CanteenDayView({
   });
 
   const meals: CanteenMeal[] = data?.days
-    ? mealsForDate(data.days, date)
+    ? mealsForDate(data.days, safeDate)
     : [];
 
   return (
@@ -63,7 +58,7 @@ export default function CanteenDayView({
       ) : meals.length === 0 ? (
         <View style={styles.center}>
           <ThemedText type="defaultSemiBold" style={styles.hint}>
-            Kein Speiseplan für {format(date, 'dd.MM.yyyy')} gefunden.
+            Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')} gefunden.
           </ThemedText>
         </View>
       ) : (

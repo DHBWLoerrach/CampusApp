@@ -184,3 +184,31 @@ function toArray<T = any>(v: any): T[] {
 export function dateFromOffset(offset: number): Date {
   return addDays(new Date(), offset);
 }
+
+export function isWeekend(d: Date): boolean {
+  const day = d.getDay(); // 0=Sun, 6=Sat
+  return day === 0 || day === 6;
+}
+
+export function nextWeekdayStart(from: Date = new Date()): Date {
+  const day = from.getDay();
+  if (day === 6) return addDays(from, 2); // Saturday -> Monday
+  if (day === 0) return addDays(from, 1); // Sunday -> Monday
+  return from; // Weekday: today
+}
+
+export function weekdayDates(count = 5, from: Date = new Date()): Date[] {
+  const dates: Date[] = [];
+  let d = nextWeekdayStart(from);
+  while (dates.length < count) {
+    dates.push(d);
+    let next = addDays(d, 1);
+    while (isWeekend(next)) next = addDays(next, 1);
+    d = next;
+  }
+  return dates;
+}
+
+export function isSameCalendarDay(a: Date, b: Date): boolean {
+  return format(a, 'yyyy-MM-dd') === format(b, 'yyyy-MM-dd');
+}
