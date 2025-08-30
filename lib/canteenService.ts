@@ -1,0 +1,186 @@
+import { addDays, format } from 'date-fns';
+import { XMLParser } from 'fast-xml-parser';
+
+const API_KEY = (globalThis as any)?.process?.env
+  ?.EXPO_PUBLIC_SWFR_API_KEY as string | undefined;
+// 677 = Lörrach, for tests use 610 = Mensa Rempartstraße Freiburg
+const SWFR_LOCATION = 610;
+
+const SWFR_API_URL = `https://www.swfr.de/apispeiseplan?type=98&tx_speiseplan_pi1[apiKey]=${API_KEY}&tx_speiseplan_pi1[ort]=${SWFR_LOCATION}`;
+
+export type CanteenMeal = {
+  title: string;
+  category?: string;
+  notes?: string;
+  prices?: Record<string, string | number>;
+};
+
+export type CanteenDay = {
+  date: string; // YYYY-MM-DD
+  meals: CanteenMeal[];
+};
+
+// Fetch raw XML from SWFR API
+export async function fetchCanteenRaw(): Promise<string> {
+  if (!API_KEY) {
+    throw new Error('Fehlender EXPO_PUBLIC_SWFR_API_KEY in .env');
+  }
+  const res = await fetch(SWFR_API_URL);
+  if (!res.ok) {
+    throw new Error(
+      `SWFR API Fehler: ${res.status} ${res.statusText}`
+    );
+  }
+  return res.text();
+}
+
+// Parse XML and normalize into list of days + meals
+export function normalizeCanteenData(
+  raw: string | any
+): CanteenDay[] {
+  try {
+    let data: any = raw;
+    if (typeof raw === 'string') {
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: '',
+        trimValues: true,
+      });
+      data = parser.parse(raw);
+    }
+
+    // Expected structure: plan -> ort -> tagesplan[] -> menue[]
+    const ortList = toArray<any>(data?.plan?.ort);
+    const ortNode =
+      ortList.find((o) => String(o?.id) === String(SWFR_LOCATION)) ||
+      ortList[0];
+    const tagesplaene = toArray<any>(ortNode?.tagesplan);
+
+    const days: CanteenDay[] = [];
+    for (const tp of tagesplaene) {
+      const dateRaw = tp?.datum ?? tp?.date ?? tp?.tag;
+      const date = normalizeDateString(dateRaw) ?? '';
+      const menues = toArray<any>(tp?.menue);
+
+      const meals: CanteenMeal[] = menues
+        .map((m) => xmlMenueToMeal(m))
+        .filter((m): m is CanteenMeal => !!m && !!m.title);
+
+      days.push({ date, meals });
+    }
+    return days;
+  } catch (e) {
+    return [];
+  }
+}
+
+export function mealsForDate(
+  days: CanteenDay[],
+  date: Date
+): CanteenMeal[] {
+  const key = format(date, 'yyyy-MM-dd');
+  // First try exact match
+  const exact = days.find(
+    (d) => d.date && normalizeDateString(d.date) === key
+  );
+  if (exact) return exact.meals;
+
+  // Fallback: sometimes date is in dd.MM.yyyy or similar
+  const alt1 = format(date, 'dd.MM.yyyy');
+  const alt2 = format(date, 'dd.MM.yy');
+  const best = days.find(
+    (d) =>
+      [d.date, normalizeDateString(d.date)].includes(alt1) ||
+      d.date === alt2
+  );
+  return best?.meals ?? [];
+}
+
+function xmlMenueToMeal(m: any): CanteenMeal | null {
+  if (!m || typeof m !== 'object') return null;
+  // Prefer nameMitUmbruch (often with <br>), fallback to name
+  const rawTitle: string | undefined = cleanup(
+    pickFirst<string>(m, ['nameMitUmbruch', 'name'])
+  );
+  const title = rawTitle
+    ?.replace(/<br\s*\/?\s*>/gi, ' · ')
+    ?.replace(/-{2,}/g, ' ')
+    ?.replace(/\s+/g, ' ')
+    ?.trim();
+  if (!title) return null;
+
+  const category = cleanup(m?.art);
+  const zusatz = cleanup(m?.zusatz);
+  const kennz = cleanup(pickFirst<string>(m, ['kennzeichnungen']));
+  const allergene = cleanup(pickFirst<string>(m, ['allergene']));
+
+  let notesParts: string[] = [];
+  if (zusatz) notesParts.push(zusatz);
+  if (kennz) notesParts.push(kennz);
+  if (allergene) notesParts.push(allergene);
+  const notes = notesParts.length
+    ? notesParts.join(' | ')
+    : undefined;
+
+  const p = m?.preis || {};
+  const prices: Record<string, string> = {};
+  if (p?.studierende) prices['Studierende'] = String(p.studierende);
+  if (p?.angestellte) prices['Angestellte'] = String(p.angestellte);
+  if (p?.gaeste) prices['Gäste'] = String(p.gaeste);
+  if (p?.schueler) prices['Schüler'] = String(p.schueler);
+
+  return {
+    title,
+    category,
+    notes,
+    prices: Object.keys(prices).length ? prices : undefined,
+  };
+}
+
+function cleanup(v?: string): string | undefined {
+  if (!v) return v;
+  return String(v).replace(/\s+/g, ' ').trim();
+}
+
+function normalizeDateString(v: any): string | undefined {
+  if (!v) return undefined;
+  const s = String(v).trim();
+  // Try to parse formats like yyyy-mm-dd, dd.mm.yyyy
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const de = s.match(/^(\d{2})\.(\d{2})\.(\d{2,4})$/);
+  if (de) {
+    const year = de[3].length === 2 ? `20${de[3]}` : de[3];
+    return `${year}-${de[2]}-${de[1]}`;
+  }
+  return s;
+}
+
+function inferDateFromContext(_obj: any): string | undefined {
+  return undefined;
+}
+
+function pickFirst<T = any>(obj: any, keys: string[]): T | undefined {
+  for (const k of keys)
+    if (obj && Object.prototype.hasOwnProperty.call(obj, k))
+      return obj[k] as T;
+  return undefined;
+}
+
+function joinIfArrayOrString(v: any): string | undefined {
+  if (!v) return undefined;
+  if (Array.isArray(v))
+    return v.filter(Boolean).map(String).join(', ');
+  if (typeof v === 'string') return v;
+  return undefined;
+}
+
+// Generic helper
+function toArray<T = any>(v: any): T[] {
+  if (v == null) return [];
+  return Array.isArray(v) ? (v as T[]) : [v as T];
+}
+
+export function dateFromOffset(offset: number): Date {
+  return addDays(new Date(), offset);
+}

@@ -1,6 +1,6 @@
 # TODOS
 
-- dev setup in README dokumentieren
+- dev setup in README dokumentieren (build, .env, etc.)
 - Design Review (siehe GPT-5) für alle Screens?
 - iPad?
 - EAS updates: müssen wir nach jedem Store-Release auch einen update pushen?
@@ -34,6 +34,7 @@
 
 ## Canteen screen
 
+- APPSTORE: encrypt env-key?
 - Speiseplan aus SWFR-API
   - LÖ: `https://www.swfr.de/apispeiseplan?&type=98&tx_speiseplan_pi1[apiKey]=${canteenApiKey}&tx_speiseplan_pi1[ort]=677`
   - handle API-Key
