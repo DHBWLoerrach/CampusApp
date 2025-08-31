@@ -71,4 +71,6 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
   }
 );
 
+LinkifiedText.displayName = 'LinkifiedText';
+
 export default LinkifiedText;
