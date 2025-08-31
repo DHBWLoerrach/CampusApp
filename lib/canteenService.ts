@@ -12,7 +12,10 @@ const SWFR_API_URL = `https://www.swfr.de/apispeiseplan?type=98&tx_speiseplan_pi
 export type CanteenMeal = {
   title: string;
   category?: string;
-  notes?: string;
+  // Separated additional info for clearer UI rendering
+  additionalInfo?: string; // from "zusatz"
+  labels?: string; // from "kennzeichnungen"
+  allergens?: string; // from "allergene"
   prices?: Record<string, string | number>;
 };
 
@@ -115,14 +118,6 @@ function xmlMenueToMeal(m: any): CanteenMeal | null {
   const kennz = cleanup(pickFirst<string>(m, ['kennzeichnungen']));
   const allergene = cleanup(pickFirst<string>(m, ['allergene']));
 
-  let notesParts: string[] = [];
-  if (zusatz) notesParts.push(zusatz);
-  if (kennz) notesParts.push(kennz);
-  if (allergene) notesParts.push(allergene);
-  const notes = notesParts.length
-    ? notesParts.join(' · ')
-    : undefined;
-
   const p = m?.preis || {};
   const prices: Record<string, string> = {};
   if (p?.studierende) prices['Studierende'] = String(p.studierende);
@@ -133,7 +128,9 @@ function xmlMenueToMeal(m: any): CanteenMeal | null {
   return {
     title,
     category,
-    notes,
+    additionalInfo: zusatz,
+    labels: kennz,
+    allergens: allergene,
     prices: Object.keys(prices).length ? prices : undefined,
   };
 }
