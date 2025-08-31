@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -7,13 +7,23 @@ import {
   StyleSheet,
   Text,
   View,
+  Pressable,
 } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
-import { dhbwRed } from '@/constants/Colors';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { ThemedView } from '@/components/ui/ThemedView';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
-export default function NfcButton() {
+type Props = {
+  render?: (args: {
+    onPress: () => void;
+    isScanning: boolean;
+  }) => ReactNode;
+};
+
+export default function NfcButton({ render }: Props) {
   const modalBg = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const [isScanning, setIsScanning] = useState(false);
@@ -78,6 +88,7 @@ export default function NfcButton() {
         );
       } else {
         setModalMessage('NFC Fehler – bitte erneut versuchen.');
+        console.warn('NFC Fehler (Android):', ex);
       }
     } finally {
       if (timeoutHandle) clearTimeout(timeoutHandle);
@@ -88,13 +99,37 @@ export default function NfcButton() {
 
   const handleModalClose = () => setModalMessage(null);
 
+  const iconColor = useThemeColor({}, 'icon');
+  const trigger = render ? (
+    render({ onPress, isScanning })
+  ) : (
+    <ThemedView
+      style={[styles.balanceCard, styles.elevated]}
+      lightColor="#fff"
+      darkColor="#222"
+    >
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel="Guthaben der CampusCard abfragen"
+        style={styles.balanceRow}
+        hitSlop={8}
+      >
+        <IconSymbol
+          name="wallet.bifold"
+          size={18}
+          color={iconColor}
+        />
+        <ThemedText style={styles.balanceTitle}>
+          Guthaben der CampusCard abfragen
+        </ThemedText>
+      </Pressable>
+    </ThemedView>
+  );
+
   return (
     <>
-      <Button
-        color={dhbwRed}
-        title="Guthaben auf der CampusCard abfragen"
-        onPress={onPress}
-      />
+      {trigger}
       <Modal
         visible={isScanning || modalMessage !== null}
         transparent
@@ -144,5 +179,24 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     textAlign: 'center',
+  },
+  balanceCard: {
+    borderRadius: 12,
+    padding: 12,
+  },
+  balanceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  balanceTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  elevated: {
+    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
   },
 });

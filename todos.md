@@ -36,10 +36,6 @@
 ## Canteen screen
 
 - APPSTORE: encrypt env-key?
-- Speiseplan aus SWFR-API
-  - LÖ: `https://www.swfr.de/apispeiseplan?&type=98&tx_speiseplan_pi1[apiKey]=${canteenApiKey}&tx_speiseplan_pi1[ort]=677`
-  - handle API-Key
-  - check nameMitUmbruch
 - Update des Screenshots in den App Stores
 - Uhricon oben rechts zeig Alert mit Öffnungszeiten:
   - Mo-Fr XX-YY, Mittagessen: AA-BB Uhr

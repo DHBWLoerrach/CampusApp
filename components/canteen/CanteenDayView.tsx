@@ -92,6 +92,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const badgeBg = useThemeColor({}, 'dayNumberContainer');
   const badgeBorder = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
+  const pageBg = useThemeColor({}, 'background');
   const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
@@ -147,6 +148,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
       ) : (
         <ScrollView
           contentContainerStyle={styles.listContent}
+          stickyHeaderIndices={['android', 'ios'].includes(Platform.OS) ? [0] : undefined}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
@@ -155,6 +157,11 @@ export default function CanteenDayView({ date }: { date: Date }) {
             />
           }
         >
+          {['android', 'ios'].includes(Platform.OS) ? (
+            <View style={[styles.stickyHeader, { backgroundColor: pageBg }]}>
+              <NfcButton />
+            </View>
+          ) : null}
           {meals.map((m, idx) => {
             const price = resolveMealPrice(m.prices, selectedRole);
             const tags = extractMealTags(m);
@@ -247,11 +254,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
         </ScrollView>
       )}
 
-      {['android', 'ios'].includes(Platform.OS) && (
-        <View style={styles.nfcContainer}>
-          <NfcButton />
-        </View>
-      )}
+      
     </ThemedView>
   );
 }
@@ -271,6 +274,12 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 24,
     gap: 12,
+  },
+  stickyHeader: {
+    paddingHorizontal: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
+    zIndex: 2,
   },
   card: {
     borderRadius: 12,
@@ -365,11 +374,6 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 8,
     textDecorationLine: 'underline',
-  },
-  nfcContainer: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
   },
 });
 

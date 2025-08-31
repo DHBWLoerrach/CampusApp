@@ -1,10 +1,18 @@
-import { useEffect } from 'react';
-import { Alert, Button } from 'react-native';
+import { ReactNode, useEffect } from 'react';
+import { Alert, Pressable, StyleSheet } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
-import { dhbwRed } from '@/constants/Colors';
+import { ThemedView } from '@/components/ui/ThemedView';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-export default function NfcButton() {
+type Props = {
+  render?: (args: { onPress: () => void }) => ReactNode;
+};
+
+export default function NfcButton({ render }: Props) {
+  const iconColor = useThemeColor({}, 'icon');
   useEffect(() => {
     NfcManager.isSupported().then((supported) => {
       if (supported) NfcManager.start();
@@ -62,11 +70,52 @@ export default function NfcButton() {
     }
   };
 
+  if (render) return <>{render({ onPress })}</>;
+
   return (
-    <Button
-      color={dhbwRed}
-      title="Guthaben auf der CampusCard abfragen"
-      onPress={onPress}
-    />
+    <ThemedView
+      style={[styles.balanceCard, styles.elevated]}
+      lightColor="#fff"
+      darkColor="#222"
+    >
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel="Guthaben der CampusCard abfragen"
+        style={styles.balanceRow}
+        hitSlop={8}
+      >
+        <IconSymbol
+          name="wallet.bifold"
+          size={18}
+          color={iconColor}
+        />
+        <ThemedText style={styles.balanceTitle}>
+          Guthaben der CampusCard abfragen
+        </ThemedText>
+      </Pressable>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  balanceCard: {
+    borderRadius: 12,
+    padding: 12,
+  },
+  balanceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  balanceTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  elevated: {
+    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+});
