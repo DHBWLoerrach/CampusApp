@@ -1,12 +1,13 @@
 # TODOS
 
-- Doku: AppStore release und EAS update workflow(u.a. version bump in app.json)
+- Dokumentieren: AppStore release und EAS update workflow
+  - z.B. version bump in app.json erst bevor der nächste AppStore release kommt
+    - sonst funktionieren updates nicht, denn diese werden passend zur Version/Runtime ausgeliefert
+  - im Prinzip nutzen wir EAS updates nur für Hotfixes der aktuellen Version?
 - dev setup in README dokumentieren (build, .env, etc.)
 - Design Review (siehe GPT-5) für alle Screens?
 - iPad?
-- EAS updates: müssen wir nach jedem Store-Release auch einen update pushen?
-  - die Updates werden passend zur Version (Runtime) in app.json ausgeliefert
-  - können wir das Update in "About" anzeigen?
+- können/sollen wir das aktive Update in "About" anzeigen?
 
 ## Webapp
 
