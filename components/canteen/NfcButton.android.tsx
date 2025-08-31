@@ -7,14 +7,11 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
 } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { ThemedView } from '@/components/ui/ThemedView';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import NfcTriggerCard from '@/components/canteen/NfcTriggerCard';
 
 type Props = {
   render?: (args: {
@@ -99,32 +96,10 @@ export default function NfcButton({ render }: Props) {
 
   const handleModalClose = () => setModalMessage(null);
 
-  const iconColor = useThemeColor({}, 'icon');
   const trigger = render ? (
     render({ onPress, isScanning })
   ) : (
-    <ThemedView
-      style={[styles.balanceCard, styles.elevated]}
-      lightColor="#fff"
-      darkColor="#222"
-    >
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel="Guthaben der CampusCard abfragen"
-        style={styles.balanceRow}
-        hitSlop={8}
-      >
-        <IconSymbol
-          name="wallet.bifold"
-          size={18}
-          color={iconColor}
-        />
-        <ThemedText style={styles.balanceTitle}>
-          Guthaben der CampusCard abfragen
-        </ThemedText>
-      </Pressable>
-    </ThemedView>
+    <NfcTriggerCard onPress={onPress} />
   );
 
   return (
@@ -180,23 +155,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  balanceCard: {
-    borderRadius: 12,
-    padding: 12,
-  },
-  balanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  balanceTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  elevated: {
-    elevation: 3,
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
+  // Card styles are in NfcTriggerCard
 });
