@@ -13,13 +13,30 @@ import {
   fetchCanteenRaw,
   mealsForDate,
   normalizeCanteenData,
+  priceForRole,
 } from '@/lib/canteenService';
 import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import { useRoleContext } from '@/context/RoleContext';
+import type { Role } from '@/constants/Roles';
+
+function resolveMealPriceValue(
+  prices: CanteenMeal['prices'],
+  role: ReturnType<typeof useRoleContext>['selectedRole']
+): string | number | undefined {
+  const fallbackRole: Role = 'Gast';
+  const pr = priceForRole(
+    prices as Record<string, string | number> | undefined,
+    role ?? fallbackRole
+  );
+  if (pr) return pr.value;
+  return undefined;
+}
 
 export default function CanteenDayView({ date }: { date: Date }) {
   const safeDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
+  const { selectedRole } = useRoleContext();
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
@@ -63,33 +80,31 @@ export default function CanteenDayView({ date }: { date: Date }) {
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.listContent}>
-          {meals.map((m, idx) => (
-            <ThemedView key={idx} style={styles.card}>
-              {m.category ? (
-                <ThemedText style={styles.category}>
-                  {m.category}
+          {meals.map((m, idx) => {
+            const priceValue = resolveMealPriceValue(m.prices, selectedRole);
+            return (
+              <ThemedView key={idx} style={styles.card}>
+                {m.category ? (
+                  <ThemedText style={styles.category}>
+                    {m.category}
+                  </ThemedText>
+                ) : null}
+                <ThemedText type="defaultSemiBold" style={styles.title}>
+                  {m.title}
                 </ThemedText>
-              ) : null}
-              <ThemedText type="defaultSemiBold" style={styles.title}>
-                {m.title}
-              </ThemedText>
-              {m.notes ? (
-                <ThemedText style={styles.notes}>
-                  {m.notes}
-                </ThemedText>
-              ) : null}
-              {m.prices && Object.keys(m.prices).length > 0 ? (
-                <View style={styles.pricesRow}>
-                  {Object.entries(m.prices).map(([k, v]) => (
-                    <ThemedText
-                      key={k}
-                      style={styles.price}
-                    >{`${k}: ${v}`}</ThemedText>
-                  ))}
-                </View>
-              ) : null}
-            </ThemedView>
-          ))}
+                {m.notes ? (
+                  <ThemedText style={styles.notes}>
+                    {m.notes}
+                  </ThemedText>
+                ) : null}
+                {priceValue != null ? (
+                  <View style={styles.pricesRow}>
+                    <ThemedText style={styles.price}>{`${priceValue}`}</ThemedText>
+                  </View>
+                ) : null}
+              </ThemedView>
+            );
+          })}
         </ScrollView>
       )}
 

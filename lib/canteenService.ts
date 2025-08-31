@@ -1,5 +1,6 @@
 import { addDays, format } from 'date-fns';
 import { XMLParser } from 'fast-xml-parser';
+import type { Role } from '@/constants/Roles';
 
 const API_KEY = (globalThis as any)?.process?.env
   ?.EXPO_PUBLIC_SWFR_API_KEY as string | undefined;
@@ -137,6 +138,29 @@ function xmlMenueToMeal(m: any): CanteenMeal | null {
   };
 }
 
+// Map an app Role to the corresponding price label(s) used by SWFR
+// Falls back by priority if the preferred label is not present
+const ROLE_TO_PRICE_LABELS: Record<Role, string[]> = {
+  Studierende: ['Studierende'],
+  Mitarbeitende: ['Angestellte'],
+  Lehrbeauftragte: ['Gäste'],
+  Gast: ['Gäste'],
+};
+
+export function priceForRole(
+  prices: Record<string, string | number> | undefined,
+  role: Role | null
+): { label: string; value: string | number } | null {
+  if (!prices || !role) return null;
+  const labels = ROLE_TO_PRICE_LABELS[role] || [];
+  for (const lbl of labels) {
+    if (Object.prototype.hasOwnProperty.call(prices, lbl)) {
+      return { label: lbl, value: prices[lbl]! };
+    }
+  }
+  return null;
+}
+
 function cleanup(v?: string): string | undefined {
   if (!v) return v;
   return String(v).replace(/\s+/g, ' ').trim();
@@ -197,7 +221,10 @@ export function nextWeekdayStart(from: Date = new Date()): Date {
   return from; // Weekday: today
 }
 
-export function weekdayDates(count = 5, from: Date = new Date()): Date[] {
+export function weekdayDates(
+  count = 5,
+  from: Date = new Date()
+): Date[] {
   const dates: Date[] = [];
   let d = nextWeekdayStart(from);
   while (dates.length < count) {
