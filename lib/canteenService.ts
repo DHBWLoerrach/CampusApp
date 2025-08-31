@@ -5,7 +5,7 @@ import type { Role } from '@/constants/Roles';
 const API_KEY = (globalThis as any)?.process?.env
   ?.EXPO_PUBLIC_SWFR_API_KEY as string | undefined;
 // 677 = Lörrach, for tests use 610 = Mensa Rempartstraße Freiburg
-const SWFR_LOCATION = 610;
+const SWFR_LOCATION = 677;
 
 const SWFR_API_URL = `https://www.swfr.de/apispeiseplan?type=98&tx_speiseplan_pi1[apiKey]=${API_KEY}&tx_speiseplan_pi1[ort]=${SWFR_LOCATION}`;
 
@@ -164,11 +164,15 @@ export function summarizeAllergensAndLabels(
   labels?: string,
   allergens?: string
 ): string | undefined {
-  const src = `${labels ?? ''} ${allergens ?? ''}`.toLowerCase().trim();
+  const src = `${labels ?? ''} ${allergens ?? ''}`
+    .toLowerCase()
+    .trim();
   if (!src) return undefined;
 
   // Helper to test presence while avoiding "-frei" false positives
-  const has = (re: RegExp) => re.test(src) && !/(gluten\s*frei|laktose\s*frei|milch\s*frei)/i.test(src);
+  const has = (re: RegExp) =>
+    re.test(src) &&
+    !/(gluten\s*frei|laktose\s*frei|milch\s*frei)/i.test(src);
 
   const foundAllergens: string[] = [];
   // Group gluten-related cereals under "Gluten"
@@ -184,13 +188,16 @@ export function summarizeAllergensAndLabels(
   if (has(/nuss|haselnuss|walnuss|cashew|mandel|pistazie/))
     foundAllergens.push('Schalenfrüchte');
   if (has(/fisch\b/)) foundAllergens.push('Fisch');
-  if (has(/krebstier|garnelen|krabben|hummer/)) foundAllergens.push('Krebstiere');
+  if (has(/krebstier|garnelen|krabben|hummer/))
+    foundAllergens.push('Krebstiere');
   if (has(/sellerie/)) foundAllergens.push('Sellerie');
   if (has(/senf\b/)) foundAllergens.push('Senf');
   if (has(/sesam/)) foundAllergens.push('Sesam');
   if (has(/lupine/)) foundAllergens.push('Lupine');
-  if (has(/sulf(it|id)|schwefeldioxid/)) foundAllergens.push('Sulfite');
-  if (has(/weichtier|muschel|tintenfisch/)) foundAllergens.push('Weichtiere');
+  if (has(/sulf(it|id)|schwefeldioxid/))
+    foundAllergens.push('Sulfite');
+  if (has(/weichtier|muschel|tintenfisch/))
+    foundAllergens.push('Weichtiere');
 
   // Essential non-allergen notices to surface briefly
   const extras: string[] = [];
