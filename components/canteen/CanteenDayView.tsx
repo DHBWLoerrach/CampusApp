@@ -15,6 +15,7 @@ import {
   normalizeCanteenData,
   priceForRole,
 } from '@/lib/canteenService';
+import { getCanteenClosure } from '@/lib/canteenClosures';
 import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -52,6 +53,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const meals: CanteenMeal[] = data?.days
     ? mealsForDate(data.days, safeDate)
     : [];
+  const closure = getCanteenClosure(safeDate);
 
   return (
     <ThemedView style={styles.container}>
@@ -71,6 +73,15 @@ export default function CanteenDayView({ date }: { date: Date }) {
           <ThemedText style={styles.link} onPress={() => refetch()}>
             Erneut versuchen
           </ThemedText>
+        </View>
+      ) : closure ? (
+        <View style={styles.center}>
+          <ThemedText type="defaultSemiBold" style={styles.hint}>
+            Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
+          </ThemedText>
+          {closure.reason ? (
+            <ThemedText style={styles.small}>{closure.reason}</ThemedText>
+          ) : null}
         </View>
       ) : meals.length === 0 ? (
         <View style={styles.center}>
