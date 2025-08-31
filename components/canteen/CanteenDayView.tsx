@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import {
   CanteenDay,
   CanteenMeal,
+  summarizeAllergensAndLabels,
   fetchCanteenRaw,
   mealsForDate,
   normalizeCanteenData,
@@ -260,8 +261,8 @@ export default function CanteenDayView({ date }: { date: Date }) {
                       hitSlop={8}
                       style={styles.detailsHeaderRow}
                     >
-                      <ThemedText style={styles.detailsHeaderLabel}>
-                        Allergene und Zusätze
+                      <ThemedText style={styles.detailsHeaderLabel} numberOfLines={1}>
+                        {`Allergene & Zusätze: ${summarizeAllergensAndLabels(m.labels, m.allergens) ?? ''}`}
                       </ThemedText>
                       <IconSymbol
                         name="chevron.down"
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   detailsHeaderRow: {
-    marginTop: 8,
+    marginTop: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
   },
   detailsHeaderLabel: {
     fontSize: 12,
-    opacity: 0.6,
+    opacity: 0.8,
   },
   moreText: {
     fontSize: 13,

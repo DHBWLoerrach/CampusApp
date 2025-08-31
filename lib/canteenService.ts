@@ -158,6 +158,52 @@ export function priceForRole(
   return null;
 }
 
+// Build a short, single-line summary of key allergens and essential labels
+// Example output: "Gluten, Milch, Ei · Alkohol"
+export function summarizeAllergensAndLabels(
+  labels?: string,
+  allergens?: string
+): string | undefined {
+  const src = `${labels ?? ''} ${allergens ?? ''}`.toLowerCase().trim();
+  if (!src) return undefined;
+
+  // Helper to test presence while avoiding "-frei" false positives
+  const has = (re: RegExp) => re.test(src) && !/(gluten\s*frei|laktose\s*frei|milch\s*frei)/i.test(src);
+
+  const foundAllergens: string[] = [];
+  // Group gluten-related cereals under "Gluten"
+  if (
+    has(/gluten|weizen|roggen|gerste|dinkel|hafer/) &&
+    !/gluten\s*frei/i.test(src)
+  )
+    foundAllergens.push('Gluten');
+  if (has(/milch|laktose/)) foundAllergens.push('Milch');
+  if (has(/ei(er)?\b/)) foundAllergens.push('Ei');
+  if (has(/soja/)) foundAllergens.push('Soja');
+  if (has(/erdnuss/)) foundAllergens.push('Erdnuss');
+  if (has(/nuss|haselnuss|walnuss|cashew|mandel|pistazie/))
+    foundAllergens.push('Schalenfrüchte');
+  if (has(/fisch\b/)) foundAllergens.push('Fisch');
+  if (has(/krebstier|garnelen|krabben|hummer/)) foundAllergens.push('Krebstiere');
+  if (has(/sellerie/)) foundAllergens.push('Sellerie');
+  if (has(/senf\b/)) foundAllergens.push('Senf');
+  if (has(/sesam/)) foundAllergens.push('Sesam');
+  if (has(/lupine/)) foundAllergens.push('Lupine');
+  if (has(/sulf(it|id)|schwefeldioxid/)) foundAllergens.push('Sulfite');
+  if (has(/weichtier|muschel|tintenfisch/)) foundAllergens.push('Weichtiere');
+
+  // Essential non-allergen notices to surface briefly
+  const extras: string[] = [];
+  if (/alkohol/.test(src)) extras.push('Alkohol');
+
+  // De-duplicate while preserving order
+  const uniq = (arr: string[]) => Array.from(new Set(arr));
+  const allergensShort = uniq(foundAllergens).join(', ');
+  const extrasShort = uniq(extras).join(', ');
+  const parts = [allergensShort, extrasShort].filter(Boolean);
+  return parts.length ? parts.join(' · ') : undefined;
+}
+
 function cleanup(v?: string): string | undefined {
   if (!v) return v;
   return String(v).replace(/\s+/g, ' ').trim();
