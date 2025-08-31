@@ -37,8 +37,7 @@
 
 ## Canteen screen
 
-- APPSTORE: encrypt env-key?
-- Update des Screenshots in den App Stores
+- APPSTORE: encrypt env-key? geht nur mit Server-Proxy… vielleicht too much
 
 ## Services screen
 
