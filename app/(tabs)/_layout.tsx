@@ -89,6 +89,27 @@ function TabsContent() {
               color={color}
             />
           ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() =>
+                Alert.alert(
+                  'Mensa Campus Hangstraße',
+                  [
+                    'Mo–Fr 9:30–13:45 Uhr',
+                    'Mittagessen: 11:45–13:30 Uhr',
+                    'Preise richten sich nach Personengruppen (kann unter Services > Einstellungen angepasst werden)',
+                  ].join('\n'),
+                )
+              }
+              hitSlop={8}
+              style={{ marginRight: 16 }}
+              accessibilityRole="button"
+              accessibilityLabel="Öffnungszeiten der Mensa anzeigen"
+              accessibilityHint="Zeigt die Öffnungszeiten für die Mensa Campus Hangstraße"
+            >
+              <IconSymbol size={20} name="clock" color="white" />
+            </TouchableOpacity>
+          ),
         }}
         listeners={{
           focus: () => {

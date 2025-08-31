@@ -37,9 +37,6 @@
 
 - APPSTORE: encrypt env-key?
 - Update des Screenshots in den App Stores
-- Uhricon oben rechts zeig Alert mit Öffnungszeiten:
-  - Mo-Fr XX-YY, Mittagessen: AA-BB Uhr
-  - Preise richten sich nach Personengruppen (-> Einstellungen)
 
 ## Services screen
 
