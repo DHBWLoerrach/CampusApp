@@ -4,6 +4,8 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  RefreshControl,
+  Pressable,
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -19,25 +21,78 @@ import { getCanteenClosure } from '@/lib/canteenClosures';
 import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useRoleContext } from '@/context/RoleContext';
 import type { Role } from '@/constants/Roles';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useState } from 'react';
 
-function resolveMealPriceValue(
+function resolveMealPrice(
   prices: CanteenMeal['prices'],
   role: ReturnType<typeof useRoleContext>['selectedRole']
-): string | number | undefined {
+): { label: string; amount: string; display: string } | null {
   const fallbackRole: Role = 'Gast';
   const pr = priceForRole(
     prices as Record<string, string | number> | undefined,
     role ?? fallbackRole
   );
-  if (pr) return pr.value;
-  return undefined;
+  if (!pr) return null;
+  let raw = String(pr.value).trim();
+  // remove any existing euro signs and surrounding spaces
+  raw = raw.replace(/\s*€\s*/gi, '');
+  // normalize decimal separator to comma if only dot is present
+  if (raw.includes('.') && !raw.includes(',')) raw = raw.replace('.', ',');
+  const amount = raw;
+  const display = `${amount} €`;
+  return { label: pr.label, amount, display };
+}
+
+type MealTag = {
+  key: string;
+  label: string;
+  kind:
+    | 'vegan'
+    | 'vegetarian'
+    | 'fish'
+    | 'beef'
+    | 'pork'
+    | 'poultry'
+    | 'spicy'
+    | 'bio'
+    | 'alcohol'
+    | 'other';
+};
+
+function extractMealTags(meal: CanteenMeal): MealTag[] {
+  const src = `${meal.title} ${meal.notes ?? ''}`.toLowerCase();
+  const tags: MealTag[] = [];
+  const add = (key: string, label: string, kind: MealTag['kind']) =>
+    tags.push({ key, label, kind });
+
+  if (/\bvegan\b/.test(src)) add('vegan', 'Vegan', 'vegan');
+  if (/vegetar|\bveg\b/.test(src) && !/\bvegan\b/.test(src))
+    add('vegetarian', 'Vegetarisch', 'vegetarian');
+  if (/fisch|lachs|seelachs|thunfisch|forelle/.test(src))
+    add('fish', 'Fisch', 'fish');
+  if (/rind/.test(src)) add('beef', 'Rind', 'beef');
+  if (/schwein/.test(src)) add('pork', 'Schwein', 'pork');
+  if (/geflügel|hähnchen|huhn|pute|poultry/.test(src))
+    add('poultry', 'Geflügel', 'poultry');
+  if (/scharf|spicy|chili|pikant/.test(src)) add('spicy', 'Scharf', 'spicy');
+  if (/\bbio\b|\borganic\b/.test(src)) add('bio', 'Bio', 'bio');
+  if (/alkohol/.test(src)) add('alcohol', 'Alkohol', 'alcohol');
+
+  return tags;
 }
 
 export default function CanteenDayView({ date }: { date: Date }) {
   const safeDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
   const { selectedRole } = useRoleContext();
+  const tintColor = useThemeColor({}, 'tint');
+  const badgeBg = useThemeColor({}, 'dayNumberContainer');
+  const badgeBorder = useThemeColor({}, 'border');
+  const iconColor = useThemeColor({}, 'icon');
+  const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
@@ -90,28 +145,101 @@ export default function CanteenDayView({ date }: { date: Date }) {
           </ThemedText>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.listContent}>
+        <ScrollView
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={() => refetch()}
+              tintColor={tintColor}
+            />
+          }
+        >
           {meals.map((m, idx) => {
-            const priceValue = resolveMealPriceValue(m.prices, selectedRole);
+            const price = resolveMealPrice(m.prices, selectedRole);
+            const tags = extractMealTags(m);
+            const isExpanded = !!expandedMap[idx];
             return (
-              <ThemedView key={idx} style={styles.card}>
-                {m.category ? (
-                  <ThemedText style={styles.category}>
-                    {m.category}
-                  </ThemedText>
-                ) : null}
+              <ThemedView
+                key={idx}
+                style={[styles.card, styles.elevated]}
+                lightColor="#fff"
+                darkColor="#222"
+              >
+                <View style={styles.cardHeader}>
+                  {m.category ? (
+                    <View style={styles.categoryPill}>
+                      <ThemedText style={styles.categoryText}>
+                        {m.category}
+                      </ThemedText>
+                    </View>
+                  ) : (
+                    <View />
+                  )}
+
+                  {price ? (
+                    <View
+                      style={[
+                        styles.priceBadge,
+                        { backgroundColor: badgeBg, borderColor: badgeBorder },
+                      ]}
+                      accessibilityLabel={`Preis: ${price.display}`}
+                    >
+                      <ThemedText style={styles.priceText}>
+                        {price.display}
+                      </ThemedText>
+                    </View>
+                  ) : null}
+                </View>
+
                 <ThemedText type="defaultSemiBold" style={styles.title}>
                   {m.title}
                 </ThemedText>
-                {m.notes ? (
-                  <ThemedText style={styles.notes}>
-                    {m.notes}
-                  </ThemedText>
-                ) : null}
-                {priceValue != null ? (
-                  <View style={styles.pricesRow}>
-                    <ThemedText style={styles.price}>{`${priceValue}`}</ThemedText>
+
+                {tags.length > 0 ? (
+                  <View style={styles.tagsRow}>
+                    {tags.map((t) => (
+                      <View key={t.key} style={[styles.tagChip, chipStyleFor(t)]}>
+                        <ThemedText style={[styles.tagText, chipTextStyleFor(t)]}>
+                          {t.label}
+                        </ThemedText>
+                      </View>
+                    ))}
                   </View>
+                ) : null}
+
+                {m.notes ? (
+                  <>
+                    <ThemedText
+                      style={styles.notes}
+                      numberOfLines={isExpanded ? undefined : 1}
+                    >
+                      {m.notes}
+                    </ThemedText>
+                    <Pressable
+                      onPress={() =>
+                        setExpandedMap((prev) => ({
+                          ...prev,
+                          [idx]: !prev[idx],
+                        }))
+                      }
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        isExpanded
+                          ? 'Zusatzinfos ausblenden'
+                          : 'Zusatzinfos anzeigen'
+                      }
+                      hitSlop={8}
+                      style={styles.moreRow}
+                    >
+                      <IconSymbol
+                        name="chevron.down"
+                        size={16}
+                        color={iconColor}
+                        style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}
+                      />
+                    </Pressable>
+                  </>
                 ) : null}
               </ThemedView>
             );
@@ -146,31 +274,83 @@ const styles = StyleSheet.create({
   },
   card: {
     borderRadius: 12,
-    padding: 12,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    padding: 14,
+  },
+  elevated: {
+    elevation: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
   },
   category: {
     fontSize: 12,
     opacity: 0.8,
     marginBottom: 4,
   },
+  categoryPill: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(127,127,127,0.12)',
+    alignSelf: 'flex-start',
+  },
+  categoryText: {
+    fontSize: 12,
+    opacity: 0.9,
+  },
   title: {
-    fontSize: 16,
+    fontSize: 17,
+    lineHeight: 22,
   },
   notes: {
     fontSize: 12,
     opacity: 0.8,
-    marginTop: 4,
+    marginTop: 8,
   },
-  pricesRow: {
+  moreRow: {
+    marginTop: 4,
+    alignSelf: 'flex-end',
+  },
+  moreText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  priceBadge: {
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  priceText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  tagsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
     marginTop: 8,
   },
-  price: {
+  tagChip: {
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(127,127,127,0.25)',
+    backgroundColor: 'rgba(127,127,127,0.10)',
+  },
+  tagText: {
     fontSize: 12,
-    opacity: 0.9,
+    fontWeight: '600',
   },
   error: {
     textAlign: 'center',
@@ -192,3 +372,82 @@ const styles = StyleSheet.create({
     right: 16,
   },
 });
+
+// Visual styles for chips depending on tag kind
+function chipStyleFor(tag: MealTag) {
+  switch (tag.kind) {
+    case 'vegan':
+      return {
+        backgroundColor: 'rgba(46, 125, 50, 0.18)',
+        borderColor: 'rgba(46, 125, 50, 0.35)',
+      } as const;
+    case 'vegetarian':
+      return {
+        backgroundColor: 'rgba(76, 175, 80, 0.18)',
+        borderColor: 'rgba(76, 175, 80, 0.35)',
+      } as const;
+    case 'fish':
+      return {
+        backgroundColor: 'rgba(33, 150, 243, 0.18)',
+        borderColor: 'rgba(33, 150, 243, 0.35)',
+      } as const;
+    case 'spicy':
+      return {
+        backgroundColor: 'rgba(255, 87, 34, 0.18)',
+        borderColor: 'rgba(255, 87, 34, 0.35)',
+      } as const;
+    case 'bio':
+      return {
+        // Teal tone to distinguish from green Vegan/Vegetarisch
+        backgroundColor: 'rgba(0, 137, 123, 0.18)',
+        borderColor: 'rgba(0, 137, 123, 0.35)',
+      } as const;
+    case 'alcohol':
+      return {
+        backgroundColor: 'rgba(156, 39, 176, 0.18)',
+        borderColor: 'rgba(156, 39, 176, 0.35)',
+      } as const;
+    case 'beef':
+      return {
+        backgroundColor: 'rgba(121, 85, 72, 0.18)',
+        borderColor: 'rgba(121, 85, 72, 0.35)',
+      } as const;
+    case 'pork':
+      return {
+        backgroundColor: 'rgba(233, 30, 99, 0.18)',
+        borderColor: 'rgba(233, 30, 99, 0.35)',
+      } as const;
+    case 'poultry':
+      return {
+        backgroundColor: 'rgba(255, 193, 7, 0.18)',
+        borderColor: 'rgba(255, 193, 7, 0.35)',
+      } as const;
+    default:
+      return {} as const;
+  }
+}
+
+function chipTextStyleFor(tag: MealTag) {
+  switch (tag.kind) {
+    case 'vegan':
+    case 'vegetarian':
+      return { color: '#2e7d32' } as const;
+    case 'fish':
+      return { color: '#1976d2' } as const;
+    case 'spicy':
+      return { color: '#e65100' } as const;
+    case 'bio':
+      // Darker teal text
+      return { color: '#00695C' } as const;
+    case 'alcohol':
+      return { color: '#7b1fa2' } as const;
+    case 'beef':
+      return { color: '#6d4c41' } as const;
+    case 'pork':
+      return { color: '#c2185b' } as const;
+    case 'poultry':
+      return { color: '#f57f17' } as const;
+    default:
+      return {} as const;
+  }
+}

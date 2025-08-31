@@ -120,7 +120,7 @@ function xmlMenueToMeal(m: any): CanteenMeal | null {
   if (kennz) notesParts.push(kennz);
   if (allergene) notesParts.push(allergene);
   const notes = notesParts.length
-    ? notesParts.join(' | ')
+    ? notesParts.join(' · ')
     : undefined;
 
   const p = m?.preis || {};
