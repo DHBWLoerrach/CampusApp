@@ -96,6 +96,10 @@ const MAPPING = {
     name: 'account-question',
     source: 'community',
   },
+  // Utility/actions
+  'doc.on.doc': { name: 'content-copy', source: 'community' },
+  'square.and.arrow.up': { name: 'share', source: 'material' },
+  ellipsis: { name: 'more-vert', source: 'material' },
 } as Record<string, IconConfig>;
 
 /**

@@ -241,7 +241,7 @@ function TabsContent() {
       </BottomSheet>
       <BottomSheet
         visible={carpoolOpen}
-        title="Mitfahr-Matches"
+        title="Mitfahr-Matches (nächste 5 Tage)"
         onClose={() => setCarpoolOpen(false)}
       >
         <RideMatchSheetContent myCourse={selectedCourse ?? ''} />

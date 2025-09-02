@@ -169,6 +169,10 @@ export default function RideMatchSheetContent({
     [myCourse, mode]
   );
 
+  // Dynamic labels based on current offsets
+  const arrAbs = Math.abs(ARRIVAL_OFFSET_MIN);
+  const depAbs = Math.abs(DEPARTURE_OFFSET_MIN);
+
   // Build compact strings for copy/share actions
   const buildCopyText = (
     date: string,
@@ -210,6 +214,11 @@ export default function RideMatchSheetContent({
         Kurse mit gleichen Ankunfts-/Abfahrtszeiten wie{' '}
         <ThemedText style={styles.bold}>{myCourse}</ThemedText>{' '}
       </ThemedText>
+      <View style={styles.subInfoWrap}>
+        <ThemedText style={styles.subInfo}>
+          {`Ankunft = VL-Start - ${arrAbs} Min · Abfahrt = VL-Ende + ${depAbs} Min`}
+        </ThemedText>
+      </View>
 
       <View style={styles.segmentedWrap}>
         <View
@@ -243,7 +252,7 @@ export default function RideMatchSheetContent({
                   styles.segTextActiveLight,
               ]}
             >
-              Exakt
+              Exakte Zeiten
             </ThemedText>
           </Pressable>
           <Pressable
@@ -271,7 +280,7 @@ export default function RideMatchSheetContent({
                   styles.segTextActiveLight,
               ]}
             >
-              ±{TOLERANCE_MIN} Min
+              ±{TOLERANCE_MIN} Min Toleranz
             </ThemedText>
           </Pressable>
         </View>
@@ -389,15 +398,14 @@ function Section({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`${title} kopieren`}
+          hitSlop={8}
           onPress={onCopy}
           style={({ pressed }) => [
             styles.copyBtn,
-            pressed && { opacity: 0.7 },
+            pressed && { opacity: 0.6 },
           ]}
         >
-          <ThemedText style={styles.copyBtnText}>
-            Liste kopieren
-          </ThemedText>
+          <IconSymbol name="doc.on.doc" size={16} color={textColor} />
         </Pressable>
       </View>
       <View style={styles.chipsWrap}>
@@ -504,13 +512,10 @@ const styles = StyleSheet.create({
   chipText: { fontSize: 10, fontWeight: '600' },
   muted: { opacity: 0.6 },
   copyBtn: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(125,125,125,0.35)',
   },
-  copyBtnText: { fontSize: 12, fontWeight: '700' },
   toast: {
     alignSelf: 'center',
     marginTop: 8,
@@ -568,4 +573,11 @@ const styles = StyleSheet.create({
   segTextActive: { opacity: 1 },
   segTextActiveDark: { color: '#111' },
   segTextActiveLight: { color: '#111' },
+  subInfoWrap: { alignItems: 'center', gap: 0, marginTop: -4 },
+  subInfo: {
+    fontSize: 12,
+    lineHeight: 14,
+    opacity: 0.7,
+    textAlign: 'center',
+  },
 });
