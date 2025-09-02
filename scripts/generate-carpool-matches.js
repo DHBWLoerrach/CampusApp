@@ -9,6 +9,7 @@ const DAYS = parseInt(process.env.DAYS || '5', 10);
 const COURSES_PATH = process.env.COURSES_PATH || './courses.txt';
 const OUT_DIR = process.env.OUT_DIR || '.';
 const OUT_FILE = process.env.OUT_FILE || 'match-index.json';
+const START_DATE_RAW = process.env.START_DATE; // optional; parsed in resolveStartKey
 
 // --- CLI helpers ---
 const argv = process.argv.slice(2);
@@ -96,7 +97,7 @@ function nextDayKeys(days, startKeyOverride) {
 
 // Parse start date CLI/env -> YYYY-MM-DD (in TZ)
 function resolveStartKey() {
-  const raw = getArg('start-date') ?? getArg('start') ?? process.env.START_DATE;
+  const raw = getArg('start-date') ?? getArg('start') ?? START_DATE_RAW;
   if (!raw) return dateKeyTZ(new Date());
 
   const s = String(raw).trim();
