@@ -1,18 +1,9 @@
 // generate-match-index.mjs
+// Minimal deps: only "ical.js" for ICS parsing. Node 18+ (global fetch).
+
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import ical from 'node-ical';
-import {
-  addDays,
-  differenceInMinutes,
-  startOfDay,
-  endOfDay,
-} from 'date-fns';
-import {
-  utcToZonedTime,
-  zonedTimeToUtc,
-  formatInTimeZone,
-} from 'date-fns-tz';
+import * as ICAL from 'ical.js';
 
 // --- Config ---
 const TZ = process.env.TZ_NAME || 'Europe/Berlin';
@@ -21,7 +12,7 @@ const COURSES_PATH = process.env.COURSES_PATH || './courses.txt';
 const OUT_DIR = process.env.OUT_DIR || './public';
 const OUT_FILE = process.env.OUT_FILE || 'match-index.json';
 
-// Optional: derive study program from course code prefix (extend as needed)
+// Optional: derive program from course code prefix (extend as needed)
 const PROGRAM_RULES = [
   { re: /^WWI/i, program: 'WI' }, // Business Informatics
   { re: /^TIF/i, program: 'INF' }, // Computer Science (example)
@@ -29,133 +20,169 @@ const PROGRAM_RULES = [
 const programFor = (course) =>
   PROGRAM_RULES.find((r) => r.re.test(course))?.program ?? null;
 
-// Build the ICS URL from the given course code
+// Build ICS URL from your pattern
 const icsUrlFor = (course) =>
   `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
 
-// --- Helpers ---
+// --- Intl formatters for Berlin TZ ---
+const fmtDateYMD = new Intl.DateTimeFormat('en-CA', {
+  timeZone: TZ,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}); // -> "YYYY-MM-DD"
 
-// Compute UTC bounds for a given Berlin calendar day (00:00..23:59:59.999)
-function berlinDayBoundsUtc(refUtcDate, dayOffset) {
-  const refBerlin = utcToZonedTime(refUtcDate, TZ);
-  const dayBerlin = addDays(refBerlin, dayOffset);
-  const sodBerlin = startOfDay(dayBerlin);
-  const eodBerlin = endOfDay(dayBerlin);
-  return {
-    fromUtc: zonedTimeToUtc(sodBerlin, TZ),
-    toUtc: zonedTimeToUtc(eodBerlin, TZ),
-    dateKey: formatInTimeZone(sodBerlin, TZ, 'yyyy-MM-dd'),
-  };
-}
+const fmtHM = new Intl.DateTimeFormat('en-GB', {
+  timeZone: TZ,
+  hour12: false,
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
 // Minutes since local midnight in Europe/Berlin
 function minutesSinceMidnightBerlin(dateUtc) {
-  const z = utcToZonedTime(dateUtc, TZ);
-  return z.getHours() * 60 + z.getMinutes();
+  const parts = fmtHM.formatToParts(dateUtc);
+  const h = parseInt(parts.find((p) => p.type === 'hour').value, 10);
+  const m = parseInt(
+    parts.find((p) => p.type === 'minute').value,
+    10
+  );
+  return h * 60 + m;
 }
 
-// Expand a VEVENT into concrete instances within [fromUtc, toUtc],
-// honoring RRULE and EXDATE. Returns [{start:Date, end:Date}, ...] in UTC.
-function expandInstances(ev, fromUtc, toUtc) {
-  const out = [];
-  const baseDurMin = differenceInMinutes(ev.end, ev.start);
+// Local (Berlin) date key "YYYY-MM-DD" for a UTC Date
+function dateKeyBerlin(dateUtc) {
+  return fmtDateYMD.format(dateUtc);
+}
 
-  // Non-recurring event: add if it overlaps the window
-  if (!ev.rrule) {
-    if (ev.start < toUtc && ev.end > fromUtc) {
-      out.push({ start: ev.start, end: ev.end });
-    }
+// Generate a list of Berlin local date keys for today + next N-1 days
+function nextDayKeys(days) {
+  const keys = [];
+  const todayKey = dateKeyBerlin(new Date());
+  const [y0, m0, d0] = todayKey.split('-').map(Number);
+  for (let i = 0; i < days; i++) {
+    const t = new Date(Date.UTC(y0, m0 - 1, d0 + i));
+    const key = `${t.getUTCFullYear()}-${String(
+      t.getUTCMonth() + 1
+    ).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    keys.push(key);
+  }
+  return keys;
+}
+
+// Expand occurrences for a VEVENT within [fromUtc, toUtc] using ical.js iterator.
+// Returns array of { start: Date, end: Date } in UTC.
+function expandEventOccurrences(event, fromUtc, toUtc) {
+  const out = [];
+
+  // Ignore all-day events (DATE values) – not relevant for lecture start/end windows
+  if (event.startDate.isDate || event.endDate.isDate) return out;
+
+  // Non-recurring: include if it overlaps
+  if (!event.isRecurring()) {
+    const start = event.startDate.toJSDate();
+    const end = event.endDate.toJSDate();
+    if (start < toUtc && end > fromUtc) out.push({ start, end });
     return out;
   }
 
-  // Recurring event: use rrule.between and filter EXDATEs
-  const exdates = new Set(
-    Object.values(ev.exdate || {}).map((d) => new Date(d).getTime())
-  );
+  // Recurring: iterate occurrences using event.iterator()
+  const iterStart = ICAL.Time.fromJSDate(fromUtc);
+  const iter = event.iterator(iterStart);
+  let next;
+  while ((next = iter.next())) {
+    const occStart = next.toJSDate();
+    if (occStart >= toUtc) break; // beyond window
 
-  const between = ev.rrule.between(fromUtc, toUtc, true);
-  for (const occStart of between) {
-    const t = new Date(occStart).getTime();
-    if (exdates.has(t)) continue;
-    const occEnd = new Date(
-      new Date(occStart).getTime() + baseDurMin * 60000
-    );
-    out.push({ start: occStart, end: occEnd });
+    // Pull full details (handles EXDATE and RECURRENCE-ID overrides)
+    const { startDate, endDate } = event.getOccurrenceDetails(next);
+    if (startDate.isDate || endDate.isDate) continue; // skip all-day
+    const s = startDate.toJSDate();
+    const e = endDate.toJSDate();
+
+    // Overlap guard (usually true for recurrences within iterator window)
+    if (s < toUtc && e > fromUtc) out.push({ start: s, end: e });
   }
   return out;
 }
 
-// Load and parse an ICS (URL). Returns node-ical calendar object or null.
-async function loadICS(url) {
+// Load ICS text via fetch and parse with ical.js
+async function loadCalendar(url) {
   try {
-    return await ical.async.fromURL(url, {});
+    const res = await fetch(url, { redirect: 'follow' });
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    const icsText = await res.text();
+    const jcal = ICAL.parse(icsText);
+    return new ICAL.Component(jcal);
   } catch (e) {
     console.error(`! failed ${url}: ${e.message}`);
     return null;
   }
 }
 
-// --- Main ---
 async function main() {
-  const nowUtc = new Date();
+  // Wide expansion window to safely include today's earlier events and edge DST cases
+  const now = new Date();
+  const windowStartUtc = new Date(
+    now.getTime() - 24 * 60 * 60 * 1000
+  ); // now - 1 day
+  const windowEndUtc = new Date(
+    now.getTime() + (DAYS + 1) * 24 * 60 * 60 * 1000
+  ); // now + (DAYS+1) days
 
-  // Prepare day buckets for the next N days
-  const daysMeta = Array.from({ length: DAYS }, (_, i) =>
-    berlinDayBoundsUtc(nowUtc, i)
-  );
-  const byDay = new Map(daysMeta.map((d) => [d.dateKey, new Map()]));
+  // Prepare Berlin-local target day keys
+  const dayKeys = nextDayKeys(DAYS);
 
-  // Read course codes from text file (one per line)
+  // Map: dateKey -> Map(course -> record)
+  const byDay = new Map(dayKeys.map((k) => [k, new Map()]));
+
+  // Read course codes (one per line)
   const courses = (await fs.readFile(COURSES_PATH, 'utf8'))
     .split(/\r?\n/)
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // Iterate all courses and aggregate earliest start / latest end per day
   for (const course of courses) {
-    const cal = await loadICS(icsUrlFor(course));
-    if (!cal) continue;
+    const comp = await loadCalendar(icsUrlFor(course));
+    if (!comp) continue;
 
-    for (const ev of Object.values(cal)) {
-      // Only handle VEVENTs with start/end
-      if (!ev || ev.type !== 'VEVENT' || !ev.start || !ev.end)
-        continue;
+    const vevents = comp.getAllSubcomponents('vevent') || [];
+    for (const ve of vevents) {
+      const ev = new ICAL.Event(ve);
+      if (!ev.startDate || !ev.endDate) continue;
 
-      for (const { fromUtc, toUtc } of daysMeta) {
-        const instances = expandInstances(ev, fromUtc, toUtc);
-        for (const inst of instances) {
-          // Bucket key = Berlin local date (of the instance start)
-          const dateKey = formatInTimeZone(
-            inst.start,
-            TZ,
-            'yyyy-MM-dd'
-          );
-          const bucket = byDay.get(dateKey);
-          if (!bucket) continue;
+      const occs = expandEventOccurrences(
+        ev,
+        windowStartUtc,
+        windowEndUtc
+      );
+      for (const { start, end } of occs) {
+        const dKey = dateKeyBerlin(start);
+        if (!byDay.has(dKey)) continue; // outside selected DAYS
 
-          if (!bucket.has(course)) {
-            bucket.set(course, {
-              course,
-              program: programFor(course),
-              firstStartMin: Number.POSITIVE_INFINITY,
-              lastEndMin: Number.NEGATIVE_INFINITY,
-            });
-          }
-          const rec = bucket.get(course);
-          rec.firstStartMin = Math.min(
-            rec.firstStartMin,
-            minutesSinceMidnightBerlin(inst.start)
-          );
-          rec.lastEndMin = Math.max(
-            rec.lastEndMin,
-            minutesSinceMidnightBerlin(inst.end)
-          );
+        const bucket = byDay.get(dKey);
+        if (!bucket.has(course)) {
+          bucket.set(course, {
+            course,
+            program: programFor(course),
+            firstStartMin: Number.POSITIVE_INFINITY,
+            lastEndMin: Number.NEGATIVE_INFINITY,
+          });
         }
+        const rec = bucket.get(course);
+        rec.firstStartMin = Math.min(
+          rec.firstStartMin,
+          minutesSinceMidnightBerlin(start)
+        );
+        rec.lastEndMin = Math.max(
+          rec.lastEndMin,
+          minutesSinceMidnightBerlin(end)
+        );
       }
     }
   }
 
-  // Build output JSON: for each day list courses with firstStart/lastEnd (minutes)
+  // Build output JSON
   const out = {
     version: 1,
     generatedAt: new Date().toISOString(),
@@ -163,8 +190,8 @@ async function main() {
     days: [],
   };
 
-  for (const { dateKey } of daysMeta) {
-    const bucket = byDay.get(dateKey);
+  for (const dKey of dayKeys) {
+    const bucket = byDay.get(dKey) || new Map();
     const items = [];
     for (const rec of bucket.values()) {
       if (
@@ -180,10 +207,9 @@ async function main() {
       });
     }
     items.sort((a, b) => a.course.localeCompare(b.course));
-    out.days.push({ date: dateKey, courses: items });
+    out.days.push({ date: dKey, courses: items });
   }
 
-  // Write file
   await fs.mkdir(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, OUT_FILE);
   await fs.writeFile(outPath, JSON.stringify(out), 'utf8');
