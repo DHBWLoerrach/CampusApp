@@ -338,6 +338,11 @@ async function main() {
     out.days.push({ date: dKey, courses: items });
   }
 
+  debugPrint(
+    out,
+    (process.env.DEBUG_COURSES || '').split(',').filter(Boolean)
+  );
+
   await fs.mkdir(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, OUT_FILE);
   await fs.writeFile(outPath, JSON.stringify(out), 'utf8');
@@ -347,6 +352,43 @@ async function main() {
       0
     )} courses`
   );
+}
+
+function debugPrint(outJson, coursesToCheck = []) {
+  if (!coursesToCheck.length) return;
+  const set = new Set(
+    coursesToCheck.map((s) => s.trim().toUpperCase())
+  );
+  console.log(
+    '\n[DEBUG] Per-day first/last (minutes since midnight):'
+  );
+  for (const day of outJson.days) {
+    const rows = day.courses.filter((c) =>
+      set.has(c.course.toUpperCase())
+    );
+    if (!rows.length) continue;
+    const label = new Intl.DateTimeFormat('de-DE', {
+      weekday: 'short',
+      day: '2-digit',
+      month: '2-digit',
+    }).format(new Date(day.date + 'T00:00:00Z'));
+    const line = rows
+      .map(
+        (r) =>
+          `${r.course}: ${r.firstStartMin}→${r.lastEndMin} (${String(
+            Math.floor(r.firstStartMin / 60)
+          ).padStart(2, '0')}:${String(r.firstStartMin % 60).padStart(
+            2,
+            '0'
+          )}–${String(Math.floor(r.lastEndMin / 60)).padStart(
+            2,
+            '0'
+          )}:${String(r.lastEndMin % 60).padStart(2, '0')})`
+      )
+      .join('  |  ');
+    console.log(`  ${label}  ${line}`);
+  }
+  console.log();
 }
 
 main().catch((err) => {
