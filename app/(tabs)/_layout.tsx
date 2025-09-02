@@ -5,6 +5,7 @@ import Storage from 'expo-sqlite/kv-store';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import BottomSheet from '@/components/ui/BottomSheet';
 import { ThemedText } from '@/components/ui/ThemedText';
+import RideMatchSheetContent from '@/components/schedule/RideMatchSheetContent';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import {
   CourseProvider,
@@ -12,7 +13,6 @@ import {
 } from '@/context/CourseContext';
 import { LAST_TAB_KEY } from '@/constants/StorageKeys';
 import { navBarOptions } from '@/constants/Navigation';
-
 const ICON_SIZE = 28;
 
 function TabsContent() {
@@ -244,7 +244,7 @@ function TabsContent() {
         title="Carpool"
         onClose={() => setCarpoolOpen(false)}
       >
-        <ThemedText>Carpool</ThemedText>
+        <RideMatchSheetContent myCourse={selectedCourse ?? ''} />
       </BottomSheet>
     </>
   );
