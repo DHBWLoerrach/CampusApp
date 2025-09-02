@@ -41,6 +41,8 @@ const fmtHM = new Intl.DateTimeFormat('en-GB', {
   minute: '2-digit',
 });
 
+const within = (a, b, tol = 10) => Math.abs(a - b) <= tol;
+
 function dateKeyTZ(d) {
   return fmtDateYMD.format(d);
 }
@@ -338,6 +340,20 @@ async function main() {
     out.days.push({ date: dKey, courses: items });
   }
 
+  // Final sanity check
+  for (const day of out.days) {
+    for (const c of day.courses) {
+      if (
+        (c.firstStartMin === 0 && c.lastEndMin === 0) ||
+        c.lastEndMin < c.firstStartMin
+      ) {
+        throw new Error(
+          `Invalid slice for ${c.course} on ${day.date}: ${c.firstStartMin}→${c.lastEndMin}`
+        );
+      }
+    }
+  }
+
   debugPrint(
     out,
     (process.env.DEBUG_COURSES || '').split(',').filter(Boolean)
@@ -354,39 +370,55 @@ async function main() {
   );
 }
 
-function debugPrint(outJson, coursesToCheck = []) {
+function debugPrint(outJson, coursesToCheck = [], nearTolMin = 10) {
   if (!coursesToCheck.length) return;
   const set = new Set(
     coursesToCheck.map((s) => s.trim().toUpperCase())
   );
   console.log(
-    '\n[DEBUG] Per-day first/last (minutes since midnight):'
+    '\n[DEBUG] Per-day first/last (mins since midnight) + near (±' +
+      nearTolMin +
+      'm):'
   );
   for (const day of outJson.days) {
-    const rows = day.courses.filter((c) =>
+    const me = day.courses.filter((c) =>
       set.has(c.course.toUpperCase())
     );
-    if (!rows.length) continue;
+    if (!me.length) continue;
     const label = new Intl.DateTimeFormat('de-DE', {
       weekday: 'short',
       day: '2-digit',
       month: '2-digit',
     }).format(new Date(day.date + 'T00:00:00Z'));
-    const line = rows
-      .map(
-        (r) =>
-          `${r.course}: ${r.firstStartMin}→${r.lastEndMin} (${String(
-            Math.floor(r.firstStartMin / 60)
-          ).padStart(2, '0')}:${String(r.firstStartMin % 60).padStart(
-            2,
-            '0'
-          )}–${String(Math.floor(r.lastEndMin / 60)).padStart(
-            2,
-            '0'
-          )}:${String(r.lastEndMin % 60).padStart(2, '0')})`
-      )
-      .join('  |  ');
-    console.log(`  ${label}  ${line}`);
+    const lines = me.map((r) => {
+      const hhmm = (m) =>
+        `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(
+          m % 60
+        ).padStart(2, '0')}`;
+      const nearHin = day.courses
+        .filter(
+          (x) =>
+            x.course !== r.course &&
+            within(x.firstStartMin, r.firstStartMin, nearTolMin)
+        )
+        .map((x) => x.course);
+      const nearRue = day.courses
+        .filter(
+          (x) =>
+            x.course !== r.course &&
+            within(x.lastEndMin, r.lastEndMin, nearTolMin)
+        )
+        .map((x) => x.course);
+      return (
+        `${r.course}: ${r.firstStartMin}→${r.lastEndMin} (${hhmm(
+          r.firstStartMin
+        )}–${hhmm(r.lastEndMin)})  ` +
+        `| Hin≈: [${nearHin.join(', ')}]  | Zurück≈: [${nearRue.join(
+          ', '
+        )}]`
+      );
+    });
+    console.log(`  ${label}  ` + lines.join('  ||  '));
   }
   console.log();
 }
