@@ -3,8 +3,15 @@
 // - Ignores bogus entries like first/last == 0
 
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 // ---- Match JSON (loaded from scripts/match-index.json if available) ----
 type MatchIndex = {
@@ -59,12 +66,15 @@ function mmToHHMM(mm: number | null | undefined): string {
 function formatDateShort(ymd: string): string {
   const [y, m, d] = ymd.split('-').map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d));
-  return new Intl.DateTimeFormat('de-DE', {
+  const weekdayShort = new Intl.DateTimeFormat('de-DE', {
     weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
     timeZone: MATCH_JSON.timezone,
-  }).format(dt);
+  })
+    .format(dt)
+    .replace(/\.$/, ''); // drop trailing dot ("Mo." -> "Mo")
+  const dd = String(d).padStart(2, '0');
+  const mm = String(m).padStart(2, '0');
+  return `${weekdayShort}, ${dd}.${mm}.`;
 }
 
 type DayRow = {
@@ -180,8 +190,8 @@ export default function RideMatchSheetContent({
   return (
     <View style={styles.container}>
       <ThemedText style={styles.info}>
-        Kurse mit gleichen Hin-/Rückfahrzeiten zu{' '}
-        <ThemedText style={styles.bold}>{myCourse}</ThemedText>
+        Kurse mit gleichen Ankunfts-/Abfahrtszeiten wie{' '}
+        <ThemedText style={styles.bold}>{myCourse}</ThemedText>{' '}
       </ThemedText>
 
       <View style={styles.segmentedWrap}>
@@ -198,7 +208,9 @@ export default function RideMatchSheetContent({
             style={({ pressed }) => [
               styles.segItem,
               mode === 'exact' &&
-                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
+                (isDark
+                  ? styles.segItemActiveDark
+                  : styles.segItemActiveLight),
               pressed && { opacity: 0.9 },
             ]}
           >
@@ -206,8 +218,12 @@ export default function RideMatchSheetContent({
               style={[
                 styles.segText,
                 mode === 'exact' && styles.segTextActive,
-                mode === 'exact' && isDark && styles.segTextActiveDark,
-                mode === 'exact' && !isDark && styles.segTextActiveLight,
+                mode === 'exact' &&
+                  isDark &&
+                  styles.segTextActiveDark,
+                mode === 'exact' &&
+                  !isDark &&
+                  styles.segTextActiveLight,
               ]}
             >
               Exakt
@@ -220,7 +236,9 @@ export default function RideMatchSheetContent({
             style={({ pressed }) => [
               styles.segItem,
               mode === 'tolerance' &&
-                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
+                (isDark
+                  ? styles.segItemActiveDark
+                  : styles.segItemActiveLight),
               pressed && { opacity: 0.9 },
             ]}
           >
@@ -228,8 +246,12 @@ export default function RideMatchSheetContent({
               style={[
                 styles.segText,
                 mode === 'tolerance' && styles.segTextActive,
-                mode === 'tolerance' && isDark && styles.segTextActiveDark,
-                mode === 'tolerance' && !isDark && styles.segTextActiveLight,
+                mode === 'tolerance' &&
+                  isDark &&
+                  styles.segTextActiveDark,
+                mode === 'tolerance' &&
+                  !isDark &&
+                  styles.segTextActiveLight,
               ]}
             >
               ±{TOLERANCE_MIN} Min
@@ -244,13 +266,20 @@ export default function RideMatchSheetContent({
         return (
           <View key={row.date} style={styles.card}>
             <ThemedText style={styles.dayHeader}>
-              {formatDateShort(row.date)} ·{' '}
-              {Number.isFinite(row.myFirst)
-                ? `Hin ${mmToHHMM(row.myFirst!)}`
-                : 'Keine Vorlesung'}
-              {Number.isFinite(row.myLast)
-                ? ` · Zurück ${mmToHHMM(row.myLast!)}`
-                : ''}
+              {(() => {
+                const dateLabel = formatDateShort(row.date);
+                const parts: string[] = [];
+                if (Number.isFinite(row.myFirst)) {
+                  parts.push(`Ankunft ${mmToHHMM(row.myFirst!)}`);
+                }
+                if (Number.isFinite(row.myLast)) {
+                  parts.push(`Abfahrt ${mmToHHMM(row.myLast!)}`);
+                }
+                if (parts.length === 0) {
+                  return `${dateLabel} — Keine Vorlesung`;
+                }
+                return `${dateLabel} — ${parts.join(' · ')}`;
+              })()}
             </ThemedText>
 
             {hasMyTimes ? (
@@ -258,8 +287,8 @@ export default function RideMatchSheetContent({
                 <Section
                   title={
                     mode === 'exact'
-                      ? 'Hin (Exakt)'
-                      : `Hin (±${TOLERANCE_MIN} Min)`
+                      ? 'Ankunft (Exakt)'
+                      : `Ankunft (±${TOLERANCE_MIN} Min)`
                   }
                   chips={row.hinMatches}
                   emptyHint="—"
@@ -277,8 +306,8 @@ export default function RideMatchSheetContent({
                 <Section
                   title={
                     mode === 'exact'
-                      ? 'Zurück (Exakt)'
-                      : `Zurück (±${TOLERANCE_MIN} Min)`
+                      ? 'Abfahrt (Exakt)'
+                      : `Abfahrt (±${TOLERANCE_MIN} Min)`
                   }
                   chips={row.zurueckMatches}
                   emptyHint="—"
@@ -329,6 +358,7 @@ function Section({
     ? list.length
     : Math.min(list.length, MAX_VISIBLE_CHIPS);
   const hiddenCount = Math.max(0, list.length - visibleCount);
+  const textColor = useThemeColor({}, 'text');
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -342,7 +372,9 @@ function Section({
             pressed && { opacity: 0.7 },
           ]}
         >
-          <ThemedText style={styles.copyBtnText}>Kopieren</ThemedText>
+          <ThemedText style={styles.copyBtnText}>
+            Liste kopieren
+          </ThemedText>
         </Pressable>
       </View>
       <View style={styles.chipsWrap}>
@@ -365,9 +397,17 @@ function Section({
                   pressed && { opacity: 0.7 },
                 ]}
               >
-                <ThemedText style={styles.chipText}>
-                  + weitere {hiddenCount}
-                </ThemedText>
+                <View style={styles.chipContentRow}>
+                  <ThemedText style={styles.chipText}>
+                    + weitere {hiddenCount}
+                  </ThemedText>
+                  <IconSymbol
+                    name="chevron.down"
+                    size={12}
+                    color={textColor}
+                    style={styles.chipIcon}
+                  />
+                </View>
               </Pressable>
             )}
             {expanded && list.length > MAX_VISIBLE_CHIPS && (
@@ -380,9 +420,15 @@ function Section({
                   pressed && { opacity: 0.7 },
                 ]}
               >
-                <ThemedText style={styles.chipText}>
-                  − weniger
-                </ThemedText>
+                <View style={styles.chipContentRow}>
+                  <ThemedText style={styles.chipText}>− weniger</ThemedText>
+                  <IconSymbol
+                    name="chevron.up"
+                    size={12}
+                    color={textColor}
+                    style={styles.chipIcon}
+                  />
+                </View>
               </Pressable>
             )}
           </>
@@ -424,6 +470,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
+  chipContentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  chipIcon: { marginLeft: 2 },
   chipText: { fontSize: 10, fontWeight: '600' },
   muted: { opacity: 0.6 },
   copyBtn: {
