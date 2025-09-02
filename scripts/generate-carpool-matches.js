@@ -10,6 +10,25 @@ const COURSES_PATH = process.env.COURSES_PATH || './courses.txt';
 const OUT_DIR = process.env.OUT_DIR || '.';
 const OUT_FILE = process.env.OUT_FILE || 'match-index.json';
 
+// --- CLI helpers ---
+const argv = process.argv.slice(2);
+function getArg(name) {
+  const flag = `--${name}`;
+  const withEq = new RegExp(`^--${name}=`);
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === flag) return argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : '';
+    if (withEq.test(a)) return a.split('=')[1] ?? '';
+  }
+  return undefined;
+}
+function showHelpAndExit() {
+  const msg = `\nUsage: node scripts/generate-carpool-matches.js [options]\n\nOptions:\n  --start-date YYYY-MM-DD   Start date for the generated window (local to TZ)\n  --start YYYY-MM-DD        Same as --start-date\n  --help, -h                Show this help\n\nEnv vars (still supported):\n  TZ_NAME                   IANA time zone (default: Europe/Berlin)\n  DAYS                      Number of days to generate (default: 5)\n  COURSES_PATH              Path to courses list (default: ./courses.txt)\n  OUT_DIR                   Output directory (default: .)\n  OUT_FILE                  Output file name (default: match-index.json)\n  START_DATE                Alternative to --start-date (YYYY-MM-DD)\n`;
+  console.log(msg);
+  process.exit(0);
+}
+if (argv.includes('--help') || argv.includes('-h')) showHelpAndExit();
+
 // Optional mapping: derive program code from course prefix
 const PROGRAM_RULES = [
   { re: /^WWI/i, program: 'WI' },
@@ -59,10 +78,10 @@ function isMidnightTZ(d) {
     parts.find((p) => p.type === 'minute').value === '00'
   );
 }
-function nextDayKeys(days) {
+function nextDayKeys(days, startKeyOverride) {
   const keys = [];
-  const todayKey = dateKeyTZ(new Date());
-  const [y0, m0, d0] = todayKey.split('-').map(Number);
+  const baseKey = startKeyOverride || dateKeyTZ(new Date());
+  const [y0, m0, d0] = baseKey.split('-').map(Number);
   for (let i = 0; i < days; i++) {
     const t = new Date(Date.UTC(y0, m0 - 1, d0 + i));
     keys.push(
@@ -73,6 +92,39 @@ function nextDayKeys(days) {
     );
   }
   return keys;
+}
+
+// Parse start date CLI/env -> YYYY-MM-DD (in TZ)
+function resolveStartKey() {
+  const raw = getArg('start-date') ?? getArg('start') ?? process.env.START_DATE;
+  if (!raw) return dateKeyTZ(new Date());
+
+  const s = String(raw).trim();
+  if (!s) return dateKeyTZ(new Date());
+
+  // Support simple shorthands
+  const todayKey = dateKeyTZ(new Date());
+  if (/^today$/i.test(s)) return todayKey;
+  if (/^tomorrow$/i.test(s)) {
+    const [y, m, d] = todayKey.split('-').map(Number);
+    const t = new Date(Date.UTC(y, m - 1, d + 1));
+    return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+  }
+
+  // Expect YYYY-MM-DD; ignore any time-of-day portion if passed
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) {
+    const y = Number(m[1]);
+    const mo = Number(m[2]);
+    const da = Number(m[3]);
+    // Normalize via UTC to ensure a valid calendar date
+    const t = new Date(Date.UTC(y, mo - 1, da));
+    const norm = `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    return norm;
+  }
+
+  console.warn(`Unrecognized start date: "${s}". Falling back to today.`);
+  return todayKey;
 }
 
 // --- Windows TZID normalization + Berlin VTIMEZONE injection (Exchange quirk) ---
@@ -232,17 +284,16 @@ function sliceTimedEventPerDay(startJs, endJs) {
 
 // --- Main ---
 async function main() {
-  const dayKeys = nextDayKeys(DAYS);
+  const startKey = resolveStartKey();
+  const dayKeys = nextDayKeys(DAYS, startKey);
   const byDay = new Map(dayKeys.map((k) => [k, new Map()])); // dateKey -> Map(course -> agg)
 
   // Expansion window (safe around DST): yesterday .. +DAYS+1
-  const now = new Date();
-  const windowStartUtc = new Date(
-    now.getTime() - 24 * 60 * 60 * 1000
-  );
-  const windowEndUtc = new Date(
-    now.getTime() + (DAYS + 1) * 24 * 60 * 60 * 1000
-  );
+  // Anchor on the chosen start date's midnight (UTC) to cover the local TZ range
+  const [sy, sm, sd] = startKey.split('-').map(Number);
+  const startAnchorUtc = new Date(Date.UTC(sy, sm - 1, sd));
+  const windowStartUtc = new Date(startAnchorUtc.getTime() - 24 * 60 * 60 * 1000);
+  const windowEndUtc = new Date(startAnchorUtc.getTime() + (DAYS + 1) * 24 * 60 * 60 * 1000);
 
   const courses = (await fs.readFile(COURSES_PATH, 'utf8'))
     .split(/\r?\n/)
