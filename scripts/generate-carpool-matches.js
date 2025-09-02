@@ -1,7 +1,18 @@
+// generate-match-index.mjs
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import ical from 'node-ical';
-import { DateTime, Interval } from 'luxon';
+import {
+  addDays,
+  differenceInMinutes,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
+import {
+  utcToZonedTime,
+  zonedTimeToUtc,
+  formatInTimeZone,
+} from 'date-fns-tz';
 
 // --- Config ---
 const TZ = process.env.TZ_NAME || 'Europe/Berlin';
@@ -10,56 +21,71 @@ const COURSES_PATH = process.env.COURSES_PATH || './courses.txt';
 const OUT_DIR = process.env.OUT_DIR || './public';
 const OUT_FILE = process.env.OUT_FILE || 'match-index.json';
 
-// Optional: Studiengang-Ableitung aus Kurspräfix (bei Bedarf erweitern)
+// Optional: derive study program from course code prefix (extend as needed)
 const PROGRAM_RULES = [
-  { re: /^WWI/i, program: 'WI' }, // Wirtschaftsinformatik
-  { re: /^TIF/i, program: 'INF' }, // (Beispiel) Informatik
+  { re: /^WWI/i, program: 'WI' }, // Business Informatics
+  { re: /^TIF/i, program: 'INF' }, // Computer Science (example)
 ];
 const programFor = (course) =>
   PROGRAM_RULES.find((r) => r.re.test(course))?.program ?? null;
 
-// ICS-URL nach gegebenem Muster bauen
+// Build the ICS URL from the given course code
 const icsUrlFor = (course) =>
   `https://webmail.dhbw-loerrach.de/owa/calendar/kal-${course}@dhbw-loerrach.de/Kalender/calendar.ics`;
 
 // --- Helpers ---
-const sod = (dt) =>
-  dt.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-const eod = (dt) =>
-  dt.set({ hour: 23, minute: 59, second: 59, millisecond: 999 });
-const minSinceMidnight = (dt) =>
-  dt.setZone(TZ).hour * 60 + dt.setZone(TZ).minute;
 
-function expandInstances(ev, from, to) {
+// Compute UTC bounds for a given Berlin calendar day (00:00..23:59:59.999)
+function berlinDayBoundsUtc(refUtcDate, dayOffset) {
+  const refBerlin = utcToZonedTime(refUtcDate, TZ);
+  const dayBerlin = addDays(refBerlin, dayOffset);
+  const sodBerlin = startOfDay(dayBerlin);
+  const eodBerlin = endOfDay(dayBerlin);
+  return {
+    fromUtc: zonedTimeToUtc(sodBerlin, TZ),
+    toUtc: zonedTimeToUtc(eodBerlin, TZ),
+    dateKey: formatInTimeZone(sodBerlin, TZ, 'yyyy-MM-dd'),
+  };
+}
+
+// Minutes since local midnight in Europe/Berlin
+function minutesSinceMidnightBerlin(dateUtc) {
+  const z = utcToZonedTime(dateUtc, TZ);
+  return z.getHours() * 60 + z.getMinutes();
+}
+
+// Expand a VEVENT into concrete instances within [fromUtc, toUtc],
+// honoring RRULE and EXDATE. Returns [{start:Date, end:Date}, ...] in UTC.
+function expandInstances(ev, fromUtc, toUtc) {
   const out = [];
-  const dtStart = DateTime.fromJSDate(ev.start, { zone: TZ });
-  const dtEnd = DateTime.fromJSDate(ev.end, { zone: TZ });
-  const baseDur = dtEnd.diff(dtStart).as('minutes');
-  const win = Interval.fromDateTimes(from, to);
+  const baseDurMin = differenceInMinutes(ev.end, ev.start);
 
+  // Non-recurring event: add if it overlaps the window
   if (!ev.rrule) {
-    const evInt = Interval.fromDateTimes(dtStart, dtEnd);
-    if (evInt.overlaps(win)) out.push({ start: dtStart, end: dtEnd });
+    if (ev.start < toUtc && ev.end > fromUtc) {
+      out.push({ start: ev.start, end: ev.end });
+    }
     return out;
   }
+
+  // Recurring event: use rrule.between and filter EXDATEs
   const exdates = new Set(
-    Object.values(ev.exdate || {}).map((d) =>
-      DateTime.fromJSDate(d, { zone: TZ }).toISO()
-    )
+    Object.values(ev.exdate || {}).map((d) => new Date(d).getTime())
   );
-  const between = ev.rrule.between(
-    from.toJSDate(),
-    to.toJSDate(),
-    true
-  );
-  for (const d of between) {
-    const start = DateTime.fromJSDate(d, { zone: TZ });
-    if (exdates.has(start.toISO())) continue;
-    out.push({ start, end: start.plus({ minutes: baseDur }) });
+
+  const between = ev.rrule.between(fromUtc, toUtc, true);
+  for (const occStart of between) {
+    const t = new Date(occStart).getTime();
+    if (exdates.has(t)) continue;
+    const occEnd = new Date(
+      new Date(occStart).getTime() + baseDurMin * 60000
+    );
+    out.push({ start: occStart, end: occEnd });
   }
   return out;
 }
 
+// Load and parse an ICS (URL). Returns node-ical calendar object or null.
 async function loadICS(url) {
   try {
     return await ical.async.fromURL(url, {});
@@ -69,62 +95,75 @@ async function loadICS(url) {
   }
 }
 
+// --- Main ---
 async function main() {
-  const now = DateTime.now().setZone(TZ);
-  const winStart = sod(now);
-  const winEnd = eod(now.plus({ days: DAYS - 1 }));
+  const nowUtc = new Date();
 
+  // Prepare day buckets for the next N days
+  const daysMeta = Array.from({ length: DAYS }, (_, i) =>
+    berlinDayBoundsUtc(nowUtc, i)
+  );
+  const byDay = new Map(daysMeta.map((d) => [d.dateKey, new Map()]));
+
+  // Read course codes from text file (one per line)
   const courses = (await fs.readFile(COURSES_PATH, 'utf8'))
     .split(/\r?\n/)
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // date -> course -> record
-  const byDay = new Map();
-  for (let i = 0; i < DAYS; i++)
-    byDay.set(winStart.plus({ days: i }).toISODate(), new Map());
-
+  // Iterate all courses and aggregate earliest start / latest end per day
   for (const course of courses) {
     const cal = await loadICS(icsUrlFor(course));
     if (!cal) continue;
 
     for (const ev of Object.values(cal)) {
+      // Only handle VEVENTs with start/end
       if (!ev || ev.type !== 'VEVENT' || !ev.start || !ev.end)
         continue;
-      for (const inst of expandInstances(ev, winStart, winEnd)) {
-        const dKey = inst.start.toISODate();
-        if (!byDay.has(dKey)) continue;
-        const bucket = byDay.get(dKey);
-        if (!bucket.has(course)) {
-          bucket.set(course, {
-            course,
-            program: programFor(course),
-            firstStartMin: Number.POSITIVE_INFINITY,
-            lastEndMin: Number.NEGATIVE_INFINITY,
-          });
+
+      for (const { fromUtc, toUtc } of daysMeta) {
+        const instances = expandInstances(ev, fromUtc, toUtc);
+        for (const inst of instances) {
+          // Bucket key = Berlin local date (of the instance start)
+          const dateKey = formatInTimeZone(
+            inst.start,
+            TZ,
+            'yyyy-MM-dd'
+          );
+          const bucket = byDay.get(dateKey);
+          if (!bucket) continue;
+
+          if (!bucket.has(course)) {
+            bucket.set(course, {
+              course,
+              program: programFor(course),
+              firstStartMin: Number.POSITIVE_INFINITY,
+              lastEndMin: Number.NEGATIVE_INFINITY,
+            });
+          }
+          const rec = bucket.get(course);
+          rec.firstStartMin = Math.min(
+            rec.firstStartMin,
+            minutesSinceMidnightBerlin(inst.start)
+          );
+          rec.lastEndMin = Math.max(
+            rec.lastEndMin,
+            minutesSinceMidnightBerlin(inst.end)
+          );
         }
-        const rec = bucket.get(course);
-        rec.firstStartMin = Math.min(
-          rec.firstStartMin,
-          minSinceMidnight(inst.start)
-        );
-        rec.lastEndMin = Math.max(
-          rec.lastEndMin,
-          minSinceMidnight(inst.end)
-        );
       }
     }
   }
 
+  // Build output JSON: for each day list courses with firstStart/lastEnd (minutes)
   const out = {
     version: 1,
-    generatedAt: now.toUTC().toISO(),
+    generatedAt: new Date().toISOString(),
     timezone: TZ,
     days: [],
   };
 
-  for (let i = 0; i < DAYS; i++) {
-    const dateKey = winStart.plus({ days: i }).toISODate();
+  for (const { dateKey } of daysMeta) {
     const bucket = byDay.get(dateKey);
     const items = [];
     for (const rec of bucket.values()) {
@@ -140,12 +179,11 @@ async function main() {
         lastEndMin: Math.round(rec.lastEndMin),
       });
     }
-    out.days.push({
-      date: dateKey,
-      courses: items.sort((a, b) => a.course.localeCompare(b.course)),
-    });
+    items.sort((a, b) => a.course.localeCompare(b.course));
+    out.days.push({ date: dateKey, courses: items });
   }
 
+  // Write file
   await fs.mkdir(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, OUT_FILE);
   await fs.writeFile(outPath, JSON.stringify(out), 'utf8');
