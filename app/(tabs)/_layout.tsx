@@ -17,6 +17,7 @@ const ICON_SIZE = 28;
 
 function TabsContent() {
   const [canteenInfoOpen, setCanteenInfoOpen] = useState(false);
+  const [carpoolOpen, setCarpoolOpen] = useState(false);
   const { selectedCourse, setSelectedCourse } = useCourseContext();
   const textColor = useThemeColor({}, 'text');
 
@@ -64,6 +65,20 @@ function TabsContent() {
                 color={color}
               />
             ),
+            headerLeft: selectedCourse
+              ? () => (
+                  <TouchableOpacity
+                    onPress={() => setCarpoolOpen(true)}
+                    hitSlop={8}
+                    style={{ marginLeft: 16 }}
+                    accessibilityRole="button"
+                    accessibilityLabel="Carpool öffnen"
+                    accessibilityHint="Öffnet Carpool-Informationen"
+                  >
+                    <IconSymbol size={20} name="car" color="white" />
+                  </TouchableOpacity>
+                )
+              : undefined,
             headerRight: selectedCourse
               ? () => (
                   <TouchableOpacity
@@ -155,7 +170,11 @@ function TabsContent() {
             accessible={false}
             accessibilityElementsHidden
             importantForAccessibility="no"
-            style={{ width: 24, alignItems: 'center', marginRight: 8 }}
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
           >
             <IconSymbol name="clock" size={20} color={textColor} />
           </View>
@@ -165,15 +184,27 @@ function TabsContent() {
         </View>
 
         <View
-          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 8,
+          }}
         >
           <View
             accessible={false}
             accessibilityElementsHidden
             importantForAccessibility="no"
-            style={{ width: 24, alignItems: 'center', marginRight: 8 }}
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
           >
-            <IconSymbol name="fork.knife" size={20} color={textColor} />
+            <IconSymbol
+              name="fork.knife"
+              size={20}
+              color={textColor}
+            />
           </View>
           <ThemedText accessibilityLabel="Essensausgabe: elf Uhr fünfundvierzig bis dreizehn Uhr dreißig">
             Ausgabe 11:45–13:30
@@ -181,13 +212,21 @@ function TabsContent() {
         </View>
 
         <View
-          style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 10,
+          }}
         >
           <View
             accessible={false}
             accessibilityElementsHidden
             importantForAccessibility="no"
-            style={{ width: 24, alignItems: 'center', marginRight: 8 }}
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
           >
             <IconSymbol name="eurosign" size={20} color={textColor} />
           </View>
@@ -199,6 +238,13 @@ function TabsContent() {
             .
           </ThemedText>
         </View>
+      </BottomSheet>
+      <BottomSheet
+        visible={carpoolOpen}
+        title="Carpool"
+        onClose={() => setCarpoolOpen(false)}
+      >
+        <ThemedText>Carpool</ThemedText>
       </BottomSheet>
     </>
   );

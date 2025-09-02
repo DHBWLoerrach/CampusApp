@@ -72,6 +72,8 @@ const MAPPING = {
     name: 'email-open-outline',
     source: 'community',
   },
+  car: { name: 'directions-car', source: 'material' },
+  'car.fill': { name: 'directions-car', source: 'material' },
   binoculars: { name: 'binoculars', source: 'community' },
   'mappin.and.ellipse': {
     name: 'map-marker-radius',
