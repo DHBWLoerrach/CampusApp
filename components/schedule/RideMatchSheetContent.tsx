@@ -38,6 +38,8 @@ try {
 
 // ---- Helpers ----
 
+const TOLERANCE_MIN = 15;
+
 // Format minutes (since midnight) to "HH:MM"
 function mmToHHMM(mm: number | null | undefined): string {
   if (mm == null || mm < 0) return '—';
@@ -81,22 +83,25 @@ function computeRows(myCourse: string): DayRow[] {
     const myLast = me?.lastEndMin;
 
     const hinMatches =
-      myFirst == null
+      myFirst == null || myFirst === 0
         ? []
         : valid
-            .filter(
-              (c) =>
-                c.course !== myCourse && c.firstStartMin === myFirst
-            )
+            .filter((c) => {
+              if (c.course === myCourse) return false;
+              if (!Number.isFinite(c.firstStartMin) || c.firstStartMin === 0) return false;
+              return Math.abs(c.firstStartMin - myFirst) <= TOLERANCE_MIN;
+            })
             .map((c) => c.course);
 
     const zurueckMatches =
       myLast == null || myLast === 0
         ? []
         : valid
-            .filter(
-              (c) => c.course !== myCourse && c.lastEndMin === myLast
-            )
+            .filter((c) => {
+              if (c.course === myCourse) return false;
+              if (!Number.isFinite(c.lastEndMin) || c.lastEndMin === 0) return false;
+              return Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
+            })
             .map((c) => c.course);
 
     return {
@@ -151,6 +156,10 @@ export default function RideMatchSheetContent({
 
   return (
     <View style={styles.container}>
+      <ThemedText style={styles.info}>
+        Passende Kurse für Hin- und Rückfahrt mit {TOLERANCE_MIN} Minuten
+        Toleranz.
+      </ThemedText>
       <ThemedText style={styles.subtitle}>
         Du bist:{' '}
         <ThemedText style={styles.bold}>{myCourse}</ThemedText>
@@ -174,7 +183,7 @@ export default function RideMatchSheetContent({
             {hasMyTimes ? (
               <>
                 <Section
-                  title="Hin (exakt)"
+                  title={`Hin (±${TOLERANCE_MIN} Min)`}
                   chips={row.hinMatches}
                   emptyHint="—"
                   onCopy={() =>
@@ -189,7 +198,7 @@ export default function RideMatchSheetContent({
                   }
                 />
                 <Section
-                  title="Zurück (exakt)"
+                  title={`Zurück (±${TOLERANCE_MIN} Min)`}
                   chips={row.zurueckMatches}
                   emptyHint="—"
                   onCopy={() =>
@@ -268,6 +277,7 @@ function Section({
 // ---- Styles ----
 const styles = StyleSheet.create({
   container: { gap: 12 },
+  info: { fontSize: 12, opacity: 0.8, textAlign: 'center' },
   subtitle: { fontSize: 14, marginBottom: 4, textAlign: 'center' },
   bold: { fontWeight: '700' },
   card: {
