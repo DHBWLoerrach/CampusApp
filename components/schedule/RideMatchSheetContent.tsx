@@ -172,6 +172,25 @@ export default function RideMatchSheetContent({
   // Dynamic labels based on current offsets
   const arrAbs = Math.abs(ARRIVAL_OFFSET_MIN);
   const depAbs = Math.abs(DEPARTURE_OFFSET_MIN);
+  // Today key in the calendar timezone
+  const todayKey = useMemo(() => {
+    const f = new Intl.DateTimeFormat('en-CA', {
+      timeZone: MATCH_JSON.timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return f.format(new Date());
+  }, []);
+  // Tomorrow key in the same timezone
+  const tomorrowKey = useMemo(() => {
+    const [y, m, d] = todayKey.split('-').map(Number);
+    const t = new Date(Date.UTC(y, (m ?? 1) - 1, (d ?? 1) + 1));
+    const yy = t.getUTCFullYear();
+    const mm = String(t.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(t.getUTCDate()).padStart(2, '0');
+    return `${yy}-${mm}-${dd}`;
+  }, [todayKey]);
 
   // Build compact strings for copy/share actions
   const buildCopyText = (
@@ -291,28 +310,35 @@ export default function RideMatchSheetContent({
           Number.isFinite(row.myFirst) || Number.isFinite(row.myLast);
         return (
           <View key={row.date} style={styles.card}>
-            <ThemedText style={styles.dayHeader}>
-              {(() => {
-                const dateLabel = formatDateShort(row.date);
-                const parts: string[] = [];
-                if (Number.isFinite(row.myFirst)) {
-                  const adj = clampDayMinutes(
-                    row.myFirst! + ARRIVAL_OFFSET_MIN
-                  );
-                  parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
-                }
-                if (Number.isFinite(row.myLast)) {
-                  const adj = clampDayMinutes(
-                    row.myLast! + DEPARTURE_OFFSET_MIN
-                  );
-                  parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
-                }
-                if (parts.length === 0) {
-                  return `${dateLabel} — Keine Vorlesung`;
-                }
-                return `${dateLabel} — ${parts.join(' · ')}`;
-              })()}
-            </ThemedText>
+            {(() => {
+              const dateLabel = formatDateShort(row.date);
+              const parts: string[] = [];
+              if (Number.isFinite(row.myFirst)) {
+                const adj = clampDayMinutes(row.myFirst! + ARRIVAL_OFFSET_MIN);
+                parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
+              }
+              if (Number.isFinite(row.myLast)) {
+                const adj = clampDayMinutes(row.myLast! + DEPARTURE_OFFSET_MIN);
+                parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
+              }
+              const rightText = parts.length === 0 ? 'Keine Vorlesung' : parts.join(' · ');
+              const isToday = row.date === todayKey;
+              const isTomorrow = row.date === tomorrowKey;
+              const badgeLabel = isToday ? 'Heute' : isTomorrow ? 'Morgen' : null;
+              return (
+                <View style={styles.dayHeaderRow}>
+                  <View style={styles.dayHeaderLeft}>
+                    <ThemedText style={styles.dayHeaderDate}>{dateLabel}</ThemedText>
+                    {badgeLabel && (
+                      <View style={styles.badgeToday}>
+                        <ThemedText style={styles.badgeTodayText}>{badgeLabel}</ThemedText>
+                      </View>
+                    )}
+                  </View>
+                  <ThemedText style={styles.dayHeaderTimes}>{rightText}</ThemedText>
+                </View>
+              );
+            })()}
 
             {hasMyTimes ? (
               <>
@@ -430,7 +456,7 @@ function Section({
               >
                 <View style={styles.chipContentRow}>
                   <ThemedText style={styles.chipText}>
-                    + weitere {hiddenCount}
+                    {hiddenCount} weitere anzeigen
                   </ThemedText>
                   <IconSymbol
                     name="chevron.down"
@@ -453,7 +479,7 @@ function Section({
               >
                 <View style={styles.chipContentRow}>
                   <ThemedText style={styles.chipText}>
-                    − weniger
+                    Weniger anzeigen
                   </ThemedText>
                   <IconSymbol
                     name="chevron.up"
@@ -484,6 +510,22 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   dayHeader: { fontSize: 15, fontWeight: '700', marginBottom: 8 },
+  dayHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  dayHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dayHeaderDate: { fontSize: 15, fontWeight: '700' },
+  dayHeaderTimes: { fontSize: 13, fontWeight: '600' },
+  badgeToday: {
+    backgroundColor: 'rgba(40,180,99,0.18)',
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  badgeTodayText: { fontSize: 10, fontWeight: '700' },
   section: { marginBottom: 6 },
   sectionHeader: {
     flexDirection: 'row',
