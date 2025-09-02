@@ -3,7 +3,7 @@
 // - Ignores bogus entries like first/last == 0
 
 import React, { useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 
 // ---- Match JSON (loaded from scripts/match-index.json if available) ----
@@ -138,6 +138,8 @@ export default function RideMatchSheetContent({
 }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [mode, setMode] = useState<MatchMode>('exact');
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   // Precompute day rows once
   const rows = useMemo(
@@ -182,45 +184,58 @@ export default function RideMatchSheetContent({
         <ThemedText style={styles.bold}>{myCourse}</ThemedText>
       </ThemedText>
 
-      <View style={styles.toggleWrap}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Exakt anzeigen"
-          onPress={() => setMode('exact')}
-          style={({ pressed }) => [
-            styles.toggleBtn,
-            mode === 'exact' && styles.toggleBtnActive,
-            pressed && { opacity: 0.8 },
+      <View style={styles.segmentedWrap}>
+        <View
+          style={[
+            styles.segmented,
+            isDark ? styles.segmentedDark : styles.segmentedLight,
           ]}
         >
-          <ThemedText
-            style={[
-              styles.toggleText,
-              mode === 'exact' && styles.toggleTextActive,
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Exakt anzeigen"
+            onPress={() => setMode('exact')}
+            style={({ pressed }) => [
+              styles.segItem,
+              mode === 'exact' &&
+                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
+              pressed && { opacity: 0.9 },
             ]}
           >
-            Exakt
-          </ThemedText>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Mit ±${TOLERANCE_MIN} Minuten Toleranz anzeigen`}
-          onPress={() => setMode('tolerance')}
-          style={({ pressed }) => [
-            styles.toggleBtn,
-            mode === 'tolerance' && styles.toggleBtnActive,
-            pressed && { opacity: 0.8 },
-          ]}
-        >
-          <ThemedText
-            style={[
-              styles.toggleText,
-              mode === 'tolerance' && styles.toggleTextActive,
+            <ThemedText
+              style={[
+                styles.segText,
+                mode === 'exact' && styles.segTextActive,
+                mode === 'exact' && isDark && styles.segTextActiveDark,
+                mode === 'exact' && !isDark && styles.segTextActiveLight,
+              ]}
+            >
+              Exakt
+            </ThemedText>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Mit ±${TOLERANCE_MIN} Minuten Toleranz anzeigen`}
+            onPress={() => setMode('tolerance')}
+            style={({ pressed }) => [
+              styles.segItem,
+              mode === 'tolerance' &&
+                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
+              pressed && { opacity: 0.9 },
             ]}
           >
-            ±{TOLERANCE_MIN} Min
-          </ThemedText>
-        </Pressable>
+            <ThemedText
+              style={[
+                styles.segText,
+                mode === 'tolerance' && styles.segTextActive,
+                mode === 'tolerance' && isDark && styles.segTextActiveDark,
+                mode === 'tolerance' && !isDark && styles.segTextActiveLight,
+              ]}
+            >
+              ±{TOLERANCE_MIN} Min
+            </ThemedText>
+          </Pressable>
+        </View>
       </View>
 
       {rows.map((row) => {
@@ -448,4 +463,32 @@ const styles = StyleSheet.create({
   },
   toggleText: { fontSize: 12, fontWeight: '700' },
   toggleTextActive: {},
+  segmentedWrap: { alignItems: 'center', marginBottom: 6 },
+  segmented: {
+    flexDirection: 'row',
+    borderRadius: 999,
+    borderWidth: StyleSheet.hairlineWidth,
+    overflow: 'hidden',
+  },
+  segmentedDark: {
+    borderColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+  },
+  segmentedLight: {
+    borderColor: 'rgba(125,125,125,0.35)',
+    backgroundColor: 'rgba(125,125,125,0.12)',
+  },
+  segItem: {
+    flex: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  segItemActiveDark: { backgroundColor: 'rgba(255,255,255,0.88)' },
+  segItemActiveLight: { backgroundColor: 'rgba(0,0,0,0.06)' },
+  segText: { fontSize: 12, fontWeight: '700', opacity: 0.85 },
+  segTextActive: { opacity: 1 },
+  segTextActiveDark: { color: '#111' },
+  segTextActiveLight: { color: '#111' },
 });
