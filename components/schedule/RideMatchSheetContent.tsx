@@ -31,7 +31,8 @@ let MATCH_JSON: MatchIndex = {
 
 try {
   // Using require keeps things simple and works in Metro for JSON files.
-  MATCH_JSON = require('../../scripts/match-index.json') as MatchIndex;
+  MATCH_JSON =
+    require('../../scripts/match-index.json') as MatchIndex;
 } catch {
   // File not present in repo or not generated yet; keep empty fallback.
 }
@@ -39,6 +40,9 @@ try {
 // ---- Helpers ----
 
 const TOLERANCE_MIN = 15;
+const MAX_VISIBLE_CHIPS = 10; // show + weitere X beyond this
+
+type MatchMode = 'exact' | 'tolerance';
 
 // Format minutes (since midnight) to "HH:MM"
 function mmToHHMM(mm: number | null | undefined): string {
@@ -72,7 +76,7 @@ type DayRow = {
 };
 
 // Compute day rows for a given course code
-function computeRows(myCourse: string): DayRow[] {
+function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
   return MATCH_JSON.days.map((day) => {
     const valid = day.courses.filter(
       (c) => !(c.firstStartMin === 0 && c.lastEndMin === 0)
@@ -88,8 +92,15 @@ function computeRows(myCourse: string): DayRow[] {
         : valid
             .filter((c) => {
               if (c.course === myCourse) return false;
-              if (!Number.isFinite(c.firstStartMin) || c.firstStartMin === 0) return false;
-              return Math.abs(c.firstStartMin - myFirst) <= TOLERANCE_MIN;
+              if (
+                !Number.isFinite(c.firstStartMin) ||
+                c.firstStartMin === 0
+              )
+                return false;
+              return mode === 'exact'
+                ? c.firstStartMin === myFirst
+                : Math.abs(c.firstStartMin - myFirst) <=
+                    TOLERANCE_MIN;
             })
             .map((c) => c.course);
 
@@ -99,8 +110,14 @@ function computeRows(myCourse: string): DayRow[] {
         : valid
             .filter((c) => {
               if (c.course === myCourse) return false;
-              if (!Number.isFinite(c.lastEndMin) || c.lastEndMin === 0) return false;
-              return Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
+              if (
+                !Number.isFinite(c.lastEndMin) ||
+                c.lastEndMin === 0
+              )
+                return false;
+              return mode === 'exact'
+                ? c.lastEndMin === myLast
+                : Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
             })
             .map((c) => c.course);
 
@@ -120,9 +137,13 @@ export default function RideMatchSheetContent({
   myCourse?: string;
 }) {
   const [copied, setCopied] = useState<string | null>(null);
+  const [mode, setMode] = useState<MatchMode>('exact');
 
   // Precompute day rows once
-  const rows = useMemo(() => computeRows(myCourse), [myCourse]);
+  const rows = useMemo(
+    () => computeRows(myCourse, mode),
+    [myCourse, mode]
+  );
 
   // Build compact strings for copy/share actions
   const buildCopyText = (
@@ -157,13 +178,50 @@ export default function RideMatchSheetContent({
   return (
     <View style={styles.container}>
       <ThemedText style={styles.info}>
-        Passende Kurse für Hin- und Rückfahrt mit {TOLERANCE_MIN} Minuten
-        Toleranz.
-      </ThemedText>
-      <ThemedText style={styles.subtitle}>
-        Du bist:{' '}
+        Kurse mit gleichen Hin-/Rückfahrzeiten zu{' '}
         <ThemedText style={styles.bold}>{myCourse}</ThemedText>
       </ThemedText>
+
+      <View style={styles.toggleWrap}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Exakt anzeigen"
+          onPress={() => setMode('exact')}
+          style={({ pressed }) => [
+            styles.toggleBtn,
+            mode === 'exact' && styles.toggleBtnActive,
+            pressed && { opacity: 0.8 },
+          ]}
+        >
+          <ThemedText
+            style={[
+              styles.toggleText,
+              mode === 'exact' && styles.toggleTextActive,
+            ]}
+          >
+            Exakt
+          </ThemedText>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Mit ±${TOLERANCE_MIN} Minuten Toleranz anzeigen`}
+          onPress={() => setMode('tolerance')}
+          style={({ pressed }) => [
+            styles.toggleBtn,
+            mode === 'tolerance' && styles.toggleBtnActive,
+            pressed && { opacity: 0.8 },
+          ]}
+        >
+          <ThemedText
+            style={[
+              styles.toggleText,
+              mode === 'tolerance' && styles.toggleTextActive,
+            ]}
+          >
+            ±{TOLERANCE_MIN} Min
+          </ThemedText>
+        </Pressable>
+      </View>
 
       {rows.map((row) => {
         const hasMyTimes =
@@ -183,7 +241,11 @@ export default function RideMatchSheetContent({
             {hasMyTimes ? (
               <>
                 <Section
-                  title={`Hin (±${TOLERANCE_MIN} Min)`}
+                  title={
+                    mode === 'exact'
+                      ? 'Hin (Exakt)'
+                      : `Hin (±${TOLERANCE_MIN} Min)`
+                  }
                   chips={row.hinMatches}
                   emptyHint="—"
                   onCopy={() =>
@@ -198,7 +260,11 @@ export default function RideMatchSheetContent({
                   }
                 />
                 <Section
-                  title={`Zurück (±${TOLERANCE_MIN} Min)`}
+                  title={
+                    mode === 'exact'
+                      ? 'Zurück (Exakt)'
+                      : `Zurück (±${TOLERANCE_MIN} Min)`
+                  }
                   chips={row.zurueckMatches}
                   emptyHint="—"
                   onCopy={() =>
@@ -243,6 +309,11 @@ function Section({
   onCopy?: () => void;
 }) {
   const list = chips.length ? chips : [];
+  const [expanded, setExpanded] = useState(false);
+  const visibleCount = expanded
+    ? list.length
+    : Math.min(list.length, MAX_VISIBLE_CHIPS);
+  const hiddenCount = Math.max(0, list.length - visibleCount);
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -263,11 +334,43 @@ function Section({
         {list.length === 0 ? (
           <ThemedText style={styles.muted}>{emptyHint}</ThemedText>
         ) : (
-          list.map((c) => (
-            <View key={c} style={styles.chip}>
-              <ThemedText style={styles.chipText}>{c}</ThemedText>
-            </View>
-          ))
+          <>
+            {list.slice(0, visibleCount).map((c) => (
+              <View key={c} style={styles.chip}>
+                <ThemedText style={styles.chipText}>{c}</ThemedText>
+              </View>
+            ))}
+            {!expanded && hiddenCount > 0 && (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`Weitere ${hiddenCount} Kurse anzeigen`}
+                onPress={() => setExpanded(true)}
+                style={({ pressed }) => [
+                  styles.chip,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <ThemedText style={styles.chipText}>
+                  + weitere {hiddenCount}
+                </ThemedText>
+              </Pressable>
+            )}
+            {expanded && list.length > MAX_VISIBLE_CHIPS && (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Weniger anzeigen"
+                onPress={() => setExpanded(false)}
+                style={({ pressed }) => [
+                  styles.chip,
+                  pressed && { opacity: 0.7 },
+                ]}
+              >
+                <ThemedText style={styles.chipText}>
+                  − weniger
+                </ThemedText>
+              </Pressable>
+            )}
+          </>
         )}
       </View>
     </View>
@@ -277,9 +380,8 @@ function Section({
 // ---- Styles ----
 const styles = StyleSheet.create({
   container: { gap: 12 },
-  info: { fontSize: 12, opacity: 0.8, textAlign: 'center' },
-  subtitle: { fontSize: 14, marginBottom: 4, textAlign: 'center' },
-  bold: { fontWeight: '700' },
+  info: { fontSize: 14, opacity: 0.8, textAlign: 'center' },
+  bold: { fontSize: 14, fontWeight: '700' },
   card: {
     borderRadius: 12,
     padding: 12,
@@ -307,7 +409,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
-  chipText: { fontSize: 13, fontWeight: '600' },
+  chipText: { fontSize: 10, fontWeight: '600' },
   muted: { opacity: 0.6 },
   copyBtn: {
     paddingHorizontal: 10,
@@ -326,4 +428,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(40,180,99,0.15)',
     fontWeight: '700',
   },
+  toggleWrap: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 6,
+  },
+  toggleBtn: {
+    backgroundColor: 'rgba(125,125,125,0.12)',
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'transparent',
+  },
+  toggleBtnActive: {
+    borderColor: 'rgba(125,125,125,0.35)',
+    backgroundColor: 'rgba(125,125,125,0.18)',
+  },
+  toggleText: { fontSize: 12, fontWeight: '700' },
+  toggleTextActive: {},
 });
