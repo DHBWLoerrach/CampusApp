@@ -1,5 +1,6 @@
 # TODOS
 
+- Im Auge behalten: https://github.com/revtel/react-native-nfc-manager/releases (v4)
 - Dokumentieren: AppStore release und EAS update workflow
   - z.B. version bump in app.json erst bevor der nächste AppStore release kommt
     - sonst funktionieren updates nicht, denn diese werden passend zur Version/Runtime ausgeliefert
@@ -11,11 +12,17 @@
 
 ## Webapp
 
+- Wo deployen? EAS? eigener Server?
+  - der API-Key für das SWFR wird dann schneller leaken als in den Apps… 
+  - wir könnten den Key mit EAS Hosting in API-Route als echtes Secret nutzen…
+    - …aber dann müssten wir auch den Code in der mobilen App anpassen…
+      - …dennoch könnte es mittelfristig serverseitige Aktionen ermöglichen…
 - Webapp immer wieder checken, ob sie noch funktioniert
 - Welcome screen nicht in Webversion zeigen und Zustimmung/Rolle ignorieren
 
 ## Chores
 
+- ab und zu `npx expo-doctor` ausführen (Abhängigkeiten usw.)
 - GPT5 im Webbrowser als Design-Experte nutzen
 - GPT5 im Beast Mode in VS Code den Code konsistent machen lassen, best practices beachten, usw.
 - Gelegentlich `npm run lint` ausführen
