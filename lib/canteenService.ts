@@ -2,8 +2,7 @@ import { addDays, format } from 'date-fns';
 import { XMLParser } from 'fast-xml-parser';
 import type { Role } from '@/constants/Roles';
 
-const API_KEY = (globalThis as any)?.process?.env
-  ?.EXPO_PUBLIC_SWFR_API_KEY as string | undefined;
+const API_KEY = process.env.EXPO_PUBLIC_SWFR_API_KEY as string;
 // 677 = Lörrach, for tests use 610 = Mensa Rempartstraße Freiburg
 const SWFR_LOCATION = 677;
 
