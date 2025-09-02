@@ -6,13 +6,35 @@ import React, { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 
-// ---- Dummy JSON (paste from your generator) ----
-const MATCH_JSON = {
+// ---- Match JSON (loaded from scripts/match-index.json if available) ----
+type MatchIndex = {
+  version: number;
+  generatedAt: string;
+  timezone: string;
+  days: {
+    date: string;
+    courses: {
+      course: string;
+      program: string | null;
+      firstStartMin: number;
+      lastEndMin: number;
+    }[];
+  }[];
+};
+
+let MATCH_JSON: MatchIndex = {
   version: 1,
-  generatedAt: '2025-09-02T15:32:55.622Z',
+  generatedAt: '',
   timezone: 'Europe/Berlin',
   days: [],
-} as const;
+};
+
+try {
+  // Using require keeps things simple and works in Metro for JSON files.
+  MATCH_JSON = require('../../scripts/match-index.json') as MatchIndex;
+} catch {
+  // File not present in repo or not generated yet; keep empty fallback.
+}
 
 // ---- Helpers ----
 
