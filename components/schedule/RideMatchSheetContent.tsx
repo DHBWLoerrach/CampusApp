@@ -47,7 +47,9 @@ try {
 // ---- Helpers ----
 
 const TOLERANCE_MIN = 15;
-const MAX_VISIBLE_CHIPS = 10; // show + weitere X beyond this
+const ARRIVAL_OFFSET_MIN = -5; // show arrival 5 minutes before first lecture
+const DEPARTURE_OFFSET_MIN = 5; // show departure 5 minutes after last lecture
+const MAX_VISIBLE_CHIPS = 5; // show + weitere X beyond this
 
 type MatchMode = 'exact' | 'tolerance';
 
@@ -60,6 +62,16 @@ function mmToHHMM(mm: number | null | undefined): string {
     2,
     '0'
   )}`;
+}
+
+// Clamp minutes to a 0..1439 range for safe display
+function clampDayMinutes(
+  mm: number | null | undefined
+): number | null {
+  if (mm == null || !Number.isFinite(mm)) return null;
+  if (mm < 0) return 0;
+  if (mm > 1439) return 1439;
+  return mm;
 }
 
 // Localized short date like "Di, 02.09."
@@ -165,7 +177,12 @@ export default function RideMatchSheetContent({
     myMin?: number
   ) => {
     const dateLabel = formatDateShort(date);
-    const time = mmToHHMM(myMin ?? -1);
+    const raw =
+      dir === 'hin'
+        ? (myMin ?? 0) + ARRIVAL_OFFSET_MIN
+        : (myMin ?? 0) + DEPARTURE_OFFSET_MIN;
+    const adj = clampDayMinutes(raw);
+    const time = mmToHHMM(adj ?? -1);
     const label = dir === 'hin' ? 'Hin' : 'Zurück';
     const courses = list.length ? list.join(', ') : '—';
     return `(${dateLabel}) ${label} ${time} · Kurse: ${courses}`;
@@ -270,10 +287,16 @@ export default function RideMatchSheetContent({
                 const dateLabel = formatDateShort(row.date);
                 const parts: string[] = [];
                 if (Number.isFinite(row.myFirst)) {
-                  parts.push(`Ankunft ${mmToHHMM(row.myFirst!)}`);
+                  const adj = clampDayMinutes(
+                    row.myFirst! + ARRIVAL_OFFSET_MIN
+                  );
+                  parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
                 }
                 if (Number.isFinite(row.myLast)) {
-                  parts.push(`Abfahrt ${mmToHHMM(row.myLast!)}`);
+                  const adj = clampDayMinutes(
+                    row.myLast! + DEPARTURE_OFFSET_MIN
+                  );
+                  parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
                 }
                 if (parts.length === 0) {
                   return `${dateLabel} — Keine Vorlesung`;
@@ -421,7 +444,9 @@ function Section({
                 ]}
               >
                 <View style={styles.chipContentRow}>
-                  <ThemedText style={styles.chipText}>− weniger</ThemedText>
+                  <ThemedText style={styles.chipText}>
+                    − weniger
+                  </ThemedText>
                   <IconSymbol
                     name="chevron.up"
                     size={12}
