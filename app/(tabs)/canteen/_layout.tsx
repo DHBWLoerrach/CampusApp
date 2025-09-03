@@ -1,4 +1,3 @@
-import { Text } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { withLayoutContext } from 'expo-router';
 import { addDays, format } from 'date-fns';
@@ -9,6 +8,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
+import TopTabLabel from '@/components/ui/TopTabLabel';
 
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = withLayoutContext(Tab.Navigator);
@@ -39,16 +39,8 @@ export default function CanteenLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
     tabBarItemStyle: { paddingHorizontal: 0 },
-    tabBarLabel: ({
-      focused,
-      children,
-    }: {
-      focused: boolean;
-      children: string;
-    }) => (
-      <Text style={{ color: 'white', opacity: focused ? 1 : 0.7 }}>
-        {children}
-      </Text>
+    tabBarLabel: (props: { focused: boolean; children: string; color?: string }) => (
+      <TopTabLabel {...props} />
     ),
   };
 

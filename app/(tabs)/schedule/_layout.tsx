@@ -1,4 +1,3 @@
-import { Text } from 'react-native';
 import Storage from 'expo-sqlite/kv-store';
 import { withLayoutContext } from 'expo-router';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -11,6 +10,7 @@ import CourseSetup from '@/components/schedule/CourseSetup';
 import { useCourseContext } from '@/context/CourseContext';
 import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
 import { useEffect, useState } from 'react';
+import TopTabLabel from '@/components/ui/TopTabLabel';
 
 const Tab = createMaterialTopTabNavigator();
 const TopTabs = withLayoutContext(Tab.Navigator);
@@ -66,21 +66,8 @@ export default function ScheduleLayout() {
   // Enhanced tab options with course display
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
-    tabBarLabel: ({
-      focused,
-      children,
-    }: {
-      focused: boolean;
-      children: string;
-    }) => (
-      <Text
-        style={{
-          color: 'white',
-          opacity: focused ? 1 : 0.7,
-        }}
-      >
-        {children}
-      </Text>
+    tabBarLabel: (props: { focused: boolean; children: string; color?: string }) => (
+      <TopTabLabel {...props} />
     ),
   };
 
