@@ -64,6 +64,15 @@ function mmToHHMM(mm: number | null | undefined): string {
   )}`;
 }
 
+// Convert a hex color like #RRGGBB to an rgba() string with alpha
+function hexToRgba(hex: string, alpha: number): string {
+  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const r = parseInt(m[1], 16);
+  const g = parseInt(m[2], 16);
+  const b = parseInt(m[3], 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 // Clamp minutes to a 0..1439 range for safe display
 function clampDayMinutes(
   mm: number | null | undefined
@@ -172,6 +181,10 @@ export default function RideMatchSheetContent({
   // Dynamic labels based on current offsets
   const arrAbs = Math.abs(ARRIVAL_OFFSET_MIN);
   const depAbs = Math.abs(DEPARTURE_OFFSET_MIN);
+  // Card outline color (theme-aware, slightly stronger in dark mode)
+  const borderBase = useThemeColor({}, 'border') as string;
+  const cardBorderColor = hexToRgba(borderBase, isDark ? 0.42 : 0.32);
+  const cardBorderWidth = isDark ? StyleSheet.hairlineWidth : 1;
   // Today key in the calendar timezone
   const todayKey = useMemo(() => {
     const f = new Intl.DateTimeFormat('en-CA', {
@@ -191,6 +204,12 @@ export default function RideMatchSheetContent({
     const dd = String(t.getUTCDate()).padStart(2, '0');
     return `${yy}-${mm}-${dd}`;
   }, [todayKey]);
+  // Brand tint for badges
+  const tintColor = useThemeColor({}, 'tint') as string;
+  const todayAlpha = isDark ? 0.36 : 0.14;
+  const tomorrowAlpha = isDark ? 0.28 : 0.1;
+  const badgeTodayBg = hexToRgba(tintColor, todayAlpha);
+  const badgeTomorrowBg = hexToRgba(tintColor, tomorrowAlpha);
 
   // Build compact strings for copy/share actions
   const buildCopyText = (
@@ -235,7 +254,10 @@ export default function RideMatchSheetContent({
       </ThemedText>
       <View style={styles.subInfoWrap}>
         <ThemedText style={styles.subInfo}>
-          {`Ankunft = VL-Start - ${arrAbs} Min · Abfahrt = VL-Ende + ${depAbs} Min`}
+          {`Ankunft = VL-Start - ${arrAbs} Min`}
+        </ThemedText>
+        <ThemedText style={styles.subInfo}>
+          {`Abfahrt = VL-Ende + ${depAbs} Min`}
         </ThemedText>
       </View>
 
@@ -309,7 +331,13 @@ export default function RideMatchSheetContent({
         const hasMyTimes =
           Number.isFinite(row.myFirst) || Number.isFinite(row.myLast);
         return (
-          <View key={row.date} style={styles.card}>
+          <View
+            key={row.date}
+            style={[
+              styles.card,
+              { borderColor: cardBorderColor, borderWidth: cardBorderWidth },
+            ]}
+          >
             {(() => {
               const dateLabel = formatDateShort(row.date);
               const parts: string[] = [];
@@ -330,7 +358,12 @@ export default function RideMatchSheetContent({
                   <View style={styles.dayHeaderLeft}>
                     <ThemedText style={styles.dayHeaderDate}>{dateLabel}</ThemedText>
                     {badgeLabel && (
-                      <View style={styles.badgeToday}>
+                      <View
+                        style={[
+                          styles.badgeToday,
+                          { backgroundColor: isTomorrow ? badgeTomorrowBg : badgeTodayBg },
+                        ]}
+                      >
                         <ThemedText style={styles.badgeTodayText}>{badgeLabel}</ThemedText>
                       </View>
                     )}
@@ -381,12 +414,7 @@ export default function RideMatchSheetContent({
                   }
                 />
               </>
-            ) : (
-              <ThemedText style={styles.muted}>
-                Für diesen Tag liegen für {myCourse} keine
-                Vorlesungszeiten vor.
-              </ThemedText>
-            )}
+            ) : null}
           </View>
         );
       })}
@@ -514,18 +542,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   dayHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   dayHeaderDate: { fontSize: 15, fontWeight: '700' },
-  dayHeaderTimes: { fontSize: 13, fontWeight: '600' },
+  dayHeaderTimes: { fontSize: 12, fontWeight: '600', opacity: 0.9 },
   badgeToday: {
-    backgroundColor: 'rgba(40,180,99,0.18)',
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  badgeTodayText: { fontSize: 10, fontWeight: '700' },
+  badgeTodayText: { fontSize: 9, fontWeight: '700' },
   section: { marginBottom: 6 },
   sectionHeader: {
     flexDirection: 'row',
@@ -596,7 +623,7 @@ const styles = StyleSheet.create({
   },
   segmentedDark: {
     borderColor: 'rgba(255,255,255,0.12)',
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(255,255,255,0.05)',
   },
   segmentedLight: {
     borderColor: 'rgba(125,125,125,0.35)',
@@ -609,16 +636,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  segItemActiveDark: { backgroundColor: 'rgba(255,255,255,0.88)' },
+  segItemActiveDark: { backgroundColor: 'rgba(255,255,255,0.85)' },
   segItemActiveLight: { backgroundColor: 'rgba(0,0,0,0.06)' },
   segText: { fontSize: 12, fontWeight: '700', opacity: 0.85 },
   segTextActive: { opacity: 1 },
   segTextActiveDark: { color: '#111' },
   segTextActiveLight: { color: '#111' },
-  subInfoWrap: { alignItems: 'center', gap: 0, marginTop: -4 },
+  subInfoWrap: { alignItems: 'center', gap: 0, marginTop: -6 },
   subInfo: {
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 13,
     opacity: 0.7,
     textAlign: 'center',
   },
