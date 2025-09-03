@@ -42,6 +42,16 @@ try {
 
 // ---- Helpers ----
 
+function getTodayKey(): string {
+  const f = new Intl.DateTimeFormat('en-CA', {
+    timeZone: MATCH_JSON.timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return f.format(new Date());
+}
+
 const TOLERANCE_MIN = 15;
 const ARRIVAL_OFFSET_MIN = -5; // show arrival 5 minutes before first lecture
 const DEPARTURE_OFFSET_MIN = 5; // show departure 5 minutes after last lecture
@@ -104,7 +114,10 @@ type DayRow = {
 
 // Compute day rows for a given course code
 function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
-  return MATCH_JSON.days.map((day) => {
+  const todayKey = getTodayKey();
+  return MATCH_JSON.days
+    .filter((day) => day.date >= todayKey) // ignore past days
+    .map((day) => {
     const valid = day.courses.filter(
       (c) => !(c.firstStartMin === 0 && c.lastEndMin === 0)
     );
@@ -155,7 +168,7 @@ function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
       toMatches,
       backMatches,
     };
-  });
+    });
 }
 
 export default function RideMatchSheetContent({
@@ -182,15 +195,7 @@ export default function RideMatchSheetContent({
   const cardBorderColor = hexToRgba(borderBase, isDark ? 0.42 : 0.32);
   const cardBorderWidth = isDark ? StyleSheet.hairlineWidth : 1;
   // Today key in the calendar timezone
-  const todayKey = useMemo(() => {
-    const f = new Intl.DateTimeFormat('en-CA', {
-      timeZone: MATCH_JSON.timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-    return f.format(new Date());
-  }, []);
+  const todayKey = useMemo(() => getTodayKey(), []);
   // Tomorrow key in the same timezone
   const tomorrowKey = useMemo(() => {
     const [y, m, d] = todayKey.split('-').map(Number);
@@ -322,9 +327,7 @@ export default function RideMatchSheetContent({
         </View>
       </View>
 
-      {rows
-        .filter((r) => r.date >= todayKey) // Hide past days
-        .map((row) => {
+      {rows.map((row) => {
           const hasToTime = Number.isFinite(row.myFirst);
           const hasBackTime = Number.isFinite(row.myLast);
           const hasMyTimes = hasToTime || hasBackTime;
