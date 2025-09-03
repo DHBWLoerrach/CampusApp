@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Platform } from 'react-native';
 import React, { useState } from 'react';
 import { Tabs } from 'expo-router';
 import Storage from 'expo-sqlite/kv-store';
@@ -65,37 +65,77 @@ function TabsContent() {
                 color={color}
               />
             ),
-            headerLeft: selectedCourse
-              ? () => (
-                  <TouchableOpacity
-                    onPress={() => setCarpoolOpen(true)}
-                    hitSlop={8}
-                    style={{ marginLeft: 16 }}
-                    accessibilityRole="button"
-                    accessibilityLabel="Carpool öffnen"
-                    accessibilityHint="Öffnet Carpool-Informationen"
-                  >
-                    <IconSymbol size={20} name="car" color="white" />
-                  </TouchableOpacity>
-                )
-              : undefined,
+            headerLeft:
+              selectedCourse && Platform.OS === 'ios'
+                ? () => (
+                    <TouchableOpacity
+                      onPress={handleChangeCourse}
+                      hitSlop={8}
+                      style={{ marginLeft: 16 }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Kurs bearbeiten"
+                      accessibilityHint="Öffnet den Bearbeitungsbildschirm für diesen Kurs"
+                    >
+                      <IconSymbol
+                        size={20}
+                        name="rectangle.stack"
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  )
+                : undefined,
             headerRight: selectedCourse
-              ? () => (
-                  <TouchableOpacity
-                    onPress={handleChangeCourse}
-                    hitSlop={8}
-                    style={{ marginRight: 16 }}
-                    accessibilityRole="button"
-                    accessibilityLabel="Kurs bearbeiten"
-                    accessibilityHint="Öffnet den Bearbeitungsbildschirm für diesen Kurs"
-                  >
-                    <IconSymbol
-                      size={20}
-                      name="rectangle.stack"
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                )
+              ? () => {
+                  const isAndroid = Platform.OS === 'android';
+                  if (isAndroid) {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginRight: 8,
+                        }}
+                      >
+                        <TouchableOpacity
+                          onPress={handleChangeCourse}
+                          hitSlop={8}
+                          accessibilityRole="button"
+                          accessibilityLabel="Kurs bearbeiten"
+                          accessibilityHint="Öffnet den Bearbeitungsbildschirm für diesen Kurs"
+                        >
+                          <IconSymbol
+                            size={20}
+                            name="rectangle.stack"
+                            color="white"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => setCarpoolOpen(true)}
+                          hitSlop={8}
+                          style={{ marginLeft: 16 }}
+                          accessibilityRole="button"
+                          accessibilityLabel="Carpool öffnen"
+                          accessibilityHint="Öffnet Carpool-Informationen"
+                        >
+                          <IconSymbol size={20} name="car" color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }
+                  // iOS: only car on the right
+                  return (
+                    <TouchableOpacity
+                      onPress={() => setCarpoolOpen(true)}
+                      hitSlop={8}
+                      style={{ marginRight: 16 }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Carpool öffnen"
+                      accessibilityHint="Öffnet Carpool-Informationen"
+                    >
+                      <IconSymbol size={20} name="car" color="white" />
+                    </TouchableOpacity>
+                  );
+                }
               : undefined,
           }}
           listeners={{
