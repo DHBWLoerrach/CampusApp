@@ -43,19 +43,59 @@ try {
 // ---- Helpers ----
 
 function getTodayKey(): string {
-  const f = new Intl.DateTimeFormat('en-CA', {
-    timeZone: MATCH_JSON.timezone,
+  const base = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  });
-  return f.format(new Date());
+  } as const;
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      ...base,
+      timeZone: (MATCH_JSON as any)?.timezone || 'Europe/Berlin',
+    }).format(new Date());
+  } catch {}
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      ...base,
+      timeZone: 'Europe/Berlin',
+    }).format(new Date());
+  } catch {}
+  return new Intl.DateTimeFormat('en-CA', base).format(new Date());
+}
+
+function isValidYmd(ymd: unknown): ymd is string {
+  if (typeof ymd !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return false;
+  const [y, m, d] = ymd.split('-').map(Number);
+  if (
+    !Number.isFinite(y) ||
+    !Number.isFinite(m) ||
+    !Number.isFinite(d)
+  )
+    return false;
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return (
+    dt.getUTCFullYear() === y &&
+    dt.getUTCMonth() === m - 1 &&
+    dt.getUTCDate() === d
+  );
+}
+
+function addDaysToKey(ymd: string, days: number): string {
+  const [y, m, d] = ymd.split('-').map(Number);
+  const t = new Date(Date.UTC(y, (m ?? 1) - 1, d ?? 1));
+  t.setUTCDate(t.getUTCDate() + days);
+  const yy = t.getUTCFullYear();
+  const mm = String(t.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(t.getUTCDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
 }
 
 const TOLERANCE_MIN = 15;
 const ARRIVAL_OFFSET_MIN = -5; // show arrival 5 minutes before first lecture
 const DEPARTURE_OFFSET_MIN = 5; // show departure 5 minutes after last lecture
 const MAX_VISIBLE_CHIPS = 5; // show + weitere X beyond this
+const MAX_FUTURE_DAYS = 10; // safety: ignore days beyond 10 days in future
 
 type MatchMode = 'exact' | 'tolerance';
 
@@ -115,59 +155,67 @@ type DayRow = {
 // Compute day rows for a given course code
 function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
   const todayKey = getTodayKey();
-  return MATCH_JSON.days
-    .filter((day) => day.date >= todayKey) // ignore past days
-    .map((day) => {
-    const valid = day.courses.filter(
-      (c) => !(c.firstStartMin === 0 && c.lastEndMin === 0)
-    );
+  const maxKey = addDaysToKey(todayKey, MAX_FUTURE_DAYS);
+  const days = Array.isArray((MATCH_JSON as any)?.days)
+    ? (MATCH_JSON as any).days
+    : [];
+  return days
+    .filter((day: any) => isValidYmd(day?.date))
+    .filter((day: any) => day.date >= todayKey && day.date <= maxKey) // ignore past and far-future days
+    .map((day: any) => {
+      const courses: any[] = Array.isArray(day?.courses)
+        ? day.courses
+        : [];
+      const valid = courses.filter(
+        (c) => c && typeof c.course === 'string'
+      );
 
-    const me = valid.find((c) => c.course === myCourse);
-    const myFirst = me?.firstStartMin;
-    const myLast = me?.lastEndMin;
+      const me = valid.find((c) => c.course === myCourse);
+      const myFirst = me?.firstStartMin;
+      const myLast = me?.lastEndMin;
 
-    const toMatches =
-      myFirst == null || myFirst === 0
-        ? []
-        : valid
-            .filter((c) => {
-              if (c.course === myCourse) return false;
-              if (
-                !Number.isFinite(c.firstStartMin) ||
-                c.firstStartMin === 0
-              )
-                return false;
-              return mode === 'exact'
-                ? c.firstStartMin === myFirst
-                : Math.abs(c.firstStartMin - myFirst) <=
-                    TOLERANCE_MIN;
-            })
-            .map((c) => c.course);
+      const toMatches =
+        myFirst == null || myFirst === 0
+          ? []
+          : valid
+              .filter((c) => {
+                if (c.course === myCourse) return false;
+                if (
+                  !Number.isFinite(c.firstStartMin) ||
+                  c.firstStartMin === 0
+                )
+                  return false;
+                return mode === 'exact'
+                  ? c.firstStartMin === myFirst
+                  : Math.abs(c.firstStartMin - myFirst) <=
+                      TOLERANCE_MIN;
+              })
+              .map((c) => c.course);
 
-    const backMatches =
-      myLast == null || myLast === 0
-        ? []
-        : valid
-            .filter((c) => {
-              if (c.course === myCourse) return false;
-              if (
-                !Number.isFinite(c.lastEndMin) ||
-                c.lastEndMin === 0
-              )
-                return false;
-              return mode === 'exact'
-                ? c.lastEndMin === myLast
-                : Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
-            })
-            .map((c) => c.course);
+      const backMatches =
+        myLast == null || myLast === 0
+          ? []
+          : valid
+              .filter((c) => {
+                if (c.course === myCourse) return false;
+                if (
+                  !Number.isFinite(c.lastEndMin) ||
+                  c.lastEndMin === 0
+                )
+                  return false;
+                return mode === 'exact'
+                  ? c.lastEndMin === myLast
+                  : Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
+              })
+              .map((c) => c.course);
 
-    return {
-      date: day.date,
-      myFirst,
-      myLast,
-      toMatches,
-      backMatches,
-    };
+      return {
+        date: day.date,
+        myFirst,
+        myLast,
+        toMatches,
+        backMatches,
+      };
     });
 }
 
@@ -328,148 +376,148 @@ export default function RideMatchSheetContent({
       </View>
 
       {rows.map((row) => {
-          const hasToTime = Number.isFinite(row.myFirst);
-          const hasBackTime = Number.isFinite(row.myLast);
-          const hasMyTimes = hasToTime || hasBackTime;
-          return (
-            <View
-              key={row.date}
-              style={[
-                styles.card,
-                {
-                  borderColor: cardBorderColor,
-                  borderWidth: cardBorderWidth,
-                },
-              ]}
-            >
-              {(() => {
-                const dateLabel = formatDateShort(row.date);
-                const parts: string[] = [];
-                if (hasToTime) {
-                  const adj = clampDayMinutes(
-                    row.myFirst! + ARRIVAL_OFFSET_MIN
-                  );
-                  parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
-                }
-                if (hasBackTime) {
-                  const adj = clampDayMinutes(
-                    row.myLast! + DEPARTURE_OFFSET_MIN
-                  );
-                  parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
-                }
-                const rightText =
-                  parts.length === 0
-                    ? 'Keine Vorlesung'
-                    : parts.join(' · ');
-                const isToday = row.date === todayKey;
-                const isTomorrow = row.date === tomorrowKey;
-                const badgeLabel = isToday
-                  ? 'Heute'
-                  : isTomorrow
-                  ? 'Morgen'
-                  : null;
-                return (
-                  <View style={styles.dayHeaderRow}>
-                    <View style={styles.dayHeaderLeft}>
-                      <ThemedText style={styles.dayHeaderDate}>
-                        {dateLabel}
-                      </ThemedText>
-                      {badgeLabel && (
-                        <View
-                          style={[
-                            styles.badgeToday,
-                            {
-                              backgroundColor: isTomorrow
-                                ? badgeTomorrowBg
-                                : badgeTodayBg,
-                            },
-                          ]}
-                        >
-                          <ThemedText style={styles.badgeTodayText}>
-                            {badgeLabel}
-                          </ThemedText>
-                        </View>
-                      )}
-                    </View>
-                    <ThemedText style={styles.dayHeaderTimes}>
-                      {rightText}
+        const hasToTime = Number.isFinite(row.myFirst);
+        const hasBackTime = Number.isFinite(row.myLast);
+        const hasMyTimes = hasToTime || hasBackTime;
+        return (
+          <View
+            key={row.date}
+            style={[
+              styles.card,
+              {
+                borderColor: cardBorderColor,
+                borderWidth: cardBorderWidth,
+              },
+            ]}
+          >
+            {(() => {
+              const dateLabel = formatDateShort(row.date);
+              const parts: string[] = [];
+              if (hasToTime) {
+                const adj = clampDayMinutes(
+                  row.myFirst! + ARRIVAL_OFFSET_MIN
+                );
+                parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
+              }
+              if (hasBackTime) {
+                const adj = clampDayMinutes(
+                  row.myLast! + DEPARTURE_OFFSET_MIN
+                );
+                parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
+              }
+              const rightText =
+                parts.length === 0
+                  ? 'Keine Vorlesung'
+                  : parts.join(' · ');
+              const isToday = row.date === todayKey;
+              const isTomorrow = row.date === tomorrowKey;
+              const badgeLabel = isToday
+                ? 'Heute'
+                : isTomorrow
+                ? 'Morgen'
+                : null;
+              return (
+                <View style={styles.dayHeaderRow}>
+                  <View style={styles.dayHeaderLeft}>
+                    <ThemedText style={styles.dayHeaderDate}>
+                      {dateLabel}
                     </ThemedText>
+                    {badgeLabel && (
+                      <View
+                        style={[
+                          styles.badgeToday,
+                          {
+                            backgroundColor: isTomorrow
+                              ? badgeTomorrowBg
+                              : badgeTodayBg,
+                          },
+                        ]}
+                      >
+                        <ThemedText style={styles.badgeTodayText}>
+                          {badgeLabel}
+                        </ThemedText>
+                      </View>
+                    )}
                   </View>
-                );
-              })()}
-              {/* Remark on card level if there are no matches */}
-              {(() => {
-                const dayHasAnyMatches =
-                  (hasToTime && row.toMatches.length > 0) ||
-                  (hasBackTime && row.backMatches.length > 0);
-                return hasMyTimes && !dayHasAnyMatches ? (
-                  <ThemedText
-                    style={[
-                      styles.muted,
-                      styles.info,
-                      { marginBottom: 6 },
-                    ]}
-                  >
-                    Keine Mitfahr-Matches für diesen Tag.
+                  <ThemedText style={styles.dayHeaderTimes}>
+                    {rightText}
                   </ThemedText>
-                ) : null;
-              })()}
+                </View>
+              );
+            })()}
+            {/* Remark on card level if there are no matches */}
+            {(() => {
+              const dayHasAnyMatches =
+                (hasToTime && row.toMatches.length > 0) ||
+                (hasBackTime && row.backMatches.length > 0);
+              return hasMyTimes && !dayHasAnyMatches ? (
+                <ThemedText
+                  style={[
+                    styles.muted,
+                    styles.info,
+                    { marginBottom: 6 },
+                  ]}
+                >
+                  Keine Mitfahr-Matches für diesen Tag.
+                </ThemedText>
+              ) : null;
+            })()}
 
-              {(() => {
-                const dayHasAnyMatches =
-                  (hasToTime && row.toMatches.length > 0) ||
-                  (hasBackTime && row.backMatches.length > 0);
-                if (!hasMyTimes || !dayHasAnyMatches) return null;
-                return (
-                  <>
-                    {hasToTime && (
-                      <Section
-                        title={
-                          mode === 'exact'
-                            ? 'Ankunft (Exakt)'
-                            : `Ankunft (±${TOLERANCE_MIN} Min)`
-                        }
-                        chips={row.toMatches}
-                        emptyHint="Keine passenden Ankünfte"
-                        onCopy={() =>
-                          tryCopy(
-                            buildCopyText(
-                              row.date,
-                              'hin',
-                              row.toMatches,
-                              row.myFirst
-                            )
+            {(() => {
+              const dayHasAnyMatches =
+                (hasToTime && row.toMatches.length > 0) ||
+                (hasBackTime && row.backMatches.length > 0);
+              if (!hasMyTimes || !dayHasAnyMatches) return null;
+              return (
+                <>
+                  {hasToTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Ankunft (Exakt)'
+                          : `Ankunft (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.toMatches}
+                      emptyHint="Keine passenden Ankünfte"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'hin',
+                            row.toMatches,
+                            row.myFirst
                           )
-                        }
-                      />
-                    )}
-                    {hasBackTime && (
-                      <Section
-                        title={
-                          mode === 'exact'
-                            ? 'Abfahrt (Exakt)'
-                            : `Abfahrt (±${TOLERANCE_MIN} Min)`
-                        }
-                        chips={row.backMatches}
-                        emptyHint="Keine passenden Abfahrten"
-                        onCopy={() =>
-                          tryCopy(
-                            buildCopyText(
-                              row.date,
-                              'zurueck',
-                              row.backMatches,
-                              row.myLast
-                            )
+                        )
+                      }
+                    />
+                  )}
+                  {hasBackTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Abfahrt (Exakt)'
+                          : `Abfahrt (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.backMatches}
+                      emptyHint="Keine passenden Abfahrten"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'zurueck',
+                            row.backMatches,
+                            row.myLast
                           )
-                        }
-                      />
-                    )}
-                  </>
-                );
-              })()}
-            </View>
-          );
-        })}
+                        )
+                      }
+                    />
+                  )}
+                </>
+              );
+            })()}
+          </View>
+        );
+      })}
 
       {copied && (
         <ThemedText style={styles.toast}>{copied}</ThemedText>
