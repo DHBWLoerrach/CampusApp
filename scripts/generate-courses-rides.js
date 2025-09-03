@@ -426,7 +426,10 @@ async function main() {
 
   await fs.mkdir(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, OUT_FILE);
-  await fs.writeFile(outPath, JSON.stringify(out), 'utf8');
+  const tmpPath = outPath + '.tmp';
+  await fs.writeFile(tmpPath, JSON.stringify(out) + '\n', 'utf8');
+  await fs.rename(tmpPath, outPath);
+
   console.log(
     `OK ${outPath} -> ${out.days.length} days, ${out.days.reduce(
       (n, d) => n + d.courses.length,
