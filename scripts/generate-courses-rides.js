@@ -1,4 +1,3 @@
-// generate-match-index.mjs
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import ICAL from 'ical.js';
@@ -8,7 +7,7 @@ const TZ = process.env.TZ_NAME || 'Europe/Berlin';
 const DAYS = parseInt(process.env.DAYS || '5', 10);
 const COURSES_PATH = process.env.COURSES_PATH || './courses.txt';
 const OUT_DIR = process.env.OUT_DIR || '.';
-const OUT_FILE = process.env.OUT_FILE || 'match-index.json';
+const OUT_FILE = process.env.OUT_FILE || 'courses-rides.json';
 const START_DATE_RAW = process.env.START_DATE; // optional; parsed in resolveStartKey
 
 // --- CLI helpers ---
@@ -18,7 +17,10 @@ function getArg(name) {
   const withEq = new RegExp(`^--${name}=`);
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === flag) return argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : '';
+    if (a === flag)
+      return argv[i + 1] && !argv[i + 1].startsWith('--')
+        ? argv[i + 1]
+        : '';
     if (withEq.test(a)) return a.split('=')[1] ?? '';
   }
   return undefined;
@@ -97,7 +99,8 @@ function nextDayKeys(days, startKeyOverride) {
 
 // Parse start date CLI/env -> YYYY-MM-DD (in TZ)
 function resolveStartKey() {
-  const raw = getArg('start-date') ?? getArg('start') ?? START_DATE_RAW;
+  const raw =
+    getArg('start-date') ?? getArg('start') ?? START_DATE_RAW;
   if (!raw) return dateKeyTZ(new Date());
 
   const s = String(raw).trim();
@@ -109,7 +112,9 @@ function resolveStartKey() {
   if (/^tomorrow$/i.test(s)) {
     const [y, m, d] = todayKey.split('-').map(Number);
     const t = new Date(Date.UTC(y, m - 1, d + 1));
-    return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    return `${t.getUTCFullYear()}-${String(
+      t.getUTCMonth() + 1
+    ).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
   }
 
   // Expect YYYY-MM-DD; ignore any time-of-day portion if passed
@@ -120,11 +125,15 @@ function resolveStartKey() {
     const da = Number(m[3]);
     // Normalize via UTC to ensure a valid calendar date
     const t = new Date(Date.UTC(y, mo - 1, da));
-    const norm = `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    const norm = `${t.getUTCFullYear()}-${String(
+      t.getUTCMonth() + 1
+    ).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
     return norm;
   }
 
-  console.warn(`Unrecognized start date: "${s}". Falling back to today.`);
+  console.warn(
+    `Unrecognized start date: "${s}". Falling back to today.`
+  );
   return todayKey;
 }
 
@@ -293,8 +302,12 @@ async function main() {
   // Anchor on the chosen start date's midnight (UTC) to cover the local TZ range
   const [sy, sm, sd] = startKey.split('-').map(Number);
   const startAnchorUtc = new Date(Date.UTC(sy, sm - 1, sd));
-  const windowStartUtc = new Date(startAnchorUtc.getTime() - 24 * 60 * 60 * 1000);
-  const windowEndUtc = new Date(startAnchorUtc.getTime() + (DAYS + 1) * 24 * 60 * 60 * 1000);
+  const windowStartUtc = new Date(
+    startAnchorUtc.getTime() - 24 * 60 * 60 * 1000
+  );
+  const windowEndUtc = new Date(
+    startAnchorUtc.getTime() + (DAYS + 1) * 24 * 60 * 60 * 1000
+  );
 
   const courses = (await fs.readFile(COURSES_PATH, 'utf8'))
     .split(/\r?\n/)

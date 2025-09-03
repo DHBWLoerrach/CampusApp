@@ -41,4 +41,4 @@ ios/
 android/
 
 scripts/courses.txt
-scripts/match-index.json
+scripts/*.json
