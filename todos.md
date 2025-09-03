@@ -10,11 +10,19 @@
 - iPad?
 - können/sollen wir das aktive Update in "About" anzeigen?
 
+## Carpooling
+
+- Online-Termine rausnehmen
+- Zielort berücksichtigen (TAR in Weil, andere in KBC usw.)
+  - in JSON gruppieren oder nach Raum-Name filtern?
+- Onboarding-UI
+- Liste aller Kurse für Skript erstellen
+
 ## Webapp
 
 - Wo deployen? EAS? eigener Server?
-  - der API-Key für das SWFR wird dann schneller leaken als in den Apps… 
-  - momentan liegt der Key als sensitive Info als env-Var im EAS-Projekt in der Cloud 
+  - der API-Key für das SWFR wird dann schneller leaken als in den Apps…
+  - momentan liegt der Key als sensitive Info als env-Var im EAS-Projekt in der Cloud
   - wir könnten den Key mit EAS Hosting in API-Route als echtes Secret nutzen…
     - …aber dann müssten wir auch den Code in der mobilen App anpassen…
       - …dennoch könnte es mittelfristig serverseitige Aktionen ermöglichen…
