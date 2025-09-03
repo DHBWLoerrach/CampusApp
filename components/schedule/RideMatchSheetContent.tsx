@@ -225,7 +225,7 @@ export default function RideMatchSheetContent({
         : (myMin ?? 0) + DEPARTURE_OFFSET_MIN;
     const adj = clampDayMinutes(raw);
     const time = mmToHHMM(adj ?? -1);
-    const label = dir === 'hin' ? 'Hin' : 'Zurück';
+    const label = dir === 'hin' ? 'Ankunft' : 'Abfahrt';
     const courses = list.length ? list.join(', ') : '—';
     return `(${dateLabel}) ${label} ${time} · Kurse: ${courses}`;
   };
@@ -430,7 +430,7 @@ export default function RideMatchSheetContent({
                           : `Ankunft (±${TOLERANCE_MIN} Min)`
                       }
                       chips={row.hinMatches}
-                      emptyHint="Keine passenden Hinfahrten"
+                      emptyHint="Keine passenden Ankünfte"
                       onCopy={() =>
                         tryCopy(
                           buildCopyText(
@@ -451,7 +451,7 @@ export default function RideMatchSheetContent({
                           : `Abfahrt (±${TOLERANCE_MIN} Min)`
                       }
                       chips={row.zurueckMatches}
-                      emptyHint="Keine passenden Rückfahrten"
+                      emptyHint="Keine passenden Abfahrten"
                       onCopy={() =>
                         tryCopy(
                           buildCopyText(
