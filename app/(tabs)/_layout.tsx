@@ -1,5 +1,5 @@
 import { TouchableOpacity, View, Platform } from 'react-native';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Tabs } from 'expo-router';
 import Storage from 'expo-sqlite/kv-store';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -18,8 +18,10 @@ const ICON_SIZE = 28;
 function TabsContent() {
   const [canteenInfoOpen, setCanteenInfoOpen] = useState(false);
   const [carpoolOpen, setCarpoolOpen] = useState(false);
-  const { selectedCourse, setSelectedCourse } = useCourseContext();
+  const [courseSwitchOpen, setCourseSwitchOpen] = useState(false);
+  const { selectedCourse, setSelectedCourse, previousCourses } = useCourseContext();
   const textColor = useThemeColor({}, 'text');
+  const borderColor = useThemeColor({}, 'border');
 
   const scheduleTitle = selectedCourse
     ? selectedCourse.toUpperCase()
@@ -30,6 +32,14 @@ function TabsContent() {
       setSelectedCourse(null);
     }
   };
+
+  const otherCourses = useMemo(
+    () =>
+      (previousCourses || []).filter(
+        (c) => !!c && c.toUpperCase() !== (selectedCourse || '').toUpperCase()
+      ),
+    [previousCourses, selectedCourse]
+  );
 
   return (
     <>
@@ -58,6 +68,48 @@ function TabsContent() {
           name="schedule"
           options={{
             title: scheduleTitle,
+            headerTitle:
+              selectedCourse
+                ? () => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        otherCourses.length
+                          ? setCourseSwitchOpen(true)
+                          : handleChangeCourse()
+                      }
+                      hitSlop={8}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        otherCourses.length
+                          ? 'Kurs schnell wechseln'
+                          : 'Kurs wechseln'
+                      }
+                      accessibilityHint="Öffnet den Kurswechsel"
+                    >
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ThemedText
+                          style={{
+                            color: 'white',
+                            fontWeight: '700',
+                            marginRight: 6,
+                          }}
+                        >
+                          {scheduleTitle}
+                        </ThemedText>
+                        <IconSymbol
+                          name="chevron.down"
+                          size={14}
+                          color="white"
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )
+                : undefined,
             tabBarIcon: ({ color }) => (
               <IconSymbol
                 size={ICON_SIZE}
@@ -285,6 +337,63 @@ function TabsContent() {
         onClose={() => setCarpoolOpen(false)}
       >
         <RideMatchSheetContent myCourse={selectedCourse ?? ''} />
+      </BottomSheet>
+      <BottomSheet
+        visible={courseSwitchOpen}
+        title="Kurs wechseln"
+        onClose={() => setCourseSwitchOpen(false)}
+      >
+        <View style={{ gap: 8 }}>
+          {otherCourses.length === 0 ? (
+            <ThemedText style={{ opacity: 0.7 }}>
+              Kein weiterer gespeicherter Kurs.
+            </ThemedText>
+          ) : (
+            otherCourses.map((c) => (
+              <TouchableOpacity
+                key={c}
+                onPress={() => {
+                  setCourseSwitchOpen(false);
+                  setSelectedCourse(c);
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={`Wechsel zu ${c}`}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <ThemedText style={{ fontWeight: '700' }}>{c}</ThemedText>
+                <IconSymbol name="chevron.right" size={16} color={textColor} />
+              </TouchableOpacity>
+            ))
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              setCourseSwitchOpen(false);
+              handleChangeCourse();
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Anderen Kurs auswählen"
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <IconSymbol name="rectangle.stack" size={16} color={textColor} />
+            <ThemedText>Anderen Kurs auswählen …</ThemedText>
+          </TouchableOpacity>
+        </View>
       </BottomSheet>
     </>
   );
