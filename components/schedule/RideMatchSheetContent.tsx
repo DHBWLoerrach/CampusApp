@@ -328,93 +328,145 @@ export default function RideMatchSheetContent({
       </View>
 
       {rows.map((row) => {
-        const hasMyTimes =
-          Number.isFinite(row.myFirst) || Number.isFinite(row.myLast);
+        const hasHinTime = Number.isFinite(row.myFirst);
+        const hasRueckTime = Number.isFinite(row.myLast);
+        const hasMyTimes = hasHinTime || hasRueckTime;
         return (
           <View
             key={row.date}
             style={[
               styles.card,
-              { borderColor: cardBorderColor, borderWidth: cardBorderWidth },
+              {
+                borderColor: cardBorderColor,
+                borderWidth: cardBorderWidth,
+              },
             ]}
           >
             {(() => {
               const dateLabel = formatDateShort(row.date);
               const parts: string[] = [];
-              if (Number.isFinite(row.myFirst)) {
-                const adj = clampDayMinutes(row.myFirst! + ARRIVAL_OFFSET_MIN);
+              if (hasHinTime) {
+                const adj = clampDayMinutes(
+                  row.myFirst! + ARRIVAL_OFFSET_MIN
+                );
                 parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
               }
-              if (Number.isFinite(row.myLast)) {
-                const adj = clampDayMinutes(row.myLast! + DEPARTURE_OFFSET_MIN);
+              if (hasRueckTime) {
+                const adj = clampDayMinutes(
+                  row.myLast! + DEPARTURE_OFFSET_MIN
+                );
                 parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
               }
-              const rightText = parts.length === 0 ? 'Keine Vorlesung' : parts.join(' · ');
+              const rightText =
+                parts.length === 0
+                  ? 'Keine Vorlesung'
+                  : parts.join(' · ');
               const isToday = row.date === todayKey;
               const isTomorrow = row.date === tomorrowKey;
-              const badgeLabel = isToday ? 'Heute' : isTomorrow ? 'Morgen' : null;
+              const badgeLabel = isToday
+                ? 'Heute'
+                : isTomorrow
+                ? 'Morgen'
+                : null;
               return (
                 <View style={styles.dayHeaderRow}>
                   <View style={styles.dayHeaderLeft}>
-                    <ThemedText style={styles.dayHeaderDate}>{dateLabel}</ThemedText>
+                    <ThemedText style={styles.dayHeaderDate}>
+                      {dateLabel}
+                    </ThemedText>
                     {badgeLabel && (
                       <View
                         style={[
                           styles.badgeToday,
-                          { backgroundColor: isTomorrow ? badgeTomorrowBg : badgeTodayBg },
+                          {
+                            backgroundColor: isTomorrow
+                              ? badgeTomorrowBg
+                              : badgeTodayBg,
+                          },
                         ]}
                       >
-                        <ThemedText style={styles.badgeTodayText}>{badgeLabel}</ThemedText>
+                        <ThemedText style={styles.badgeTodayText}>
+                          {badgeLabel}
+                        </ThemedText>
                       </View>
                     )}
                   </View>
-                  <ThemedText style={styles.dayHeaderTimes}>{rightText}</ThemedText>
+                  <ThemedText style={styles.dayHeaderTimes}>
+                    {rightText}
+                  </ThemedText>
                 </View>
               );
             })()}
+            {/* Hinweis auf Kartenebene, wenn es keinerlei Matches gibt */}
+            {(() => {
+              const dayHasAnyMatches =
+                (hasHinTime && row.hinMatches.length > 0) ||
+                (hasRueckTime && row.zurueckMatches.length > 0);
+              return hasMyTimes && !dayHasAnyMatches ? (
+                <ThemedText
+                  style={[
+                    styles.muted,
+                    styles.info,
+                    { marginBottom: 6 },
+                  ]}
+                >
+                  Keine Mitfahr-Matches für diesen Tag.
+                </ThemedText>
+              ) : null;
+            })()}
 
-            {hasMyTimes ? (
-              <>
-                <Section
-                  title={
-                    mode === 'exact'
-                      ? 'Ankunft (Exakt)'
-                      : `Ankunft (±${TOLERANCE_MIN} Min)`
-                  }
-                  chips={row.hinMatches}
-                  emptyHint="—"
-                  onCopy={() =>
-                    tryCopy(
-                      buildCopyText(
-                        row.date,
-                        'hin',
-                        row.hinMatches,
-                        row.myFirst
-                      )
-                    )
-                  }
-                />
-                <Section
-                  title={
-                    mode === 'exact'
-                      ? 'Abfahrt (Exakt)'
-                      : `Abfahrt (±${TOLERANCE_MIN} Min)`
-                  }
-                  chips={row.zurueckMatches}
-                  emptyHint="—"
-                  onCopy={() =>
-                    tryCopy(
-                      buildCopyText(
-                        row.date,
-                        'zurueck',
-                        row.zurueckMatches,
-                        row.myLast
-                      )
-                    )
-                  }
-                />
-              </>
-            ) : null}
+            {(() => {
+              const dayHasAnyMatches =
+                (hasHinTime && row.hinMatches.length > 0) ||
+                (hasRueckTime && row.zurueckMatches.length > 0);
+              if (!hasMyTimes || !dayHasAnyMatches) return null;
+              return (
+                <>
+                  {hasHinTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Ankunft (Exakt)'
+                          : `Ankunft (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.hinMatches}
+                      emptyHint="Keine passenden Hinfahrten"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'hin',
+                            row.hinMatches,
+                            row.myFirst
+                          )
+                        )
+                      }
+                    />
+                  )}
+                  {hasRueckTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Abfahrt (Exakt)'
+                          : `Abfahrt (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.zurueckMatches}
+                      emptyHint="Keine passenden Rückfahrten"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'zurueck',
+                            row.zurueckMatches,
+                            row.myLast
+                          )
+                        )
+                      }
+                    />
+                  )}
+                </>
+              );
+            })()}
           </View>
         );
       })}
@@ -464,7 +516,9 @@ function Section({
       </View>
       <View style={styles.chipsWrap}>
         {list.length === 0 ? (
-          <ThemedText style={styles.muted}>{emptyHint}</ThemedText>
+          <ThemedText style={[styles.muted, styles.info]}>
+            {emptyHint}
+          </ThemedText>
         ) : (
           <>
             {list.slice(0, visibleCount).map((c) => (
@@ -544,7 +598,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 6,
   },
-  dayHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  dayHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   dayHeaderDate: { fontSize: 15, fontWeight: '700' },
   dayHeaderTimes: { fontSize: 12, fontWeight: '600', opacity: 0.9 },
   badgeToday: {
