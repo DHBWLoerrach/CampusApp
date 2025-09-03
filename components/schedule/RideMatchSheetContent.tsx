@@ -1,19 +1,15 @@
-// Dummy UI that renders "Mitfahr-Matches" from the provided JSON for a given course.
-// - Exact matches only (Hin: same firstStartMin; Zurück: same lastEndMin)
-// - Ignores bogus entries like first/last == 0
-
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
+  Pressable,
   View,
   StyleSheet,
-  Pressable,
   useColorScheme,
 } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-// ---- Match JSON (loaded from scripts/match-index.json if available) ----
+// ---- Match JSON  ----
 type MatchIndex = {
   version: number;
   generatedAt: string;
@@ -102,8 +98,8 @@ type DayRow = {
   date: string;
   myFirst?: number;
   myLast?: number;
-  hinMatches: string[]; // exact: same firstStartMin
-  zurueckMatches: string[]; // exact: same lastEndMin
+  toMatches: string[]; // exact: same firstStartMin
+  backMatches: string[]; // exact: same lastEndMin
 };
 
 // Compute day rows for a given course code
@@ -117,7 +113,7 @@ function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
     const myFirst = me?.firstStartMin;
     const myLast = me?.lastEndMin;
 
-    const hinMatches =
+    const toMatches =
       myFirst == null || myFirst === 0
         ? []
         : valid
@@ -135,7 +131,7 @@ function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
             })
             .map((c) => c.course);
 
-    const zurueckMatches =
+    const backMatches =
       myLast == null || myLast === 0
         ? []
         : valid
@@ -156,8 +152,8 @@ function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
       date: day.date,
       myFirst,
       myLast,
-      hinMatches,
-      zurueckMatches,
+      toMatches,
+      backMatches,
     };
   });
 }
@@ -204,7 +200,6 @@ export default function RideMatchSheetContent({
     const dd = String(t.getUTCDate()).padStart(2, '0');
     return `${yy}-${mm}-${dd}`;
   }, [todayKey]);
-  // Brand tint for badges
   const tintColor = useThemeColor({}, 'tint') as string;
   const todayAlpha = isDark ? 0.36 : 0.14;
   const tomorrowAlpha = isDark ? 0.28 : 0.1;
@@ -327,149 +322,151 @@ export default function RideMatchSheetContent({
         </View>
       </View>
 
-      {rows.map((row) => {
-        const hasHinTime = Number.isFinite(row.myFirst);
-        const hasRueckTime = Number.isFinite(row.myLast);
-        const hasMyTimes = hasHinTime || hasRueckTime;
-        return (
-          <View
-            key={row.date}
-            style={[
-              styles.card,
-              {
-                borderColor: cardBorderColor,
-                borderWidth: cardBorderWidth,
-              },
-            ]}
-          >
-            {(() => {
-              const dateLabel = formatDateShort(row.date);
-              const parts: string[] = [];
-              if (hasHinTime) {
-                const adj = clampDayMinutes(
-                  row.myFirst! + ARRIVAL_OFFSET_MIN
-                );
-                parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
-              }
-              if (hasRueckTime) {
-                const adj = clampDayMinutes(
-                  row.myLast! + DEPARTURE_OFFSET_MIN
-                );
-                parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
-              }
-              const rightText =
-                parts.length === 0
-                  ? 'Keine Vorlesung'
-                  : parts.join(' · ');
-              const isToday = row.date === todayKey;
-              const isTomorrow = row.date === tomorrowKey;
-              const badgeLabel = isToday
-                ? 'Heute'
-                : isTomorrow
-                ? 'Morgen'
-                : null;
-              return (
-                <View style={styles.dayHeaderRow}>
-                  <View style={styles.dayHeaderLeft}>
-                    <ThemedText style={styles.dayHeaderDate}>
-                      {dateLabel}
+      {rows
+        .filter((r) => r.date >= todayKey) // Hide past days
+        .map((row) => {
+          const hasToTime = Number.isFinite(row.myFirst);
+          const hasBackTime = Number.isFinite(row.myLast);
+          const hasMyTimes = hasToTime || hasBackTime;
+          return (
+            <View
+              key={row.date}
+              style={[
+                styles.card,
+                {
+                  borderColor: cardBorderColor,
+                  borderWidth: cardBorderWidth,
+                },
+              ]}
+            >
+              {(() => {
+                const dateLabel = formatDateShort(row.date);
+                const parts: string[] = [];
+                if (hasToTime) {
+                  const adj = clampDayMinutes(
+                    row.myFirst! + ARRIVAL_OFFSET_MIN
+                  );
+                  parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
+                }
+                if (hasBackTime) {
+                  const adj = clampDayMinutes(
+                    row.myLast! + DEPARTURE_OFFSET_MIN
+                  );
+                  parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
+                }
+                const rightText =
+                  parts.length === 0
+                    ? 'Keine Vorlesung'
+                    : parts.join(' · ');
+                const isToday = row.date === todayKey;
+                const isTomorrow = row.date === tomorrowKey;
+                const badgeLabel = isToday
+                  ? 'Heute'
+                  : isTomorrow
+                  ? 'Morgen'
+                  : null;
+                return (
+                  <View style={styles.dayHeaderRow}>
+                    <View style={styles.dayHeaderLeft}>
+                      <ThemedText style={styles.dayHeaderDate}>
+                        {dateLabel}
+                      </ThemedText>
+                      {badgeLabel && (
+                        <View
+                          style={[
+                            styles.badgeToday,
+                            {
+                              backgroundColor: isTomorrow
+                                ? badgeTomorrowBg
+                                : badgeTodayBg,
+                            },
+                          ]}
+                        >
+                          <ThemedText style={styles.badgeTodayText}>
+                            {badgeLabel}
+                          </ThemedText>
+                        </View>
+                      )}
+                    </View>
+                    <ThemedText style={styles.dayHeaderTimes}>
+                      {rightText}
                     </ThemedText>
-                    {badgeLabel && (
-                      <View
-                        style={[
-                          styles.badgeToday,
-                          {
-                            backgroundColor: isTomorrow
-                              ? badgeTomorrowBg
-                              : badgeTodayBg,
-                          },
-                        ]}
-                      >
-                        <ThemedText style={styles.badgeTodayText}>
-                          {badgeLabel}
-                        </ThemedText>
-                      </View>
-                    )}
                   </View>
-                  <ThemedText style={styles.dayHeaderTimes}>
-                    {rightText}
+                );
+              })()}
+              {/* Remark on card level if there are no matches */}
+              {(() => {
+                const dayHasAnyMatches =
+                  (hasToTime && row.toMatches.length > 0) ||
+                  (hasBackTime && row.backMatches.length > 0);
+                return hasMyTimes && !dayHasAnyMatches ? (
+                  <ThemedText
+                    style={[
+                      styles.muted,
+                      styles.info,
+                      { marginBottom: 6 },
+                    ]}
+                  >
+                    Keine Mitfahr-Matches für diesen Tag.
                   </ThemedText>
-                </View>
-              );
-            })()}
-            {/* Hinweis auf Kartenebene, wenn es keinerlei Matches gibt */}
-            {(() => {
-              const dayHasAnyMatches =
-                (hasHinTime && row.hinMatches.length > 0) ||
-                (hasRueckTime && row.zurueckMatches.length > 0);
-              return hasMyTimes && !dayHasAnyMatches ? (
-                <ThemedText
-                  style={[
-                    styles.muted,
-                    styles.info,
-                    { marginBottom: 6 },
-                  ]}
-                >
-                  Keine Mitfahr-Matches für diesen Tag.
-                </ThemedText>
-              ) : null;
-            })()}
+                ) : null;
+              })()}
 
-            {(() => {
-              const dayHasAnyMatches =
-                (hasHinTime && row.hinMatches.length > 0) ||
-                (hasRueckTime && row.zurueckMatches.length > 0);
-              if (!hasMyTimes || !dayHasAnyMatches) return null;
-              return (
-                <>
-                  {hasHinTime && (
-                    <Section
-                      title={
-                        mode === 'exact'
-                          ? 'Ankunft (Exakt)'
-                          : `Ankunft (±${TOLERANCE_MIN} Min)`
-                      }
-                      chips={row.hinMatches}
-                      emptyHint="Keine passenden Ankünfte"
-                      onCopy={() =>
-                        tryCopy(
-                          buildCopyText(
-                            row.date,
-                            'hin',
-                            row.hinMatches,
-                            row.myFirst
+              {(() => {
+                const dayHasAnyMatches =
+                  (hasToTime && row.toMatches.length > 0) ||
+                  (hasBackTime && row.backMatches.length > 0);
+                if (!hasMyTimes || !dayHasAnyMatches) return null;
+                return (
+                  <>
+                    {hasToTime && (
+                      <Section
+                        title={
+                          mode === 'exact'
+                            ? 'Ankunft (Exakt)'
+                            : `Ankunft (±${TOLERANCE_MIN} Min)`
+                        }
+                        chips={row.toMatches}
+                        emptyHint="Keine passenden Ankünfte"
+                        onCopy={() =>
+                          tryCopy(
+                            buildCopyText(
+                              row.date,
+                              'hin',
+                              row.toMatches,
+                              row.myFirst
+                            )
                           )
-                        )
-                      }
-                    />
-                  )}
-                  {hasRueckTime && (
-                    <Section
-                      title={
-                        mode === 'exact'
-                          ? 'Abfahrt (Exakt)'
-                          : `Abfahrt (±${TOLERANCE_MIN} Min)`
-                      }
-                      chips={row.zurueckMatches}
-                      emptyHint="Keine passenden Abfahrten"
-                      onCopy={() =>
-                        tryCopy(
-                          buildCopyText(
-                            row.date,
-                            'zurueck',
-                            row.zurueckMatches,
-                            row.myLast
+                        }
+                      />
+                    )}
+                    {hasBackTime && (
+                      <Section
+                        title={
+                          mode === 'exact'
+                            ? 'Abfahrt (Exakt)'
+                            : `Abfahrt (±${TOLERANCE_MIN} Min)`
+                        }
+                        chips={row.backMatches}
+                        emptyHint="Keine passenden Abfahrten"
+                        onCopy={() =>
+                          tryCopy(
+                            buildCopyText(
+                              row.date,
+                              'zurueck',
+                              row.backMatches,
+                              row.myLast
+                            )
                           )
-                        )
-                      }
-                    />
-                  )}
-                </>
-              );
-            })()}
-          </View>
-        );
-      })}
+                        }
+                      />
+                    )}
+                  </>
+                );
+              })()}
+            </View>
+          );
+        })}
 
       {copied && (
         <ThemedText style={styles.toast}>{copied}</ThemedText>
@@ -478,7 +475,6 @@ export default function RideMatchSheetContent({
   );
 }
 
-// Small presentational section with chips and a copy button
 function Section({
   title,
   chips,
@@ -589,7 +585,6 @@ function Section({
   );
 }
 
-// ---- Styles ----
 const styles = StyleSheet.create({
   container: { gap: 12 },
   info: { fontSize: 14, opacity: 0.8, textAlign: 'center' },
