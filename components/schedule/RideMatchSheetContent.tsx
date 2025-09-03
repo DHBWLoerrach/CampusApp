@@ -422,48 +422,48 @@ export default function RideMatchSheetContent({
               if (!hasMyTimes || !dayHasAnyMatches) return null;
               return (
                 <>
-                {hasHinTime && (
-                  <Section
-                    title={
-                      mode === 'exact'
-                        ? 'Ankunft'
-                        : `Ankunft (±${TOLERANCE_MIN} Min)`
-                    }
-                    chips={row.hinMatches}
-                    emptyHint="Keine passenden Ankünfte"
-                    onCopy={() =>
-                      tryCopy(
-                        buildCopyText(
-                          row.date,
-                          'hin',
-                          row.hinMatches,
-                          row.myFirst
+                  {hasHinTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Ankunft (Exakt)'
+                          : `Ankunft (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.hinMatches}
+                      emptyHint="Keine passenden Ankünfte"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'hin',
+                            row.hinMatches,
+                            row.myFirst
+                          )
                         )
-                      )
-                    }
-                  />
-                )}
-                {hasRueckTime && (
-                  <Section
-                    title={
-                      mode === 'exact'
-                        ? 'Abfahrt'
-                        : `Abfahrt (±${TOLERANCE_MIN} Min)`
-                    }
-                    chips={row.zurueckMatches}
-                    emptyHint="Keine passenden Abfahrten"
-                    onCopy={() =>
-                      tryCopy(
-                        buildCopyText(
-                          row.date,
-                          'zurueck',
-                          row.zurueckMatches,
-                          row.myLast
+                      }
+                    />
+                  )}
+                  {hasRueckTime && (
+                    <Section
+                      title={
+                        mode === 'exact'
+                          ? 'Abfahrt (Exakt)'
+                          : `Abfahrt (±${TOLERANCE_MIN} Min)`
+                      }
+                      chips={row.zurueckMatches}
+                      emptyHint="Keine passenden Abfahrten"
+                      onCopy={() =>
+                        tryCopy(
+                          buildCopyText(
+                            row.date,
+                            'zurueck',
+                            row.zurueckMatches,
+                            row.myLast
+                          )
                         )
-                      )
-                    }
-                  />
-                )}
+                      }
+                    />
+                  )}
                 </>
               );
             })()}
@@ -501,11 +501,14 @@ function Section({
     const m = title.match(/\(([^)]+)\)$/);
     return m ? ` (${m[1]})` : '';
   })();
-  const headerText = list.length === 0 ? `${emptyHint}${suffix}` : title;
+  const headerText =
+    list.length === 0 ? `${emptyHint}${suffix}` : title;
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <ThemedText style={styles.sectionTitle}>{headerText}</ThemedText>
+        <ThemedText style={styles.sectionTitle}>
+          {headerText}
+        </ThemedText>
         {list.length > 0 && onCopy && (
           <Pressable
             accessibilityRole="button"
@@ -517,7 +520,11 @@ function Section({
               pressed && { opacity: 0.6 },
             ]}
           >
-            <IconSymbol name="doc.on.doc" size={16} color={textColor} />
+            <IconSymbol
+              name="doc.on.doc"
+              size={16}
+              color={textColor}
+            />
           </Pressable>
         )}
       </View>
