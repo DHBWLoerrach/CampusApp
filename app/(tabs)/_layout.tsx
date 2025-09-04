@@ -2,7 +2,10 @@ import { useMemo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import Storage from 'expo-sqlite/kv-store';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import {
   CourseProvider,
   useCourseContext,
@@ -134,20 +137,25 @@ function TabsContent() {
                 color={color}
               />
             ),
-            headerRight: selectedCourse && RIDES_FEATURE_ENABLED
-              ? () => (
-                  <TouchableOpacity
-                    onPress={() => setCarpoolOpen(true)}
-                    hitSlop={8}
-                    style={{ marginRight: 16 }}
-                    accessibilityRole="button"
-                    accessibilityLabel="Carpool öffnen"
-                    accessibilityHint="Öffnet Carpool-Informationen"
-                  >
-                    <IconSymbol size={20} name="car" color="white" />
-                  </TouchableOpacity>
-                )
-              : undefined,
+            headerRight:
+              selectedCourse && RIDES_FEATURE_ENABLED
+                ? () => (
+                    <TouchableOpacity
+                      onPress={() => setCarpoolOpen(true)}
+                      hitSlop={8}
+                      style={{ marginRight: 16 }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Carpool öffnen"
+                      accessibilityHint="Öffnet Carpool-Informationen"
+                    >
+                      <IconSymbol
+                        size={20}
+                        name="car"
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                  )
+                : undefined,
           }}
           listeners={{
             focus: () => {
