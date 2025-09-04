@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import Storage from 'expo-sqlite/kv-store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   CourseProvider,
   useCourseContext,
@@ -14,6 +15,19 @@ import RideMatchSheetContent from '@/components/schedule/RideMatchSheetContent';
 import { LAST_TAB_KEY } from '@/constants/StorageKeys';
 import { navBarOptions } from '@/constants/Navigation';
 const ICON_SIZE = 28;
+
+// Provide React Query at the tabs level so shared features (e.g., rides sheet)
+// can use hooks with caching independent of schedule/canteen sub-layouts.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Conservative defaults; hooks override where needed.
+      staleTime: 1000 * 60 * 30, // 30 mins
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      refetchOnMount: false,
+    },
+  },
+});
 
 function TabsContent() {
   const [canteenInfoOpen, setCanteenInfoOpen] = useState(false);
@@ -355,8 +369,10 @@ function TabsContent() {
 
 export default function TabLayout() {
   return (
-    <CourseProvider>
-      <TabsContent />
-    </CourseProvider>
+    <QueryClientProvider client={queryClient}>
+      <CourseProvider>
+        <TabsContent />
+      </CourseProvider>
+    </QueryClientProvider>
   );
 }

@@ -9,40 +9,15 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-// ---- Match JSON  ----
-type MatchIndex = {
-  version: number;
-  generatedAt: string;
-  timezone: string;
-  days: {
-    date: string;
-    courses: {
-      course: string;
-      program: string | null;
-      firstStartMin: number;
-      lastEndMin: number;
-    }[];
-  }[];
-};
+// ---- Data hook ----
+import { useRidesIndex } from '@/hooks/useRidesIndex';
+import type { MatchIndex } from '@/lib/ridesService';
 
-let MATCH_JSON: MatchIndex = {
-  version: 1,
-  generatedAt: '',
-  timezone: 'Europe/Berlin',
-  days: [],
-};
-
-try {
-  // Using require keeps things simple and works in Metro for JSON files.
-  MATCH_JSON =
-    require('../../scripts/match-index.json') as MatchIndex;
-} catch {
-  // File not present in repo or not generated yet; keep empty fallback.
-}
+// No module-level data; fetched via React Query in the hook.
 
 // ---- Helpers ----
 
-function getTodayKey(): string {
+function getTodayKey(timezone: string): string {
   const base = {
     year: 'numeric',
     month: '2-digit',
@@ -51,7 +26,7 @@ function getTodayKey(): string {
   try {
     return new Intl.DateTimeFormat('en-CA', {
       ...base,
-      timeZone: (MATCH_JSON as any)?.timezone || 'Europe/Berlin',
+      timeZone: timezone || 'Europe/Berlin',
     }).format(new Date());
   } catch {}
   try {
@@ -130,12 +105,12 @@ function clampDayMinutes(
 }
 
 // Localized short date like "Di, 02.09."
-function formatDateShort(ymd: string): string {
+function formatDateShort(ymd: string, timezone: string): string {
   const [y, m, d] = ymd.split('-').map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d));
   const weekdayShort = new Intl.DateTimeFormat('de-DE', {
     weekday: 'short',
-    timeZone: MATCH_JSON.timezone,
+    timeZone: timezone,
   })
     .format(dt)
     .replace(/\.$/, ''); // drop trailing dot ("Mo." -> "Mo")
@@ -153,11 +128,12 @@ type DayRow = {
 };
 
 // Compute day rows for a given course code
-function computeRows(myCourse: string, mode: MatchMode): DayRow[] {
-  const todayKey = getTodayKey();
+function computeRows(index: MatchIndex | undefined, myCourse: string, mode: MatchMode): DayRow[] {
+  const timezone = index?.timezone || 'Europe/Berlin';
+  const todayKey = getTodayKey(timezone);
   const maxKey = addDaysToKey(todayKey, MAX_FUTURE_DAYS);
-  const days = Array.isArray((MATCH_JSON as any)?.days)
-    ? (MATCH_JSON as any).days
+  const days = Array.isArray((index as any)?.days)
+    ? (index as any).days
     : [];
   return days
     .filter((day: any) => isValidYmd(day?.date))
@@ -226,13 +202,14 @@ export default function RideMatchSheetContent({
 }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [mode, setMode] = useState<MatchMode>('exact');
+  const { data: ridesIndex, isLoading, error } = useRidesIndex();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   // Precompute day rows once
   const rows = useMemo(
-    () => computeRows(myCourse, mode),
-    [myCourse, mode]
+    () => computeRows(ridesIndex, myCourse, mode),
+    [ridesIndex, myCourse, mode]
   );
 
   // Dynamic labels based on current offsets
@@ -243,7 +220,8 @@ export default function RideMatchSheetContent({
   const cardBorderColor = hexToRgba(borderBase, isDark ? 0.42 : 0.32);
   const cardBorderWidth = isDark ? StyleSheet.hairlineWidth : 1;
   // Today key in the calendar timezone
-  const todayKey = useMemo(() => getTodayKey(), []);
+  const timezone = ridesIndex?.timezone || 'Europe/Berlin';
+  const todayKey = useMemo(() => getTodayKey(timezone), [timezone]);
   // Tomorrow key in the same timezone
   const tomorrowKey = useMemo(() => {
     const [y, m, d] = todayKey.split('-').map(Number);
@@ -266,7 +244,7 @@ export default function RideMatchSheetContent({
     list: string[],
     myMin?: number
   ) => {
-    const dateLabel = formatDateShort(date);
+    const dateLabel = formatDateShort(date, timezone);
     const raw =
       dir === 'hin'
         ? (myMin ?? 0) + ARRIVAL_OFFSET_MIN
@@ -308,6 +286,15 @@ export default function RideMatchSheetContent({
           {`Abfahrt = VL-Ende + ${depAbs} Min`}
         </ThemedText>
       </View>
+
+      {isLoading && (
+        <ThemedText style={[styles.info, styles.muted]}>Lade Mitfahrdaten …</ThemedText>
+      )}
+      {!isLoading && error && (
+        <ThemedText style={[styles.info, styles.muted]}>
+          {error.message || 'Mitfahrdaten konnten nicht geladen werden.'}
+        </ThemedText>
+      )}
 
       <View style={styles.segmentedWrap}>
         <View
@@ -391,7 +378,7 @@ export default function RideMatchSheetContent({
             ]}
           >
             {(() => {
-              const dateLabel = formatDateShort(row.date);
+              const dateLabel = formatDateShort(row.date, timezone);
               const parts: string[] = [];
               if (hasToTime) {
                 const adj = clampDayMinutes(
