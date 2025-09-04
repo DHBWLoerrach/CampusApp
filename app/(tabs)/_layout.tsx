@@ -289,7 +289,8 @@ function TabsContent() {
           >
             <IconSymbol name="eurosign" size={20} color={textColor} />
           </View>
-          <ThemedText>
+          {/* flexShrink text cut-off on right side */}
+          <ThemedText style={{ flexShrink: 1 }}>
             Preise je nach Personengruppe – ändern unter{' '}
             <ThemedText style={{ fontStyle: 'italic' }}>
               Services &gt; Einstellungen
