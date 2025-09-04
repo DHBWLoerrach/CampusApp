@@ -1,0 +1,5 @@
+# this is the cronjob entry to add via `crontab -e`
+# course rides generation at 03:05 every day
+# one shot docker run with lockfile to avoid overlapping runs
+# m h dom mon dow command
+5 3 * * * /usr/bin/flock -n /tmp/generate.lock /usr/bin/docker run --rm --user $(id -u):$(id -g) -e OUT_DIR=/public -e COURSES_PATH=/app/courses.txt -w /app -v /etc/docker-compose/data/generator:/app:ro -v /etc/docker-compose/data/public:/public:rw  node:20-alpine npm run generate >> /etc/docker-compose/data/generator/generate.log 2>&1
