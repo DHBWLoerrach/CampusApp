@@ -43,7 +43,8 @@ function resolveMealPrice(
   // remove any existing euro signs and surrounding spaces
   raw = raw.replace(/\s*€\s*/gi, '');
   // normalize decimal separator to comma if only dot is present
-  if (raw.includes('.') && !raw.includes(',')) raw = raw.replace('.', ',');
+  if (raw.includes('.') && !raw.includes(','))
+    raw = raw.replace('.', ',');
   const amount = raw;
   const display = `${amount} €`;
   return { label: pr.label, amount, display };
@@ -66,7 +67,9 @@ type MealTag = {
 };
 
 function extractMealTags(meal: CanteenMeal): MealTag[] {
-  const src = `${meal.title} ${meal.additionalInfo ?? ''} ${meal.labels ?? ''} ${meal.allergens ?? ''}`.toLowerCase();
+  const src = `${meal.title} ${meal.additionalInfo ?? ''} ${
+    meal.labels ?? ''
+  } ${meal.allergens ?? ''}`.toLowerCase();
   const tags: MealTag[] = [];
   const add = (key: string, label: string, kind: MealTag['kind']) =>
     tags.push({ key, label, kind });
@@ -80,7 +83,8 @@ function extractMealTags(meal: CanteenMeal): MealTag[] {
   if (/schwein/.test(src)) add('pork', 'Schwein', 'pork');
   if (/geflügel|hähnchen|huhn|pute|poultry/.test(src))
     add('poultry', 'Geflügel', 'poultry');
-  if (/scharf|spicy|chili|pikant/.test(src)) add('spicy', 'Scharf', 'spicy');
+  if (/scharf|spicy|chili|pikant/.test(src))
+    add('spicy', 'Scharf', 'spicy');
   if (/\bbio\b|\borganic\b/.test(src)) add('bio', 'Bio', 'bio');
   if (/alkohol/.test(src)) add('alcohol', 'Alkohol', 'alcohol');
 
@@ -88,7 +92,10 @@ function extractMealTags(meal: CanteenMeal): MealTag[] {
 }
 
 export default function CanteenDayView({ date }: { date: Date }) {
-  const safeDate = date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
+  const safeDate =
+    date instanceof Date && !isNaN(date.getTime())
+      ? date
+      : new Date();
   const { selectedRole } = useRoleContext();
   const tintColor = useThemeColor({}, 'tint');
   const badgeBg = useThemeColor({}, 'dayNumberContainer');
@@ -96,7 +103,9 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const iconColor = useThemeColor({}, 'icon');
   const pageBg = useThemeColor({}, 'background');
   const isDark = useColorScheme() === 'dark';
-  const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
+  const [expandedMap, setExpandedMap] = useState<
+    Record<number, boolean>
+  >({});
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
@@ -139,19 +148,24 @@ export default function CanteenDayView({ date }: { date: Date }) {
             Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
           </ThemedText>
           {closure.reason ? (
-            <ThemedText style={styles.small}>{closure.reason}</ThemedText>
+            <ThemedText style={styles.small}>
+              {closure.reason}
+            </ThemedText>
           ) : null}
         </View>
       ) : meals.length === 0 ? (
         <View style={styles.center}>
           <ThemedText type="defaultSemiBold" style={styles.hint}>
-            Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')} gefunden.
+            Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')}{' '}
+            gefunden.
           </ThemedText>
         </View>
       ) : (
         <ScrollView
           contentContainerStyle={styles.listContent}
-          stickyHeaderIndices={['android', 'ios'].includes(Platform.OS) ? [0] : undefined}
+          stickyHeaderIndices={
+            ['android', 'ios'].includes(Platform.OS) ? [0] : undefined
+          }
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
@@ -161,7 +175,12 @@ export default function CanteenDayView({ date }: { date: Date }) {
           }
         >
           {['android', 'ios'].includes(Platform.OS) ? (
-            <View style={[styles.stickyHeader, { backgroundColor: pageBg }]}>
+            <View
+              style={[
+                styles.stickyHeader,
+                { backgroundColor: pageBg },
+              ]}
+            >
               <NfcButton />
             </View>
           ) : null}
@@ -175,7 +194,8 @@ export default function CanteenDayView({ date }: { date: Date }) {
               (t) => t.kind === 'vegan' || t.kind === 'vegetarian'
             );
             const showAdditionalInfoChip =
-              !!m.additionalInfo && !/vegan|vegetar/i.test(m.additionalInfo);
+              !!m.additionalInfo &&
+              !/vegan|vegetar/i.test(m.additionalInfo);
             const isExpanded = !!expandedMap[idx];
             return (
               <ThemedView
@@ -194,9 +214,17 @@ export default function CanteenDayView({ date }: { date: Date }) {
                       </View>
                     ) : null}
                     {dietTag ? (
-                      <View style={[styles.tagChip, chipStyleFor(dietTag, isDark)]}>
+                      <View
+                        style={[
+                          styles.tagChip,
+                          chipStyleFor(dietTag, isDark),
+                        ]}
+                      >
                         <ThemedText
-                          style={[styles.tagText, chipTextStyleFor(dietTag)]}
+                          style={[
+                            styles.tagText,
+                            chipTextStyleFor(dietTag),
+                          ]}
                           numberOfLines={1}
                         >
                           {dietTag.label}
@@ -205,7 +233,10 @@ export default function CanteenDayView({ date }: { date: Date }) {
                     ) : null}
                     {showAdditionalInfoChip ? (
                       <View style={styles.tagChip}>
-                        <ThemedText style={styles.tagText} numberOfLines={1}>
+                        <ThemedText
+                          style={styles.tagText}
+                          numberOfLines={1}
+                        >
                           {m.additionalInfo}
                         </ThemedText>
                       </View>
@@ -216,7 +247,10 @@ export default function CanteenDayView({ date }: { date: Date }) {
                     <View
                       style={[
                         styles.priceBadge,
-                        { backgroundColor: badgeBg, borderColor: badgeBorder },
+                        {
+                          backgroundColor: badgeBg,
+                          borderColor: badgeBorder,
+                        },
                       ]}
                       accessibilityLabel={`Preis: ${price.display}`}
                     >
@@ -227,15 +261,29 @@ export default function CanteenDayView({ date }: { date: Date }) {
                   ) : null}
                 </View>
 
-                <ThemedText type="defaultSemiBold" style={styles.title}>
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={styles.title}
+                >
                   {m.title}
                 </ThemedText>
 
                 {displayTags.length > 0 ? (
                   <View style={styles.tagsRow}>
                     {displayTags.map((t) => (
-                      <View key={t.key} style={[styles.tagChip, chipStyleFor(t, isDark)]}>
-                        <ThemedText style={[styles.tagText, chipTextStyleFor(t)]}>
+                      <View
+                        key={t.key}
+                        style={[
+                          styles.tagChip,
+                          chipStyleFor(t, isDark),
+                        ]}
+                      >
+                        <ThemedText
+                          style={[
+                            styles.tagText,
+                            chipTextStyleFor(t),
+                          ]}
+                        >
                           {t.label}
                         </ThemedText>
                       </View>
@@ -261,14 +309,28 @@ export default function CanteenDayView({ date }: { date: Date }) {
                       hitSlop={8}
                       style={styles.detailsHeaderRow}
                     >
-                      <ThemedText style={styles.detailsHeaderLabel} numberOfLines={1}>
-                        {`Allergene & Zusätze: ${summarizeAllergensAndLabels(m.labels, m.allergens) ?? ''}`}
+                      <ThemedText
+                        style={styles.detailsHeaderLabel}
+                        numberOfLines={1}
+                      >
+                        {`Allergene & Zusätze: ${
+                          summarizeAllergensAndLabels(
+                            m.labels,
+                            m.allergens
+                          ) ?? ''
+                        }`}
                       </ThemedText>
                       <IconSymbol
                         name="chevron.down"
                         size={16}
                         color={iconColor}
-                        style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}
+                        style={{
+                          transform: [
+                            {
+                              rotate: isExpanded ? '180deg' : '0deg',
+                            },
+                          ],
+                        }}
                       />
                     </Pressable>
                     {isExpanded ? (
@@ -285,8 +347,6 @@ export default function CanteenDayView({ date }: { date: Date }) {
           })}
         </ScrollView>
       )}
-
-      
     </ThemedView>
   );
 }
@@ -432,49 +492,85 @@ function chipStyleFor(tag: MealTag, isDark?: boolean) {
   switch (tag.kind) {
     case 'vegan':
       return {
-        backgroundColor: isDark ? 'rgba(46, 125, 50, 0.30)' : 'rgba(46, 125, 50, 0.18)',
-        borderColor: isDark ? 'rgba(46, 125, 50, 0.60)' : 'rgba(46, 125, 50, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(46, 125, 50, 0.30)'
+          : 'rgba(46, 125, 50, 0.18)',
+        borderColor: isDark
+          ? 'rgba(46, 125, 50, 0.60)'
+          : 'rgba(46, 125, 50, 0.35)',
       } as const;
     case 'vegetarian':
       return {
-        backgroundColor: isDark ? 'rgba(76, 175, 80, 0.30)' : 'rgba(76, 175, 80, 0.18)',
-        borderColor: isDark ? 'rgba(76, 175, 80, 0.60)' : 'rgba(76, 175, 80, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(76, 175, 80, 0.30)'
+          : 'rgba(76, 175, 80, 0.18)',
+        borderColor: isDark
+          ? 'rgba(76, 175, 80, 0.60)'
+          : 'rgba(76, 175, 80, 0.35)',
       } as const;
     case 'fish':
       return {
-        backgroundColor: isDark ? 'rgba(33, 150, 243, 0.30)' : 'rgba(33, 150, 243, 0.18)',
-        borderColor: isDark ? 'rgba(33, 150, 243, 0.60)' : 'rgba(33, 150, 243, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(33, 150, 243, 0.30)'
+          : 'rgba(33, 150, 243, 0.18)',
+        borderColor: isDark
+          ? 'rgba(33, 150, 243, 0.60)'
+          : 'rgba(33, 150, 243, 0.35)',
       } as const;
     case 'spicy':
       return {
-        backgroundColor: isDark ? 'rgba(255, 87, 34, 0.30)' : 'rgba(255, 87, 34, 0.18)',
-        borderColor: isDark ? 'rgba(255, 87, 34, 0.60)' : 'rgba(255, 87, 34, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(255, 87, 34, 0.30)'
+          : 'rgba(255, 87, 34, 0.18)',
+        borderColor: isDark
+          ? 'rgba(255, 87, 34, 0.60)'
+          : 'rgba(255, 87, 34, 0.35)',
       } as const;
     case 'bio':
       return {
         // Teal tone to distinguish from green Vegan/Vegetarisch
-        backgroundColor: isDark ? 'rgba(0, 137, 123, 0.30)' : 'rgba(0, 137, 123, 0.18)',
-        borderColor: isDark ? 'rgba(0, 137, 123, 0.60)' : 'rgba(0, 137, 123, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(0, 137, 123, 0.30)'
+          : 'rgba(0, 137, 123, 0.18)',
+        borderColor: isDark
+          ? 'rgba(0, 137, 123, 0.60)'
+          : 'rgba(0, 137, 123, 0.35)',
       } as const;
     case 'alcohol':
       return {
-        backgroundColor: isDark ? 'rgba(156, 39, 176, 0.30)' : 'rgba(156, 39, 176, 0.18)',
-        borderColor: isDark ? 'rgba(156, 39, 176, 0.60)' : 'rgba(156, 39, 176, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(156, 39, 176, 0.30)'
+          : 'rgba(156, 39, 176, 0.18)',
+        borderColor: isDark
+          ? 'rgba(156, 39, 176, 0.60)'
+          : 'rgba(156, 39, 176, 0.35)',
       } as const;
     case 'beef':
       return {
-        backgroundColor: isDark ? 'rgba(121, 85, 72, 0.30)' : 'rgba(121, 85, 72, 0.18)',
-        borderColor: isDark ? 'rgba(121, 85, 72, 0.60)' : 'rgba(121, 85, 72, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(121, 85, 72, 0.30)'
+          : 'rgba(121, 85, 72, 0.18)',
+        borderColor: isDark
+          ? 'rgba(121, 85, 72, 0.60)'
+          : 'rgba(121, 85, 72, 0.35)',
       } as const;
     case 'pork':
       return {
-        backgroundColor: isDark ? 'rgba(233, 30, 99, 0.30)' : 'rgba(233, 30, 99, 0.18)',
-        borderColor: isDark ? 'rgba(233, 30, 99, 0.60)' : 'rgba(233, 30, 99, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(233, 30, 99, 0.30)'
+          : 'rgba(233, 30, 99, 0.18)',
+        borderColor: isDark
+          ? 'rgba(233, 30, 99, 0.60)'
+          : 'rgba(233, 30, 99, 0.35)',
       } as const;
     case 'poultry':
       return {
-        backgroundColor: isDark ? 'rgba(255, 193, 7, 0.30)' : 'rgba(255, 193, 7, 0.18)',
-        borderColor: isDark ? 'rgba(255, 193, 7, 0.60)' : 'rgba(255, 193, 7, 0.35)',
+        backgroundColor: isDark
+          ? 'rgba(255, 193, 7, 0.30)'
+          : 'rgba(255, 193, 7, 0.18)',
+        borderColor: isDark
+          ? 'rgba(255, 193, 7, 0.60)'
+          : 'rgba(255, 193, 7, 0.35)',
       } as const;
     default:
       return {} as const;
