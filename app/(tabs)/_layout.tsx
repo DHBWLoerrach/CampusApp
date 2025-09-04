@@ -14,6 +14,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import RideMatchSheetContent from '@/components/schedule/RideMatchSheetContent';
 import { LAST_TAB_KEY } from '@/constants/StorageKeys';
 import { navBarOptions } from '@/constants/Navigation';
+import { RIDES_FEATURE_ENABLED } from '@/constants/FeatureFlags';
 const ICON_SIZE = 28;
 
 // Provide React Query at the tabs level so shared features (e.g., rides sheet)
@@ -133,7 +134,7 @@ function TabsContent() {
                 color={color}
               />
             ),
-            headerRight: selectedCourse
+            headerRight: selectedCourse && RIDES_FEATURE_ENABLED
               ? () => (
                   <TouchableOpacity
                     onPress={() => setCarpoolOpen(true)}
@@ -289,13 +290,15 @@ function TabsContent() {
           </ThemedText>
         </View>
       </BottomSheet>
-      <BottomSheet
-        visible={carpoolOpen}
-        title="Mitfahr-Matches (nächste 5 Tage)"
-        onClose={() => setCarpoolOpen(false)}
-      >
-        <RideMatchSheetContent myCourse={selectedCourse ?? ''} />
-      </BottomSheet>
+      {RIDES_FEATURE_ENABLED && (
+        <BottomSheet
+          visible={carpoolOpen}
+          title="Mitfahr-Matches (nächste 5 Tage)"
+          onClose={() => setCarpoolOpen(false)}
+        >
+          <RideMatchSheetContent myCourse={selectedCourse ?? ''} />
+        </BottomSheet>
+      )}
       <BottomSheet
         visible={courseSwitchOpen}
         title="Kurs wechseln"
