@@ -74,6 +74,7 @@ const MAPPING = {
   },
   car: { name: 'directions-car', source: 'material' },
   'car.fill': { name: 'directions-car', source: 'material' },
+  'rectangle.stack': { name: 'layers', source: 'material' },
   binoculars: { name: 'binoculars', source: 'community' },
   'mappin.and.ellipse': {
     name: 'map-marker-radius',
@@ -121,7 +122,6 @@ export function IconSymbol({
   weight?: any;
 }) {
   const iconConfig = MAPPING[name];
-
   if (iconConfig.source === 'community') {
     return (
       <MaterialCommunityIcons
