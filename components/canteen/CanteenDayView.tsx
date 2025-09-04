@@ -106,6 +106,8 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const [expandedMap, setExpandedMap] = useState<
     Record<number, boolean>
   >({});
+  const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
+
   const { data, isLoading, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
@@ -143,29 +145,33 @@ export default function CanteenDayView({ date }: { date: Date }) {
           </ThemedText>
         </View>
       ) : closure ? (
-        <View style={styles.center}>
-          <ThemedText type="defaultSemiBold" style={styles.hint}>
-            Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
-          </ThemedText>
-          {closure.reason ? (
-            <ThemedText style={styles.small}>
-              {closure.reason}
+        <>
+          {showNfcHeader ? <NfcButton /> : null}
+          <View style={styles.center}>
+            <ThemedText type="defaultSemiBold" style={styles.hint}>
+              Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
             </ThemedText>
-          ) : null}
-        </View>
+            {closure.reason ? (
+              <ThemedText style={styles.small}>
+                {closure.reason}
+              </ThemedText>
+            ) : null}
+          </View>
+        </>
       ) : meals.length === 0 ? (
-        <View style={styles.center}>
-          <ThemedText type="defaultSemiBold" style={styles.hint}>
-            Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')}{' '}
-            gefunden.
-          </ThemedText>
-        </View>
+        <>
+          {showNfcHeader ? <NfcButton /> : null}
+          <View style={styles.center}>
+            <ThemedText type="defaultSemiBold" style={styles.hint}>
+              Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')}{' '}
+              gefunden.
+            </ThemedText>
+          </View>
+        </>
       ) : (
         <ScrollView
           contentContainerStyle={styles.listContent}
-          stickyHeaderIndices={
-            ['android', 'ios'].includes(Platform.OS) ? [0] : undefined
-          }
+          stickyHeaderIndices={showNfcHeader ? [0] : undefined}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
@@ -174,16 +180,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
             />
           }
         >
-          {['android', 'ios'].includes(Platform.OS) ? (
-            <View
-              style={[
-                styles.stickyHeader,
-                { backgroundColor: pageBg },
-              ]}
-            >
-              <NfcButton />
-            </View>
-          ) : null}
+          {showNfcHeader ? <NfcButton /> : null}
           {meals.map((m, idx) => {
             const price = resolveMealPrice(m.prices, selectedRole);
             const tags = extractMealTags(m);
@@ -366,12 +363,6 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 24,
     gap: 12,
-  },
-  stickyHeader: {
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 8,
-    zIndex: 2,
   },
   card: {
     borderRadius: 12,
