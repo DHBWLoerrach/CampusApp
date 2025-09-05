@@ -1,5 +1,6 @@
 # TODOS
 
+- Expo 54 + icon
 - Im Auge behalten: https://github.com/revtel/react-native-nfc-manager/releases (v4)
 - Dokumentieren: AppStore release und EAS update workflow
   - z.B. version bump in app.json erst bevor der nächste AppStore release kommt
@@ -12,11 +13,23 @@
 
 ## Carpooling
 
+### Skript
+
+- Sonntage raus (Samstage?)
 - Online-Termine rausnehmen
 - Zielort berücksichtigen (TAR in Weil, andere in KBC usw.)
   - in JSON gruppieren oder nach Raum-Name filtern?
-- Onboarding-UI
 - Liste aller Kurse für Skript erstellen
+- unit test?
+- check /etc/docker-compose/data/generator/generate.log (log rotate?)
+
+### App
+
+- Sonntage raus (Samstage?)
+- Onboarding-UI: Erklärung zu Pendla usw. Info-Icon im Bottom-Sheet.
+- Flow für Copy-Icon durchgehen. Weitere Punkte bzgl. Pendla?
+- Screenshot in die Stores
+- unit und E2E-Tests?
 
 ## Webapp
 
@@ -69,6 +82,8 @@
 
 ## Stuff to check
 
+- https://github.com/nkzw-tech/expo-app-template
+- related: https://github.com/nkzw-tech/web-app-template
 - Expo UI (native components) https://docs.expo.dev/versions/latest/sdk/ui/
 - check common navigation patterns: https://docs.expo.dev/router/basics/common-navigation-patterns/
 - Check unistyles?
