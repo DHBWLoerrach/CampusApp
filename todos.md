@@ -68,6 +68,7 @@
 
 ## Canteen screen
 
+- Speiseplan KKG: https://dhbw-loerrach.de/mensa/cafeteria-im-kkh-loerrach#inhalt
 - APPSTORE: encrypt env-key? geht nur mit Server-Proxy… vielleicht too much
 
 ## Services screen
