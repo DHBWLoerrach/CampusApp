@@ -1,6 +1,7 @@
 # TODOS
 
 - Expo 54 + icon
+- New UI stuff, siehe Todos in CampusRallyeApp: Expo UI (SwiftUI, Jetpack Compose), Native Tabs usw.
 - Im Auge behalten: https://github.com/revtel/react-native-nfc-manager/releases (v4)
 - Dokumentieren: AppStore release und EAS update workflow
   - z.B. version bump in app.json erst bevor der nächste AppStore release kommt
