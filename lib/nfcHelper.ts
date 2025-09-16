@@ -17,10 +17,10 @@ function extractAmount(
   negate = false
 ): number {
   const val = convertFourHexBytesToIntLE(
-    bytes[startIndex + 3],
-    bytes[startIndex + 2],
+    bytes[startIndex],
     bytes[startIndex + 1],
-    bytes[startIndex]
+    bytes[startIndex + 2],
+    bytes[startIndex + 3]
   );
   return (negate ? -val : val) / 1000; // tag contains the amount in euro cent * 10
 }
