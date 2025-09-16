@@ -11,10 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.dhbw.loerrach.campusapp",
-      "icon": {
-        "light": "./assets/images/icon.png",
-        "dark": "./assets/images/icon-dark.png"
-      },
+      "icon": "./assets/app.icon",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
