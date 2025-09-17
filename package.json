@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test:ics": "node ./scripts/parse-ics.js",
+    "test:nfc": "node lib/__tests__/nfcHelper.test.js",
     "postinstall": "patch-package"
   },
   "dependencies": {
