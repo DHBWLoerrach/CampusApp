@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
   const disabled = !disclaimerChecked || !pendingRole;
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <ThemedView style={[styles.screen, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ title: 'Willkommen' }} />
 
       <ScrollView
@@ -122,17 +122,6 @@ export default function WelcomeScreen() {
             </Pressable>
           </View>
         </ThemedView>
-      </ScrollView>
-
-      <ThemedView
-        style={[
-          styles.footer,
-          {
-            paddingBottom: insets.bottom + 12,
-            paddingHorizontal: 16,
-          },
-        ]}
-      >
         <Pressable
           onPress={onStart}
           disabled={disabled}
@@ -147,8 +136,8 @@ export default function WelcomeScreen() {
             Weiter
           </ThemedText>
         </Pressable>
-      </ThemedView>
-    </View>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
@@ -195,8 +184,10 @@ const styles = StyleSheet.create({
   },
   card: {
     padding: 16,
-    borderRadius: 12,
     gap: 8,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: '#ccc',
   },
   label: {
     fontSize: 16,
@@ -223,12 +214,6 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     flexShrink: 1,
-  },
-  footer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
   startButton: {
     width: '100%',
