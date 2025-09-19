@@ -29,9 +29,27 @@ export interface RSSFeed {
 
 // Helper function to extract text from XML parser result
 function extractText(value: any): string {
-  if (!value) return '';
-  if (typeof value === 'string') return value;
-  return value['#cdata'] || value['#text'] || value || '';
+  if (value == null) return '';
+
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const text = extractText(entry);
+      if (text) return text;
+    }
+    return '';
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value);
+  }
+
+  if (typeof value === 'object') {
+    const candidate =
+      value['#cdata'] ?? value['#text'] ?? value['@_value'] ?? null;
+    return extractText(candidate);
+  }
+
+  return '';
 }
 
 // Helper function to extract content from various RSS fields
@@ -51,14 +69,31 @@ function extractId(item: any): string {
 
 // Helper function to extract enclosures
 function extractEnclosures(item: any): { url: string }[] | undefined {
-  if (!item.enclosure) return undefined;
+  const raw = item.enclosure;
+  if (!raw) return undefined;
 
-  const url =
-    typeof item.enclosure === 'object'
-      ? item.enclosure['@_url']
-      : item.enclosure;
+  const entries = Array.isArray(raw) ? raw : [raw];
+  const urls = entries
+    .map((entry) => {
+      if (!entry) return '';
+      if (typeof entry === 'string' || typeof entry === 'number') {
+        return String(entry).trim();
+      }
+      if (typeof entry === 'object') {
+        const candidate =
+          entry['@_url'] ?? entry.url ?? entry['#text'] ?? entry['@_href'];
+        return typeof candidate === 'string'
+          ? candidate.trim()
+          : candidate != null
+          ? String(candidate).trim()
+          : '';
+      }
+      return '';
+    })
+    .filter((url): url is string => url.length > 0)
+    .map((url) => ({ url }));
 
-  return url ? [{ url }] : undefined;
+  return urls.length ? urls : undefined;
 }
 
 /**
