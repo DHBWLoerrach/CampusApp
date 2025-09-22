@@ -1,4 +1,4 @@
-import { StyleSheet, Switch, View } from 'react-native';
+import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
@@ -15,44 +15,46 @@ export default function PreferencesScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.content}>
-        {/* Card: Dark Mode preference */}
-        <ThemedView style={[styles.card, { borderColor }]}>
-          <ThemedText style={styles.cardTitle}>
-            Darstellung
-          </ThemedText>
-          <ThemedText style={styles.cardDescription}>
-            Bei Aktivierung wird die Systemeinstellung ignoriert und
-            die App immer dunkel angezeigt.
-          </ThemedText>
-          <View style={styles.row}>
-            <ThemedText style={styles.label}>
-              App stets im Dark Mode
+      <ScrollView>
+        <ThemedView style={styles.content}>
+          {/* Card: Dark Mode preference */}
+          <ThemedView style={[styles.card, { borderColor }]}>
+            <ThemedText style={styles.cardTitle}>
+              Darstellung
             </ThemedText>
-            <Switch
-              value={alwaysDark}
-              onValueChange={setAlwaysDark}
-              disabled={!isReady}
-              thumbColor={alwaysDark ? dhbwRed : undefined}
-              trackColor={{ false: '#767577', true: '#cfd2d4' }}
-            />
-          </View>
-        </ThemedView>
+            <ThemedText style={styles.cardDescription}>
+              Bei Aktivierung wird die Systemeinstellung ignoriert und
+              die App immer dunkel angezeigt.
+            </ThemedText>
+            <View style={styles.row}>
+              <ThemedText style={styles.label}>
+                App stets im Dark Mode
+              </ThemedText>
+              <Switch
+                value={alwaysDark}
+                onValueChange={setAlwaysDark}
+                disabled={!isReady}
+                thumbColor={alwaysDark ? dhbwRed : undefined}
+                trackColor={{ false: '#767577', true: '#cfd2d4' }}
+              />
+            </View>
+          </ThemedView>
 
-        {/* Card: Mensa price group */}
-        <ThemedView style={[styles.card, { borderColor }]}>
-          <ThemedText style={styles.cardTitle}>
-            Mensa-Preisgruppe
-          </ThemedText>
-          <ThemedText style={styles.cardDescription}>
-            Bestimmt die Preisgruppe für die Mensa.
-          </ThemedText>
-          <RoleSelection
-            role={selectedRole}
-            onRoleChange={(r) => setSelectedRole(r)}
-          />
+          {/* Card: Mensa price group */}
+          <ThemedView style={[styles.card, { borderColor }]}>
+            <ThemedText style={styles.cardTitle}>
+              Mensa-Preisgruppe
+            </ThemedText>
+            <ThemedText style={styles.cardDescription}>
+              Bestimmt die Preisgruppe für die Mensa.
+            </ThemedText>
+            <RoleSelection
+              role={selectedRole}
+              onRoleChange={(r) => setSelectedRole(r)}
+            />
+          </ThemedView>
         </ThemedView>
-      </ThemedView>
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
