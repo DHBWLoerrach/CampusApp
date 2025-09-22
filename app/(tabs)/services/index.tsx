@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 114,
-    height: 88,
+    minHeight: 88,
     borderRadius: 12,
     borderWidth: 0.5,
   },

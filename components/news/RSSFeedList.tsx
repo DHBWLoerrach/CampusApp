@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 12,
     marginBottom: 16,
-    height: CARD_H,
+    minHeight: CARD_H,
     elevation: 5,
     shadowOpacity: 0.15,
     shadowRadius: 10,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   thumb: {
     width: CARD_H,
-    height: CARD_H,
+    minHeight: CARD_H,
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
