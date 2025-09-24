@@ -47,7 +47,7 @@ export default function NfcButton({ render }: Props) {
       );
 
       NfcManager.setAlertMessageIOS(
-        `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€`
+        `Guthaben: ${balance}€ — Letzte Transaktion: ${lastTransaction}€\n(Angaben ohne Gewähr)`
       );
     } catch (ex: any) {
       const isCancelledByUser =

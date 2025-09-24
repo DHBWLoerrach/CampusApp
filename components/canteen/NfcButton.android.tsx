@@ -76,7 +76,7 @@ export default function NfcButton({ render }: Props) {
       );
 
       setModalMessage(
-        `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€`
+        `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€\n(Angaben ohne Gewähr)`
       );
     } catch (ex: any) {
       if (timedOut) {
