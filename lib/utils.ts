@@ -59,11 +59,10 @@ export function splitLocation(location?: string | null) {
 }
 
 export function isOnlineEvent(
-  title?: string | null,
   location?: string | null,
   url?: string | null
 ) {
   if (url) return true;
-  const haystack = `${title || ''} ${location || ''}`;
+  const haystack = `${location || ''}`;
   return ONLINE_WORD_REGEX.test(haystack);
 }

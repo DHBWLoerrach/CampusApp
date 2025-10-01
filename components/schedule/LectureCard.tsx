@@ -38,11 +38,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const rawLocation = event.location || '';
   const { url: onlineLink, room: roomText } =
     splitLocation(rawLocation);
-  const isOnline = isOnlineEvent(
-    event.title,
-    rawLocation,
-    onlineLink
-  );
+  const isOnline = isOnlineEvent(rawLocation, onlineLink);
 
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);

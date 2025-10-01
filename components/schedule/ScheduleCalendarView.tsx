@@ -184,11 +184,7 @@ export default function ScheduleCalendarView({
       const rawLocation = (event.location as string) || '';
       const { url: onlineLink, room: roomText } =
         splitLocation(rawLocation);
-      const online = isOnlineEvent(
-        event.title as string,
-        rawLocation,
-        onlineLink
-      );
+      const online = isOnlineEvent(rawLocation, onlineLink);
 
       return (
         <View style={{ height: '100%', padding: 4 }}>
