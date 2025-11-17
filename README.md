@@ -26,22 +26,25 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
 4. Benötigte API-Keys (z.B. für die Mensa des SWFR) vom Projektverantwortlichen anfordern und in eine Datei `.env` eintragen
 
-## Projekt starten
+5. Development prebuild erstellen (erzeugt `android`-Projektordner und auf macOS auch das iOS-Projekt im Ordner `ios`):
 
-Mit dem Befehl
+   `npx expo prebuild`
 
-`npx expo`
+6. Development build bauen und ausführen:
 
-wird der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet.
+Vorbedingungen:
 
-Nun kann die App getestet werden:
+- Android Studio bzw. das Android SDK muss für die Android-App installiert sein
+- Nur für macOS relevant: XCode muss installiert sein
 
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- Android `npx expo run:android` 
+- iOS (nur auf macOS möglich): `npx expo run:ios`
 
-TODO: Infos zum development build usw.
+7. Ein development build muss nur dann neu erstellt werden, wenn die (nativen) Abhängigkeiten sich geändert haben. Sobald auf dem Testgerät ein Dev-Build installiert ist, reicht 
+
+  `npx expo`
+
+womit der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet wird (Ausgabe für Tipps zum Start der App beachten). 
 
 ## Lizenz
 
