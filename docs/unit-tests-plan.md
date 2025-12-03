@@ -2,20 +2,27 @@
 
 ## Übersicht
 
-Dieser Plan beschreibt die Einführung von Unit-Tests für bestehende pure Funktionen im CampusApp-Projekt. Der Fokus liegt auf Funktionen mit klaren Ein-/Ausgaben und minimalen Abhängigkeiten.
+Dieser Plan beschreibt die schrittweise Einführung von Tests für das CampusApp-Projekt:
+
+1. **Phase 1–4:** Unit-Tests für pure Funktionen (Utilities, Parser)
+2. **Phase 5:** Component- und Hook-Tests (React Native Testing Library)
+3. **Ausblick:** Integration- und E2E-Tests
 
 ---
 
-## Phase 1: Test-Framework einrichten
+## Phase 1: Test-Framework einrichten ✅ Erledigt
 
 ### 1.1 Jest installieren und konfigurieren
 
-Wie hier beschrieben: https://docs.expo.dev/develop/unit-testing/
+✅ Bereits konfiguriert in `package.json`:
+
+- `jest-expo` Preset
+- `@types/jest` für TypeScript
+- `npm test` Script
 
 ### 1.2 Bestehenden Test migrieren
 
-- `lib/__tests__/nfcHelper.test.js` → `lib/__tests__/nfcHelper.test.ts` umwandeln
-- Von `node:assert` auf Jest-Syntax (`expect()`) umstellen
+✅ `lib/__tests__/nfcHelper.test.ts` existiert bereits mit Jest-Syntax
 
 ---
 
@@ -31,14 +38,14 @@ Wie hier beschrieben: https://docs.expo.dev/develop/unit-testing/
 
 ### 2.2 `lib/__tests__/canteenService.test.ts` — Datums-Helfer (6 Funktionen)
 
-| Funktion            | Testfälle                                                                                        |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| `isWeekend`         | Samstag, Sonntag, Montag–Freitag                                                                 |
-| `isSameCalendarDay` | Gleicher Tag verschiedene Uhrzeiten, verschiedene Tage                                           |
-| `dateFromOffset`    | Positive/negative Offsets, 0                                                                     |
-| `nextWeekdayStart`  | Freitag→Freitag, Samstag→Montag, Sonntag→Montag                                                  |
-| `weekdayDates`      | Array-Länge, nur Wochentage enthalten                                                            |
-| `priceForRole`      | Alle Rollen (`Studierende`, `Mitarbeitende`, `Lehrbeauftragte`, `Gast`), fehlende Preise, `null` |
+| Funktion            | Testfälle                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `isWeekend`         | Samstag, Sonntag, Montag–Freitag                                                                   |
+| `isSameCalendarDay` | Gleicher Tag verschiedene Uhrzeiten, verschiedene Tage                                             |
+| `dateFromOffset`    | Positive/negative Offsets, 0                                                                       |
+| `nextWeekdayStart`  | Wochentage unverändert, Samstag→Montag, Sonntag→Montag                                             |
+| `weekdayDates`      | Array-Länge, nur Wochentage enthalten                                                              |
+| `priceForRole`      | Alle Rollen (inkl. Mapping `Gast`→`Gäste`, `Mitarbeitende`→`Angestellte`), fehlende Preise, `null` |
 
 ### 2.3 `constants/__tests__/CourseAliases.test.ts`
 
@@ -93,9 +100,13 @@ Wie hier beschrieben: https://docs.expo.dev/develop/unit-testing/
 
 ### 3.4 `lib/__tests__/nfcHelper.test.ts` erweitern
 
-| Funktion               | Zusätzliche Testfälle                                                |
-| ---------------------- | -------------------------------------------------------------------- |
-| `convertBytesToDouble` | Null-Balance, Maximum-Werte, ungültige Array-Längen (Error-Handling) |
+✅ Bereits implementiert mit umfassenden Tests:
+
+- Gültige Eingaben (Balance + letzte Transaktion)
+- Null-Balance, große Werte
+- Fehlerbehandlung (ungültige Array-Längen)
+
+**Hinweis:** Rückgabetyp ist `{ balance: number, lastTransaction: number }`, nicht `{ euro, cent }`.
 
 ---
 
@@ -117,16 +128,109 @@ Falls tiefere Tests gewünscht:
 
 ---
 
+## Phase 5: Component- und Hook-Tests
+
+### 5.1 Setup
+
+```bash
+npm install --save-dev @testing-library/react-native
+```
+
+In `jest.config.js` oder `package.json` ggf. `transformIgnorePatterns` anpassen für React Native Module.
+
+### 5.2 Hook-Tests — `hooks/__tests__/`
+
+| Hook             | Testfälle                                                                |
+| ---------------- | ------------------------------------------------------------------------ |
+| `useTimetable`   | Initialer State, erfolgreicher Fetch (gemockt), Fehlerfall, Reload-Logik |
+| `useRidesIndex`  | Daten laden, leere Antwort, Fehlerbehandlung                             |
+| `useColorScheme` | System-Präferenz übernehmen, manuelles Umschalten                        |
+
+**Hinweis:** `renderHook` aus `@testing-library/react-native` verwenden.
+
+### 5.3 Component-Tests — `components/__tests__/`
+
+| Komponente       | Testfälle                                               |
+| ---------------- | ------------------------------------------------------- |
+| `LectureCard`    | Rendering mit Props, Online-Event-Icon, Tap-Interaktion |
+| `CanteenDayView` | Mahlzeiten anzeigen, Schließungshinweis, leerer Zustand |
+| `RSSFeedList`    | Liste rendern, Pull-to-Refresh, Fehler-State            |
+| `ThemedText`     | Dark/Light Mode Styling                                 |
+| `CourseSetup`    | Eingabe validieren, Kurs speichern                      |
+
+**Mocking-Strategie:**
+
+- `AsyncStorage` → `@react-native-async-storage/async-storage/jest/async-storage-mock`
+- Navigation → `jest.mock('@react-navigation/native')`
+- Context-Provider wrappen für Theme/Role/Course
+
+### 5.4 Beispiel-Teststruktur
+
+```typescript
+import { render, screen, fireEvent } from '@testing-library/react-native';
+import { LectureCard } from '../schedule/LectureCard';
+
+describe('LectureCard', () => {
+  const mockLecture = {
+    title: 'Mathematik I',
+    startTime: new Date('2025-12-03T09:00:00'),
+    endTime: new Date('2025-12-03T10:30:00'),
+    location: 'Raum 101',
+  };
+
+  it('renders lecture title and time', () => {
+    render(<LectureCard lecture={mockLecture} />);
+    expect(screen.getByText('Mathematik I')).toBeTruthy();
+    expect(screen.getByText(/09:00/)).toBeTruthy();
+  });
+
+  it('shows online icon for online events', () => {
+    render(
+      <LectureCard
+        lecture={{ ...mockLecture, location: 'https://zoom.us/123' }}
+      />
+    );
+    expect(screen.getByTestId('online-icon')).toBeTruthy();
+  });
+});
+```
+
+---
+
+## Ausblick: Integration- und E2E-Tests
+
+### Integration Tests
+
+- Zusammenspiel von Fetch → Parse → Display
+- Context-Provider mit echten Komponenten
+- Mocking auf Netzwerkebene (`msw` oder `jest.mock('fetch')`)
+
+### E2E Tests (optional)
+
+| Tool    | Eignung                                                |
+| ------- | ------------------------------------------------------ |
+| Maestro | Einfaches YAML-basiertes Setup, gut für schnelle Flows |
+| Detox   | Tiefere Integration, besser für komplexe Szenarien     |
+
+**Mögliche E2E-Flows:**
+
+- Kurs auswählen → Stundenplan laden → Vorlesung anzeigen
+- Mensa-Tab öffnen → Tagesmenü anzeigen
+- News laden → Artikel öffnen
+
+---
+
 ## Zusammenfassung
 
-| Phase | Dateien           | Funktionen    | Aufwand  |
-| ----- | ----------------- | ------------- | -------- |
-| 1     | Setup             | —             | ~30 Min  |
-| 2     | 5 Test-Dateien    | 12 Funktionen | ~2–3 Std |
-| 3     | 4 Test-Dateien    | 6 Funktionen  | ~3–4 Std |
-| 4     | 2 Code-Änderungen | —             | ~15 Min  |
+| Phase | Dateien           | Funktionen/Komponenten | Aufwand     |
+| ----- | ----------------- | ---------------------- | ----------- |
+| 1     | Setup             | —                      | ✅ Erledigt |
+| 2     | 5 Test-Dateien    | 12 Funktionen          | ~2–3 Std    |
+| 3     | 3 Test-Dateien    | 5 Funktionen           | ~3–4 Std    |
+| 4     | 2 Code-Änderungen | —                      | ~15 Min     |
+| 5     | ~8 Test-Dateien   | 3 Hooks, 5 Komponenten | ~4–6 Std    |
 
-**Empfohlene Reihenfolge:** Phase 1 → Phase 2 → Phase 4 → Phase 3
+**Empfohlene Reihenfolge:** Phase 1 → Phase 2 → Phase 4 → Phase 3 → Phase 5
 
 ---
 
@@ -150,4 +254,16 @@ constants/
   __tests__/
     CourseAliases.test.ts
     FeatureFlags.test.ts
+hooks/
+  __tests__/
+    useTimetable.test.ts
+    useRidesIndex.test.ts
+    useColorScheme.test.ts
+components/
+  __tests__/
+    LectureCard.test.tsx
+    CanteenDayView.test.tsx
+    RSSFeedList.test.tsx
+    ThemedText.test.tsx
+    CourseSetup.test.tsx
 ```
