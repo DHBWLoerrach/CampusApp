@@ -17,6 +17,8 @@
 - `npm run start` or `npx expo`: Start Metro bundler and open Expo tools.
 - `npm run android` | `npm run ios` | `npm run web`: Run locally on Android, iOS, or Web.
 - `npm run lint`: ESLint check using `eslint-config-expo`.
+- `npm run test`: Run Jest unit tests.
+- `npm run test:watch`: Run Jest in watch mode.
 - `npm run test:ics`: Run the `.ics` parsing script for schedule data.
 - EAS builds: Use Expo EAS (see `eas.json`) for CI/release builds.
 
@@ -31,8 +33,11 @@
 
 ## Testing Guidelines
 
-- No formal test framework configured yet. Prefer adding Jest + React Native Testing Library.
-- Name tests `*.test.ts`/`*.test.tsx`, colocated with the unit or under `__tests__/`.
+- Jest + React Native Testing Library configured with `jest-expo` preset.
+- Tests live in `__tests__/` with subdirectories mirroring `components/`, `lib/`, etc.
+- Name test files `*.test.ts` / `*.test.tsx`.
+- Run `npm run test` locally; `npm run test:watch` for development.
+- Mock theme hooks (`useThemeColor`) and context providers as needed.
 - Validate critical flows manually on Android, iOS, and Web; run `npm run lint` in CI.
 
 ## Commit & Pull Request Guidelines
