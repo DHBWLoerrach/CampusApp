@@ -10,36 +10,7 @@ Dieser Plan beschreibt die Einführung von Unit-Tests für bestehende pure Funkt
 
 ### 1.1 Jest installieren und konfigurieren
 
-```bash
-npm install --save-dev jest @types/jest ts-jest
-```
-
-### 1.2 Jest-Konfiguration erstellen
-
-Neue Datei `jest.config.js` im Root-Verzeichnis:
-
-```js
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  roots: ['<rootDir>/lib', '<rootDir>/constants'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
-  },
-};
-```
-
-### 1.3 NPM-Script hinzufügen
-
-In `package.json` ergänzen:
-
-```json
-"scripts": {
-  "test": "jest",
-  "test:watch": "jest --watch"
-}
-```
+Wie hier beschrieben: https://docs.expo.dev/develop/unit-testing/
 
 ### 1.4 Bestehenden Test migrieren
 
