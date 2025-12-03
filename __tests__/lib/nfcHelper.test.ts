@@ -1,4 +1,4 @@
-import convertBytesToDouble from '../nfcHelper';
+import convertBytesToDouble from '@/lib/nfcHelper';
 
 describe('nfcHelper', () => {
   describe('valid input', () => {
