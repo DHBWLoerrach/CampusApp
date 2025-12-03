@@ -12,7 +12,7 @@ Dieser Plan beschreibt die Einführung von Unit-Tests für bestehende pure Funkt
 
 Wie hier beschrieben: https://docs.expo.dev/develop/unit-testing/
 
-### 1.4 Bestehenden Test migrieren
+### 1.2 Bestehenden Test migrieren
 
 - `lib/__tests__/nfcHelper.test.js` → `lib/__tests__/nfcHelper.test.ts` umwandeln
 - Von `node:assert` auf Jest-Syntax (`expect()`) umstellen
