@@ -51,6 +51,10 @@ const URL_REGEX_SINGLE = /(https?:\/\/[^\s]+)/i;
 const ONLINE_WORD_REGEX = /\bonline\b/i;
 const ONLINE_WORD_REGEX_GLOBAL = /\bonline\b/gi;
 const LOCATION_HINT_TRIM = /^[\s,;:|/\\·–—-]+|[\s,;:|/\\·–—-]+$/g;
+const LOCATION_PART_SPLIT =
+  /\s*(?:\r?\n+|\||;|,\s+|\s[–—-]\s|\s[\\/]\s)\s*/g;
+const ROOM_KEYWORDS_REGEX =
+  /\b(raum|hörsaal|hs|sr|audimax|labor|gebäude|seminar(?:raum)?)\b/i;
 
 export function splitLocation(location?: string | null) {
   const text = (location || '').trim();
@@ -58,6 +62,62 @@ export function splitLocation(location?: string | null) {
   const url = m ? m[0] : null;
   const room = url ? text.replace(url, '').trim() : text;
   return { url, room } as const;
+}
+
+function scoreRoomCandidate(text: string): number {
+  const t = text.trim();
+  if (t.length === 0) return -1;
+  let score = 0;
+  if (/\d/.test(t)) score += 2;
+  if (ROOM_KEYWORDS_REGEX.test(t)) score += 3;
+  if (/[A-ZÄÖÜ]\s*[-]?\s*\d/.test(t)) score += 1;
+  return score;
+}
+
+function splitRoomAndHint(text: string) {
+  const raw = text.trim();
+  if (raw.length === 0) return { room: '', hint: null } as const;
+
+  const parts = raw
+    .split(LOCATION_PART_SPLIT)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
+  if (parts.length <= 1) {
+    // If the location ends with parentheses, treat them as hint (e.g., "Raum 1.01 (Klausur)")
+    const m = raw.match(/^(.*?)\s*\(([^()]*)\)\s*$/);
+    if (m) {
+      const room = (m[1] || '').trim();
+      const hint = (m[2] || '').trim();
+      return {
+        room,
+        hint: hint.length > 0 ? hint : null,
+      } as const;
+    }
+    return { room: raw, hint: null } as const;
+  }
+
+  let bestIndex = 0;
+  let bestScore = scoreRoomCandidate(parts[0]);
+  for (let i = 1; i < parts.length; i += 1) {
+    const s = scoreRoomCandidate(parts[i]);
+    if (s > bestScore) {
+      bestScore = s;
+      bestIndex = i;
+    }
+  }
+
+  // If nothing looks like a room, keep the original order: first = room, rest = hint.
+  if (bestScore <= 0) bestIndex = 0;
+
+  const room = parts[bestIndex];
+  const hintText = parts
+    .filter((_p, i) => i !== bestIndex)
+    .join(', ')
+    .trim();
+  const hint = hintText.length > 0 ? hintText : null;
+
+  return { room, hint } as const;
 }
 
 function extractOnlineHint(text: string): string | null {
@@ -72,9 +132,15 @@ function extractOnlineHint(text: string): string | null {
 
 export function getLocationMeta(location?: string | null) {
   const raw = (location || '').trim();
-  const { url, room } = splitLocation(raw);
+  const { url, room: textWithoutUrl } = splitLocation(raw);
   const isOnline = isOnlineEvent(raw, url);
-  const hint = isOnline ? extractOnlineHint(room) : null;
+
+  if (isOnline) {
+    const hint = extractOnlineHint(textWithoutUrl);
+    return { url, room: textWithoutUrl, hint, isOnline } as const;
+  }
+
+  const { room, hint } = splitRoomAndHint(textWithoutUrl);
   return { url, room, hint, isOnline } as const;
 }
 

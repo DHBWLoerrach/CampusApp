@@ -30,6 +30,30 @@ describe('getLocationMeta', () => {
     expect(meta.hint).toBeNull();
   });
 
+  it('extracts hint from a comma-separated location', () => {
+    const meta = getLocationMeta('Hörsaal A, begleitetes Selbststudium');
+    expect(meta.isOnline).toBe(false);
+    expect(meta.url).toBeNull();
+    expect(meta.room).toBe('Hörsaal A');
+    expect(meta.hint).toBe('begleitetes Selbststudium');
+  });
+
+  it('extracts hint from trailing parentheses', () => {
+    const meta = getLocationMeta('Raum 1.01 (Klausur)');
+    expect(meta.isOnline).toBe(false);
+    expect(meta.url).toBeNull();
+    expect(meta.room).toBe('Raum 1.01');
+    expect(meta.hint).toBe('Klausur');
+  });
+
+  it('prefers room-like parts as room', () => {
+    const meta = getLocationMeta('DHBW Lörrach, Hörsaal A');
+    expect(meta.isOnline).toBe(false);
+    expect(meta.url).toBeNull();
+    expect(meta.room).toBe('Hörsaal A');
+    expect(meta.hint).toBe('DHBW Lörrach');
+  });
+
   it('extracts hint when online is implied by URL', () => {
     const meta = getLocationMeta(
       'begleitetes Selbststudium https://bbb.dhbw.de/meeting'
@@ -39,4 +63,3 @@ describe('getLocationMeta', () => {
     expect(meta.hint).toBe('begleitetes Selbststudium');
   });
 });
-

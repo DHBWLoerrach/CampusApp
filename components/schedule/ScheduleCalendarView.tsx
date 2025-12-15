@@ -121,7 +121,7 @@ export default function ScheduleCalendarView({
 
   const _onChange = useCallback((date: string) => {
     currentDate.value = date;
-  }, []);
+  }, [currentDate]);
 
   const _onPressToday = useCallback(() => {
     calendarRef.current?.goToDate({
@@ -149,8 +149,11 @@ export default function ScheduleCalendarView({
 
     const rawLocation =
       typeof event.location === 'string' ? event.location : '';
-    const { url: onlineLink, hint, isOnline } =
+    const { url: onlineLink, room, hint, isOnline } =
       getLocationMeta(rawLocation);
+    const cleanedHint =
+      hint?.replace(/^\s*(?:hinweis|info)\s*:\s*/i, '').trim() ||
+      null;
 
     const d = startDate.toLocaleDateString('de-DE', {
       year: 'numeric',
@@ -182,10 +185,10 @@ export default function ScheduleCalendarView({
     if (isOnline) {
       detailLines.push('Online');
       if (onlineLink) detailLines.push(`Link: ${onlineLink}`);
-      if (hint) detailLines.push(`Hinweis: ${hint}`);
-    } else if (rawLocation.trim().length > 0) {
-      detailLines.push(rawLocation.trim());
+    } else if (room.trim().length > 0) {
+      detailLines.push(room.trim());
     }
+    if (cleanedHint) detailLines.push(`Hinweis: ${cleanedHint}`);
 
     const body = [...headerLines, ...detailLines].join('\n');
     Alert.alert(event.title || '', body);
@@ -201,7 +204,7 @@ export default function ScheduleCalendarView({
         hint,
         isOnline: online,
       } = getLocationMeta(rawLocation);
-      const showHintIndicator = online && !!hint;
+      const showHintIndicator = !!hint;
 
       return (
         <View style={{ height: '100%', padding: 4 }}>
@@ -276,10 +279,19 @@ export default function ScheduleCalendarView({
                   fontSize: 12,
                   color: eventTextColor,
                   opacity: 0.85,
+                  flexShrink: 1,
                 }}
               >
                 {roomText}
               </Text>
+              {showHintIndicator && (
+                <IconSymbol
+                  name="info.circle"
+                  size={12}
+                  color={secondaryText}
+                  style={styles.metaIconSmallTrailing}
+                />
+              )}
             </View>
           ) : null}
         </View>
