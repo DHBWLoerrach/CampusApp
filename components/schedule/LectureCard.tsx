@@ -5,10 +5,15 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LinkifiedText from '@/components/ui/LinkifiedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { isOnlineEvent, splitLocation } from '@/lib/utils';
+import { getLocationMeta } from '@/lib/utils';
 
 interface LectureCardProps {
   event: TimetableEvent;
+  onPressOnlineInfo?: (args: {
+    event: TimetableEvent;
+    hint: string;
+    onlineLink: string | null;
+  }) => void;
 }
 
 // Helper to format time range in German format (e.g., 09:00–12:15)
@@ -24,7 +29,10 @@ const formatTimeRange = (start: Date, end: Date) => {
   return `${startTime}–${endTime}`;
 };
 
-const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
+const LectureCard: React.FC<LectureCardProps> = ({
+  event,
+  onPressOnlineInfo,
+}) => {
   const scheme = useColorScheme() ?? 'light';
   const cardBg = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
@@ -36,9 +44,13 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
   // Derive room and online link from the location, then decide if event is online
   const rawLocation = event.location || '';
-  const { url: onlineLink, room: roomText } =
-    splitLocation(rawLocation);
-  const isOnline = isOnlineEvent(rawLocation, onlineLink);
+  const {
+    url: onlineLink,
+    room: roomText,
+    hint: onlineHint,
+    isOnline,
+  } = getLocationMeta(rawLocation);
+  const showOnlineInfo = isOnline && !!onlineHint;
 
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);
@@ -213,6 +225,36 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 />
               )}
             </Text>
+            {showOnlineInfo && (
+              <Pressable
+                onPress={() => {
+                  if (!onlineHint) return;
+                  onPressOnlineInfo?.({
+                    event,
+                    hint: onlineHint,
+                    onlineLink,
+                  });
+                }}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  onlineHint
+                    ? `Zusatzinfo anzeigen: ${onlineHint}`
+                    : 'Zusatzinfo anzeigen'
+                }
+                accessibilityHint="Öffnet weitere Informationen zum Termin"
+                style={({ pressed }) => [
+                  styles.infoButton,
+                  { opacity: pressed ? 0.8 : 1 },
+                ]}
+              >
+                <IconSymbol
+                  name="info.circle"
+                  size={14}
+                  color={secondaryText}
+                />
+              </Pressable>
+            )}
             {onlineLink && (
               <IconSymbol
                 name="chevron.right"
@@ -295,6 +337,9 @@ const styles = StyleSheet.create({
   trailingIcon: {
     marginLeft: 6,
     opacity: 0.6,
+  },
+  infoButton: {
+    marginLeft: 8,
   },
   // Invisible measuring text (same width, without numberOfLines)
   measureGhost: {

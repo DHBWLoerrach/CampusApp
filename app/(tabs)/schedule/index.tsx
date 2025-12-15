@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
@@ -16,6 +16,10 @@ import { Colors } from '@/constants/Colors';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
+import BottomSheet from '@/components/ui/BottomSheet';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import LinkifiedText from '@/components/ui/LinkifiedText';
+import { TimetableEvent } from '@/lib/icalService';
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -42,10 +46,16 @@ export default function ScheduleList() {
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } =
     useTimetable(selectedCourse || undefined);
+  const [onlineInfo, setOnlineInfo] = useState<{
+    event: TimetableEvent;
+    hint: string;
+    onlineLink: string | null;
+  } | null>(null);
 
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
   const scheme = useColorScheme() ?? 'light';
   const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
@@ -95,7 +105,12 @@ export default function ScheduleList() {
         ref={ref}
         sections={sections}
         keyExtractor={(item) => item.uid}
-        renderItem={({ item }) => <LectureCard event={item} />}
+        renderItem={({ item }) => (
+          <LectureCard
+            event={item}
+            onPressOnlineInfo={(args) => setOnlineInfo(args)}
+          />
+        )}
         renderSectionHeader={({ section: { title } }) => (
           <ThemedText
             style={[
@@ -127,6 +142,68 @@ export default function ScheduleList() {
           />
         }
       />
+      <BottomSheet
+        visible={!!onlineInfo}
+        title={onlineInfo?.event.title || 'Zusatzinfo'}
+        onClose={() => setOnlineInfo(null)}
+      >
+        {onlineInfo && (
+          <View style={{ gap: 12 }}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'flex-start' }}
+            >
+              <View
+                accessible={false}
+                accessibilityElementsHidden
+                importantForAccessibility="no"
+                style={{
+                  width: 24,
+                  alignItems: 'center',
+                  marginRight: 8,
+                  marginTop: 2,
+                }}
+              >
+                <IconSymbol
+                  name="info.circle"
+                  size={20}
+                  color={textColor}
+                />
+              </View>
+              <LinkifiedText
+                value={onlineInfo.hint}
+                style={{ color: textColor, flexShrink: 1 }}
+              />
+            </View>
+
+            {onlineInfo.onlineLink && (
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+              >
+                <View
+                  accessible={false}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no"
+                  style={{
+                    width: 24,
+                    alignItems: 'center',
+                    marginRight: 8,
+                  }}
+                >
+                  <IconSymbol
+                    name="link"
+                    size={20}
+                    color={textColor}
+                  />
+                </View>
+                <LinkifiedText
+                  value={onlineInfo.onlineLink}
+                  style={{ color: textColor, flexShrink: 1 }}
+                />
+              </View>
+            )}
+          </View>
+        )}
+      </BottomSheet>
     </ThemedView>
   );
 }

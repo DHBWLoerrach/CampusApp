@@ -22,11 +22,7 @@ import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import LinkifiedText from '@/components/ui/LinkifiedText';
-import {
-  toLocalISOString,
-  isOnlineEvent,
-  splitLocation,
-} from '@/lib/utils';
+import { toLocalISOString, getLocationMeta } from '@/lib/utils';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface CalendarEvent {
@@ -151,6 +147,11 @@ export default function ScheduleCalendarView({
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
 
+    const rawLocation =
+      typeof event.location === 'string' ? event.location : '';
+    const { url: onlineLink, hint, isOnline } =
+      getLocationMeta(rawLocation);
+
     const d = startDate.toLocaleDateString('de-DE', {
       year: 'numeric',
       month: 'long',
@@ -163,8 +164,8 @@ export default function ScheduleCalendarView({
       startDate.getMinutes() === 0 &&
       (endDate.getTime() - startDate.getTime()) % msInDay === 0;
 
-    const body = isAllDay
-      ? `${d}\nGanzer Tag\n${event.location || ''}`
+    const headerLines = isAllDay
+      ? [`${d}`, 'Ganzer Tag']
       : (() => {
           const t = startDate.toLocaleTimeString('de-DE', {
             hour: 'numeric',
@@ -174,17 +175,33 @@ export default function ScheduleCalendarView({
             hour: 'numeric',
             minute: 'numeric',
           });
-          return `${d}\n${t} - ${t2} Uhr\n${event.location || ''}`;
+          return [`${d}`, `${t} - ${t2} Uhr`];
         })();
+
+    const detailLines: string[] = [];
+    if (isOnline) {
+      detailLines.push('Online');
+      if (onlineLink) detailLines.push(`Link: ${onlineLink}`);
+      if (hint) detailLines.push(`Hinweis: ${hint}`);
+    } else if (rawLocation.trim().length > 0) {
+      detailLines.push(rawLocation.trim());
+    }
+
+    const body = [...headerLines, ...detailLines].join('\n');
     Alert.alert(event.title || '', body);
   };
 
   const renderEvent = useCallback(
     (event: PackedEvent) => {
-      const rawLocation = (event.location as string) || '';
-      const { url: onlineLink, room: roomText } =
-        splitLocation(rawLocation);
-      const online = isOnlineEvent(rawLocation, onlineLink);
+      const rawLocation =
+        typeof event.location === 'string' ? event.location : '';
+      const {
+        url: onlineLink,
+        room: roomText,
+        hint,
+        isOnline: online,
+      } = getLocationMeta(rawLocation);
+      const showHintIndicator = online && !!hint;
 
       return (
         <View style={{ height: '100%', padding: 4 }}>
@@ -219,6 +236,7 @@ export default function ScheduleCalendarView({
                   fontSize: 12,
                   color: eventTextColor,
                   opacity: 0.85,
+                  flexShrink: 1,
                 }}
               >
                 {onlineLink ? 'Online: ' : 'Online'}
@@ -234,6 +252,14 @@ export default function ScheduleCalendarView({
                   />
                 )}
               </Text>
+              {showHintIndicator && (
+                <IconSymbol
+                  name="info.circle"
+                  size={12}
+                  color={secondaryText}
+                  style={styles.metaIconSmallTrailing}
+                />
+              )}
             </View>
           ) : roomText ? (
             <View style={styles.metaRowSmall}>
@@ -359,5 +385,9 @@ const styles = StyleSheet.create({
   },
   metaIconSmall: {
     marginRight: 4,
+  },
+  metaIconSmallTrailing: {
+    marginLeft: 4,
+    opacity: 0.85,
   },
 });

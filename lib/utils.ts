@@ -49,6 +49,8 @@ export const toLocalISOString = (date: Date): string => {
 // Extract URL and room text from a location string (first URL is considered the online link)
 const URL_REGEX_SINGLE = /(https?:\/\/[^\s]+)/i;
 const ONLINE_WORD_REGEX = /\bonline\b/i;
+const ONLINE_WORD_REGEX_GLOBAL = /\bonline\b/gi;
+const LOCATION_HINT_TRIM = /^[\s,;:|/\\·–—-]+|[\s,;:|/\\·–—-]+$/g;
 
 export function splitLocation(location?: string | null) {
   const text = (location || '').trim();
@@ -56,6 +58,24 @@ export function splitLocation(location?: string | null) {
   const url = m ? m[0] : null;
   const room = url ? text.replace(url, '').trim() : text;
   return { url, room } as const;
+}
+
+function extractOnlineHint(text: string): string | null {
+  // Remove the "online" marker and clean up leftover separators (e.g., ", online")
+  const withoutOnline = text
+    .replace(ONLINE_WORD_REGEX_GLOBAL, ' ')
+    .replace(/\(\s*\)/g, ' ')
+    .trim();
+  const cleaned = withoutOnline.replace(LOCATION_HINT_TRIM, '').trim();
+  return cleaned.length > 0 ? cleaned : null;
+}
+
+export function getLocationMeta(location?: string | null) {
+  const raw = (location || '').trim();
+  const { url, room } = splitLocation(raw);
+  const isOnline = isOnlineEvent(raw, url);
+  const hint = isOnline ? extractOnlineHint(room) : null;
+  return { url, room, hint, isOnline } as const;
 }
 
 export function isOnlineEvent(
