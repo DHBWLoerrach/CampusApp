@@ -2,7 +2,6 @@
 
 - Expo 54 + icon
 - New UI stuff, siehe Todos in CampusRallyeApp: Expo UI (SwiftUI, Jetpack Compose), Native Tabs usw.
-- Im Auge behalten: https://github.com/revtel/react-native-nfc-manager/releases (v4)
 - Dokumentieren: AppStore release und EAS update workflow
   - z.B. version bump in app.json erst bevor der nächste AppStore release kommt
     - sonst funktionieren updates nicht, denn diese werden passend zur Version/Runtime ausgeliefert
@@ -47,8 +46,6 @@
 ## Chores
 
 - ab und zu `npx expo-doctor` ausführen (Abhängigkeiten usw.)
-- GPT5 im Webbrowser als Design-Experte nutzen
-- GPT5 im Beast Mode in VS Code den Code konsistent machen lassen, best practices beachten, usw.
 - Gelegentlich `npm run lint` ausführen
 - allgemeine UI-Komponenten extrahieren
 
@@ -75,12 +72,6 @@
 ## Services screen
 
 - Webversion: Modal für "Gebäude Hangstraße" oder andere Lösung?
-
-## Automatisierte Tests
-
-- https://expo.dev/blog/how-to-build-a-solid-test-harness-for-expo-apps
-- https://expo.dev/blog/create-and-run-fast-end-to-end-tests-using-moropo-and-expo
-- https://docs.expo.dev/eas/workflows/examples/e2e-tests/
 
 ## Stuff to check
 
