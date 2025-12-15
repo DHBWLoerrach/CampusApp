@@ -5,7 +5,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LinkifiedText from '@/components/ui/LinkifiedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { getLocationMeta } from '@/lib/utils';
+import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -35,21 +35,25 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
     scheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
 
   // Derive room and online link from the location, then decide if event is online
-  const rawLocation = event.location || '';
   const {
-    url: onlineLink,
-    room: roomText,
-    hint: locationHint,
+    roomText,
     isOnline,
-  } = getLocationMeta(rawLocation);
-  const cleanedHint =
-    locationHint
-      ?.replace(/^\s*(?:hinweis|info)\s*:\s*/i, '')
-      .trim() || null;
+    extraTextCollapsed,
+    extraTextExpanded,
+    hasHiddenUrls,
+  } = getScheduleCardLocationDisplay({
+    location: event.location,
+    description: event.description,
+  });
 
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);
   const [isRoomExpanded, setIsRoomExpanded] = useState(false);
+  const [extraMeasured, setExtraMeasured] = useState(false);
+  const [isExtraMultiline, setIsExtraMultiline] = useState(false);
+  const [isExtraExpanded, setIsExtraExpanded] = useState(false);
+  const canExpandExtra = !!extraTextExpanded && (hasHiddenUrls || isExtraMultiline);
+  const visibleExtraText = isExtraExpanded ? extraTextExpanded : extraTextCollapsed;
 
   return (
     <View
@@ -80,7 +84,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         </View>
 
         {/* Room-Pill */}
-        {!isOnline && !!roomText && (
+        {!!roomText && (
           <>
             {/* Container: Pressable only when truncated */}
             {isRoomTruncated ? (
@@ -197,9 +201,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
               { backgroundColor: chipBg, borderColor },
             ]}
             accessibilityRole="text"
-            accessibilityLabel={
-              onlineLink ? `Online ${onlineLink}` : 'Online'
-            }
+            accessibilityLabel="Online"
           >
             <IconSymbol
               name="video"
@@ -212,22 +214,8 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
               ellipsizeMode="tail"
               style={[styles.chipText, { color: secondaryText }]}
             >
-              {onlineLink ? 'Online: ' : 'Online'}
-              {!!onlineLink && (
-                <LinkifiedText
-                  value={onlineLink}
-                  style={[styles.chipText, { color: secondaryText }]}
-                />
-              )}
+              Online
             </Text>
-            {onlineLink && (
-              <IconSymbol
-                name="chevron.right"
-                size={14}
-                color={secondaryText}
-                style={styles.trailingIcon}
-              />
-            )}
           </View>
         )}
       </View>
@@ -236,12 +224,51 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         {event.title}
       </Text>
 
-      {!!cleanedHint && (
-        <LinkifiedText
-          value={`Hinweis: ${cleanedHint}`}
-          numberOfLines={2}
-          style={[styles.hintText, { color: secondaryText }]}
-        />
+      {!!visibleExtraText && (
+        <View style={styles.extraRow}>
+          <View style={styles.extraTextWrap}>
+            {!extraMeasured && !!extraTextExpanded && (
+              <Text
+                onTextLayout={(e) => {
+                  setIsExtraMultiline(e.nativeEvent.lines.length > 1);
+                  setExtraMeasured(true);
+                }}
+                style={[
+                  styles.extraText,
+                  styles.measureGhost,
+                  { color: secondaryText },
+                ]}
+              >
+                {extraTextExpanded}
+              </Text>
+            )}
+            <LinkifiedText
+              value={visibleExtraText}
+              numberOfLines={isExtraExpanded ? undefined : 1}
+              style={[styles.extraText, { color: secondaryText }]}
+            />
+          </View>
+          {canExpandExtra && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={
+                isExtraExpanded ? 'Weniger anzeigen' : 'Mehr anzeigen'
+              }
+              hitSlop={8}
+              onPress={() => setIsExtraExpanded((v) => !v)}
+              style={({ pressed }) => [
+                styles.extraChevronButton,
+                pressed && { opacity: 0.7 },
+              ]}
+            >
+              <IconSymbol
+                name={isExtraExpanded ? 'chevron.up' : 'chevron.down'}
+                size={16}
+                color={secondaryText}
+              />
+            </Pressable>
+          )}
+        </View>
       )}
     </View>
   );
@@ -311,10 +338,23 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     opacity: 0.6,
   },
-  hintText: {
-    fontSize: 13,
+  extraRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
+    minWidth: 0,
+  },
+  extraTextWrap: {
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
+  },
+  extraText: {
+    fontSize: 13,
     opacity: 0.85,
+  },
+  extraChevronButton: {
+    marginLeft: 8,
   },
   // Invisible measuring text (same width, without numberOfLines)
   measureGhost: {

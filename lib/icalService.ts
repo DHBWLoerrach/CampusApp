@@ -10,6 +10,7 @@ export interface TimetableEvent {
   start: Date;
   end: Date;
   location: string;
+  description?: string;
   // True when the source ICS used a DATE (all-day) rather than DATE-TIME
   allDay?: boolean;
 }
@@ -259,6 +260,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: occStart.toJSDate(),
           end: occEnd.toJSDate(),
           location: occurrence.item.location || '',
+          description: occurrence.item.description || undefined,
           allDay: !!occStart.isDate,
         });
       }
@@ -348,6 +350,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: sliceStart,
           end: sliceEnd,
           location: event.location || '',
+          description: event.description || undefined,
           allDay: sliceAllDay,
         });
       }
@@ -361,6 +364,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       start: event.startDate.toJSDate(),
       end: event.endDate.toJSDate(),
       location: event.location || '',
+      description: event.description || undefined,
       allDay: !!event.startDate.isDate,
     });
   });
