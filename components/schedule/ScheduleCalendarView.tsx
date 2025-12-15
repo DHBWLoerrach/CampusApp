@@ -21,9 +21,9 @@ import { useCourseContext } from '@/context/CourseContext';
 import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import LinkifiedText from '@/components/ui/LinkifiedText';
-import { toLocalISOString, getLocationMeta } from '@/lib/utils';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { toLocalISOString } from '@/lib/utils';
+import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
 
 interface CalendarEvent {
   id: string;
@@ -31,6 +31,7 @@ interface CalendarEvent {
   start: { dateTime: string };
   end: { dateTime: string };
   location?: string;
+  description?: string;
   // Calendar Kit supports per-event styling; use this to color All‑Day chips
   color?: string;
   titleColor?: string;
@@ -108,6 +109,7 @@ export default function ScheduleCalendarView({
           start: { dateTime: toLocalISOString(event.start) },
           end: { dateTime: toLocalISOString(event.end) },
           location: event.location,
+          description: event.description,
           // Ensure All‑Day events (chips) adopt our brand tint color
           color: tintColor,
           // Keep white titles only for All‑Day chips
@@ -149,11 +151,19 @@ export default function ScheduleCalendarView({
 
     const rawLocation =
       typeof event.location === 'string' ? event.location : '';
-    const { url: onlineLink, room, hint, isOnline } =
-      getLocationMeta(rawLocation);
-    const cleanedHint =
-      hint?.replace(/^\s*(?:hinweis|info)\s*:\s*/i, '').trim() ||
-      null;
+    const rawDescription =
+      typeof (event as { description?: unknown }).description ===
+      'string'
+        ? ((event as { description: string }).description ?? '')
+        : '';
+    const {
+      roomText,
+      isOnline,
+      extraTextExpanded,
+    } = getScheduleCardLocationDisplay({
+      location: rawLocation,
+      description: rawDescription,
+    });
 
     const d = startDate.toLocaleDateString('de-DE', {
       year: 'numeric',
@@ -182,13 +192,9 @@ export default function ScheduleCalendarView({
         })();
 
     const detailLines: string[] = [];
-    if (isOnline) {
-      detailLines.push('Online');
-      if (onlineLink) detailLines.push(`Link: ${onlineLink}`);
-    } else if (room.trim().length > 0) {
-      detailLines.push(room.trim());
-    }
-    if (cleanedHint) detailLines.push(`Hinweis: ${cleanedHint}`);
+    if (roomText?.trim()) detailLines.push(roomText.trim());
+    if (isOnline) detailLines.push('Online');
+    if (extraTextExpanded?.trim()) detailLines.push(extraTextExpanded.trim());
 
     const body = [...headerLines, ...detailLines].join('\n');
     Alert.alert(event.title || '', body);
@@ -198,13 +204,21 @@ export default function ScheduleCalendarView({
     (event: PackedEvent) => {
       const rawLocation =
         typeof event.location === 'string' ? event.location : '';
+      const rawDescription =
+        typeof (event as { description?: unknown }).description ===
+        'string'
+          ? ((event as { description: string }).description ?? '')
+          : '';
       const {
-        url: onlineLink,
-        room: roomText,
-        hint,
+        roomText,
         isOnline: online,
-      } = getLocationMeta(rawLocation);
-      const showHintIndicator = !!hint;
+        extraTextCollapsed,
+        hasHiddenUrls,
+      } = getScheduleCardLocationDisplay({
+        location: rawLocation,
+        description: rawDescription,
+      });
+      const showExtraIndicator = !!extraTextCollapsed || hasHiddenUrls;
 
       return (
         <View style={{ height: '100%', padding: 4 }}>
@@ -225,46 +239,7 @@ export default function ScheduleCalendarView({
           </Text>
 
           {/* Compact meta row with icon for Online/Raum */}
-          {online ? (
-            <View style={styles.metaRowSmall}>
-              <IconSymbol
-                name="video"
-                size={12}
-                color={secondaryText}
-                style={styles.metaIconSmall}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 12,
-                  color: eventTextColor,
-                  opacity: 0.85,
-                  flexShrink: 1,
-                }}
-              >
-                {onlineLink ? 'Online: ' : 'Online'}
-                {!!onlineLink && (
-                  <LinkifiedText
-                    value={onlineLink}
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 12,
-                      color: eventTextColor,
-                      opacity: 0.85,
-                    }}
-                  />
-                )}
-              </Text>
-              {showHintIndicator && (
-                <IconSymbol
-                  name="info.circle"
-                  size={12}
-                  color={secondaryText}
-                  style={styles.metaIconSmallTrailing}
-                />
-              )}
-            </View>
-          ) : roomText ? (
+          {roomText ? (
             <View style={styles.metaRowSmall}>
               <IconSymbol
                 name="door.left.hand.open"
@@ -284,7 +259,43 @@ export default function ScheduleCalendarView({
               >
                 {roomText}
               </Text>
-              {showHintIndicator && (
+              {online && (
+                <IconSymbol
+                  name="video"
+                  size={12}
+                  color={secondaryText}
+                  style={styles.metaIconSmallTrailing}
+                />
+              )}
+              {showExtraIndicator && (
+                <IconSymbol
+                  name="info.circle"
+                  size={12}
+                  color={secondaryText}
+                  style={styles.metaIconSmallTrailing}
+                />
+              )}
+            </View>
+          ) : online ? (
+            <View style={styles.metaRowSmall}>
+              <IconSymbol
+                name="video"
+                size={12}
+                color={secondaryText}
+                style={styles.metaIconSmall}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontSize: 12,
+                  color: eventTextColor,
+                  opacity: 0.85,
+                  flexShrink: 1,
+                }}
+              >
+                Online
+              </Text>
+              {showExtraIndicator && (
                 <IconSymbol
                   name="info.circle"
                   size={12}
