@@ -21,6 +21,86 @@ export interface StructuredTimetable {
   [dateKey: string]: TimetableEvent[];
 }
 
+const CALENDAR_TIMEZONE = 'Europe/Berlin';
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+
+const BERLIN_YMD_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  timeZone: CALENDAR_TIMEZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const BERLIN_OFFSET_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  timeZone: CALENDAR_TIMEZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+  hourCycle: 'h23',
+});
+
+function utcDayKeyFromYmd(ymd: string): number {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return Date.UTC(y, m - 1, d);
+}
+
+function addDaysToYmd(ymd: string, days: number): string {
+  const [y, m, d] = ymd.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  const yy = dt.getUTCFullYear();
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getUTCDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
+}
+
+function getBerlinOffsetMinutes(date: Date): number {
+  const parts = BERLIN_OFFSET_FORMATTER.formatToParts(date);
+  const map: Record<string, string> = {};
+  for (const p of parts) {
+    if (p.type !== 'literal') map[p.type] = p.value;
+  }
+
+  let year = Number(map.year);
+  let month = Number(map.month);
+  let day = Number(map.day);
+  let hour = Number(map.hour);
+  const minute = Number(map.minute);
+  const second = Number(map.second);
+
+  // Some Intl implementations can emit "24" for midnight.
+  if (hour === 24) {
+    hour = 0;
+    const tmp = new Date(Date.UTC(year, month - 1, day));
+    tmp.setUTCDate(tmp.getUTCDate() + 1);
+    year = tmp.getUTCFullYear();
+    month = tmp.getUTCMonth() + 1;
+    day = tmp.getUTCDate();
+  }
+
+  const asUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+  return (asUtc - date.getTime()) / 60000;
+}
+
+function berlinMidnight(ymd: string): Date {
+  const utcMidnight = utcDayKeyFromYmd(ymd);
+
+  // Iterate to account for potential offset changes around midnight.
+  let t = utcMidnight;
+  for (let i = 0; i < 3; i += 1) {
+    const offsetMinutes = getBerlinOffsetMinutes(new Date(t));
+    const candidate = utcMidnight - offsetMinutes * 60 * 1000;
+    if (candidate === t) break;
+    t = candidate;
+  }
+
+  return new Date(t);
+}
+
 /**
  * Generates the iCal URL for a given course.
  * Applies alias resolution and normalizes to lowercase for the mailbox name.
@@ -272,28 +352,17 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       const jsStart = event.startDate.toJSDate();
       const jsEnd = event.endDate.toJSDate();
 
-      // Helper: midnight of given date (local time)
-      const atMidnight = (d: Date) => {
-        const x = new Date(d);
-        x.setHours(0, 0, 0, 0);
-        return x;
-      };
-      const isMidnight = (d: Date) =>
-        d.getHours() === 0 &&
-        d.getMinutes() === 0 &&
-        d.getSeconds() === 0 &&
-        d.getMilliseconds() === 0;
-
       // Adjust end by -1ms to include exact-midnight endings into previous day
       const endAdj = new Date(jsEnd.getTime() - 1);
-      const startMid = atMidnight(jsStart);
-      const endMid = atMidnight(endAdj);
+      const startKey = BERLIN_YMD_FORMATTER.format(jsStart);
+      const endKey = BERLIN_YMD_FORMATTER.format(endAdj);
 
       // Number of calendar days spanned between start midnight and (end - 1ms) midnight.
+      // Use UTC day keys to avoid DST-related 23/25h day lengths skewing the calculation.
       // 0 means: only one calendar day → exactly 1 slice.
       const totalDays = Math.floor(
-        (endMid.getTime() - startMid.getTime()) /
-          (24 * 60 * 60 * 1000)
+        (utcDayKeyFromYmd(endKey) - utcDayKeyFromYmd(startKey)) /
+          MS_IN_DAY
       );
 
       // Important: do not use event.duration.days here (for all-day events, DTEND is exclusive).
@@ -303,12 +372,10 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       const isAllDayEvent = !!event.startDate.isDate;
 
       for (let offset = 0; offset <= daysToSplit; offset += 1) {
+        const dayKey = addDaysToYmd(startKey, offset);
         // Day window: [sliceDayStart, sliceDayEnd)
-        const sliceDayStart = new Date(startMid);
-        sliceDayStart.setDate(sliceDayStart.getDate() + offset);
-
-        const sliceDayEnd = atMidnight(new Date(sliceDayStart));
-        sliceDayEnd.setDate(sliceDayEnd.getDate() + 1);
+        const sliceDayStart = berlinMidnight(dayKey);
+        const sliceDayEnd = berlinMidnight(addDaysToYmd(dayKey, 1));
 
         const isFirst = offset === 0;
         const isLast = offset === daysToSplit;
@@ -330,18 +397,9 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         // - Keep true for DATE-based (all-day) events
         // - Or mark as allDay when this slice cleanly spans one full calendar day
         //   (00:00 → next 00:00), inklusive 23/25h wegen DST.
-        const nextMidnightFromStart = atMidnight(
-          new Date(sliceStart)
-        );
-        nextMidnightFromStart.setDate(
-          nextMidnightFromStart.getDate() + 1
-        );
-
         const isFullDayAligned =
-          isMidnight(sliceStart) &&
-          isMidnight(sliceEnd) &&
-          sliceEnd.getTime() === nextMidnightFromStart.getTime();
-
+          sliceStart.getTime() === sliceDayStart.getTime() &&
+          sliceEnd.getTime() === sliceDayEnd.getTime();
         const sliceAllDay = isAllDayEvent || isFullDayAligned;
 
         allEvents.push({
@@ -383,16 +441,8 @@ function structureEventsByDay(
   // Chronological order makes UI rendering trivial
   events.sort((a, b) => a.start.getTime() - b.start.getTime());
 
-  // Ensure grouping by calendar date follows the same timezone as rendering (Europe/Berlin)
-  const fmt = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Berlin',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  });
-
   events.forEach((event) => {
-    const dateKey = fmt.format(event.start); // → YYYY‑MM‑DD in Europe/Berlin
+    const dateKey = BERLIN_YMD_FORMATTER.format(event.start); // → YYYY‑MM‑DD in Europe/Berlin
     if (!structured[dateKey]) structured[dateKey] = [];
     structured[dateKey].push(event);
   });
