@@ -9,18 +9,19 @@ import {
  * It uses React Query for caching, background updates, and state management.
  */
 export function useTimetable(course?: string) {
+  const normalizedCourse = course?.trim() || undefined;
   return useQuery<StructuredTimetable, Error>({
     // We specify the success and error types
-    queryKey: ['schedule', course], // Include course in the key for proper caching per course
+    queryKey: ['schedule', normalizedCourse], // Include course in the key for proper caching per course
     queryFn: () => {
-      if (!course) {
+      if (!normalizedCourse) {
         throw new Error('Kein Kurs ausgewählt');
       }
-      return getStructuredTimetable(course);
+      return getStructuredTimetable(normalizedCourse);
     },
 
     // Only run the query if we have a course
-    enabled: Boolean(course && course.trim()),
+    enabled: Boolean(normalizedCourse),
 
     // Caching configuration:
     staleTime: 1000 * 60 * 60 * 4, // Data is considered "fresh" for 4 hours. No refetch on mount.

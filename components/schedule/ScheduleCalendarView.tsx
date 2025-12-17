@@ -32,9 +32,25 @@ interface CalendarEvent {
   end: { dateTime: string };
   location?: string;
   description?: string;
+  allDay?: boolean;
   // Calendar Kit supports per-event styling; use this to color All‑Day chips
   color?: string;
   titleColor?: string;
+}
+
+function getOptionalStringField(obj: unknown, field: string): string {
+  if (!obj || typeof obj !== 'object') return '';
+  const value = (obj as Record<string, unknown>)[field];
+  return typeof value === 'string' ? value : '';
+}
+
+function getOptionalBooleanField(
+  obj: unknown,
+  field: string
+): boolean | null {
+  if (!obj || typeof obj !== 'object') return null;
+  const value = (obj as Record<string, unknown>)[field];
+  return typeof value === 'boolean' ? value : null;
 }
 
 interface ScheduleCalendarViewProps {
@@ -95,13 +111,7 @@ export default function ScheduleCalendarView({
 
     Object.keys(data).forEach((dateKey) => {
       data[dateKey].forEach((event) => {
-        // Detect all‑day events by midnight alignment and full‑day multiples
-        const msInDay = 24 * 60 * 60 * 1000;
-        const isAllDay =
-          event.start.getHours() === 0 &&
-          event.start.getMinutes() === 0 &&
-          (event.end.getTime() - event.start.getTime()) % msInDay ===
-            0;
+        const isAllDay = !!event.allDay;
 
         allEvents.push({
           id: event.uid,
@@ -110,6 +120,7 @@ export default function ScheduleCalendarView({
           end: { dateTime: toLocalISOString(event.end) },
           location: event.location,
           description: event.description,
+          allDay: isAllDay,
           // Ensure All‑Day events (chips) adopt our brand tint color
           color: tintColor,
           // Keep white titles only for All‑Day chips
@@ -151,11 +162,7 @@ export default function ScheduleCalendarView({
 
     const rawLocation =
       typeof event.location === 'string' ? event.location : '';
-    const rawDescription =
-      typeof (event as { description?: unknown }).description ===
-      'string'
-        ? ((event as { description: string }).description ?? '')
-        : '';
+    const rawDescription = getOptionalStringField(event, 'description');
     const {
       roomText,
       isOnline,
@@ -171,11 +178,7 @@ export default function ScheduleCalendarView({
       day: 'numeric',
       weekday: 'long',
     });
-    const msInDay = 24 * 60 * 60 * 1000;
-    const isAllDay =
-      startDate.getHours() === 0 &&
-      startDate.getMinutes() === 0 &&
-      (endDate.getTime() - startDate.getTime()) % msInDay === 0;
+    const isAllDay = getOptionalBooleanField(event, 'allDay') ?? false;
 
     const headerLines = isAllDay
       ? [`${d}`, 'Ganzer Tag']
@@ -204,11 +207,7 @@ export default function ScheduleCalendarView({
     (event: PackedEvent) => {
       const rawLocation =
         typeof event.location === 'string' ? event.location : '';
-      const rawDescription =
-        typeof (event as { description?: unknown }).description ===
-        'string'
-          ? ((event as { description: string }).description ?? '')
-          : '';
+      const rawDescription = getOptionalStringField(event, 'description');
       const {
         roomText,
         isOnline: online,

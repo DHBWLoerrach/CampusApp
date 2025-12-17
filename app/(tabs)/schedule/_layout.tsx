@@ -54,7 +54,7 @@ export default function ScheduleLayout() {
             ? (saved as SubTabName)
             : 'index'
         );
-      } catch (e) {
+      } catch {
         if (mounted) setInitialSubTab('index');
       }
     })();
