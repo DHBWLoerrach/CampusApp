@@ -229,22 +229,10 @@ function normalizeDateString(v: any): string | undefined {
   return s;
 }
 
-function inferDateFromContext(_obj: any): string | undefined {
-  return undefined;
-}
-
 function pickFirst<T = any>(obj: any, keys: string[]): T | undefined {
   for (const k of keys)
     if (obj && Object.prototype.hasOwnProperty.call(obj, k))
       return obj[k] as T;
-  return undefined;
-}
-
-function joinIfArrayOrString(v: any): string | undefined {
-  if (!v) return undefined;
-  if (Array.isArray(v))
-    return v.filter(Boolean).map(String).join(', ');
-  if (typeof v === 'string') return v;
   return undefined;
 }
 

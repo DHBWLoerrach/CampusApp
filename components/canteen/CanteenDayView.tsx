@@ -101,14 +101,13 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const badgeBg = useThemeColor({}, 'dayNumberContainer');
   const badgeBorder = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
-  const pageBg = useThemeColor({}, 'background');
   const isDark = useColorScheme() === 'dark';
   const [expandedMap, setExpandedMap] = useState<
     Record<number, boolean>
   >({});
   const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
 
-  const { data, isLoading, error, refetch } = useQuery<
+  const { data, isLoading, isFetching, error, refetch } = useQuery<
     { days: CanteenDay[] },
     Error
   >({
@@ -174,8 +173,10 @@ export default function CanteenDayView({ date }: { date: Date }) {
           stickyHeaderIndices={showNfcHeader ? [0] : undefined}
           refreshControl={
             <RefreshControl
-              refreshing={isLoading}
-              onRefresh={() => refetch()}
+              refreshing={isFetching}
+              onRefresh={() => {
+                void refetch();
+              }}
               tintColor={tintColor}
             />
           }
