@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Checkbox from 'expo-checkbox';
+import ExpoCheckbox from 'expo-checkbox';
 import { Stack, router } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -75,7 +75,7 @@ export default function WelcomeScreen() {
           </ThemedText>
           <RoleSelection
             role={pendingRole}
-            onRoleChange={setPendingRole as any}
+            onRoleChange={(r) => setPendingRole(r)}
           />
         </ThemedView>
 
@@ -104,7 +104,7 @@ export default function WelcomeScreen() {
           </Pressable>
 
           <View style={styles.acceptTermsRow}>
-            <Checkbox
+            <ExpoCheckbox
               value={disclaimerChecked}
               onValueChange={setDisclaimerChecked}
               color={disclaimerChecked ? dhbwRed : undefined}

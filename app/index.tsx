@@ -61,7 +61,7 @@ export default function Page() {
         } else {
           setLastScheduleSubTab(null);
         }
-      } catch (e) {
+      } catch {
         if (mounted) setLastTab('news');
       }
     })();
