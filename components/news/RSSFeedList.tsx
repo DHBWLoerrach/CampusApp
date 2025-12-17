@@ -33,16 +33,20 @@ const handleOpen = async (url: string) => {
 
 function ListItem({ item }: { item: Item }) {
   const thumb = item.enclosures?.[0]?.url;
-  const publishedDate = new Date(item.published);
   const now = new Date();
 
-  const date =
-    publishedDate > now
+  const publishedDate = item.published ? new Date(item.published) : null;
+  const hasValidPublishedDate =
+    !!publishedDate && !Number.isNaN(publishedDate.getTime());
+
+  const date = hasValidPublishedDate
+    ? publishedDate > now
       ? format(publishedDate, 'EEEE, dd.MM.yyyy', { locale: de })
       : formatDistanceToNow(publishedDate, {
           addSuffix: true,
           locale: de,
-        });
+        })
+    : '—';
 
   const shadowColor = useThemeColor({}, 'text');
 
@@ -99,7 +103,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
       setError(null);
       const parsed = await fetchAndParseRSSFeed(feedUrl);
       setItems(parsed.items);
-    } catch (err) {
+    } catch {
       setError('Fehler beim Laden des RSS-Feeds');
     } finally {
       setLoading(false);
@@ -107,7 +111,9 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     }
   }, [feedUrl]);
 
-  useEffect(() => void loadFeed(), [feedUrl]);
+  useEffect(() => {
+    void loadFeed();
+  }, [loadFeed]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
