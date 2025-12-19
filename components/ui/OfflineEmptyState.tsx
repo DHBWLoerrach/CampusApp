@@ -7,7 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function OfflineEmptyState({
   title = 'Keine Internetverbindung',
-  message = 'Aktuelles und Termine können gerade nicht geladen werden.',
+  message = 'Inhalte können ohne Internetverbindung nicht geladen werden.',
   onOpenSettings,
   onRetry,
   style,
@@ -48,7 +48,9 @@ export default function OfflineEmptyState({
               ]}
               hitSlop={8}
             >
-              <ThemedText style={[styles.buttonText, { color: tintColor }]}>
+              <ThemedText
+                style={[styles.buttonText, { color: tintColor }]}
+              >
                 Einstellungen öffnen
               </ThemedText>
             </Pressable>
@@ -116,4 +118,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

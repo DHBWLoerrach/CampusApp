@@ -78,7 +78,7 @@ describe('RSSFeedList', () => {
     expect(getByText('Keine Internetverbindung')).toBeTruthy();
     expect(
       getByText(
-        'Aktuelles und Termine können gerade nicht geladen werden.'
+        'Inhalte können ohne Internetverbindung nicht geladen werden.'
       )
     ).toBeTruthy();
     expect(getByText('Einstellungen öffnen')).toBeTruthy();
@@ -154,5 +154,36 @@ describe('RSSFeedList', () => {
     );
 
     expect(getByText('Beitrag 1')).toBeTruthy();
+  });
+
+  it('refetches when coming back online', () => {
+    const refetch = jest.fn();
+    mockUseOnlineStatus.mockReturnValue({
+      isOnline: false,
+      isOffline: true,
+      isReady: true,
+    });
+    mockUseQuery.mockReturnValue({
+      data: sampleFeed(),
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      refetch,
+      dataUpdatedAt: 1,
+    });
+
+    const { rerender } = render(
+      <RSSFeedList feedUrl="https://example.com/rss" />
+    );
+
+    // Simulate coming back online
+    mockUseOnlineStatus.mockReturnValue({
+      isOnline: true,
+      isOffline: false,
+      isReady: true,
+    });
+    rerender(<RSSFeedList feedUrl="https://example.com/rss" />);
+
+    expect(refetch).toHaveBeenCalledTimes(1);
   });
 });
