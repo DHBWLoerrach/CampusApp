@@ -20,7 +20,7 @@ export default function OfflineBanner({
 
   return (
     <ThemedView
-      accessibilityRole="status"
+      accessibilityRole="summary"
       accessibilityLabel={`${title}. ${message}`}
       style={[
         styles.container,
@@ -76,4 +76,3 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
 });
-

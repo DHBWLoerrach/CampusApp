@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Linking,
   Pressable,
+  Platform,
   RefreshControl,
   StyleSheet,
   View,
@@ -13,6 +15,9 @@ import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
 import { fetchAndParseRSSFeed, type RSSItem } from '@/lib/rssParser';
@@ -91,6 +96,7 @@ function ListItem({ item }: { item: Item }) {
 export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const ref = useRef<FlatList>(null);
   useScrollToTop(ref);
+  const { isOnline, isOffline, isReady } = useOnlineStatus();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -115,6 +121,20 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     void loadFeed();
   }, [loadFeed]);
 
+  // Auto-refresh when the device comes back online (while this screen is mounted)
+  const prevOnlineRef = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (!isReady) return;
+    const prevOnline = prevOnlineRef.current;
+    prevOnlineRef.current = isOnline;
+
+    const cameBackOnline = prevOnline === false && isOnline === true;
+    if (!cameBackOnline) return;
+
+    setRefreshing(true);
+    void loadFeed();
+  }, [isOnline, isReady, loadFeed]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     void loadFeed();
@@ -128,7 +148,26 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     );
   }
 
-  if (error) {
+  // Offline + no data: show a dedicated empty state instead of a generic error.
+  const showOffline = isReady && isOffline;
+  const hasItems = items.length > 0;
+  if (showOffline && !hasItems) {
+    const onOpenSettings =
+      Platform.OS === 'web'
+        ? undefined
+        : () => {
+            void Linking.openSettings();
+          };
+    return (
+      <OfflineEmptyState
+        onOpenSettings={onOpenSettings}
+        onRetry={onRefresh}
+      />
+    );
+  }
+
+  // No data + error: show the existing retry UI.
+  if (error && !hasItems) {
     return (
       <ThemedView style={styles.centered}>
         <ThemedText style={styles.errorText}>{error}</ThemedText>
@@ -151,6 +190,11 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
 
   return (
     <ThemedView style={styles.container}>
+      {showOffline && hasItems ? (
+        <View style={styles.bannerWrap}>
+          <OfflineBanner />
+        </View>
+      ) : null}
       <FlatList
         ref={ref}
         data={items}
@@ -164,6 +208,11 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
             onRefresh={onRefresh}
             tintColor={tintColor}
           />
+        }
+        ListEmptyComponent={
+          <View style={styles.centered}>
+            <ThemedText>Keine Einträge gefunden.</ThemedText>
+          </View>
         }
       />
     </ThemedView>
@@ -182,6 +231,11 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
+  },
+  bannerWrap: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 4,
   },
   card: {
     flexDirection: 'row',
