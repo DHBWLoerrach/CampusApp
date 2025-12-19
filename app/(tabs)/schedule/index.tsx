@@ -1,6 +1,8 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
+  Linking,
+  Platform,
   RefreshControl,
   SectionList,
   StyleSheet,
@@ -12,10 +14,13 @@ import LectureCard from '@/components/schedule/LectureCard';
 import { useCourseContext } from '@/context/CourseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -40,8 +45,9 @@ export default function ScheduleList() {
   const ref = useRef<SectionList>(null);
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
-  const { data, isLoading, isError, error, refetch, isFetching } =
+  const { data, isLoading, isError, error, refetch, isFetching, dataUpdatedAt } =
     useTimetable(selectedCourse || undefined);
+  const { isOnline, isOffline, isReady } = useOnlineStatus();
 
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -49,6 +55,19 @@ export default function ScheduleList() {
   const scheme = useColorScheme() ?? 'light';
   const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
+
+  // Auto-refresh when the device comes back online
+  const prevOnlineRef = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (!isReady) return;
+    const prevOnline = prevOnlineRef.current;
+    prevOnlineRef.current = isOnline;
+
+    const cameBackOnline = prevOnline === false && isOnline === true;
+    if (!cameBackOnline) return;
+
+    void refetch();
+  }, [isOnline, isReady, refetch]);
 
   // useMemo will re-calculate the sections only when the timetable data changes.
   // This is a performance optimization.
@@ -79,7 +98,27 @@ export default function ScheduleList() {
     );
   }
 
-  if (isError) {
+  // Offline + no data: show dedicated empty state
+  const showOffline = isReady && isOffline;
+  const hasData = sections.length > 0;
+  if (showOffline && !hasData) {
+    const onOpenSettings =
+      Platform.OS === 'web'
+        ? undefined
+        : () => {
+            void Linking.openSettings();
+          };
+    return (
+      <OfflineEmptyState
+        message="Der Vorlesungsplan kann ohne Internetverbindung nicht geladen werden."
+        onOpenSettings={onOpenSettings}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
+  // Online + error + no data: show error state
+  if (isError && !hasData) {
     return (
       <ErrorWithReloadButton
         error={error as Error}
@@ -91,6 +130,21 @@ export default function ScheduleList() {
 
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
+      {showOffline && hasData ? (
+        <OfflineBanner
+          style={styles.banner}
+          message={
+            dataUpdatedAt
+              ? `Letzte Aktualisierung: ${new Date(
+                  dataUpdatedAt
+                ).toLocaleTimeString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })} Uhr`
+              : 'Inhalte können nicht aktualisiert werden.'
+          }
+        />
+      ) : null}
       <SectionList
         ref={ref}
         sections={sections}
@@ -142,6 +196,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     marginTop: 50,
+  },
+  banner: {
+    marginTop: 12,
+    marginBottom: 4,
   },
   sectionHeader: {
     borderRadius: 8,

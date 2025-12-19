@@ -15,9 +15,11 @@ import {
 import { ThemedView } from '@/components/ui/ThemedView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { validateCourse } from '@/lib/icalService';
 import { useCourseContext } from '@/context/CourseContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import OfflineBanner from '@/components/ui/OfflineBanner';
 
 interface CourseSetupProps {
   onCourseSelected: (course: string) => void;
@@ -30,6 +32,7 @@ export default function CourseSetup({
   const [isValidating, setIsValidating] = useState(false);
   const { previousCourses, removeCourseFromHistory } =
     useCourseContext();
+  const { isOffline, isReady } = useOnlineStatus();
 
   // Resolve theme-aware colors
   const textColor = useThemeColor({}, 'text');
@@ -38,6 +41,8 @@ export default function CourseSetup({
   const placeholderColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
   // Disabled button uses same tint color with reduced opacity (see Welcome screen)
+  
+  const showOffline = isReady && isOffline;
 
   // Keep previous courses sorted ascending for display
   const sortedPreviousCourses = useMemo(
@@ -54,6 +59,15 @@ export default function CourseSetup({
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
       Alert.alert('Fehler', 'Bitte geben Sie einen Kursnamen ein.');
+      return;
+    }
+
+    // Block validation when offline
+    if (showOffline) {
+      Alert.alert(
+        'Keine Internetverbindung',
+        'Neue Kurse können nur online geprüft werden. Wählen Sie einen bereits verwendeten Kurs aus der Liste oder verbinden Sie sich mit dem Internet.'
+      );
       return;
     }
 
@@ -95,6 +109,12 @@ export default function CourseSetup({
           keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
         >
           <View style={styles.contentContainer}>
+            {showOffline && (
+              <OfflineBanner
+                style={styles.banner}
+                message="Neue Kurse können nur online geprüft werden."
+              />
+            )}
             <View style={styles.content}>
               <View style={styles.inputContainer}>
                 {/* Input with trailing action button inside */}
@@ -244,6 +264,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingVertical: 24,
+  },
+  banner: {
+    marginBottom: 16,
   },
   content: {
     flex: 1,
