@@ -45,15 +45,8 @@ export default function ScheduleList() {
   const ref = useRef<SectionList>(null);
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-    isFetching,
-    dataUpdatedAt,
-  } = useTimetable(selectedCourse || undefined);
+  const { data, isLoading, isError, error, refetch, isFetching } =
+    useTimetable(selectedCourse || undefined);
   const { isOnline, isOffline, isReady } = useOnlineStatus();
 
   // Theme-aware colors
@@ -138,19 +131,7 @@ export default function ScheduleList() {
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
       {showOffline && hasData ? (
-        <OfflineBanner
-          style={styles.banner}
-          message={
-            dataUpdatedAt
-              ? `Letzte Aktualisierung: ${new Date(
-                  dataUpdatedAt
-                ).toLocaleTimeString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })} Uhr`
-              : 'Inhalte können nicht aktualisiert werden.'
-          }
-        />
+        <OfflineBanner style={styles.banner} />
       ) : null}
       <SectionList
         ref={ref}

@@ -108,14 +108,10 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const backgroundColor = useThemeColor({}, 'background');
 
   const queryKey = useMemo(() => ['rss', feedUrl], [feedUrl]);
-  const {
-    data,
-    error,
-    isLoading,
-    isFetching,
-    refetch,
-    dataUpdatedAt,
-  } = useQuery<RSSFeed, Error>({
+  const { data, error, isLoading, isFetching, refetch } = useQuery<
+    RSSFeed,
+    Error
+  >({
     queryKey,
     queryFn: () => fetchAndParseRSSFeed(feedUrl),
     staleTime: 1000 * 60 * 15, // 15 minutes
@@ -195,18 +191,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     <ThemedView style={styles.container}>
       {showOffline && hasItems ? (
         <View style={styles.bannerWrap}>
-          <OfflineBanner
-            message={
-              dataUpdatedAt
-                ? `Letzte Aktualisierung: ${new Date(
-                    dataUpdatedAt
-                  ).toLocaleTimeString('de-DE', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })} Uhr`
-                : 'Inhalte können nicht aktualisiert werden.'
-            }
-          />
+          <OfflineBanner />
         </View>
       ) : null}
       <FlatList

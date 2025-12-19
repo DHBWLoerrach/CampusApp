@@ -112,14 +112,10 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
   const { isOnline, isOffline, isReady } = useOnlineStatus();
 
-  const {
-    data,
-    isLoading,
-    isFetching,
-    error,
-    refetch,
-    dataUpdatedAt,
-  } = useQuery<{ days: CanteenDay[] }, Error>({
+  const { data, isLoading, isFetching, error, refetch } = useQuery<
+    { days: CanteenDay[] },
+    Error
+  >({
     queryKey: ['canteen-swfr'],
     queryFn: async () => {
       const raw = await fetchCanteenRaw();
@@ -225,19 +221,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
           }
         >
           {showOffline && hasData ? (
-            <OfflineBanner
-              style={styles.banner}
-              message={
-                dataUpdatedAt
-                  ? `Letzte Aktualisierung: ${new Date(
-                      dataUpdatedAt
-                    ).toLocaleTimeString('de-DE', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })} Uhr`
-                  : 'Inhalte können nicht aktualisiert werden.'
-              }
-            />
+            <OfflineBanner style={styles.banner} />
           ) : null}
           {showNfcHeader ? <NfcButton /> : null}
           {meals.map((m, idx) => {

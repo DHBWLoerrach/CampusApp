@@ -105,7 +105,9 @@ describe('RSSFeedList', () => {
     );
 
     expect(getByText('Offline')).toBeTruthy();
-    expect(getByText(/Aktualisierung/)).toBeTruthy();
+    expect(
+      getByText('Inhalte können nicht aktualisiert werden.')
+    ).toBeTruthy();
     expect(getByText('Beitrag 1')).toBeTruthy();
   });
 
