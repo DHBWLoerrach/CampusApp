@@ -1,5 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -24,10 +26,12 @@ import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useRoleContext } from '@/context/RoleContext';
 import type { Role } from '@/constants/Roles';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useState } from 'react';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 
 function resolveMealPrice(
   prices: CanteenMeal['prices'],
@@ -106,11 +110,16 @@ export default function CanteenDayView({ date }: { date: Date }) {
     Record<number, boolean>
   >({});
   const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
+  const { isOnline, isOffline, isReady } = useOnlineStatus();
 
-  const { data, isLoading, isFetching, error, refetch } = useQuery<
-    { days: CanteenDay[] },
-    Error
-  >({
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+    dataUpdatedAt,
+  } = useQuery<{ days: CanteenDay[] }, Error>({
     queryKey: ['canteen-swfr'],
     queryFn: async () => {
       const raw = await fetchCanteenRaw();
@@ -119,10 +128,42 @@ export default function CanteenDayView({ date }: { date: Date }) {
     },
   });
 
+  // Auto-refresh when the device comes back online
+  const prevOnlineRef = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (!isReady) return;
+    const prevOnline = prevOnlineRef.current;
+    prevOnlineRef.current = isOnline;
+
+    const cameBackOnline = prevOnline === false && isOnline === true;
+    if (!cameBackOnline) return;
+
+    void refetch();
+  }, [isOnline, isReady, refetch]);
+
   const meals: CanteenMeal[] = data?.days
     ? mealsForDate(data.days, safeDate)
     : [];
   const closure = getCanteenClosure(safeDate);
+  const showOffline = isReady && isOffline;
+  const hasData = data?.days && data.days.length > 0;
+
+  // Offline + no data: show dedicated empty state
+  if (showOffline && !hasData && !isLoading) {
+    const onOpenSettings =
+      Platform.OS === 'web'
+        ? undefined
+        : () => {
+            void Linking.openSettings();
+          };
+    return (
+      <OfflineEmptyState
+        message="Der Speiseplan kann ohne Internetverbindung nicht geladen werden."
+        onOpenSettings={onOpenSettings}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>
@@ -133,7 +174,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
             Lade Speiseplan …
           </ThemedText>
         </View>
-      ) : error ? (
+      ) : error && !hasData ? (
         <View style={styles.center}>
           <ThemedText type="defaultSemiBold" style={styles.error}>
             Fehler beim Laden des Speiseplans
@@ -170,7 +211,9 @@ export default function CanteenDayView({ date }: { date: Date }) {
       ) : (
         <ScrollView
           contentContainerStyle={styles.listContent}
-          stickyHeaderIndices={showNfcHeader ? [0] : undefined}
+          stickyHeaderIndices={
+            showNfcHeader ? [showOffline ? 1 : 0] : undefined
+          }
           refreshControl={
             <RefreshControl
               refreshing={isFetching}
@@ -181,6 +224,21 @@ export default function CanteenDayView({ date }: { date: Date }) {
             />
           }
         >
+          {showOffline && hasData ? (
+            <OfflineBanner
+              style={styles.banner}
+              message={
+                dataUpdatedAt
+                  ? `Letzte Aktualisierung: ${new Date(
+                      dataUpdatedAt
+                    ).toLocaleTimeString('de-DE', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })} Uhr`
+                  : 'Inhalte können nicht aktualisiert werden.'
+              }
+            />
+          ) : null}
           {showNfcHeader ? <NfcButton /> : null}
           {meals.map((m, idx) => {
             const price = resolveMealPrice(m.prices, selectedRole);
@@ -359,6 +417,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 16,
     gap: 8,
+  },
+  banner: {
+    marginBottom: 4,
   },
   listContent: {
     padding: 12,
