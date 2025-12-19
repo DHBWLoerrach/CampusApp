@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -13,6 +13,7 @@ import { Image } from 'expo-image';
 import { useScrollToTop } from '@react-navigation/native';
 import { formatDistanceToNow, format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { useQuery } from '@tanstack/react-query';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import OfflineBanner from '@/components/ui/OfflineBanner';
@@ -20,7 +21,11 @@ import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
-import { fetchAndParseRSSFeed, type RSSItem } from '@/lib/rssParser';
+import {
+  fetchAndParseRSSFeed,
+  type RSSFeed,
+  type RSSItem,
+} from '@/lib/rssParser';
 import { openLink } from '@/lib/utils';
 
 interface RSSFeedListProps {
@@ -40,7 +45,9 @@ function ListItem({ item }: { item: Item }) {
   const thumb = item.enclosures?.[0]?.url;
   const now = new Date();
 
-  const publishedDate = item.published ? new Date(item.published) : null;
+  const publishedDate = item.published
+    ? new Date(item.published)
+    : null;
   const hasValidPublishedDate =
     !!publishedDate && !Number.isNaN(publishedDate.getTime());
 
@@ -97,29 +104,26 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const ref = useRef<FlatList>(null);
   useScrollToTop(ref);
   const { isOnline, isOffline, isReady } = useOnlineStatus();
-  const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const tintColor = useThemeColor({}, 'tint');
   const backgroundColor = useThemeColor({}, 'background');
 
-  const loadFeed = useCallback(async () => {
-    try {
-      setError(null);
-      const parsed = await fetchAndParseRSSFeed(feedUrl);
-      setItems(parsed.items);
-    } catch {
-      setError('Fehler beim Laden des RSS-Feeds');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [feedUrl]);
+  const queryKey = useMemo(() => ['rss', feedUrl], [feedUrl]);
+  const {
+    data,
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+    dataUpdatedAt,
+  } = useQuery<RSSFeed, Error>({
+    queryKey,
+    queryFn: () => fetchAndParseRSSFeed(feedUrl),
+    staleTime: 1000 * 60 * 15, // 15 minutes
+    gcTime: 1000 * 60 * 60 * 6, // 6 hours
+    retry: 1,
+  });
 
-  useEffect(() => {
-    void loadFeed();
-  }, [loadFeed]);
+  const items = data?.items ?? [];
 
   // Auto-refresh when the device comes back online (while this screen is mounted)
   const prevOnlineRef = useRef<boolean | null>(null);
@@ -131,16 +135,14 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     const cameBackOnline = prevOnline === false && isOnline === true;
     if (!cameBackOnline) return;
 
-    setRefreshing(true);
-    void loadFeed();
-  }, [isOnline, isReady, loadFeed]);
+    void refetch();
+  }, [isOnline, isReady, refetch]);
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    void loadFeed();
-  }, [loadFeed]);
+    void refetch();
+  }, [refetch]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <ThemedView style={styles.centered}>
         <ActivityIndicator color={tintColor} />
@@ -170,12 +172,13 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   if (error && !hasItems) {
     return (
       <ThemedView style={styles.centered}>
-        <ThemedText style={styles.errorText}>{error}</ThemedText>
+        <ThemedText style={styles.errorText}>
+          Fehler beim Laden des RSS-Feeds
+        </ThemedText>
         <Pressable
           style={[styles.retryButton, { borderColor: tintColor }]}
           onPress={() => {
-            setLoading(true);
-            void loadFeed();
+            void onRefresh();
           }}
         >
           <ThemedText
@@ -192,7 +195,18 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     <ThemedView style={styles.container}>
       {showOffline && hasItems ? (
         <View style={styles.bannerWrap}>
-          <OfflineBanner />
+          <OfflineBanner
+            message={
+              dataUpdatedAt
+                ? `Letzte Aktualisierung: ${new Date(
+                    dataUpdatedAt
+                  ).toLocaleTimeString('de-DE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })} Uhr`
+                : 'Inhalte können nicht aktualisiert werden.'
+            }
+          />
         </View>
       ) : null}
       <FlatList
@@ -204,7 +218,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
         style={{ backgroundColor }}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={isFetching}
             onRefresh={onRefresh}
             tintColor={tintColor}
           />
