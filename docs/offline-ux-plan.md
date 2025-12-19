@@ -14,20 +14,26 @@
 - [x] Move RSS fetching to TanStack Query.
 - [x] Add component test for `RSSFeedList`.
 - [x] Run full lint and test suite.
+- [x] Roll out offline UX to Schedule (list + CourseSetup).
+- [x] Roll out offline UX to Canteen.
+- [x] Roll out offline UX to Rides.
 
 ## Next Steps
 
-- [ ] Roll out offline UX to Schedule, Canteen, and Rides.
-- [ ] Standardize screen behavior:
-  - offline + cached data -> show data + `OfflineBanner` with last updated time
-  - offline + empty -> show `OfflineEmptyState`
-  - online + error -> error state with retry
 - [ ] After rollout, wire React Query `onlineManager` globally.
 - [ ] Optional: distinguish "offline" vs "invalid course" in course validation.
 
 ## Design Decisions
 
 - Offline banner is **sticky** (does not scroll with content) for better visibility.
+- Offline banner uses **static text** (`'Inhalte können nicht aktualisiert werden.'`) — no timestamps.
+- `CourseSetup` has a **specific message** since it blocks validation, not cached data display.
+
+## Standardized Screen Behavior
+
+- offline + cached data -> show data + `OfflineBanner`
+- offline + empty -> show `OfflineEmptyState`
+- online + error -> error state with retry
 
 ## Open Questions
 

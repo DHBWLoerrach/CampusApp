@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   View,
@@ -8,6 +8,8 @@ import {
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import OfflineBanner from '@/components/ui/OfflineBanner';
 
 // ---- Data hook ----
 import { useRidesIndex } from '@/hooks/useRidesIndex';
@@ -202,9 +204,25 @@ export default function RideMatchSheetContent({
 }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [mode, setMode] = useState<MatchMode>('exact');
-  const { data: ridesIndex, isLoading, error } = useRidesIndex();
+  const { data: ridesIndex, isLoading, error, refetch } = useRidesIndex();
+  const { isOnline, isOffline, isReady } = useOnlineStatus();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  // Auto-refresh when the device comes back online
+  const prevOnlineRef = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (!isReady) return;
+    const prevOnline = prevOnlineRef.current;
+    prevOnlineRef.current = isOnline;
+
+    const cameBackOnline = prevOnline === false && isOnline === true;
+    if (!cameBackOnline) return;
+
+    void refetch();
+  }, [isOnline, isReady, refetch]);
+
+  const showOffline = isReady && isOffline;
 
   // Precompute day rows once
   const rows = useMemo(
@@ -287,10 +305,14 @@ export default function RideMatchSheetContent({
         </ThemedText>
       </View>
 
+      {showOffline && (
+        <OfflineBanner style={styles.banner} />
+      )}
+
       {isLoading && (
         <ThemedText style={[styles.info, styles.muted]}>Lade Mitfahrdaten …</ThemedText>
       )}
-      {!isLoading && error && (
+      {!isLoading && !showOffline && error && (
         <ThemedText style={[styles.info, styles.muted]}>
           {error.message || 'Mitfahrdaten konnten nicht geladen werden.'}
         </ThemedText>
@@ -625,6 +647,7 @@ function Section({
 
 const styles = StyleSheet.create({
   container: { gap: 12 },
+  banner: { marginBottom: 4 },
   info: { fontSize: 14, opacity: 0.8, textAlign: 'center' },
   bold: { fontSize: 14, fontWeight: '700' },
   card: {
