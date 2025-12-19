@@ -45,8 +45,15 @@ export default function ScheduleList() {
   const ref = useRef<SectionList>(null);
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
-  const { data, isLoading, isError, error, refetch, isFetching, dataUpdatedAt } =
-    useTimetable(selectedCourse || undefined);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+    dataUpdatedAt,
+  } = useTimetable(selectedCourse || undefined);
   const { isOnline, isOffline, isReady } = useOnlineStatus();
 
   // Theme-aware colors

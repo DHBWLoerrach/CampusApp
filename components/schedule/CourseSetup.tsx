@@ -41,7 +41,7 @@ export default function CourseSetup({
   const placeholderColor = useThemeColor({}, 'icon');
   const tintColor = useThemeColor({}, 'tint');
   // Disabled button uses same tint color with reduced opacity (see Welcome screen)
-  
+
   const showOffline = isReady && isOffline;
 
   // Keep previous courses sorted ascending for display
