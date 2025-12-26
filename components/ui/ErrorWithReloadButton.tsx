@@ -1,7 +1,7 @@
-import { Button, StyleSheet, View } from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { Button, StyleSheet, View } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function ErrorWithReloadButton({
   error,
@@ -12,7 +12,7 @@ export default function ErrorWithReloadButton({
   isFetching: boolean;
   refetch: () => void;
 }) {
-  const tintColor = useThemeColor({}, 'tint');
+  const tintColor = useThemeColor({}, "tint");
 
   return (
     <ThemedView style={styles.center}>
@@ -24,7 +24,7 @@ export default function ErrorWithReloadButton({
       </ThemedText>
       <View style={{ marginTop: 12 }}>
         <Button
-          title={isFetching ? 'Wird neu geladen…' : 'Neu laden'}
+          title={isFetching ? "Wird neu geladen…" : "Neu laden"}
           onPress={() => refetch()}
           color={tintColor}
           disabled={isFetching}
@@ -38,13 +38,13 @@ export default function ErrorWithReloadButton({
 const styles = StyleSheet.create({
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
     marginTop: 50,
   },
   errorText: {
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
   },
 });

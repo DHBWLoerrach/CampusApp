@@ -4,11 +4,11 @@ import {
   useContext,
   useState,
   useEffect,
-} from 'react';
-import Storage from 'expo-sqlite/kv-store';
+} from "react";
+import Storage from "expo-sqlite/kv-store";
 
-const COURSE_KEY = 'scheduleCourse';
-const HISTORY_KEY = 'scheduleCourseHistory';
+const COURSE_KEY = "scheduleCourse";
+const HISTORY_KEY = "scheduleCourseHistory";
 
 // Course Context for sharing course state across the app
 interface CourseContextType {
@@ -19,16 +19,12 @@ interface CourseContextType {
   removeCourseFromHistory: (course: string) => Promise<void>;
 }
 
-const CourseContext = createContext<CourseContextType | undefined>(
-  undefined
-);
+const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
 export function useCourseContext() {
   const context = useContext(CourseContext);
   if (context === undefined) {
-    throw new Error(
-      'useCourseContext must be used within a CourseProvider'
-    );
+    throw new Error("useCourseContext must be used within a CourseProvider");
   }
   return context;
 }
@@ -38,22 +34,18 @@ interface CourseProviderProps {
 }
 
 export function CourseProvider({ children }: CourseProviderProps) {
-  const [selectedCourse, setSelectedCourseInternal] = useState<
-    string | null
-  >(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [previousCourses, setPreviousCourses] = useState<string[]>(
-    []
+  const [selectedCourse, setSelectedCourseInternal] = useState<string | null>(
+    null,
   );
+  const [isLoading, setIsLoading] = useState(true);
+  const [previousCourses, setPreviousCourses] = useState<string[]>([]);
 
   // Load course from storage on mount
   useEffect(() => {
     const loadCourse = async () => {
       try {
         const savedCourse = await Storage.getItem(COURSE_KEY);
-        const savedCourseUpper = savedCourse
-          ? savedCourse.toUpperCase()
-          : null;
+        const savedCourseUpper = savedCourse ? savedCourse.toUpperCase() : null;
         if (savedCourseUpper) {
           // Normalize state to uppercase
           setSelectedCourseInternal(savedCourseUpper);
@@ -69,7 +61,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
             if (Array.isArray(parsed)) {
               // Ensure string[] and normalize to uppercase, de-duplicate while preserving order
               const rawList = parsed.filter(
-                (x) => typeof x === 'string'
+                (x) => typeof x === "string",
               ) as string[];
               const upperList: string[] = [];
               const seen = new Set<string>();
@@ -81,32 +73,21 @@ export function CourseProvider({ children }: CourseProviderProps) {
                 }
               }
               // If there is a saved course but it's not in history yet, add it to front
-              if (
-                savedCourseUpper &&
-                !upperList.includes(savedCourseUpper)
-              ) {
+              if (savedCourseUpper && !upperList.includes(savedCourseUpper)) {
                 upperList.unshift(savedCourseUpper);
               }
               setPreviousCourses(upperList);
               // Persist normalized list if any changes from original
-              if (
-                JSON.stringify(rawList) !== JSON.stringify(upperList)
-              ) {
-                await Storage.setItem(
-                  HISTORY_KEY,
-                  JSON.stringify(upperList)
-                );
+              if (JSON.stringify(rawList) !== JSON.stringify(upperList)) {
+                await Storage.setItem(HISTORY_KEY, JSON.stringify(upperList));
               }
             }
           } catch (err) {
-            console.warn(
-              'Failed to parse course history from storage:',
-              err
-            );
+            console.warn("Failed to parse course history from storage:", err);
           }
         }
       } catch (error) {
-        console.warn('Failed to load course from storage:', error);
+        console.warn("Failed to load course from storage:", error);
       } finally {
         setIsLoading(false);
       }
@@ -121,10 +102,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
       setPreviousCourses(list);
       await Storage.setItem(HISTORY_KEY, JSON.stringify(list));
     } catch (error) {
-      console.warn(
-        'Failed to save course history to storage:',
-        error
-      );
+      console.warn("Failed to save course history to storage:", error);
     }
   };
 
@@ -132,10 +110,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
   const addCourseToHistory = async (course: string) => {
     const trimmed = course.trim().toUpperCase();
     if (!trimmed) return;
-    const next = [
-      trimmed,
-      ...previousCourses.filter((c) => c !== trimmed),
-    ];
+    const next = [trimmed, ...previousCourses.filter((c) => c !== trimmed)];
     await persistHistory(next);
   };
 
@@ -152,7 +127,7 @@ export function CourseProvider({ children }: CourseProviderProps) {
         await Storage.removeItem(COURSE_KEY);
       }
     } catch (error) {
-      console.warn('Failed to save course to storage:', error);
+      console.warn("Failed to save course to storage:", error);
     }
   };
 

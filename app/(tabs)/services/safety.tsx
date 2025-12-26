@@ -54,12 +54,11 @@ export default function SafetyScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ThemedText style={styles.introText}>
-          Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese
-          Videos zusammengestellt, in denen wir Sie über verschiedene
-          Sicherheitshemen an der DHBW Lörrach informieren. Sie
-          erfahren, wie Sie sich vor Unfällen schützen können und
-          welche Sicherheitseinrichtungen es an den Standorten gibt.
-          Viel Spaß!
+          Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
+          zusammengestellt, in denen wir Sie über verschiedene Sicherheitshemen
+          an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor
+          Unfällen schützen können und welche Sicherheitseinrichtungen es an den
+          Standorten gibt. Viel Spaß!
         </ThemedText>
         <ThemedView style={styles.grid}>
           {links.map((item) => (
@@ -94,9 +93,7 @@ export default function SafetyScreen() {
           <Button
             title="Brandschutzordnung (PDF)"
             color={dhbwRed}
-            onPress={() =>
-              openLink('https://dhbw-loerrach.de/brandschutz')
-            }
+            onPress={() => openLink('https://dhbw-loerrach.de/brandschutz')}
           />
         </ThemedView>
       </ScrollView>

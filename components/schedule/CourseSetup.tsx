@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -11,35 +11,32 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { ThemedView } from '@/components/ui/ThemedView';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { validateCourse } from '@/lib/icalService';
-import { useCourseContext } from '@/context/CourseContext';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+} from "react-native";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { validateCourse } from "@/lib/icalService";
+import { useCourseContext } from "@/context/CourseContext";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import OfflineBanner from "@/components/ui/OfflineBanner";
 
 interface CourseSetupProps {
   onCourseSelected: (course: string) => void;
 }
 
-export default function CourseSetup({
-  onCourseSelected,
-}: CourseSetupProps) {
-  const [inputValue, setInputValue] = useState('');
+export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
+  const [inputValue, setInputValue] = useState("");
   const [isValidating, setIsValidating] = useState(false);
-  const { previousCourses, removeCourseFromHistory } =
-    useCourseContext();
+  const { previousCourses, removeCourseFromHistory } = useCourseContext();
   const { isOffline, isReady } = useOnlineStatus();
 
   // Resolve theme-aware colors
-  const textColor = useThemeColor({}, 'text');
-  const borderColor = useThemeColor({}, 'border');
-  const inputBgColor = useThemeColor({}, 'dayNumberContainer');
-  const placeholderColor = useThemeColor({}, 'icon');
-  const tintColor = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, "text");
+  const borderColor = useThemeColor({}, "border");
+  const inputBgColor = useThemeColor({}, "dayNumberContainer");
+  const placeholderColor = useThemeColor({}, "icon");
+  const tintColor = useThemeColor({}, "tint");
   // Disabled button uses same tint color with reduced opacity (see Welcome screen)
 
   const showOffline = isReady && isOffline;
@@ -48,25 +45,25 @@ export default function CourseSetup({
   const sortedPreviousCourses = useMemo(
     () =>
       [...previousCourses].sort((a, b) =>
-        a.localeCompare(b, 'de', {
-          sensitivity: 'base',
+        a.localeCompare(b, "de", {
+          sensitivity: "base",
           numeric: true,
-        })
+        }),
       ),
-    [previousCourses]
+    [previousCourses],
   );
 
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
-      Alert.alert('Fehler', 'Bitte geben Sie einen Kursnamen ein.');
+      Alert.alert("Fehler", "Bitte geben Sie einen Kursnamen ein.");
       return;
     }
 
     // Block validation when offline
     if (showOffline) {
       Alert.alert(
-        'Keine Internetverbindung',
-        'Neue Kurse können nur online geprüft werden. Wählen Sie einen bereits verwendeten Kurs aus der Liste oder verbinden Sie sich mit dem Internet.'
+        "Keine Internetverbindung",
+        "Neue Kurse können nur online geprüft werden. Wählen Sie einen bereits verwendeten Kurs aus der Liste oder verbinden Sie sich mit dem Internet.",
       );
       return;
     }
@@ -81,16 +78,16 @@ export default function CourseSetup({
         onCourseSelected(inputValue.trim());
       } else {
         Alert.alert(
-          'Ungültiger Kurs',
+          "Ungültiger Kurs",
           `Der Kurs "${inputValue
             .trim()
-            .toUpperCase()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`
+            .toUpperCase()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`,
         );
       }
     } catch {
       Alert.alert(
-        'Fehler',
-        'Bei der Validierung des Kurses ist ein Fehler aufgetreten.'
+        "Fehler",
+        "Bei der Validierung des Kurses ist ein Fehler aufgetreten.",
       );
     } finally {
       setIsValidating(false);
@@ -98,15 +95,12 @@ export default function CourseSetup({
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={Keyboard.dismiss}
-      accessible={false}
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ThemedView style={styles.container}>
         <KeyboardAvoidingView
           style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
         >
           <View style={styles.contentContainer}>
             {showOffline && (
@@ -141,10 +135,8 @@ export default function CourseSetup({
                     onSubmitEditing={handleValidateAndSetCourse}
                   />
                   {(() => {
-                    const isInputEmpty =
-                      inputValue.trim().length === 0;
-                    const isButtonDisabled =
-                      isValidating || isInputEmpty;
+                    const isInputEmpty = inputValue.trim().length === 0;
+                    const isButtonDisabled = isValidating || isInputEmpty;
                     const iconColor = isButtonDisabled
                       ? placeholderColor
                       : tintColor;
@@ -163,10 +155,7 @@ export default function CourseSetup({
                         hitSlop={8}
                       >
                         {isValidating ? (
-                          <ActivityIndicator
-                            size="small"
-                            color={iconColor}
-                          />
+                          <ActivityIndicator size="small" color={iconColor} />
                         ) : (
                           <IconSymbol
                             name="magnifyingglass"
@@ -182,10 +171,7 @@ export default function CourseSetup({
 
               {previousCourses.length > 0 && (
                 <View style={styles.historySection}>
-                  <ThemedText
-                    type="subtitle"
-                    style={styles.historyTitle}
-                  >
+                  <ThemedText type="subtitle" style={styles.historyTitle}>
                     Zuletzt angezeigt
                   </ThemedText>
                   <ScrollView
@@ -215,20 +201,20 @@ export default function CourseSetup({
                         <TouchableOpacity
                           onPress={() => {
                             Alert.alert(
-                              'Entfernen bestätigen',
+                              "Entfernen bestätigen",
                               `Möchten Sie den Kurs "${course}" aus der Liste entfernen?`,
                               [
                                 {
-                                  text: 'Abbrechen',
-                                  style: 'cancel',
+                                  text: "Abbrechen",
+                                  style: "cancel",
                                 },
                                 {
-                                  text: 'Entfernen',
-                                  style: 'destructive',
+                                  text: "Entfernen",
+                                  style: "destructive",
                                   onPress: () =>
                                     removeCourseFromHistory(course),
                                 },
-                              ]
+                              ],
                             );
                           }}
                           accessibilityRole="button"
@@ -270,18 +256,18 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
-    width: '100%',
+    width: "100%",
   },
   inputWrapper: {
     flex: 1,
@@ -291,8 +277,8 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     // Reserve space for the trailing action
     paddingRight: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   courseInput: {
     flex: 1,
@@ -300,16 +286,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   trailingAction: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     width: 28,
   },
   historySection: {
     marginTop: 28,
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     flex: 1,
     minHeight: 0,
@@ -320,15 +306,15 @@ const styles = StyleSheet.create({
   historyTitle: {
     marginBottom: 8,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   historyList: {
     gap: 8,
   },
   historyItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -339,7 +325,7 @@ const styles = StyleSheet.create({
   },
   historyItemText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   removeButton: {
     marginLeft: 12,

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { TimetableEvent } from '@/lib/icalService';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import LinkifiedText from '@/components/ui/LinkifiedText';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { TimetableEvent } from "@/lib/icalService";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import LinkifiedText from "@/components/ui/LinkifiedText";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { getScheduleCardLocationDisplay } from "@/lib/scheduleCardLocation";
 
 interface LectureCardProps {
   event: TimetableEvent;
@@ -13,26 +13,26 @@ interface LectureCardProps {
 
 // Helper to format time range in German format (e.g., 09:00–12:15)
 const formatTimeRange = (start: Date, end: Date) => {
-  const startTime = start.toLocaleTimeString('de-DE', {
-    hour: '2-digit',
-    minute: '2-digit',
+  const startTime = start.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
-  const endTime = end.toLocaleTimeString('de-DE', {
-    hour: '2-digit',
-    minute: '2-digit',
+  const endTime = end.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
   return `${startTime}–${endTime}`;
 };
 
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
-  const scheme = useColorScheme() ?? 'light';
-  const cardBg = useThemeColor({}, 'background');
-  const textColor = useThemeColor({}, 'text');
-  const secondaryText = useThemeColor({}, 'icon');
-  const borderColor = useThemeColor({}, 'border');
+  const scheme = useColorScheme() ?? "light";
+  const cardBg = useThemeColor({}, "background");
+  const textColor = useThemeColor({}, "text");
+  const secondaryText = useThemeColor({}, "icon");
+  const borderColor = useThemeColor({}, "border");
   // Subtle filled background for chips (keeps contrast in both themes)
   const chipBg =
-    scheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+    scheme === "dark" ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)";
 
   // Derive room and online link from the location, then decide if event is online
   const {
@@ -52,8 +52,11 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const [extraMeasured, setExtraMeasured] = useState(false);
   const [isExtraMultiline, setIsExtraMultiline] = useState(false);
   const [isExtraExpanded, setIsExtraExpanded] = useState(false);
-  const canExpandExtra = !!extraTextExpanded && (hasHiddenUrls || isExtraMultiline);
-  const visibleExtraText = isExtraExpanded ? extraTextExpanded : extraTextCollapsed;
+  const canExpandExtra =
+    !!extraTextExpanded && (hasHiddenUrls || isExtraMultiline);
+  const visibleExtraText = isExtraExpanded
+    ? extraTextExpanded
+    : extraTextCollapsed;
 
   return (
     <View
@@ -62,9 +65,8 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         {
           backgroundColor: cardBg,
           borderColor,
-          shadowOpacity:
-            scheme === 'dark' ? 0 : styles.card.shadowOpacity,
-          elevation: scheme === 'dark' ? 0 : styles.card.elevation,
+          shadowOpacity: scheme === "dark" ? 0 : styles.card.shadowOpacity,
+          elevation: scheme === "dark" ? 0 : styles.card.elevation,
         },
       ]}
     >
@@ -78,7 +80,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
           />
           <Text style={[styles.timeText, { color: secondaryText }]}>
             {event.allDay
-              ? 'Ganzer Tag'
+              ? "Ganzer Tag"
               : formatTimeRange(event.start, event.end)}
           </Text>
         </View>
@@ -104,8 +106,8 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 accessibilityLabel={`Ort ${roomText}`}
                 accessibilityHint={
                   isRoomExpanded
-                    ? 'Tippen klappt den Text zu'
-                    : 'Tippen zeigt den vollständigen Text'
+                    ? "Tippen klappt den Text zu"
+                    : "Tippen zeigt den vollständigen Text"
                 }
                 hitSlop={6}
               >
@@ -120,9 +122,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 {!roomMeasured && (
                   <Text
                     onTextLayout={(e) => {
-                      setIsRoomTruncated(
-                        e.nativeEvent.lines.length > 1
-                      );
+                      setIsRoomTruncated(e.nativeEvent.lines.length > 1);
                       setRoomMeasured(true);
                     }}
                     style={[styles.chipText, styles.measureGhost]}
@@ -134,7 +134,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 {/* Visible text (1 line) */}
                 <Text
                   numberOfLines={isRoomExpanded ? undefined : 1}
-                  ellipsizeMode={isRoomExpanded ? 'clip' : 'tail'}
+                  ellipsizeMode={isRoomExpanded ? "clip" : "tail"}
                   style={[styles.chipText, { color: secondaryText }]}
                 >
                   {roomText}
@@ -142,9 +142,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 
                 {/* Chevron only when truncated */}
                 <IconSymbol
-                  name={
-                    isRoomExpanded ? 'chevron.down' : 'chevron.right'
-                  }
+                  name={isRoomExpanded ? "chevron.down" : "chevron.right"}
                   size={14}
                   color={secondaryText}
                   style={styles.trailingIcon}
@@ -169,9 +167,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                 {!roomMeasured && (
                   <Text
                     onTextLayout={(e) => {
-                      setIsRoomTruncated(
-                        e.nativeEvent.lines.length > 1
-                      );
+                      setIsRoomTruncated(e.nativeEvent.lines.length > 1);
                       setRoomMeasured(true);
                     }}
                     style={[styles.chipText, styles.measureGhost]}
@@ -220,9 +216,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         )}
       </View>
 
-      <Text style={[styles.title, { color: textColor }]}>
-        {event.title}
-      </Text>
+      <Text style={[styles.title, { color: textColor }]}>{event.title}</Text>
 
       {!!visibleExtraText && (
         <View style={styles.extraRow}>
@@ -252,7 +246,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={
-                isExtraExpanded ? 'Weniger anzeigen' : 'Mehr anzeigen'
+                isExtraExpanded ? "Weniger anzeigen" : "Mehr anzeigen"
               }
               hitSlop={8}
               onPress={() => setIsExtraExpanded((v) => !v)}
@@ -262,7 +256,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
               ]}
             >
               <IconSymbol
-                name={isExtraExpanded ? 'chevron.up' : 'chevron.down'}
+                name={isExtraExpanded ? "chevron.up" : "chevron.down"}
                 size={16}
                 color={secondaryText}
               />
@@ -280,26 +274,26 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 8,
     borderWidth: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 1.41,
     elevation: 2,
   },
   metaRow: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    alignItems: "center",
     marginBottom: 2,
     minWidth: 0,
   },
   metaRowText: { flexShrink: 1 },
   metaChunk: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 12,
     marginBottom: 2,
-    maxWidth: '100%',
+    maxWidth: "100%",
     minWidth: 0,
   },
   chip: {
@@ -314,7 +308,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     minWidth: 0,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   metaIcon: {
     marginRight: 6,
@@ -324,7 +318,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 2,
   },
   location: {
@@ -339,8 +333,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   extraRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 2,
     minWidth: 0,
   },
@@ -358,7 +352,7 @@ const styles = StyleSheet.create({
   },
   // Invisible measuring text (same width, without numberOfLines)
   measureGhost: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,

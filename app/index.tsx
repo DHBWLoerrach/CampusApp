@@ -41,13 +41,13 @@ export default function Page() {
         setLastTab(
           saved && (allowed as readonly string[]).includes(saved)
             ? (saved as TabName)
-            : 'news'
+            : 'news',
         );
         // If schedule is the last tab, also read which sub-tab was active
         if (saved === 'schedule') {
-          const sub = (await Storage.getItem(
-            LAST_SCHEDULE_SUBTAB_KEY
-          )) as string | null;
+          const sub = (await Storage.getItem(LAST_SCHEDULE_SUBTAB_KEY)) as
+            | string
+            | null;
           const allowedSubs: readonly ScheduleSubTab[] = [
             'index',
             'week',
@@ -56,7 +56,7 @@ export default function Page() {
           setLastScheduleSubTab(
             sub && (allowedSubs as readonly string[]).includes(sub)
               ? (sub as ScheduleSubTab)
-              : 'index'
+              : 'index',
           );
         } else {
           setLastScheduleSubTab(null);

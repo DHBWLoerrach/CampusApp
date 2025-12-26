@@ -9,8 +9,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function PreferencesScreen() {
   const borderColor = useThemeColor({}, 'border');
-  const { alwaysDark, setAlwaysDark, isReady } =
-    useColorSchemeOverride();
+  const { alwaysDark, setAlwaysDark, isReady } = useColorSchemeOverride();
   const { selectedRole, setSelectedRole } = useRoleContext();
 
   return (
@@ -19,12 +18,10 @@ export default function PreferencesScreen() {
         <ThemedView style={styles.content}>
           {/* Card: Dark Mode preference */}
           <ThemedView style={[styles.card, { borderColor }]}>
-            <ThemedText style={styles.cardTitle}>
-              Darstellung
-            </ThemedText>
+            <ThemedText style={styles.cardTitle}>Darstellung</ThemedText>
             <ThemedText style={styles.cardDescription}>
-              Bei Aktivierung wird die Systemeinstellung ignoriert und
-              die App immer dunkel angezeigt.
+              Bei Aktivierung wird die Systemeinstellung ignoriert und die App
+              immer dunkel angezeigt.
             </ThemedText>
             <View style={styles.row}>
               <ThemedText style={styles.label}>
@@ -42,9 +39,7 @@ export default function PreferencesScreen() {
 
           {/* Card: Mensa price group */}
           <ThemedView style={[styles.card, { borderColor }]}>
-            <ThemedText style={styles.cardTitle}>
-              Mensa-Preisgruppe
-            </ThemedText>
+            <ThemedText style={styles.cardTitle}>Mensa-Preisgruppe</ThemedText>
             <ThemedText style={styles.cardDescription}>
               Bestimmt die Preisgruppe für die Mensa.
             </ThemedText>

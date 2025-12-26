@@ -1,14 +1,8 @@
-import { ReactNode } from 'react';
-import {
-  Modal,
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { ReactNode } from "react";
+import { Modal, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function BottomSheet({
   visible,
@@ -21,7 +15,7 @@ export default function BottomSheet({
   onClose: () => void;
   children: ReactNode;
 }) {
-  const background = useThemeColor({}, 'background');
+  const background = useThemeColor({}, "background");
   const insets = useSafeAreaInsets();
 
   return (
@@ -67,15 +61,15 @@ export default function BottomSheet({
 
 const styles = StyleSheet.create({
   backdrop: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: "rgba(0,0,0,0.45)",
   },
   sheet: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     bottom: 0,
@@ -83,28 +77,28 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingHorizontal: 20,
-    maxHeight: '80%',
-    shadowColor: '#000',
+    maxHeight: "80%",
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: -6 },
     elevation: 14,
   },
   handle: {
-    alignSelf: 'center',
+    alignSelf: "center",
     width: 36,
     height: 5,
     borderRadius: 3,
-    backgroundColor: 'rgba(255,255,255,0.35)',
+    backgroundColor: "rgba(255,255,255,0.35)",
     marginBottom: 8,
   },
   title: {
     fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     marginBottom: 12,
   },
   content: {
-    maxHeight: '100%',
+    maxHeight: "100%",
   },
 });

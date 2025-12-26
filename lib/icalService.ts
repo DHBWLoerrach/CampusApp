@@ -1,5 +1,5 @@
-import ICAL from 'ical.js';
-import { resolveCourseAlias } from '@/constants/CourseAliases';
+import ICAL from "ical.js";
+import { resolveCourseAlias } from "@/constants/CourseAliases";
 
 // --- Type Definitions ---
 
@@ -21,40 +21,40 @@ export interface StructuredTimetable {
   [dateKey: string]: TimetableEvent[];
 }
 
-const CALENDAR_TIMEZONE = 'Europe/Berlin';
+const CALENDAR_TIMEZONE = "Europe/Berlin";
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
-const BERLIN_YMD_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+const BERLIN_YMD_FORMATTER = new Intl.DateTimeFormat("en-CA", {
   timeZone: CALENDAR_TIMEZONE,
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
 });
 
-const BERLIN_OFFSET_FORMATTER = new Intl.DateTimeFormat('en-US', {
+const BERLIN_OFFSET_FORMATTER = new Intl.DateTimeFormat("en-US", {
   timeZone: CALENDAR_TIMEZONE,
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
   hour12: false,
-  hourCycle: 'h23',
+  hourCycle: "h23",
 });
 
 function utcDayKeyFromYmd(ymd: string): number {
-  const [y, m, d] = ymd.split('-').map(Number);
+  const [y, m, d] = ymd.split("-").map(Number);
   return Date.UTC(y, m - 1, d);
 }
 
 function addDaysToYmd(ymd: string, days: number): string {
-  const [y, m, d] = ymd.split('-').map(Number);
+  const [y, m, d] = ymd.split("-").map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d));
   dt.setUTCDate(dt.getUTCDate() + days);
   const yy = dt.getUTCFullYear();
-  const mm = String(dt.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(dt.getUTCDate()).padStart(2, '0');
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(dt.getUTCDate()).padStart(2, "0");
   return `${yy}-${mm}-${dd}`;
 }
 
@@ -62,7 +62,7 @@ function getBerlinOffsetMinutes(date: Date): number {
   const parts = BERLIN_OFFSET_FORMATTER.formatToParts(date);
   const map: Record<string, string> = {};
   for (const p of parts) {
-    if (p.type !== 'literal') map[p.type] = p.value;
+    if (p.type !== "literal") map[p.type] = p.value;
   }
 
   let year = Number(map.year);
@@ -114,19 +114,17 @@ function generateIcalUrl(course: string): string {
 /**
  * Validates if a course exists by checking if the iCal URL is accessible.
  */
-export async function validateCourse(
-  course: string
-): Promise<boolean> {
-  if (!course || course.trim() === '') {
+export async function validateCourse(course: string): Promise<boolean> {
+  if (!course || course.trim() === "") {
     return false;
   }
 
   try {
     const icalUrl = generateIcalUrl(course.trim());
-    const response = await fetch(icalUrl, { method: 'HEAD' });
+    const response = await fetch(icalUrl, { method: "HEAD" });
     return response.ok;
   } catch (error) {
-    console.warn('Course validation failed:', error);
+    console.warn("Course validation failed:", error);
     return false;
   }
 }
@@ -138,9 +136,7 @@ async function fetchRawIcalData(course: string): Promise<string> {
   const icalUrl = generateIcalUrl(course);
   const response = await fetch(icalUrl);
   if (!response.ok) {
-    throw new Error(
-      `Network response was not ok: ${response.statusText}`
-    );
+    throw new Error(`Network response was not ok: ${response.statusText}`);
   }
   return response.text();
 }
@@ -151,8 +147,8 @@ async function fetchRawIcalData(course: string): Promise<string> {
  */
 const WINDOWS_TO_IANA_TZID: Record<string, string> = {
   // Germany/Switzerland/Austria
-  'W. Europe Standard Time': 'Europe/Berlin',
-  'Central European Standard Time': 'Europe/Warsaw', // fallback; not expected for DHBW
+  "W. Europe Standard Time": "Europe/Berlin",
+  "Central European Standard Time": "Europe/Warsaw", // fallback; not expected for DHBW
 };
 
 /**
@@ -160,25 +156,25 @@ const WINDOWS_TO_IANA_TZID: Record<string, string> = {
  * Injected when no compatible VTIMEZONE exists and events reference Europe/Berlin.
  */
 const EUROPE_BERLIN_VTIMEZONE = [
-  'BEGIN:VTIMEZONE',
-  'TZID:Europe/Berlin',
-  'X-LIC-LOCATION:Europe/Berlin',
-  'BEGIN:DAYLIGHT',
-  'TZOFFSETFROM:+0100',
-  'TZOFFSETTO:+0200',
-  'TZNAME:CEST',
-  'DTSTART:19700329T020000',
-  'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
-  'END:DAYLIGHT',
-  'BEGIN:STANDARD',
-  'TZOFFSETFROM:+0200',
-  'TZOFFSETTO:+0100',
-  'TZNAME:CET',
-  'DTSTART:19701025T030000',
-  'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
-  'END:STANDARD',
-  'END:VTIMEZONE',
-].join('\n');
+  "BEGIN:VTIMEZONE",
+  "TZID:Europe/Berlin",
+  "X-LIC-LOCATION:Europe/Berlin",
+  "BEGIN:DAYLIGHT",
+  "TZOFFSETFROM:+0100",
+  "TZOFFSETTO:+0200",
+  "TZNAME:CEST",
+  "DTSTART:19700329T020000",
+  "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU",
+  "END:DAYLIGHT",
+  "BEGIN:STANDARD",
+  "TZOFFSETFROM:+0200",
+  "TZOFFSETTO:+0100",
+  "TZNAME:CET",
+  "DTSTART:19701025T030000",
+  "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU",
+  "END:STANDARD",
+  "END:VTIMEZONE",
+].join("\n");
 
 /**
  * Normalizes Windows TZIDs to IANA and ensures a suitable VTIMEZONE is available.
@@ -189,42 +185,35 @@ function normalizeTimezones(icalText: string): string {
   let normalized = icalText;
 
   // Replace TZID parameters and values used by event properties (DTSTART;TZID=..., EXDATE;TZID=...)
-  for (const [winTz, ianaTz] of Object.entries(
-    WINDOWS_TO_IANA_TZID
-  )) {
+  for (const [winTz, ianaTz] of Object.entries(WINDOWS_TO_IANA_TZID)) {
     // Parameter form: TZID=W. Europe Standard Time
     const paramRe = new RegExp(
-      `(TZID=)${winTz.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        '\\$&'
-      )}(?=[;:])`,
-      'g'
+      `(TZID=)${winTz.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=[;:])`,
+      "g",
     );
     normalized = normalized.replace(paramRe, `$1${ianaTz}`);
 
     // Property form inside VTIMEZONE: TZID:W. Europe Standard Time
     const propRe = new RegExp(
-      `(TZID:)${winTz.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        '\\$&'
-      )}(?=\r?\n)`,
-      'g'
+      `(TZID:)${winTz.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=\r?\n)`,
+      "g",
     );
     normalized = normalized.replace(propRe, `$1${ianaTz}`);
   }
 
   // If events now reference Europe/Berlin but no such VTIMEZONE exists, inject one.
-  const referencesBerlin =
-    /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(normalized);
+  const referencesBerlin = /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(
+    normalized,
+  );
   const hasBerlinVTimezone =
     /BEGIN:VTIMEZONE[\s\S]*?TZID:Europe\/Berlin[\s\S]*?END:VTIMEZONE/.test(
-      normalized
+      normalized,
     );
   if (referencesBerlin && !hasBerlinVTimezone) {
     // Insert after BEGIN:VCALENDAR to keep calendar valid.
     normalized = normalized.replace(
       /BEGIN:VCALENDAR\r?\n/,
-      (match) => `${match}${EUROPE_BERLIN_VTIMEZONE}\n`
+      (match) => `${match}${EUROPE_BERLIN_VTIMEZONE}\n`,
     );
   }
 
@@ -238,11 +227,11 @@ function normalizeTimezones(icalText: string): string {
  * the calendar's native timezone instead of defaulting to local/UTC.
  */
 function registerTimezone(vcalendar: ICAL.Component): void {
-  const tzComps = vcalendar.getAllSubcomponents('vtimezone');
+  const tzComps = vcalendar.getAllSubcomponents("vtimezone");
   if (!tzComps || tzComps.length === 0) return;
 
   tzComps.forEach((timezoneComp) => {
-    const tzid = timezoneComp.getFirstPropertyValue('tzid');
+    const tzid = timezoneComp.getFirstPropertyValue("tzid");
     if (!tzid) return;
     try {
       const timezone = new (ICAL as any).Timezone({
@@ -252,7 +241,7 @@ function registerTimezone(vcalendar: ICAL.Component): void {
       (ICAL as any).TimezoneService.register(tzid, timezone);
     } catch (e) {
       // If registration fails, ignore and continue with others
-      console.warn('Failed to register VTIMEZONE for tzid', tzid, e);
+      console.warn("Failed to register VTIMEZONE for tzid", tzid, e);
     }
   });
 }
@@ -267,7 +256,7 @@ function registerTimezone(vcalendar: ICAL.Component): void {
  * event will be added separately because it shows up as its own VEVENT).
  */
 function getRecurrenceExceptions(
-  vevents: ICAL.Component[]
+  vevents: ICAL.Component[],
 ): Record<string, Set<string>> {
   const result: Record<string, Set<string>> = {};
 
@@ -275,9 +264,7 @@ function getRecurrenceExceptions(
     const event = new ICAL.Event(vevent);
     if (event.isRecurrenceException()) {
       if (!result[event.uid]) result[event.uid] = new Set<string>();
-      result[event.uid].add(
-        event.recurrenceId.toJSDate().toDateString()
-      );
+      result[event.uid].add(event.recurrenceId.toJSDate().toDateString());
     }
   });
 
@@ -297,7 +284,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
   // Ensure calendar timezone is registered before touching dates
   registerTimezone(vcalendar);
 
-  const vevents = vcalendar.getAllSubcomponents('vevent');
+  const vevents = vcalendar.getAllSubcomponents("vevent");
   const recurrenceExceptions = getRecurrenceExceptions(vevents);
 
   const now = new Date();
@@ -323,11 +310,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         if (nextDate > rangeEnd) break;
         if (nextDate < windowStart) continue;
         // Skip buggy Exchange duplicates – the real exception VEVENT will follow.
-        if (
-          recurrenceExceptions[event.uid]?.has(
-            nextDate.toDateString()
-          )
-        ) {
+        if (recurrenceExceptions[event.uid]?.has(nextDate.toDateString())) {
           continue;
         }
 
@@ -339,7 +322,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           title: occurrence.item.summary,
           start: occStart.toJSDate(),
           end: occEnd.toJSDate(),
-          location: occurrence.item.location || '',
+          location: occurrence.item.location || "",
           description: occurrence.item.description || undefined,
           allDay: !!occStart.isDate,
         });
@@ -361,8 +344,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       // Use UTC day keys to avoid DST-related 23/25h day lengths skewing the calculation.
       // 0 means: only one calendar day → exactly 1 slice.
       const totalDays = Math.floor(
-        (utcDayKeyFromYmd(endKey) - utcDayKeyFromYmd(startKey)) /
-          MS_IN_DAY
+        (utcDayKeyFromYmd(endKey) - utcDayKeyFromYmd(startKey)) / MS_IN_DAY,
       );
 
       // Important: do not use event.duration.days here (for all-day events, DTEND is exclusive).
@@ -384,14 +366,14 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         const sliceStart = isAllDayEvent
           ? sliceDayStart
           : isFirst
-          ? jsStart
-          : sliceDayStart;
+            ? jsStart
+            : sliceDayStart;
 
         const sliceEnd = isAllDayEvent
           ? sliceDayEnd
           : isLast
-          ? jsEnd
-          : sliceDayEnd;
+            ? jsEnd
+            : sliceDayEnd;
 
         // Per-slice allDay:
         // - Keep true for DATE-based (all-day) events
@@ -407,7 +389,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           title: event.summary,
           start: sliceStart,
           end: sliceEnd,
-          location: event.location || '',
+          location: event.location || "",
           description: event.description || undefined,
           allDay: sliceAllDay,
         });
@@ -421,7 +403,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       title: event.summary,
       start: event.startDate.toJSDate(),
       end: event.endDate.toJSDate(),
-      location: event.location || '',
+      location: event.location || "",
       description: event.description || undefined,
       allDay: !!event.startDate.isDate,
     });
@@ -433,9 +415,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
 /**
  * Groups events by calendar day in chronological order.
  */
-function structureEventsByDay(
-  events: TimetableEvent[]
-): StructuredTimetable {
+function structureEventsByDay(events: TimetableEvent[]): StructuredTimetable {
   const structured: StructuredTimetable = {};
 
   // Chronological order makes UI rendering trivial
@@ -454,10 +434,10 @@ function structureEventsByDay(
  * Orchestrator – fetches, parses and structures the course timetable for a specific course.
  */
 export async function getStructuredTimetable(
-  course: string
+  course: string,
 ): Promise<StructuredTimetable> {
-  if (!course || course.trim() === '') {
-    throw new Error('Kurs muss angegeben werden');
+  if (!course || course.trim() === "") {
+    throw new Error("Kurs muss angegeben werden");
   }
 
   const raw = await fetchRawIcalData(course.trim());
@@ -466,8 +446,6 @@ export async function getStructuredTimetable(
 }
 
 // Test helper: parse raw ICS to flat events (used by local verification script)
-export function __parseIcalForTest(
-  icalText: string
-): TimetableEvent[] {
+export function __parseIcalForTest(icalText: string): TimetableEvent[] {
   return parseAndTransformIcal(icalText);
 }

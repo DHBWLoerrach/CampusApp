@@ -3,10 +3,7 @@ import { withLayoutContext } from 'expo-router';
 import { addDays, format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { weekdayDates } from '@/lib/canteenService';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
@@ -39,34 +36,21 @@ export default function CanteenLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
     tabBarItemStyle: { paddingHorizontal: 0 },
-    tabBarLabel: (props: { focused: boolean; children: string; color?: string }) => (
-      <TopTabLabel {...props} />
-    ),
+    tabBarLabel: (props: {
+      focused: boolean;
+      children: string;
+      color?: string;
+    }) => <TopTabLabel {...props} />,
   };
 
   return (
     <QueryClientProvider client={queryClient}>
       <TopTabs screenOptions={enhancedTabBarOptions}>
-        <TopTabs.Screen
-          name="index"
-          options={{ title: titleForIndex(0) }}
-        />
-        <TopTabs.Screen
-          name="day1"
-          options={{ title: titleForIndex(1) }}
-        />
-        <TopTabs.Screen
-          name="day2"
-          options={{ title: titleForIndex(2) }}
-        />
-        <TopTabs.Screen
-          name="day3"
-          options={{ title: titleForIndex(3) }}
-        />
-        <TopTabs.Screen
-          name="day4"
-          options={{ title: titleForIndex(4) }}
-        />
+        <TopTabs.Screen name="index" options={{ title: titleForIndex(0) }} />
+        <TopTabs.Screen name="day1" options={{ title: titleForIndex(1) }} />
+        <TopTabs.Screen name="day2" options={{ title: titleForIndex(2) }} />
+        <TopTabs.Screen name="day3" options={{ title: titleForIndex(3) }} />
+        <TopTabs.Screen name="day4" options={{ title: titleForIndex(4) }} />
       </TopTabs>
     </QueryClientProvider>
   );

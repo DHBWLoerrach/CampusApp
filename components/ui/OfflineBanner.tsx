@@ -1,22 +1,22 @@
-import { StyleSheet, View } from 'react-native';
-import type { StyleProp, ViewStyle } from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { StyleSheet, View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function OfflineBanner({
-  title = 'Offline',
-  message = 'Inhalte können nicht aktualisiert werden.',
+  title = "Offline",
+  message = "Inhalte können nicht aktualisiert werden.",
   style,
 }: {
   title?: string;
   message?: string;
   style?: StyleProp<ViewStyle>;
 }) {
-  const tintColor = useThemeColor({}, 'tint');
-  const bgColor = useThemeColor({}, 'dayNumberContainer');
-  const borderColor = useThemeColor({}, 'border');
+  const tintColor = useThemeColor({}, "tint");
+  const bgColor = useThemeColor({}, "dayNumberContainer");
+  const borderColor = useThemeColor({}, "border");
 
   return (
     <ThemedView
@@ -50,8 +50,8 @@ export default function OfflineBanner({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 12,

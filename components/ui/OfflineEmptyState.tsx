@@ -1,13 +1,13 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-import type { StyleProp, ViewStyle } from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Pressable, StyleSheet, View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function OfflineEmptyState({
-  title = 'Keine Internetverbindung',
-  message = 'Inhalte können ohne Internetverbindung nicht geladen werden.',
+  title = "Keine Internetverbindung",
+  message = "Inhalte können ohne Internetverbindung nicht geladen werden.",
   onOpenSettings,
   onRetry,
   style,
@@ -18,8 +18,8 @@ export default function OfflineEmptyState({
   onRetry?: () => void;
   style?: StyleProp<ViewStyle>;
 }) {
-  const tintColor = useThemeColor({}, 'tint');
-  const borderColor = useThemeColor({}, 'border');
+  const tintColor = useThemeColor({}, "tint");
+  const borderColor = useThemeColor({}, "border");
 
   return (
     <ThemedView style={[styles.container, style]}>
@@ -48,9 +48,7 @@ export default function OfflineEmptyState({
               ]}
               hitSlop={8}
             >
-              <ThemedText
-                style={[styles.buttonText, { color: tintColor }]}
-              >
+              <ThemedText style={[styles.buttonText, { color: tintColor }]}>
                 Einstellungen öffnen
               </ThemedText>
             </Pressable>
@@ -86,23 +84,23 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   icon: {
     marginBottom: 12,
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 8,
   },
   message: {
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.9,
     marginBottom: 18,
   },
   actions: {
-    width: '100%',
+    width: "100%",
     maxWidth: 360,
     gap: 12,
   },
@@ -111,10 +109,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

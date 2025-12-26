@@ -18,19 +18,19 @@ export type MatchIndex = {
 
 export const DEFAULT_RIDES_URL: string =
   (process.env.EXPO_PUBLIC_RIDES_URL as string) ||
-  'https://data.apps.szi.dhbw-loerrach.de/courses-rides.json';
+  "https://data.apps.szi.dhbw-loerrach.de/courses-rides.json";
 
-export type RidesSource = 'file' | 'remote';
+export type RidesSource = "file" | "remote";
 
 /**
  * Returns the selected source for rides JSON based on env.
  * Env: EXPO_PUBLIC_RIDES_SOURCE=file | remote (default: remote)
  */
 export function getRidesSource(): RidesSource {
-  const src = String(process.env.EXPO_PUBLIC_RIDES_SOURCE || '')
+  const src = String(process.env.EXPO_PUBLIC_RIDES_SOURCE || "")
     .trim()
     .toLowerCase();
-  return src === 'file' ? 'file' : 'remote';
+  return src === "file" ? "file" : "remote";
 }
 
 /**
@@ -38,13 +38,11 @@ export function getRidesSource(): RidesSource {
  */
 export async function fetchMatchIndexFromRemote(
   url: string = DEFAULT_RIDES_URL,
-  opts?: { signal?: AbortSignal }
+  opts?: { signal?: AbortSignal },
 ): Promise<MatchIndex> {
   const res = await fetch(url, { signal: opts?.signal });
   if (!res.ok) {
-    throw new Error(
-      `Rides JSON fetch error: ${res.status} ${res.statusText}`
-    );
+    throw new Error(`Rides JSON fetch error: ${res.status} ${res.statusText}`);
   }
   return (await res.json()) as MatchIndex;
 }
@@ -56,7 +54,7 @@ export async function fetchMatchIndexFromRemote(
 export function loadLocalMatchIndex(): MatchIndex | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const data = require('../scripts/courses-rides.json');
+    const data = require("../scripts/courses-rides.json");
     return data as MatchIndex;
   } catch {
     return null;

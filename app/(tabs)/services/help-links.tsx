@@ -12,8 +12,7 @@ const links: {
     url: 'https://dhbw-loerrach.de/studienberatung#inhalt',
   },
   {
-    title:
-      'Ansprechpartner der Studiengänge und Serviceeinrichtungen',
+    title: 'Ansprechpartner der Studiengänge und Serviceeinrichtungen',
     icon: 'person.2.wave.2',
     url: 'https://dhbw-loerrach.de/ansprechpersonen#inhalt',
   },

@@ -1,20 +1,16 @@
 // Fallback for using MaterialIcons and MaterialCommunityIcons on Android and web.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { ComponentProps } from 'react';
-import {
-  OpaqueColorValue,
-  type StyleProp,
-  type TextStyle,
-} from 'react-native';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ComponentProps } from "react";
+import { OpaqueColorValue, type StyleProp, type TextStyle } from "react-native";
 
-type IconSource = 'material' | 'community';
+type IconSource = "material" | "community";
 
 type IconConfig = {
   name:
-    | ComponentProps<typeof MaterialIcons>['name']
-    | ComponentProps<typeof MaterialCommunityIcons>['name'];
+    | ComponentProps<typeof MaterialIcons>["name"]
+    | ComponentProps<typeof MaterialCommunityIcons>["name"];
   source: IconSource;
 };
 
@@ -27,79 +23,79 @@ export type IconSymbolName = keyof typeof MAPPING;
  * - Use 'material' for MaterialIcons, 'community' for MaterialCommunityIcons
  */
 const MAPPING = {
-  house: { name: 'home', source: 'material' },
-  calendar: { name: 'calendar-month', source: 'material' },
-  'fork.knife': { name: 'restaurant', source: 'material' },
-  'info.circle': { name: 'info-outline', source: 'material' },
-  map: { name: 'map', source: 'material' },
-  phone: { name: 'call', source: 'material' },
-  graduationcap: { name: 'school', source: 'material' },
-  'sun.max': { name: 'wb-sunny', source: 'material' },
-  envelope: { name: 'mail-outline', source: 'material' },
-  gearshape: { name: 'settings', source: 'material' },
-  'info.square': { name: 'perm-device-info', source: 'material' },
-  'exclamationmark.triangle': {
-    name: 'warning-amber',
-    source: 'material',
+  house: { name: "home", source: "material" },
+  calendar: { name: "calendar-month", source: "material" },
+  "fork.knife": { name: "restaurant", source: "material" },
+  "info.circle": { name: "info-outline", source: "material" },
+  map: { name: "map", source: "material" },
+  phone: { name: "call", source: "material" },
+  graduationcap: { name: "school", source: "material" },
+  "sun.max": { name: "wb-sunny", source: "material" },
+  envelope: { name: "mail-outline", source: "material" },
+  gearshape: { name: "settings", source: "material" },
+  "info.square": { name: "perm-device-info", source: "material" },
+  "exclamationmark.triangle": {
+    name: "warning-amber",
+    source: "material",
   },
-  magnifyingglass: { name: 'search', source: 'material' },
-  'chart.bar': { name: 'insert-chart-outlined', source: 'material' },
-  'person.3': { name: 'groups', source: 'material' },
-  'text.page': { name: 'description', source: 'material' },
-  translate: { name: 'translate', source: 'material' },
-  eye: { name: 'visibility', source: 'material' },
-  'chevron.right': { name: 'chevron-right', source: 'material' },
-  'chevron.left': { name: 'chevron-left', source: 'material' },
-  'chevron.down': { name: 'expand-more', source: 'material' },
-  'chevron.up': { name: 'expand-less', source: 'material' },
-  'figure.run': { name: 'directions-run', source: 'material' },
-  eurosign: { name: 'euro-symbol', source: 'material' },
-  'wallet.bifold': {
-    name: 'wallet',
-    source: 'material',
+  magnifyingglass: { name: "search", source: "material" },
+  "chart.bar": { name: "insert-chart-outlined", source: "material" },
+  "person.3": { name: "groups", source: "material" },
+  "text.page": { name: "description", source: "material" },
+  translate: { name: "translate", source: "material" },
+  eye: { name: "visibility", source: "material" },
+  "chevron.right": { name: "chevron-right", source: "material" },
+  "chevron.left": { name: "chevron-left", source: "material" },
+  "chevron.down": { name: "expand-more", source: "material" },
+  "chevron.up": { name: "expand-less", source: "material" },
+  "figure.run": { name: "directions-run", source: "material" },
+  eurosign: { name: "euro-symbol", source: "material" },
+  "wallet.bifold": {
+    name: "wallet",
+    source: "material",
   },
-  'book.pages': { name: 'menu-book', source: 'material' },
-  'checkmark.circle': {
-    name: 'check-circle-outline',
-    source: 'material',
+  "book.pages": { name: "menu-book", source: "material" },
+  "checkmark.circle": {
+    name: "check-circle-outline",
+    source: "material",
   },
-  'doc.text.magnifyingglass': { name: 'article', source: 'material' },
-  clock: { name: 'schedule', source: 'material' },
-  video: { name: 'videocam', source: 'material' },
-  'door.left.hand.open': { name: 'door-open', source: 'community' },
-  link: { name: 'link-variant', source: 'community' },
-  'envelope.open': {
-    name: 'email-open-outline',
-    source: 'community',
+  "doc.text.magnifyingglass": { name: "article", source: "material" },
+  clock: { name: "schedule", source: "material" },
+  video: { name: "videocam", source: "material" },
+  "door.left.hand.open": { name: "door-open", source: "community" },
+  link: { name: "link-variant", source: "community" },
+  "envelope.open": {
+    name: "email-open-outline",
+    source: "community",
   },
-  car: { name: 'directions-car', source: 'material' },
-  'car.fill': { name: 'directions-car', source: 'material' },
-  'rectangle.stack': { name: 'layers', source: 'material' },
-  binoculars: { name: 'binoculars', source: 'community' },
-  'mappin.and.ellipse': {
-    name: 'map-marker-radius',
-    source: 'community',
+  car: { name: "directions-car", source: "material" },
+  "car.fill": { name: "directions-car", source: "material" },
+  "rectangle.stack": { name: "layers", source: "material" },
+  binoculars: { name: "binoculars", source: "community" },
+  "mappin.and.ellipse": {
+    name: "map-marker-radius",
+    source: "community",
   },
-  'books.vertical': { name: 'bookshelf', source: 'community' },
-  shield: { name: 'shield-outline', source: 'community' },
-  'shield.lefthalf.filled': {
-    name: 'shield-half-full',
-    source: 'community',
+  "books.vertical": { name: "bookshelf", source: "community" },
+  shield: { name: "shield-outline", source: "community" },
+  "shield.lefthalf.filled": {
+    name: "shield-half-full",
+    source: "community",
   },
-  building: { name: 'office-building', source: 'community' },
-  'person.2.wave.2': {
-    name: 'human-greeting-proximity',
-    source: 'community',
+  building: { name: "office-building", source: "community" },
+  "person.2.wave.2": {
+    name: "human-greeting-proximity",
+    source: "community",
   },
-  'xmark.circle.fill': { name: 'close', source: 'community' },
-  'person.crop.circle.badge.questionmark': {
-    name: 'account-question',
-    source: 'community',
+  "xmark.circle.fill": { name: "close", source: "community" },
+  "person.crop.circle.badge.questionmark": {
+    name: "account-question",
+    source: "community",
   },
   // Utility/actions
-  'doc.on.doc': { name: 'content-copy', source: 'community' },
-  'square.and.arrow.up': { name: 'share', source: 'material' },
-  ellipsis: { name: 'more-vert', source: 'material' },
+  "doc.on.doc": { name: "content-copy", source: "community" },
+  "square.and.arrow.up": { name: "share", source: "material" },
+  ellipsis: { name: "more-vert", source: "material" },
 } as Record<string, IconConfig>;
 
 /**
@@ -122,7 +118,7 @@ export function IconSymbol({
   weight?: any;
 }) {
   const iconConfig = MAPPING[name];
-  if (iconConfig.source === 'community') {
+  if (iconConfig.source === "community") {
     return (
       <MaterialCommunityIcons
         color={color}
@@ -130,7 +126,7 @@ export function IconSymbol({
         name={
           iconConfig.name as ComponentProps<
             typeof MaterialCommunityIcons
-          >['name']
+          >["name"]
         }
         style={style}
       />
@@ -141,11 +137,7 @@ export function IconSymbol({
     <MaterialIcons
       color={color}
       size={size}
-      name={
-        iconConfig.name as ComponentProps<
-          typeof MaterialIcons
-        >['name']
-      }
+      name={iconConfig.name as ComponentProps<typeof MaterialIcons>["name"]}
       style={style}
     />
   );

@@ -6,8 +6,8 @@ import {
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import Storage from 'expo-sqlite/kv-store';
+} from "react";
+import Storage from "expo-sqlite/kv-store";
 
 // Centralized color scheme override state. When alwaysDark is true,
 // the app should render in dark mode regardless of the OS setting.
@@ -25,18 +25,13 @@ const defaultValue: ColorSchemeContextValue = {
   isReady: false,
 };
 
-const STORAGE_KEY = 'alwaysDark';
+const STORAGE_KEY = "alwaysDark";
 
-const ColorSchemeContext =
-  createContext<ColorSchemeContextValue>(defaultValue);
+const ColorSchemeContext = createContext<ColorSchemeContextValue>(defaultValue);
 
-export function ColorSchemeProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function ColorSchemeProvider({ children }: { children: ReactNode }) {
   const [alwaysDark, setAlwaysDarkState] = useState<boolean>(
-    defaultValue.alwaysDark
+    defaultValue.alwaysDark,
   );
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -46,7 +41,7 @@ export function ColorSchemeProvider({
       try {
         const raw = await Storage.getItem(STORAGE_KEY);
         if (raw != null) {
-          setAlwaysDarkState(raw === '1');
+          setAlwaysDarkState(raw === "1");
         }
       } catch (e) {
         // Ignore storage errors and use default
@@ -60,14 +55,14 @@ export function ColorSchemeProvider({
   const setAlwaysDark = useCallback((value: boolean) => {
     setAlwaysDarkState(value);
     // Fire and forget persistence
-    Storage.setItem(STORAGE_KEY, value ? '1' : '0').catch(() => {
+    Storage.setItem(STORAGE_KEY, value ? "1" : "0").catch(() => {
       // Ignore persistence errors
     });
   }, []);
 
   const value = useMemo(
     () => ({ alwaysDark, setAlwaysDark, isReady }),
-    [alwaysDark, setAlwaysDark, isReady]
+    [alwaysDark, setAlwaysDark, isReady],
   );
 
   return (

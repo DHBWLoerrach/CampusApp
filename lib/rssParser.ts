@@ -1,16 +1,16 @@
-import { XMLParser } from 'fast-xml-parser';
+import { XMLParser } from "fast-xml-parser";
 
 // XML parser configuration
 const parserOptions = {
   ignoreAttributes: false,
-  attributeNamePrefix: '@_',
+  attributeNamePrefix: "@_",
   parseAttributeValue: true,
   trimValues: true,
   parseTrueNumberOnly: false,
   parseNodeValue: true,
   parseTagValue: true,
-  textNodeName: '#text',
-  cdataPropName: '#cdata',
+  textNodeName: "#text",
+  cdataPropName: "#cdata",
 };
 
 export interface RSSItem {
@@ -29,32 +29,32 @@ export interface RSSFeed {
 
 // Helper function to extract text from XML parser result
 function extractText(value: any): string {
-  if (value == null) return '';
+  if (value == null) return "";
 
   if (Array.isArray(value)) {
     for (const entry of value) {
       const text = extractText(entry);
       if (text) return text;
     }
-    return '';
+    return "";
   }
 
-  if (typeof value === 'string' || typeof value === 'number') {
+  if (typeof value === "string" || typeof value === "number") {
     return String(value);
   }
 
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     const candidate =
-      value['#cdata'] ?? value['#text'] ?? value['@_value'] ?? null;
+      value["#cdata"] ?? value["#text"] ?? value["@_value"] ?? null;
     return extractText(candidate);
   }
 
-  return '';
+  return "";
 }
 
 // Helper function to extract content from various RSS fields
 function extractContent(item: any): string {
-  return extractText(item['content:encoded']).trim();
+  return extractText(item["content:encoded"]).trim();
 }
 
 // Helper function to extract description from item
@@ -64,7 +64,7 @@ function extractDescription(item: any): string {
 
 // Helper function to extract ID from item
 function extractId(item: any): string {
-  return item.guid?.['#text'] || item.guid || item.link || '';
+  return item.guid?.["#text"] || item.guid || item.link || "";
 }
 
 // Helper function to extract enclosures
@@ -75,20 +75,20 @@ function extractEnclosures(item: any): { url: string }[] | undefined {
   const entries = Array.isArray(raw) ? raw : [raw];
   const urls = entries
     .map((entry) => {
-      if (!entry) return '';
-      if (typeof entry === 'string' || typeof entry === 'number') {
+      if (!entry) return "";
+      if (typeof entry === "string" || typeof entry === "number") {
         return String(entry).trim();
       }
-      if (typeof entry === 'object') {
+      if (typeof entry === "object") {
         const candidate =
-          entry['@_url'] ?? entry.url ?? entry['#text'] ?? entry['@_href'];
-        return typeof candidate === 'string'
+          entry["@_url"] ?? entry.url ?? entry["#text"] ?? entry["@_href"];
+        return typeof candidate === "string"
           ? candidate.trim()
           : candidate != null
-          ? String(candidate).trim()
-          : '';
+            ? String(candidate).trim()
+            : "";
       }
-      return '';
+      return "";
     })
     .filter((url): url is string => url.length > 0)
     .map((url) => ({ url }));
@@ -108,18 +108,15 @@ function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
   const itemsArray = Array.isArray(rssItems) ? rssItems : [rssItems];
 
   const items: RSSItem[] = itemsArray
-    .filter(
-      (item: any) =>
-        item && extractText(item.title) && extractId(item)
-    )
+    .filter((item: any) => item && extractText(item.title) && extractId(item))
     .map((item: any) => ({
       id: extractId(item),
       title: extractText(item.title),
-      published: item.pubDate || '',
+      published: item.pubDate || "",
       content: extractContent(item),
       description: extractDescription(item),
       enclosures: extractEnclosures(item),
-      link: item.link || '',
+      link: item.link || "",
     }));
 
   const feed = { items };
@@ -129,9 +126,7 @@ function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
 /**
  * Fetch and parse RSS feed
  */
-export async function fetchAndParseRSSFeed(
-  feedUrl: string
-): Promise<RSSFeed> {
+export async function fetchAndParseRSSFeed(feedUrl: string): Promise<RSSFeed> {
   const xml = await fetch(feedUrl).then((r) => r.text());
   return parseRSSFeed(xml, feedUrl);
 }

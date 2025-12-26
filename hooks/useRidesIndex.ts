@@ -1,11 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 import {
   fetchMatchIndexFromRemote,
   loadLocalMatchIndex,
   getRidesSource,
   type MatchIndex,
   type RidesSource,
-} from '@/lib/ridesService';
+} from "@/lib/ridesService";
 
 /**
  * Fetches the rides (courses-rides) index. Caches for 24 hours.
@@ -14,11 +14,11 @@ import {
 export function useRidesIndex() {
   const source: RidesSource = getRidesSource();
   return useQuery<MatchIndex, Error>({
-    queryKey: ['rides-index', source],
+    queryKey: ["rides-index", source],
     queryFn: async () => {
-      if (source === 'file') {
+      if (source === "file") {
         const data = loadLocalMatchIndex();
-        if (!data) throw new Error('Lokale Match-Datei nicht gefunden.');
+        if (!data) throw new Error("Lokale Match-Datei nicht gefunden.");
         return data;
       }
       return await fetchMatchIndexFromRemote();

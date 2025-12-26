@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text } from "react-native";
 
 type Props = {
   focused: boolean;
@@ -10,7 +10,7 @@ export default function TopTabLabel({ focused, children, color }: Props) {
   return (
     <Text
       style={{
-        color: color ?? 'white',
+        color: color ?? "white",
         opacity: focused ? 1 : 0.7,
         fontSize: 14,
       }}
@@ -19,4 +19,3 @@ export default function TopTabLabel({ focused, children, color }: Props) {
     </Text>
   );
 }
-

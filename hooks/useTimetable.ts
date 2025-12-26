@@ -1,8 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import {
-  getStructuredTimetable,
-  StructuredTimetable,
-} from '@/lib/icalService';
+import { useQuery } from "@tanstack/react-query";
+import { getStructuredTimetable, StructuredTimetable } from "@/lib/icalService";
 
 /**
  * A custom React Hook to fetch and manage the timetable data for a specific course.
@@ -12,10 +9,10 @@ export function useTimetable(course?: string) {
   const normalizedCourse = course?.trim() || undefined;
   return useQuery<StructuredTimetable, Error>({
     // We specify the success and error types
-    queryKey: ['schedule', normalizedCourse], // Include course in the key for proper caching per course
+    queryKey: ["schedule", normalizedCourse], // Include course in the key for proper caching per course
     queryFn: () => {
       if (!normalizedCourse) {
-        throw new Error('Kein Kurs ausgewählt');
+        throw new Error("Kein Kurs ausgewählt");
       }
       return getStructuredTimetable(normalizedCourse);
     },
@@ -30,6 +27,6 @@ export function useTimetable(course?: string) {
     // Always refetch when a component mounts/subscribes (e.g., after switching courses),
     // even if cache is still fresh according to staleTime. This guarantees up-to-date data
     // when the user switches between different courses.
-    refetchOnMount: 'always',
+    refetchOnMount: "always",
   });
 }

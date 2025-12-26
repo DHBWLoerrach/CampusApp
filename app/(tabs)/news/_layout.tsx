@@ -9,9 +9,11 @@ const TopTabs = withLayoutContext(Tab.Navigator);
 export default function NewsLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
-    tabBarLabel: (props: { focused: boolean; children: string; color?: string }) => (
-      <TopTabLabel {...props} />
-    ),
+    tabBarLabel: (props: {
+      focused: boolean;
+      children: string;
+      color?: string;
+    }) => <TopTabLabel {...props} />,
   };
 
   return (

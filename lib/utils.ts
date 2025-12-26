@@ -1,19 +1,18 @@
-import { Linking, Platform } from 'react-native';
-import * as WebBrowser from 'expo-web-browser';
-import { dhbwRed } from '@/constants/Colors';
+import { Linking, Platform } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import { dhbwRed } from "@/constants/Colors";
 
 export const openLink = async (url: string) => {
   if (!url) return;
 
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
+  if (Platform.OS === "web") {
+    window.open(url, "_blank");
     return;
   }
 
-  if (url.startsWith('http')) {
+  if (url.startsWith("http")) {
     await WebBrowser.openBrowserAsync(url, {
-      presentationStyle:
-        WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
+      presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET, //iOS
       controlsColor: dhbwRed, // iOS
       createTask: false, // Android
       showTitle: false, // Android
@@ -27,7 +26,7 @@ export const openLink = async (url: string) => {
 // Example: 2025-08-18T00:00:00+02:00
 export const toLocalISOString = (date: Date): string => {
   // Use local time components to avoid UTC shifting
-  const pad = (n: number) => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, "0");
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1);
   const day = pad(date.getDate());
@@ -37,7 +36,7 @@ export const toLocalISOString = (date: Date): string => {
 
   // Timezone offset in minutes west of UTC; invert to get the sign for ISO string
   const offsetMinutes = -date.getTimezoneOffset();
-  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const sign = offsetMinutes >= 0 ? "+" : "-";
   const abs = Math.abs(offsetMinutes);
   const offsetH = pad(Math.floor(abs / 60));
   const offsetM = pad(abs % 60);
@@ -51,16 +50,15 @@ const URL_REGEX_SINGLE = /(https?:\/\/[^\s]+)/i;
 const ONLINE_WORD_REGEX = /\bonline\b/i;
 const ONLINE_WORD_REGEX_GLOBAL = /\bonline\b/gi;
 const LOCATION_HINT_TRIM = /^[\s,;:|/\\·–—-]+|[\s,;:|/\\·–—-]+$/g;
-const LOCATION_PART_SPLIT =
-  /\s*(?:\r?\n+|\||;|,\s+|\s[–—-]\s|\s[\\/]\s)\s*/g;
+const LOCATION_PART_SPLIT = /\s*(?:\r?\n+|\||;|,\s+|\s[–—-]\s|\s[\\/]\s)\s*/g;
 const ROOM_KEYWORDS_REGEX =
   /\b(raum|hörsaal|hs|sr|audimax|labor|gebäude|seminar(?:raum)?)\b/i;
 
 export function splitLocation(location?: string | null) {
-  const text = (location || '').trim();
+  const text = (location || "").trim();
   const m = text.match(URL_REGEX_SINGLE);
   const url = m ? m[0] : null;
-  const room = url ? text.replace(url, '').trim() : text;
+  const room = url ? text.replace(url, "").trim() : text;
   return { url, room } as const;
 }
 
@@ -76,7 +74,7 @@ function scoreRoomCandidate(text: string): number {
 
 function splitRoomAndHint(text: string) {
   const raw = text.trim();
-  if (raw.length === 0) return { room: '', hint: null } as const;
+  if (raw.length === 0) return { room: "", hint: null } as const;
 
   const parts = raw
     .split(LOCATION_PART_SPLIT)
@@ -87,8 +85,8 @@ function splitRoomAndHint(text: string) {
     // If the location ends with parentheses, treat them as hint (e.g., "Raum 1.01 (Klausur)")
     const m = raw.match(/^(.*?)\s*\(([^()]*)\)\s*$/);
     if (m) {
-      const room = (m[1] || '').trim();
-      const hint = (m[2] || '').trim();
+      const room = (m[1] || "").trim();
+      const hint = (m[2] || "").trim();
       return {
         room,
         hint: hint.length > 0 ? hint : null,
@@ -113,7 +111,7 @@ function splitRoomAndHint(text: string) {
   const room = parts[bestIndex];
   const hintText = parts
     .filter((_p, i) => i !== bestIndex)
-    .join(', ')
+    .join(", ")
     .trim();
   const hint = hintText.length > 0 ? hintText : null;
 
@@ -123,15 +121,15 @@ function splitRoomAndHint(text: string) {
 function extractOnlineHint(text: string): string | null {
   // Remove the "online" marker and clean up leftover separators (e.g., ", online")
   const withoutOnline = text
-    .replace(ONLINE_WORD_REGEX_GLOBAL, ' ')
-    .replace(/\(\s*\)/g, ' ')
+    .replace(ONLINE_WORD_REGEX_GLOBAL, " ")
+    .replace(/\(\s*\)/g, " ")
     .trim();
-  const cleaned = withoutOnline.replace(LOCATION_HINT_TRIM, '').trim();
+  const cleaned = withoutOnline.replace(LOCATION_HINT_TRIM, "").trim();
   return cleaned.length > 0 ? cleaned : null;
 }
 
 export function getLocationMeta(location?: string | null) {
-  const raw = (location || '').trim();
+  const raw = (location || "").trim();
   const { url, room: textWithoutUrl } = splitLocation(raw);
   const isOnline = isOnlineEvent(raw, url);
 
@@ -144,11 +142,8 @@ export function getLocationMeta(location?: string | null) {
   return { url, room, hint, isOnline } as const;
 }
 
-export function isOnlineEvent(
-  location?: string | null,
-  url?: string | null
-) {
+export function isOnlineEvent(location?: string | null, url?: string | null) {
   if (url) return true;
-  const haystack = `${location || ''}`;
+  const haystack = `${location || ""}`;
   return ONLINE_WORD_REGEX.test(haystack);
 }

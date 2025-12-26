@@ -8,15 +8,9 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import {
-  IconSymbol,
-  type IconSymbolName,
-} from '@/components/ui/IconSymbol';
+import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import InfoModal from '@/components/services/InfoModal';
-import {
-  INFO_PAGES,
-  type InfoKey,
-} from '@/components/services/InfoPages';
+import { INFO_PAGES, type InfoKey } from '@/components/services/InfoPages';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors } from '@/constants/Colors';
@@ -176,7 +170,7 @@ export default function ServicesScreen() {
   const [infoKey, setInfoKey] = useState<InfoKey | null>(null);
   const Active = useMemo(
     () => (infoKey ? INFO_PAGES[infoKey].Body : null),
-    [infoKey]
+    [infoKey],
   );
   const title = infoKey ? INFO_PAGES[infoKey].title : '';
 
@@ -189,30 +183,26 @@ export default function ServicesScreen() {
       >
         {serviceGroups.map((group) => (
           <View key={group.title} style={styles.section}>
-            <ThemedText style={styles.sectionTitle}>
-              {group.title}
-            </ThemedText>
+            <ThemedText style={styles.sectionTitle}>{group.title}</ThemedText>
             <View style={styles.grid}>
-              {group.services.map(
-                ({ title, icon, url, image, content }) => (
-                  <ServiceCard
-                    key={title}
-                    title={title}
-                    icon={icon}
-                    onPress={() => {
-                      if (image) {
-                        setImageModal({ title, source: image });
-                      } else if (url) {
-                        openLink(url);
-                      } else if (content) {
-                        setInfoKey(content);
-                      } else {
-                        handlePress(title);
-                      }
-                    }}
-                  />
-                )
-              )}
+              {group.services.map(({ title, icon, url, image, content }) => (
+                <ServiceCard
+                  key={title}
+                  title={title}
+                  icon={icon}
+                  onPress={() => {
+                    if (image) {
+                      setImageModal({ title, source: image });
+                    } else if (url) {
+                      openLink(url);
+                    } else if (content) {
+                      setInfoKey(content);
+                    } else {
+                      handlePress(title);
+                    }
+                  }}
+                />
+              ))}
             </View>
           </View>
         ))}

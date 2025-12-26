@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo } from "react";
 import {
   Linking,
   Platform,
@@ -6,9 +6,9 @@ import {
   type TextProps,
   type StyleProp,
   type TextStyle,
-} from 'react-native';
+} from "react-native";
 
-interface LinkifiedTextProps extends Omit<TextProps, 'children'> {
+interface LinkifiedTextProps extends Omit<TextProps, "children"> {
   value?: string | null;
   style?: StyleProp<TextStyle>;
   numberOfLines?: number;
@@ -25,12 +25,12 @@ const URL_REGEX = /(https?:\/\/[^\s]+)/gi;
 
 // Remove trailing punctuation that often sticks to URLs in plain text
 const trimTrailingPunctuation = (url: string) => {
-  return url.replace(/[\.,;:!?\)\]\}]+$/g, '');
+  return url.replace(/[\.,;:!?\)\]\}]+$/g, "");
 };
 
 const openLink = (url: string) => {
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
+  if (Platform.OS === "web") {
+    window.open(url, "_blank");
   } else {
     Linking.openURL(url);
   }
@@ -56,7 +56,7 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
           return (
             <Text
               key={`u-${index}`}
-              style={{ textDecorationLine: 'underline' }}
+              style={{ textDecorationLine: "underline" }}
               onPress={() => openLink(cleanUrl)}
               suppressHighlighting
               accessibilityRole="link"
@@ -68,9 +68,9 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
         })}
       </Text>
     );
-  }
+  },
 );
 
-LinkifiedText.displayName = 'LinkifiedText';
+LinkifiedText.displayName = "LinkifiedText";
 
 export default LinkifiedText;

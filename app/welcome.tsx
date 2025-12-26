@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import ExpoCheckbox from 'expo-checkbox';
 import { Stack, router } from 'expo-router';
 import { ThemedText } from '@/components/ui/ThemedText';
@@ -21,17 +15,13 @@ export default function WelcomeScreen() {
   const insets = useSafeAreaInsets();
 
   const [disclaimerChecked, setDisclaimerChecked] = useState(false);
-  const [showDisclaimerDetails, setShowDisclaimerDetails] =
-    useState(false);
+  const [showDisclaimerDetails, setShowDisclaimerDetails] = useState(false);
   const { setSelectedRole, setAcceptedTerms } = useRoleContext();
   const [pendingRole, setPendingRole] = useState<Role | null>(null);
 
   const onStart = async () => {
     if (!disclaimerChecked || !pendingRole) return;
-    await Promise.all([
-      setSelectedRole(pendingRole),
-      setAcceptedTerms(true),
-    ]);
+    await Promise.all([setSelectedRole(pendingRole), setAcceptedTerms(true)]);
     router.replace('/(tabs)/news');
   };
 
@@ -81,8 +71,8 @@ export default function WelcomeScreen() {
 
         <ThemedView style={styles.card}>
           <ThemedText style={styles.disclaimerShort}>
-            Hinweis: Abweichungen in den Inhalten sind möglich.
-            Maßgeblich ist der Online-Vorlesungsplan.
+            Hinweis: Abweichungen in den Inhalten sind möglich. Maßgeblich ist
+            der Online-Vorlesungsplan.
           </ThemedText>
 
           {showDisclaimerDetails ? (
@@ -125,16 +115,11 @@ export default function WelcomeScreen() {
         <Pressable
           onPress={onStart}
           disabled={disabled}
-          style={[
-            styles.startButton,
-            disabled && styles.startButtonDisabled,
-          ]}
+          style={[styles.startButton, disabled && styles.startButtonDisabled]}
           accessibilityRole="button"
           accessibilityState={{ disabled }}
         >
-          <ThemedText style={styles.startButtonLabel}>
-            Weiter
-          </ThemedText>
+          <ThemedText style={styles.startButtonLabel}>Weiter</ThemedText>
         </Pressable>
       </ScrollView>
     </ThemedView>

@@ -1,27 +1,19 @@
-import {
-  FlatList,
-  Platform,
-  Pressable,
-  StyleSheet,
-} from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { ThemedView } from '@/components/ui/ThemedView';
-import {
-  IconSymbol,
-  type IconSymbolName,
-} from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { openLink } from '@/lib/utils';
+import { FlatList, Platform, Pressable, StyleSheet } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { IconSymbol, type IconSymbolName } from "@/components/ui/IconSymbol";
+import { Colors } from "@/constants/Colors";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { openLink } from "@/lib/utils";
 
 function LinkItem({
   item,
 }: {
   item: { title: string; icon: IconSymbolName; url: string };
 }) {
-  const schemeBg = useThemeColor({}, 'background');
-  const iconColor = useThemeColor({}, 'icon');
-  const borderColor = useThemeColor({}, 'border'); // Use borderColor for subtle separator
+  const schemeBg = useThemeColor({}, "background");
+  const iconColor = useThemeColor({}, "icon");
+  const borderColor = useThemeColor({}, "border"); // Use borderColor for subtle separator
 
   return (
     <Pressable
@@ -31,11 +23,11 @@ function LinkItem({
         {
           backgroundColor: schemeBg,
           borderColor, // Added borderColor to itemContainer style
-          opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
+          opacity: Platform.OS === "ios" && pressed ? 0.7 : 1,
         },
       ]}
       android_ripple={{
-        color: Colors.light.tint + '30',
+        color: Colors.light.tint + "30",
       }}
     >
       <IconSymbol
@@ -80,8 +72,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,

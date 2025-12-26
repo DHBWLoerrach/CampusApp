@@ -2,14 +2,8 @@ import { useMemo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import Storage from 'expo-sqlite/kv-store';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
-import {
-  CourseProvider,
-  useCourseContext,
-} from '@/context/CourseContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CourseProvider, useCourseContext } from '@/context/CourseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import BottomSheet from '@/components/ui/BottomSheet';
@@ -55,11 +49,9 @@ function TabsContent() {
   const otherCourses = useMemo(
     () =>
       (previousCourses || []).filter(
-        (c) =>
-          !!c &&
-          c.toUpperCase() !== (selectedCourse || '').toUpperCase()
+        (c) => !!c && c.toUpperCase() !== (selectedCourse || '').toUpperCase(),
       ),
-    [previousCourses, selectedCourse]
+    [previousCourses, selectedCourse],
   );
 
   return (
@@ -70,11 +62,7 @@ function TabsContent() {
           options={{
             title: 'DHBW Lörrach',
             tabBarIcon: ({ color }) => (
-              <IconSymbol
-                size={ICON_SIZE}
-                name="house"
-                color={color}
-              />
+              <IconSymbol size={ICON_SIZE} name="house" color={color} />
             ),
             tabBarLabel: 'DHBW',
           }}
@@ -121,21 +109,13 @@ function TabsContent() {
                       >
                         {scheduleTitle}
                       </ThemedText>
-                      <IconSymbol
-                        name="chevron.down"
-                        size={14}
-                        color="white"
-                      />
+                      <IconSymbol name="chevron.down" size={14} color="white" />
                     </View>
                   </TouchableOpacity>
                 )
               : undefined,
             tabBarIcon: ({ color }) => (
-              <IconSymbol
-                size={ICON_SIZE}
-                name="calendar"
-                color={color}
-              />
+              <IconSymbol size={ICON_SIZE} name="calendar" color={color} />
             ),
             headerRight:
               selectedCourse && RIDES_FEATURE_ENABLED
@@ -148,20 +128,14 @@ function TabsContent() {
                       accessibilityLabel="Carpool öffnen"
                       accessibilityHint="Öffnet Carpool-Informationen"
                     >
-                      <IconSymbol
-                        size={20}
-                        name="car"
-                        color="white"
-                      />
+                      <IconSymbol size={20} name="car" color="white" />
                     </TouchableOpacity>
                   )
                 : undefined,
           }}
           listeners={{
             focus: () => {
-              Storage.setItem(LAST_TAB_KEY, 'schedule').catch(
-                () => {}
-              );
+              Storage.setItem(LAST_TAB_KEY, 'schedule').catch(() => {});
             },
           }}
         />
@@ -170,11 +144,7 @@ function TabsContent() {
           options={{
             title: 'Mensa',
             tabBarIcon: ({ color }) => (
-              <IconSymbol
-                size={ICON_SIZE}
-                name="fork.knife"
-                color={color}
-              />
+              <IconSymbol size={ICON_SIZE} name="fork.knife" color={color} />
             ),
             headerRight: () => (
               <TouchableOpacity
@@ -191,9 +161,7 @@ function TabsContent() {
           }}
           listeners={{
             focus: () => {
-              Storage.setItem(LAST_TAB_KEY, 'canteen').catch(
-                () => {}
-              );
+              Storage.setItem(LAST_TAB_KEY, 'canteen').catch(() => {});
             },
           }}
         />
@@ -203,18 +171,12 @@ function TabsContent() {
             title: 'Services',
             headerShown: false,
             tabBarIcon: ({ color }) => (
-              <IconSymbol
-                size={ICON_SIZE}
-                name="info.circle"
-                color={color}
-              />
+              <IconSymbol size={ICON_SIZE} name="info.circle" color={color} />
             ),
           }}
           listeners={{
             focus: () => {
-              Storage.setItem(LAST_TAB_KEY, 'services').catch(
-                () => {}
-              );
+              Storage.setItem(LAST_TAB_KEY, 'services').catch(() => {});
             },
           }}
         />
@@ -259,11 +221,7 @@ function TabsContent() {
               marginRight: 8,
             }}
           >
-            <IconSymbol
-              name="fork.knife"
-              size={20}
-              color={textColor}
-            />
+            <IconSymbol name="fork.knife" size={20} color={textColor} />
           </View>
           <ThemedText accessibilityLabel="Essensausgabe: elf Uhr fünfundvierzig bis dreizehn Uhr dreißig">
             Ausgabe 11:45–13:30
@@ -339,14 +297,8 @@ function TabsContent() {
                   justifyContent: 'space-between',
                 }}
               >
-                <ThemedText style={{ fontWeight: '700' }}>
-                  {c}
-                </ThemedText>
-                <IconSymbol
-                  name="chevron.right"
-                  size={16}
-                  color={textColor}
-                />
+                <ThemedText style={{ fontWeight: '700' }}>{c}</ThemedText>
+                <IconSymbol name="chevron.right" size={16} color={textColor} />
               </TouchableOpacity>
             ))
           )}
@@ -366,11 +318,7 @@ function TabsContent() {
               gap: 8,
             }}
           >
-            <IconSymbol
-              name="rectangle.stack"
-              size={16}
-              color={textColor}
-            />
+            <IconSymbol name="rectangle.stack" size={16} color={textColor} />
             <ThemedText>Anderen Kurs auswählen …</ThemedText>
           </TouchableOpacity>
         </View>

@@ -9,10 +9,7 @@ export default function Layout() {
         name="help-links"
         options={{ title: 'Beratung und Hilfe' }}
       />
-      <Stack.Screen
-        name="preferences"
-        options={{ title: 'Einstellungen' }}
-      />
+      <Stack.Screen name="preferences" options={{ title: 'Einstellungen' }} />
       <Stack.Screen name="safety" options={{ title: 'Sicherheit' }} />
       <Stack.Screen
         name="study-links"

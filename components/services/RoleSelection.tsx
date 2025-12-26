@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, View, Platform } from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { roles, type Role } from '@/constants/Roles';
+import { Pressable, StyleSheet, View, Platform } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { roles, type Role } from "@/constants/Roles";
 
 function RadioItem({
   label,
@@ -12,9 +12,9 @@ function RadioItem({
   selected: boolean;
   onPress: () => void;
 }) {
-  const background = useThemeColor({}, 'background');
-  const border = useThemeColor({}, 'border');
-  const text = useThemeColor({}, 'text');
+  const background = useThemeColor({}, "background");
+  const border = useThemeColor({}, "border");
+  const text = useThemeColor({}, "text");
 
   return (
     <Pressable
@@ -23,7 +23,7 @@ function RadioItem({
         styles.item,
         {
           backgroundColor: background,
-          opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
+          opacity: Platform.OS === "ios" && pressed ? 0.7 : 1,
         },
       ]}
     >
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 8,
   },
   outerCircle: {
@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 12,
   },
   label: {

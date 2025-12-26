@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import NetInfo from '@react-native-community/netinfo';
+import { useEffect, useState } from "react";
+import NetInfo from "@react-native-community/netinfo";
 
 type OnlineStatus = {
   isOnline: boolean;
@@ -20,8 +20,7 @@ export function useOnlineStatus(): OnlineStatus {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
-      const online =
-        state.isInternetReachable ?? state.isConnected ?? true;
+      const online = state.isInternetReachable ?? state.isConnected ?? true;
       setIsOnline(online);
       setIsReady(true);
     });
@@ -31,4 +30,3 @@ export function useOnlineStatus(): OnlineStatus {
 
   return { isOnline, isOffline: !isOnline, isReady };
 }
-

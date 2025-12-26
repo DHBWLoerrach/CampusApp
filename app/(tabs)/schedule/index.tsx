@@ -27,7 +27,7 @@ const formatDateHeader = (dateString: string): string => {
   const date = new Date(dateString);
   // Add time to avoid timezone issues when creating the date object
   const adjustedDate = new Date(
-    date.valueOf() + date.getTimezoneOffset() * 60 * 1000
+    date.valueOf() + date.getTimezoneOffset() * 60 * 1000,
   );
 
   return adjustedDate.toLocaleDateString('de-DE', {
@@ -45,8 +45,9 @@ export default function ScheduleList() {
   const ref = useRef<SectionList>(null);
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
-  const { data, isLoading, isError, error, refetch, isFetching } =
-    useTimetable(selectedCourse || undefined);
+  const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
+    selectedCourse || undefined,
+  );
   const { isOnline, isOffline, isReady } = useOnlineStatus();
 
   // Theme-aware colors
@@ -130,9 +131,7 @@ export default function ScheduleList() {
 
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
-      {showOffline && hasData ? (
-        <OfflineBanner style={styles.banner} />
-      ) : null}
+      {showOffline && hasData ? <OfflineBanner style={styles.banner} /> : null}
       <SectionList
         ref={ref}
         sections={sections}
@@ -154,8 +153,7 @@ export default function ScheduleList() {
         ListEmptyComponent={() => (
           <ThemedView style={styles.center}>
             <ThemedText>
-              Keine anstehenden Termine gefunden. Vielleicht Ferien?
-              🏖️
+              Keine anstehenden Termine gefunden. Vielleicht Ferien? 🏖️
             </ThemedText>
           </ThemedView>
         )}

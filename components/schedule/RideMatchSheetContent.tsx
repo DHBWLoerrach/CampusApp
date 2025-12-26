@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Pressable,
-  View,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
-import { ThemedText } from '@/components/ui/ThemedText';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, View, StyleSheet, useColorScheme } from "react-native";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import OfflineBanner from "@/components/ui/OfflineBanner";
 
 // ---- Data hook ----
-import { useRidesIndex } from '@/hooks/useRidesIndex';
-import type { MatchIndex } from '@/lib/ridesService';
+import { useRidesIndex } from "@/hooks/useRidesIndex";
+import type { MatchIndex } from "@/lib/ridesService";
 
 // No module-level data; fetched via React Query in the hook.
 
@@ -21,34 +16,30 @@ import type { MatchIndex } from '@/lib/ridesService';
 
 function getTodayKey(timezone: string): string {
   const base = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   } as const;
   try {
-    return new Intl.DateTimeFormat('en-CA', {
+    return new Intl.DateTimeFormat("en-CA", {
       ...base,
-      timeZone: timezone || 'Europe/Berlin',
+      timeZone: timezone || "Europe/Berlin",
     }).format(new Date());
   } catch {}
   try {
-    return new Intl.DateTimeFormat('en-CA', {
+    return new Intl.DateTimeFormat("en-CA", {
       ...base,
-      timeZone: 'Europe/Berlin',
+      timeZone: "Europe/Berlin",
     }).format(new Date());
   } catch {}
-  return new Intl.DateTimeFormat('en-CA', base).format(new Date());
+  return new Intl.DateTimeFormat("en-CA", base).format(new Date());
 }
 
 function isValidYmd(ymd: unknown): ymd is string {
-  if (typeof ymd !== 'string') return false;
+  if (typeof ymd !== "string") return false;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return false;
-  const [y, m, d] = ymd.split('-').map(Number);
-  if (
-    !Number.isFinite(y) ||
-    !Number.isFinite(m) ||
-    !Number.isFinite(d)
-  )
+  const [y, m, d] = ymd.split("-").map(Number);
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d))
     return false;
   const dt = new Date(Date.UTC(y, m - 1, d));
   return (
@@ -59,12 +50,12 @@ function isValidYmd(ymd: unknown): ymd is string {
 }
 
 function addDaysToKey(ymd: string, days: number): string {
-  const [y, m, d] = ymd.split('-').map(Number);
+  const [y, m, d] = ymd.split("-").map(Number);
   const t = new Date(Date.UTC(y, (m ?? 1) - 1, d ?? 1));
   t.setUTCDate(t.getUTCDate() + days);
   const yy = t.getUTCFullYear();
-  const mm = String(t.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(t.getUTCDate()).padStart(2, '0');
+  const mm = String(t.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(t.getUTCDate()).padStart(2, "0");
   return `${yy}-${mm}-${dd}`;
 }
 
@@ -74,17 +65,14 @@ const DEPARTURE_OFFSET_MIN = 5; // show departure 5 minutes after last lecture
 const MAX_VISIBLE_CHIPS = 5; // show + weitere X beyond this
 const MAX_FUTURE_DAYS = 10; // safety: ignore days beyond 10 days in future
 
-type MatchMode = 'exact' | 'tolerance';
+type MatchMode = "exact" | "tolerance";
 
 // Format minutes (since midnight) to "HH:MM"
 function mmToHHMM(mm: number | null | undefined): string {
-  if (mm == null || mm < 0) return '—';
+  if (mm == null || mm < 0) return "—";
   const h = Math.floor(mm / 60);
   const m = mm % 60;
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(
-    2,
-    '0'
-  )}`;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
 // Convert a hex color like #RRGGBB to an rgba() string with alpha
@@ -97,9 +85,7 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 // Clamp minutes to a 0..1439 range for safe display
-function clampDayMinutes(
-  mm: number | null | undefined
-): number | null {
+function clampDayMinutes(mm: number | null | undefined): number | null {
   if (mm == null || !Number.isFinite(mm)) return null;
   if (mm < 0) return 0;
   if (mm > 1439) return 1439;
@@ -108,16 +94,16 @@ function clampDayMinutes(
 
 // Localized short date like "Di, 02.09."
 function formatDateShort(ymd: string, timezone: string): string {
-  const [y, m, d] = ymd.split('-').map(Number);
+  const [y, m, d] = ymd.split("-").map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d));
-  const weekdayShort = new Intl.DateTimeFormat('de-DE', {
-    weekday: 'short',
+  const weekdayShort = new Intl.DateTimeFormat("de-DE", {
+    weekday: "short",
     timeZone: timezone,
   })
     .format(dt)
-    .replace(/\.$/, ''); // drop trailing dot ("Mo." -> "Mo")
-  const dd = String(d).padStart(2, '0');
-  const mm = String(m).padStart(2, '0');
+    .replace(/\.$/, ""); // drop trailing dot ("Mo." -> "Mo")
+  const dd = String(d).padStart(2, "0");
+  const mm = String(m).padStart(2, "0");
   return `${weekdayShort}, ${dd}.${mm}.`;
 }
 
@@ -130,23 +116,21 @@ type DayRow = {
 };
 
 // Compute day rows for a given course code
-function computeRows(index: MatchIndex | undefined, myCourse: string, mode: MatchMode): DayRow[] {
-  const timezone = index?.timezone || 'Europe/Berlin';
+function computeRows(
+  index: MatchIndex | undefined,
+  myCourse: string,
+  mode: MatchMode,
+): DayRow[] {
+  const timezone = index?.timezone || "Europe/Berlin";
   const todayKey = getTodayKey(timezone);
   const maxKey = addDaysToKey(todayKey, MAX_FUTURE_DAYS);
-  const days = Array.isArray((index as any)?.days)
-    ? (index as any).days
-    : [];
+  const days = Array.isArray((index as any)?.days) ? (index as any).days : [];
   return days
     .filter((day: any) => isValidYmd(day?.date))
     .filter((day: any) => day.date >= todayKey && day.date <= maxKey) // ignore past and far-future days
     .map((day: any) => {
-      const courses: any[] = Array.isArray(day?.courses)
-        ? day.courses
-        : [];
-      const valid = courses.filter(
-        (c) => c && typeof c.course === 'string'
-      );
+      const courses: any[] = Array.isArray(day?.courses) ? day.courses : [];
+      const valid = courses.filter((c) => c && typeof c.course === "string");
 
       const me = valid.find((c) => c.course === myCourse);
       const myFirst = me?.firstStartMin;
@@ -158,15 +142,11 @@ function computeRows(index: MatchIndex | undefined, myCourse: string, mode: Matc
           : valid
               .filter((c) => {
                 if (c.course === myCourse) return false;
-                if (
-                  !Number.isFinite(c.firstStartMin) ||
-                  c.firstStartMin === 0
-                )
+                if (!Number.isFinite(c.firstStartMin) || c.firstStartMin === 0)
                   return false;
-                return mode === 'exact'
+                return mode === "exact"
                   ? c.firstStartMin === myFirst
-                  : Math.abs(c.firstStartMin - myFirst) <=
-                      TOLERANCE_MIN;
+                  : Math.abs(c.firstStartMin - myFirst) <= TOLERANCE_MIN;
               })
               .map((c) => c.course);
 
@@ -176,12 +156,9 @@ function computeRows(index: MatchIndex | undefined, myCourse: string, mode: Matc
           : valid
               .filter((c) => {
                 if (c.course === myCourse) return false;
-                if (
-                  !Number.isFinite(c.lastEndMin) ||
-                  c.lastEndMin === 0
-                )
+                if (!Number.isFinite(c.lastEndMin) || c.lastEndMin === 0)
                   return false;
-                return mode === 'exact'
+                return mode === "exact"
                   ? c.lastEndMin === myLast
                   : Math.abs(c.lastEndMin - myLast) <= TOLERANCE_MIN;
               })
@@ -198,16 +175,16 @@ function computeRows(index: MatchIndex | undefined, myCourse: string, mode: Matc
 }
 
 export default function RideMatchSheetContent({
-  myCourse = '',
+  myCourse = "",
 }: {
   myCourse?: string;
 }) {
   const [copied, setCopied] = useState<string | null>(null);
-  const [mode, setMode] = useState<MatchMode>('exact');
+  const [mode, setMode] = useState<MatchMode>("exact");
   const { data: ridesIndex, isLoading, error, refetch } = useRidesIndex();
   const { isOnline, isOffline, isReady } = useOnlineStatus();
   const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const isDark = colorScheme === "dark";
 
   // Auto-refresh when the device comes back online
   const prevOnlineRef = useRef<boolean | null>(null);
@@ -227,29 +204,29 @@ export default function RideMatchSheetContent({
   // Precompute day rows once
   const rows = useMemo(
     () => computeRows(ridesIndex, myCourse, mode),
-    [ridesIndex, myCourse, mode]
+    [ridesIndex, myCourse, mode],
   );
 
   // Dynamic labels based on current offsets
   const arrAbs = Math.abs(ARRIVAL_OFFSET_MIN);
   const depAbs = Math.abs(DEPARTURE_OFFSET_MIN);
   // Card outline color (theme-aware, slightly stronger in dark mode)
-  const borderBase = useThemeColor({}, 'border') as string;
+  const borderBase = useThemeColor({}, "border") as string;
   const cardBorderColor = hexToRgba(borderBase, isDark ? 0.42 : 0.32);
   const cardBorderWidth = isDark ? StyleSheet.hairlineWidth : 1;
   // Today key in the calendar timezone
-  const timezone = ridesIndex?.timezone || 'Europe/Berlin';
+  const timezone = ridesIndex?.timezone || "Europe/Berlin";
   const todayKey = useMemo(() => getTodayKey(timezone), [timezone]);
   // Tomorrow key in the same timezone
   const tomorrowKey = useMemo(() => {
-    const [y, m, d] = todayKey.split('-').map(Number);
+    const [y, m, d] = todayKey.split("-").map(Number);
     const t = new Date(Date.UTC(y, (m ?? 1) - 1, (d ?? 1) + 1));
     const yy = t.getUTCFullYear();
-    const mm = String(t.getUTCMonth() + 1).padStart(2, '0');
-    const dd = String(t.getUTCDate()).padStart(2, '0');
+    const mm = String(t.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(t.getUTCDate()).padStart(2, "0");
     return `${yy}-${mm}-${dd}`;
   }, [todayKey]);
-  const tintColor = useThemeColor({}, 'tint') as string;
+  const tintColor = useThemeColor({}, "tint") as string;
   const todayAlpha = isDark ? 0.36 : 0.14;
   const tomorrowAlpha = isDark ? 0.28 : 0.1;
   const badgeTodayBg = hexToRgba(tintColor, todayAlpha);
@@ -258,19 +235,19 @@ export default function RideMatchSheetContent({
   // Build compact strings for copy/share actions
   const buildCopyText = (
     date: string,
-    dir: 'hin' | 'zurueck',
+    dir: "hin" | "zurueck",
     list: string[],
-    myMin?: number
+    myMin?: number,
   ) => {
     const dateLabel = formatDateShort(date, timezone);
     const raw =
-      dir === 'hin'
+      dir === "hin"
         ? (myMin ?? 0) + ARRIVAL_OFFSET_MIN
         : (myMin ?? 0) + DEPARTURE_OFFSET_MIN;
     const adj = clampDayMinutes(raw);
     const time = mmToHHMM(adj ?? -1);
-    const label = dir === 'hin' ? 'Ankunft' : 'Abfahrt';
-    const courses = list.length ? list.join(', ') : '—';
+    const label = dir === "hin" ? "Ankunft" : "Abfahrt";
+    const courses = list.length ? list.join(", ") : "—";
     return `(${dateLabel}) ${label} ${time} · Kurse: ${courses}`;
   };
 
@@ -282,10 +259,10 @@ export default function RideMatchSheetContent({
         // @ts-ignore
         await globalThis.navigator.clipboard.writeText(text);
       }
-      setCopied('Text kopiert');
+      setCopied("Text kopiert");
       setTimeout(() => setCopied(null), 1500);
     } catch {
-      setCopied('Bereit zum Einfügen');
+      setCopied("Bereit zum Einfügen");
       setTimeout(() => setCopied(null), 1500);
     }
   };
@@ -293,8 +270,8 @@ export default function RideMatchSheetContent({
   return (
     <View style={styles.container}>
       <ThemedText style={styles.info}>
-        Kurse mit gleichen Ankunfts-/Abfahrtszeiten wie{' '}
-        <ThemedText style={styles.bold}>{myCourse}</ThemedText>{' '}
+        Kurse mit gleichen Ankunfts-/Abfahrtszeiten wie{" "}
+        <ThemedText style={styles.bold}>{myCourse}</ThemedText>{" "}
       </ThemedText>
       <View style={styles.subInfoWrap}>
         <ThemedText style={styles.subInfo}>
@@ -305,16 +282,16 @@ export default function RideMatchSheetContent({
         </ThemedText>
       </View>
 
-      {showOffline && (
-        <OfflineBanner style={styles.banner} />
-      )}
+      {showOffline && <OfflineBanner style={styles.banner} />}
 
       {isLoading && (
-        <ThemedText style={[styles.info, styles.muted]}>Lade Mitfahrdaten …</ThemedText>
+        <ThemedText style={[styles.info, styles.muted]}>
+          Lade Mitfahrdaten …
+        </ThemedText>
       )}
       {!isLoading && !showOffline && error && (
         <ThemedText style={[styles.info, styles.muted]}>
-          {error.message || 'Mitfahrdaten konnten nicht geladen werden.'}
+          {error.message || "Mitfahrdaten konnten nicht geladen werden."}
         </ThemedText>
       )}
 
@@ -328,26 +305,20 @@ export default function RideMatchSheetContent({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Exakt anzeigen"
-            onPress={() => setMode('exact')}
+            onPress={() => setMode("exact")}
             style={({ pressed }) => [
               styles.segItem,
-              mode === 'exact' &&
-                (isDark
-                  ? styles.segItemActiveDark
-                  : styles.segItemActiveLight),
+              mode === "exact" &&
+                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
               pressed && { opacity: 0.9 },
             ]}
           >
             <ThemedText
               style={[
                 styles.segText,
-                mode === 'exact' && styles.segTextActive,
-                mode === 'exact' &&
-                  isDark &&
-                  styles.segTextActiveDark,
-                mode === 'exact' &&
-                  !isDark &&
-                  styles.segTextActiveLight,
+                mode === "exact" && styles.segTextActive,
+                mode === "exact" && isDark && styles.segTextActiveDark,
+                mode === "exact" && !isDark && styles.segTextActiveLight,
               ]}
             >
               Exakte Zeiten
@@ -356,26 +327,20 @@ export default function RideMatchSheetContent({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Mit ±${TOLERANCE_MIN} Minuten Toleranz anzeigen`}
-            onPress={() => setMode('tolerance')}
+            onPress={() => setMode("tolerance")}
             style={({ pressed }) => [
               styles.segItem,
-              mode === 'tolerance' &&
-                (isDark
-                  ? styles.segItemActiveDark
-                  : styles.segItemActiveLight),
+              mode === "tolerance" &&
+                (isDark ? styles.segItemActiveDark : styles.segItemActiveLight),
               pressed && { opacity: 0.9 },
             ]}
           >
             <ThemedText
               style={[
                 styles.segText,
-                mode === 'tolerance' && styles.segTextActive,
-                mode === 'tolerance' &&
-                  isDark &&
-                  styles.segTextActiveDark,
-                mode === 'tolerance' &&
-                  !isDark &&
-                  styles.segTextActiveLight,
+                mode === "tolerance" && styles.segTextActive,
+                mode === "tolerance" && isDark && styles.segTextActiveDark,
+                mode === "tolerance" && !isDark && styles.segTextActiveLight,
               ]}
             >
               ±{TOLERANCE_MIN} Min Toleranz
@@ -403,28 +368,22 @@ export default function RideMatchSheetContent({
               const dateLabel = formatDateShort(row.date, timezone);
               const parts: string[] = [];
               if (hasToTime) {
-                const adj = clampDayMinutes(
-                  row.myFirst! + ARRIVAL_OFFSET_MIN
-                );
+                const adj = clampDayMinutes(row.myFirst! + ARRIVAL_OFFSET_MIN);
                 parts.push(`Ankunft ${mmToHHMM(adj ?? -1)}`);
               }
               if (hasBackTime) {
-                const adj = clampDayMinutes(
-                  row.myLast! + DEPARTURE_OFFSET_MIN
-                );
+                const adj = clampDayMinutes(row.myLast! + DEPARTURE_OFFSET_MIN);
                 parts.push(`Abfahrt ${mmToHHMM(adj ?? -1)}`);
               }
               const rightText =
-                parts.length === 0
-                  ? 'Keine Vorlesung'
-                  : parts.join(' · ');
+                parts.length === 0 ? "Keine Vorlesung" : parts.join(" · ");
               const isToday = row.date === todayKey;
               const isTomorrow = row.date === tomorrowKey;
               const badgeLabel = isToday
-                ? 'Heute'
+                ? "Heute"
                 : isTomorrow
-                ? 'Morgen'
-                : null;
+                  ? "Morgen"
+                  : null;
               return (
                 <View style={styles.dayHeaderRow}>
                   <View style={styles.dayHeaderLeft}>
@@ -461,11 +420,7 @@ export default function RideMatchSheetContent({
                 (hasBackTime && row.backMatches.length > 0);
               return hasMyTimes && !dayHasAnyMatches ? (
                 <ThemedText
-                  style={[
-                    styles.muted,
-                    styles.info,
-                    { marginBottom: 6 },
-                  ]}
+                  style={[styles.muted, styles.info, { marginBottom: 6 }]}
                 >
                   Keine Mitfahr-Matches für diesen Tag.
                 </ThemedText>
@@ -482,8 +437,8 @@ export default function RideMatchSheetContent({
                   {hasToTime && (
                     <Section
                       title={
-                        mode === 'exact'
-                          ? 'Ankunft (Exakt)'
+                        mode === "exact"
+                          ? "Ankunft (Exakt)"
                           : `Ankunft (±${TOLERANCE_MIN} Min)`
                       }
                       chips={row.toMatches}
@@ -492,10 +447,10 @@ export default function RideMatchSheetContent({
                         tryCopy(
                           buildCopyText(
                             row.date,
-                            'hin',
+                            "hin",
                             row.toMatches,
-                            row.myFirst
-                          )
+                            row.myFirst,
+                          ),
                         )
                       }
                     />
@@ -503,8 +458,8 @@ export default function RideMatchSheetContent({
                   {hasBackTime && (
                     <Section
                       title={
-                        mode === 'exact'
-                          ? 'Abfahrt (Exakt)'
+                        mode === "exact"
+                          ? "Abfahrt (Exakt)"
                           : `Abfahrt (±${TOLERANCE_MIN} Min)`
                       }
                       chips={row.backMatches}
@@ -513,10 +468,10 @@ export default function RideMatchSheetContent({
                         tryCopy(
                           buildCopyText(
                             row.date,
-                            'zurueck',
+                            "zurueck",
                             row.backMatches,
-                            row.myLast
-                          )
+                            row.myLast,
+                          ),
                         )
                       }
                     />
@@ -528,9 +483,7 @@ export default function RideMatchSheetContent({
         );
       })}
 
-      {copied && (
-        <ThemedText style={styles.toast}>{copied}</ThemedText>
-      )}
+      {copied && <ThemedText style={styles.toast}>{copied}</ThemedText>}
     </View>
   );
 }
@@ -538,7 +491,7 @@ export default function RideMatchSheetContent({
 function Section({
   title,
   chips,
-  emptyHint = '—',
+  emptyHint = "—",
   onCopy,
 }: {
   title: string;
@@ -552,19 +505,16 @@ function Section({
     ? list.length
     : Math.min(list.length, MAX_VISIBLE_CHIPS);
   const hiddenCount = Math.max(0, list.length - visibleCount);
-  const textColor = useThemeColor({}, 'text');
+  const textColor = useThemeColor({}, "text");
   const suffix = (() => {
     const m = title.match(/\(([^)]+)\)$/);
-    return m ? ` (${m[1]})` : '';
+    return m ? ` (${m[1]})` : "";
   })();
-  const headerText =
-    list.length === 0 ? `${emptyHint}${suffix}` : title;
+  const headerText = list.length === 0 ? `${emptyHint}${suffix}` : title;
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <ThemedText style={styles.sectionTitle}>
-          {headerText}
-        </ThemedText>
+        <ThemedText style={styles.sectionTitle}>{headerText}</ThemedText>
         {list.length > 0 && onCopy && (
           <Pressable
             accessibilityRole="button"
@@ -576,11 +526,7 @@ function Section({
               pressed && { opacity: 0.6 },
             ]}
           >
-            <IconSymbol
-              name="doc.on.doc"
-              size={16}
-              color={textColor}
-            />
+            <IconSymbol name="doc.on.doc" size={16} color={textColor} />
           </Pressable>
         )}
       </View>
@@ -648,61 +594,61 @@ function Section({
 const styles = StyleSheet.create({
   container: { gap: 12 },
   banner: { marginBottom: 4 },
-  info: { fontSize: 14, opacity: 0.8, textAlign: 'center' },
-  bold: { fontSize: 14, fontWeight: '700' },
+  info: { fontSize: 14, opacity: 0.8, textAlign: "center" },
+  bold: { fontSize: 14, fontWeight: "700" },
   card: {
     borderRadius: 12,
     padding: 12,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(125,125,125,0.25)',
+    borderColor: "rgba(125,125,125,0.25)",
     marginBottom: 8,
   },
-  dayHeader: { fontSize: 15, fontWeight: '700', marginBottom: 8 },
+  dayHeader: { fontSize: 15, fontWeight: "700", marginBottom: 8 },
   dayHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 6,
   },
   dayHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
-  dayHeaderDate: { fontSize: 15, fontWeight: '700' },
-  dayHeaderTimes: { fontSize: 12, fontWeight: '600', opacity: 0.9 },
+  dayHeaderDate: { fontSize: 15, fontWeight: "700" },
+  dayHeaderTimes: { fontSize: 12, fontWeight: "600", opacity: 0.9 },
   badgeToday: {
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
-  badgeTodayText: { fontSize: 9, fontWeight: '700' },
+  badgeTodayText: { fontSize: 9, fontWeight: "700" },
   section: { marginBottom: 6 },
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  sectionTitle: { fontSize: 13, fontWeight: '600' },
+  sectionTitle: { fontSize: 13, fontWeight: "600" },
   chipsWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
     marginTop: 6,
   },
   chip: {
-    backgroundColor: 'rgba(125,125,125,0.12)',
+    backgroundColor: "rgba(125,125,125,0.12)",
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   chipContentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   chipIcon: { marginLeft: 2 },
-  chipText: { fontSize: 10, fontWeight: '600' },
+  chipText: { fontSize: 10, fontWeight: "600" },
   muted: { opacity: 0.6 },
   copyBtn: {
     paddingHorizontal: 8,
@@ -710,67 +656,67 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   toast: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 8,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: 'rgba(40,180,99,0.15)',
-    fontWeight: '700',
+    backgroundColor: "rgba(40,180,99,0.15)",
+    fontWeight: "700",
   },
   toggleWrap: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 8,
     marginBottom: 6,
   },
   toggleBtn: {
-    backgroundColor: 'rgba(125,125,125,0.12)',
+    backgroundColor: "rgba(125,125,125,0.12)",
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   toggleBtnActive: {
-    borderColor: 'rgba(125,125,125,0.35)',
-    backgroundColor: 'rgba(125,125,125,0.18)',
+    borderColor: "rgba(125,125,125,0.35)",
+    backgroundColor: "rgba(125,125,125,0.18)",
   },
-  toggleText: { fontSize: 12, fontWeight: '700' },
+  toggleText: { fontSize: 12, fontWeight: "700" },
   toggleTextActive: {},
-  segmentedWrap: { alignItems: 'center', marginBottom: 6 },
+  segmentedWrap: { alignItems: "center", marginBottom: 6 },
   segmented: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 999,
     borderWidth: StyleSheet.hairlineWidth,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   segmentedDark: {
-    borderColor: 'rgba(255,255,255,0.12)',
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderColor: "rgba(255,255,255,0.12)",
+    backgroundColor: "rgba(255,255,255,0.05)",
   },
   segmentedLight: {
-    borderColor: 'rgba(125,125,125,0.35)',
-    backgroundColor: 'rgba(125,125,125,0.12)',
+    borderColor: "rgba(125,125,125,0.35)",
+    backgroundColor: "rgba(125,125,125,0.12)",
   },
   segItem: {
     flex: 1,
     paddingHorizontal: 14,
     paddingVertical: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  segItemActiveDark: { backgroundColor: 'rgba(255,255,255,0.85)' },
-  segItemActiveLight: { backgroundColor: 'rgba(0,0,0,0.06)' },
-  segText: { fontSize: 12, fontWeight: '700', opacity: 0.85 },
+  segItemActiveDark: { backgroundColor: "rgba(255,255,255,0.85)" },
+  segItemActiveLight: { backgroundColor: "rgba(0,0,0,0.06)" },
+  segText: { fontSize: 12, fontWeight: "700", opacity: 0.85 },
   segTextActive: { opacity: 1 },
-  segTextActiveDark: { color: '#111' },
-  segTextActiveLight: { color: '#111' },
-  subInfoWrap: { alignItems: 'center', gap: 0, marginTop: -6 },
+  segTextActiveDark: { color: "#111" },
+  segTextActiveLight: { color: "#111" },
+  subInfoWrap: { alignItems: "center", gap: 0, marginTop: -6 },
   subInfo: {
     fontSize: 12,
     lineHeight: 13,
     opacity: 0.7,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

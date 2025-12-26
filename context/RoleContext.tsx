@@ -4,12 +4,12 @@ import {
   useContext,
   useEffect,
   useState,
-} from 'react';
-import Storage from 'expo-sqlite/kv-store';
-import type { Role } from '@/constants/Roles';
+} from "react";
+import Storage from "expo-sqlite/kv-store";
+import type { Role } from "@/constants/Roles";
 
-const ROLE_KEY = 'userRole';
-const TERMS_KEY = 'acceptedTerms';
+const ROLE_KEY = "userRole";
+const TERMS_KEY = "acceptedTerms";
 
 // Role Context for sharing user role across the app
 
@@ -21,26 +21,19 @@ interface RoleContextType {
   isLoading: boolean;
 }
 
-const RoleContext = createContext<RoleContextType | undefined>(
-  undefined
-);
+const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export function useRoleContext() {
   const ctx = useContext(RoleContext);
   if (!ctx) {
-    throw new Error(
-      'useRoleContext must be used within a RoleProvider'
-    );
+    throw new Error("useRoleContext must be used within a RoleProvider");
   }
   return ctx;
 }
 
 export function RoleProvider({ children }: { children: ReactNode }) {
-  const [selectedRole, setSelectedRoleState] = useState<Role | null>(
-    null
-  );
-  const [acceptedTerms, setAcceptedTermsState] =
-    useState<boolean>(false);
+  const [selectedRole, setSelectedRoleState] = useState<Role | null>(null);
+  const [acceptedTerms, setAcceptedTermsState] = useState<boolean>(false);
   const [roleReady, setRoleReady] = useState(false);
   const [termsReady, setTermsReady] = useState(false);
   const isLoading = !(roleReady && termsReady);
@@ -65,7 +58,7 @@ export function RoleProvider({ children }: { children: ReactNode }) {
       try {
         const raw = await Storage.getItem(TERMS_KEY);
         if (raw != null) {
-          setAcceptedTermsState(raw === '1');
+          setAcceptedTermsState(raw === "1");
         }
       } catch (e) {
         // Ignore storage errors and use default false
@@ -92,7 +85,7 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     setAcceptedTermsState(accepted);
     try {
       if (accepted) {
-        await Storage.setItem(TERMS_KEY, '1');
+        await Storage.setItem(TERMS_KEY, "1");
       } else {
         await Storage.removeItem(TERMS_KEY);
       }
