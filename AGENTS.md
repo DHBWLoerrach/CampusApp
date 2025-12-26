@@ -28,6 +28,7 @@
 - Components: PascalCase `*.tsx` (e.g., `ThemedText.tsx`). Hooks: `useX.ts`.
 - Constants: PascalCase files; exported constants in UPPER_SNAKE_CASE where appropriate.
 - Path alias `@/*` is available (see `tsconfig.json`).
+- Run `npx prettier --write` on changed files before committing.
 - Lint before pushing: `npm run lint` (fix issues or justify with comments).
 - Code comments always in English
 
