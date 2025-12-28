@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   Linking,
@@ -15,6 +15,7 @@ import { useCourseContext } from '@/context/CourseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
@@ -58,17 +59,11 @@ export default function ScheduleList() {
   const sectionHeaderText = Colors[scheme].dayTextColor;
 
   // Auto-refresh when the device comes back online
-  const prevOnlineRef = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (!isReady) return;
-    const prevOnline = prevOnlineRef.current;
-    prevOnlineRef.current = isOnline;
-
-    const cameBackOnline = prevOnline === false && isOnline === true;
-    if (!cameBackOnline) return;
-
-    void refetch();
-  }, [isOnline, isReady, refetch]);
+  useRefetchOnReconnect({
+    isOnline,
+    isReady,
+    onReconnect: () => void refetch(),
+  });
 
   // useMemo will re-calculate the sections only when the timetable data changes.
   // This is a performance optimization.

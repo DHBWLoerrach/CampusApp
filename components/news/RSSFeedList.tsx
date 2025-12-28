@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -20,6 +20,7 @@ import OfflineBanner from "@/components/ui/OfflineBanner";
 import OfflineEmptyState from "@/components/ui/OfflineEmptyState";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useRefetchOnReconnect } from "@/hooks/useRefetchOnReconnect";
 import { dhbwRed } from "@/constants/Colors";
 import {
   fetchAndParseRSSFeed,
@@ -120,17 +121,11 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const items = data?.items ?? [];
 
   // Auto-refresh when the device comes back online (while this screen is mounted)
-  const prevOnlineRef = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (!isReady) return;
-    const prevOnline = prevOnlineRef.current;
-    prevOnlineRef.current = isOnline;
-
-    const cameBackOnline = prevOnline === false && isOnline === true;
-    if (!cameBackOnline) return;
-
-    void refetch();
-  }, [isOnline, isReady, refetch]);
+  useRefetchOnReconnect({
+    isOnline,
+    isReady,
+    onReconnect: () => void refetch(),
+  });
 
   const onRefresh = useCallback(() => {
     void refetch();

@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, View, StyleSheet, useColorScheme } from "react-native";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useRefetchOnReconnect } from "@/hooks/useRefetchOnReconnect";
 import OfflineBanner from "@/components/ui/OfflineBanner";
 
 // ---- Data hook ----
@@ -187,17 +188,11 @@ export default function RideMatchSheetContent({
   const isDark = colorScheme === "dark";
 
   // Auto-refresh when the device comes back online
-  const prevOnlineRef = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (!isReady) return;
-    const prevOnline = prevOnlineRef.current;
-    prevOnlineRef.current = isOnline;
-
-    const cameBackOnline = prevOnline === false && isOnline === true;
-    if (!cameBackOnline) return;
-
-    void refetch();
-  }, [isOnline, isReady, refetch]);
+  useRefetchOnReconnect({
+    isOnline,
+    isReady,
+    onReconnect: () => void refetch(),
+  });
 
   const showOffline = isReady && isOffline;
 

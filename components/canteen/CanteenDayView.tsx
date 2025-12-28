@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Linking,
@@ -32,6 +32,7 @@ import { useRoleContext } from "@/context/RoleContext";
 import type { Role } from "@/constants/Roles";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useRefetchOnReconnect } from "@/hooks/useRefetchOnReconnect";
 
 function resolveMealPrice(
   prices: CanteenMeal["prices"],
@@ -119,17 +120,11 @@ export default function CanteenDayView({ date }: { date: Date }) {
   });
 
   // Auto-refresh when the device comes back online
-  const prevOnlineRef = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (!isReady) return;
-    const prevOnline = prevOnlineRef.current;
-    prevOnlineRef.current = isOnline;
-
-    const cameBackOnline = prevOnline === false && isOnline === true;
-    if (!cameBackOnline) return;
-
-    void refetch();
-  }, [isOnline, isReady, refetch]);
+  useRefetchOnReconnect({
+    isOnline,
+    isReady,
+    onReconnect: () => void refetch(),
+  });
 
   const meals: CanteenMeal[] = data?.days
     ? mealsForDate(data.days, safeDate)
