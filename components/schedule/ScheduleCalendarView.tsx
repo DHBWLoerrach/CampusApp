@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import {
@@ -21,7 +21,6 @@ import { getScheduleCardLocationDisplay } from "@/lib/scheduleCardLocation";
 import BottomSheet from "@/components/ui/BottomSheet";
 import LinkifiedText from "@/components/ui/LinkifiedText";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { useState } from "react";
 
 interface CalendarEvent {
   id: string;
