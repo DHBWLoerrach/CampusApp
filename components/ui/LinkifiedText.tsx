@@ -11,7 +11,9 @@ import {
 interface LinkifiedTextProps extends Omit<TextProps, "children"> {
   value?: string | null;
   style?: StyleProp<TextStyle>;
+  linkStyle?: StyleProp<TextStyle>;
   numberOfLines?: number;
+  fullUrl?: boolean;
 }
 
 // Shorten links to display e.g. https://bbb.dhbw.de/…
@@ -37,7 +39,7 @@ const openLink = (url: string) => {
 };
 
 const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
-  ({ value, style, numberOfLines }) => {
+  ({ value, style, linkStyle, numberOfLines, fullUrl }) => {
     if (!value) {
       return null;
     }
@@ -52,11 +54,11 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
             return <Text key={`t-${index}`}>{part}</Text>;
           }
           const cleanUrl = trimTrailingPunctuation(part);
-          const label = formatUrlLabel(cleanUrl);
+          const label = fullUrl ? cleanUrl : formatUrlLabel(cleanUrl);
           return (
             <Text
               key={`u-${index}`}
-              style={{ textDecorationLine: "underline" }}
+              style={[{ textDecorationLine: "underline" }, linkStyle]}
               onPress={() => openLink(cleanUrl)}
               suppressHighlighting
               accessibilityRole="link"

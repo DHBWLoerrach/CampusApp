@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from "react";
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import {
   CalendarBody,
@@ -18,6 +18,10 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { toLocalISOString } from "@/lib/utils";
 import { getScheduleCardLocationDisplay } from "@/lib/scheduleCardLocation";
+import BottomSheet from "@/components/ui/BottomSheet";
+import LinkifiedText from "@/components/ui/LinkifiedText";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { useState } from "react";
 
 interface CalendarEvent {
   id: string;
@@ -78,6 +82,9 @@ export default function ScheduleCalendarView({
   hideWeekDays = [],
 }: ScheduleCalendarViewProps) {
   const { selectedCourse } = useCourseContext();
+  const [selectedEvent, setSelectedEvent] = useState<OnEventResponse | null>(
+    null,
+  );
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
     selectedCourse || undefined,
   );
@@ -148,51 +155,7 @@ export default function ScheduleCalendarView({
   };
 
   const onPressEvent = (event: OnEventResponse) => {
-    if (!event.start?.dateTime || !event.end?.dateTime) return;
-
-    const { dateTime: startTime } = event.start;
-    const { dateTime: endTime } = event.end;
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-
-    const rawLocation =
-      typeof event.location === "string" ? event.location : "";
-    const rawDescription = getOptionalStringField(event, "description");
-    const { roomText, isOnline, extraTextExpanded } =
-      getScheduleCardLocationDisplay({
-        location: rawLocation,
-        description: rawDescription,
-      });
-
-    const d = startDate.toLocaleDateString("de-DE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "long",
-    });
-    const isAllDay = getOptionalBooleanField(event, "allDay") ?? false;
-
-    const headerLines = isAllDay
-      ? [`${d}`, "Ganzer Tag"]
-      : (() => {
-          const t = startDate.toLocaleTimeString("de-DE", {
-            hour: "numeric",
-            minute: "numeric",
-          });
-          const t2 = endDate.toLocaleTimeString("de-DE", {
-            hour: "numeric",
-            minute: "numeric",
-          });
-          return [`${d}`, `${t} - ${t2} Uhr`];
-        })();
-
-    const detailLines: string[] = [];
-    if (roomText?.trim()) detailLines.push(roomText.trim());
-    if (isOnline) detailLines.push("Online");
-    if (extraTextExpanded?.trim()) detailLines.push(extraTextExpanded.trim());
-
-    const body = [...headerLines, ...detailLines].join("\n");
-    Alert.alert(event.title || "", body);
+    setSelectedEvent(event);
   };
 
   const renderEvent = useCallback(
@@ -375,6 +338,10 @@ export default function ScheduleCalendarView({
         <CalendarHeader />
         <CalendarBody renderEvent={renderEvent} />
       </CalendarContainer>
+      <EventDetailSheet
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
     </View>
   );
 }
@@ -402,4 +369,114 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     opacity: 0.85,
   },
+  detailText: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  detailLabel: {
+    fontWeight: "bold",
+    marginTop: 8,
+  },
 });
+
+function EventDetailSheet({
+  event,
+  onClose,
+}: {
+  event: OnEventResponse | null;
+  onClose: () => void;
+}) {
+  const secondaryText = useThemeColor({}, "icon");
+  const tintColor = useThemeColor({}, "tint");
+  const textColor = useThemeColor({}, "text");
+
+  if (!event) return null;
+
+  const { dateTime: startTime } = event.start || {};
+  const { dateTime: endTime } = event.end || {};
+  if (!startTime || !endTime) return null;
+
+  const startDate = new Date(startTime);
+  const endDate = new Date(endTime);
+
+  const rawLocation = typeof event.location === "string" ? event.location : "";
+  const rawDescription = getOptionalStringField(event, "description");
+  const { roomText, isOnline, extraTextExpanded } =
+    getScheduleCardLocationDisplay({
+      location: rawLocation,
+      description: rawDescription,
+    });
+
+  const d = startDate.toLocaleDateString("de-DE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const isAllDay = getOptionalBooleanField(event, "allDay") ?? false;
+
+  let timeString = "";
+  if (isAllDay) {
+    timeString = "Ganzer Tag";
+  } else {
+    const t = startDate.toLocaleTimeString("de-DE", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+    const t2 = endDate.toLocaleTimeString("de-DE", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+    timeString = `${t} - ${t2} Uhr`;
+  }
+
+  return (
+    <BottomSheet
+      visible={!!event}
+      title={event.title || "Termin-Details"}
+      onClose={onClose}
+    >
+      <View style={{ gap: 12 }}>
+        <View>
+          <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+            ZEIT
+          </ThemedText>
+          <ThemedText style={styles.detailText}>
+            {d}
+            {"\n"}
+            {timeString}
+          </ThemedText>
+        </View>
+
+        {(roomText || isOnline) && (
+          <View>
+            <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+              ORT
+            </ThemedText>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              {roomText ? (
+                <ThemedText style={styles.detailText}>{roomText}</ThemedText>
+              ) : (
+                <ThemedText style={styles.detailText}>Online</ThemedText>
+              )}
+            </View>
+          </View>
+        )}
+
+        {extraTextExpanded ? (
+          <View>
+            <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+              BESCHREIBUNG
+            </ThemedText>
+            <LinkifiedText
+              value={extraTextExpanded}
+              style={[styles.detailText, { lineHeight: 24, color: textColor }]}
+              linkStyle={{ color: tintColor }}
+              fullUrl
+            />
+          </View>
+        ) : null}
+      </View>
+    </BottomSheet>
+  );
+}
