@@ -102,8 +102,8 @@ export default function ScheduleList() {
       Platform.OS === 'web'
         ? undefined
         : () => {
-            void Linking.openSettings();
-          };
+          void Linking.openSettings();
+        };
     return (
       <OfflineEmptyState
         message="Der Vorlesungsplan kann ohne Internetverbindung nicht geladen werden."
@@ -130,6 +130,7 @@ export default function ScheduleList() {
       <SectionList
         ref={ref}
         sections={sections}
+        stickySectionHeadersEnabled={false}
         keyExtractor={(item) => item.uid}
         renderItem={({ item }) => <LectureCard event={item} />}
         renderSectionHeader={({ section: { title } }) => (
