@@ -9,6 +9,7 @@ const TopTabs = withLayoutContext(Tab.Navigator);
 export default function NewsLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
+    swipeEnabled: true,
     tabBarLabel: (props: {
       focused: boolean;
       children: string;

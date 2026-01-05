@@ -35,6 +35,7 @@ function titleForIndex(index: number) {
 export default function CanteenLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
+    swipeEnabled: true,
     tabBarItemStyle: { paddingHorizontal: 0 },
     tabBarLabel: (props: {
       focused: boolean;
