@@ -30,11 +30,17 @@ export default function BottomSheet({
   const [isMounted, setIsMounted] = useState(visible);
   const sheetProgress = useRef(new Animated.Value(visible ? 0 : 1)).current;
   const backdropOpacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const AnimatedPressable = useRef(
     Animated.createAnimatedComponent(Pressable)
   ).current;
 
   useEffect(() => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+
     if (visible && !isMounted) {
       setIsMounted(true);
       return;
@@ -71,6 +77,20 @@ export default function BottomSheet({
         setIsMounted(false);
       }
     });
+
+    if (!visible) {
+      closeTimeout.current = setTimeout(() => {
+        setIsMounted(false);
+        closeTimeout.current = null;
+      }, sheetDuration + 50);
+    }
+
+    return () => {
+      if (closeTimeout.current) {
+        clearTimeout(closeTimeout.current);
+        closeTimeout.current = null;
+      }
+    };
   }, [visible, isMounted, sheetProgress, backdropOpacity]);
 
   const sheetTranslateY = sheetProgress.interpolate({
