@@ -1,5 +1,14 @@
-import { ReactNode } from "react";
-import { Modal, View, StyleSheet, Pressable, ScrollView } from "react-native";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Easing,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -17,30 +26,82 @@ export default function BottomSheet({
 }) {
   const background = useThemeColor({}, "background");
   const insets = useSafeAreaInsets();
+  const { height: screenHeight } = useWindowDimensions();
+  const [isMounted, setIsMounted] = useState(visible);
+  const sheetProgress = useRef(new Animated.Value(visible ? 0 : 1)).current;
+  const backdropOpacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const AnimatedPressable = useRef(
+    Animated.createAnimatedComponent(Pressable)
+  ).current;
+
+  useEffect(() => {
+    if (visible && !isMounted) {
+      setIsMounted(true);
+      return;
+    }
+
+    if (!isMounted) return;
+
+    const toValue = visible ? 0 : 1;
+    const fadeTo = visible ? 1 : 0;
+
+    const sheetDuration = visible ? 360 : 300;
+    const sheetEasing = visible ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic);
+    const backdropDuration = visible ? 240 : 200;
+    const backdropEasing = visible
+      ? Easing.out(Easing.cubic)
+      : Easing.in(Easing.cubic);
+
+    Animated.parallel([
+      Animated.timing(sheetProgress, {
+        toValue,
+        duration: sheetDuration,
+        easing: sheetEasing,
+        useNativeDriver: true,
+      }),
+      Animated.timing(backdropOpacity, {
+        toValue: fadeTo,
+        duration: backdropDuration,
+        easing: backdropEasing,
+        useNativeDriver: true,
+      }),
+    ]).start(({ finished }) => {
+      if (!finished) return;
+      if (!visible) {
+        setIsMounted(false);
+      }
+    });
+  }, [visible, isMounted, sheetProgress, backdropOpacity]);
+
+  const sheetTranslateY = sheetProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, Math.max(0, screenHeight)],
+  });
 
   return (
     <Modal
-      visible={visible}
-      animationType="slide"
+      visible={isMounted}
+      animationType="none"
       transparent
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      <Pressable
-        style={styles.backdrop}
+      <AnimatedPressable
+        style={[styles.backdrop, { opacity: backdropOpacity }]}
         onPress={onClose}
         accessibilityRole="button"
         accessibilityLabel="Sheet schließen"
         accessibilityHint="Schließt die eingeblendeten Informationen"
       >
         {/* spacer to capture taps; sheet stops propagation below */}
-      </Pressable>
-      <View
+      </AnimatedPressable>
+      <Animated.View
         style={[
           styles.sheet,
           {
             backgroundColor: background,
             paddingBottom: Math.max(16, insets.bottom + 12),
+            transform: [{ translateY: sheetTranslateY }],
           },
         ]}
         accessibilityViewIsModal
@@ -54,7 +115,7 @@ export default function BottomSheet({
         >
           {children}
         </ScrollView>
-      </View>
+      </Animated.View>
     </Modal>
   );
 }
