@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useState } from "react";
+import { useMemo } from "react";
 import {
   Platform,
   StyleSheet,
@@ -7,15 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import type { SharedValue } from "react-native-reanimated";
-import { runOnJS, useAnimatedReaction } from "react-native-reanimated";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 
 const ICON_SIZE = Platform.OS === "ios" ? 16 : 24;
 
 interface HeaderProps {
-  currentDate: SharedValue<string>;
+  currentDate: string;
   onPressToday?: () => void;
   onPressPrevious?: () => void;
   onPressNext?: () => void;
@@ -27,26 +25,16 @@ const Header: FC<HeaderProps> = ({
   onPressPrevious,
   onPressNext,
 }) => {
-  const [title, setTitle] = useState("");
-
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
 
-  const updateTitle = (date: string) => {
-    const formatted = new Date(date).toLocaleDateString("de-DE", {
+  const title = useMemo(() => {
+    if (!currentDate) return "";
+    return new Date(currentDate).toLocaleDateString("de-DE", {
       year: "numeric",
       month: "long",
     });
-    setTitle(formatted);
-  };
-
-  useAnimatedReaction(
-    () => currentDate.value,
-    (value) => {
-      runOnJS(updateTitle)(value);
-    },
-    [],
-  );
+  }, [currentDate]);
 
   return (
     <View

@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import type { ComponentProps, RefObject } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import {
   CalendarBody,
   CalendarContainer,
@@ -8,7 +8,6 @@ import {
   CalendarKitHandle,
   LocaleConfigsProps,
   OnEventResponse,
-  PackedEvent,
 } from "@howljs/calendar-kit";
 import { useTimetable } from "@/hooks/useTimetable";
 import { useCourseContext } from "@/context/CourseContext";
@@ -52,6 +51,8 @@ interface ScheduleCalendarViewProps {
   hideWeekDays?: number[];
 }
 
+const DEFAULT_HIDE_WEEK_DAYS: number[] = [];
+
 const now = new Date();
 // Build initial date at local midnight; if today is Sunday (0), advance to Monday
 const _initialAtMidnight = new Date(
@@ -76,9 +77,69 @@ const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   },
 };
 
+type CalendarContainerProps = ComponentProps<typeof CalendarContainer>;
+type CalendarBodyProps = ComponentProps<typeof CalendarBody>;
+type CalendarBodyRenderEvent = NonNullable<CalendarBodyProps["renderEvent"]>;
+type CalendarBodyRenderEventEvent = Parameters<CalendarBodyRenderEvent>[0];
+type CalendarBodyRenderEventSize = Parameters<CalendarBodyRenderEvent>[1];
+
+interface CalendarSectionProps {
+  calendarRef: RefObject<CalendarKitHandle | null>;
+  numberOfDays: number;
+  hideWeekDays: number[];
+  onChange: CalendarContainerProps["onChange"];
+  onRefresh: CalendarContainerProps["onRefresh"];
+  isFetching: boolean;
+  events: CalendarContainerProps["events"];
+  onPressEvent: CalendarContainerProps["onPressEvent"];
+  renderEvent: CalendarBodyRenderEvent;
+  theme: CalendarContainerProps["theme"];
+}
+
+const CalendarSection = memo(function CalendarSection({
+  calendarRef,
+  numberOfDays,
+  hideWeekDays,
+  onChange,
+  onRefresh,
+  isFetching,
+  events,
+  onPressEvent,
+  renderEvent,
+  theme,
+}: CalendarSectionProps) {
+  return (
+    <CalendarContainer
+      ref={calendarRef}
+      numberOfDays={numberOfDays}
+      hideWeekDays={hideWeekDays} // we hide Sundays in week view
+      initialDate={INITIAL_DATE}
+      onChange={onChange}
+      onRefresh={onRefresh}
+      isLoading={isFetching}
+      allowPinchToZoom={true}
+      hourWidth={50}
+      initialLocales={initialLocales}
+      locale="de"
+      events={events}
+      onPressEvent={onPressEvent}
+      scrollToNow={false}
+      start={420}
+      end={1200}
+      timeZone="Europe/Berlin"
+      theme={theme}
+    >
+      <CalendarHeader />
+      <CalendarBody renderEvent={renderEvent} />
+    </CalendarContainer>
+  );
+});
+
+CalendarSection.displayName = "CalendarSection";
+
 export default function ScheduleCalendarView({
   numberOfDays,
-  hideWeekDays = [],
+  hideWeekDays = DEFAULT_HIDE_WEEK_DAYS,
 }: ScheduleCalendarViewProps) {
   const { selectedCourse } = useCourseContext();
   const [selectedEvent, setSelectedEvent] = useState<OnEventResponse | null>(
@@ -88,7 +149,7 @@ export default function ScheduleCalendarView({
     selectedCourse || undefined,
   );
   const calendarRef = useRef<CalendarKitHandle>(null);
-  const currentDate = useSharedValue(INITIAL_DATE);
+  const [currentDate, setCurrentDate] = useState(INITIAL_DATE);
 
   const borderColor = useThemeColor({}, "border");
   const tintColor = useThemeColor({}, "tint");
@@ -130,12 +191,9 @@ export default function ScheduleCalendarView({
     return allEvents;
   }, [data, tintColor]);
 
-  const _onChange = useCallback(
-    (date: string) => {
-      currentDate.value = date;
-    },
-    [currentDate],
-  );
+  const _onChange = useCallback((date: string) => {
+    setCurrentDate(date);
+  }, []);
 
   const _onPressToday = useCallback(() => {
     calendarRef.current?.goToDate({
@@ -143,22 +201,26 @@ export default function ScheduleCalendarView({
       animatedDate: true,
       hourScroll: true,
     });
-  }, []);
+  }, [calendarRef]);
 
-  const onPressPrevious = () => {
+  const onPressPrevious = useCallback(() => {
     calendarRef.current?.goToPrevPage();
-  };
+  }, [calendarRef]);
 
-  const onPressNext = () => {
+  const onPressNext = useCallback(() => {
     calendarRef.current?.goToNextPage();
-  };
+  }, [calendarRef]);
 
-  const onPressEvent = (event: OnEventResponse) => {
+  const onPressEvent = useCallback((event: OnEventResponse) => {
     setSelectedEvent(event);
-  };
+  }, [setSelectedEvent]);
 
-  const renderEvent = useCallback(
-    (event: PackedEvent) => {
+  const onRefresh = useCallback(() => {
+    void refetch();
+  }, [refetch]);
+
+  const renderEvent = useCallback<CalendarBodyRenderEvent>(
+    (event: CalendarBodyRenderEventEvent, _size: CalendarBodyRenderEventSize) => {
       const rawLocation =
         typeof event.location === "string" ? event.location : "";
       const rawDescription = getOptionalStringField(event, "description");
@@ -262,6 +324,42 @@ export default function ScheduleCalendarView({
     [eventTextColor, secondaryText],
   );
 
+  const calendarTheme = useMemo<CalendarContainerProps["theme"]>(
+    () => ({
+      colors: {
+        background: backgroundColor,
+        border: borderColor,
+      },
+      eventContainerStyle: {
+        backgroundColor: eventBackground,
+        borderColor: borderColor,
+        borderWidth: 1,
+        borderRadius: 8,
+      },
+      nowIndicatorColor: "magenta",
+      headerBackgroundColor: backgroundColor,
+      hourTextStyle: { color: tintColor, fontWeight: 600 },
+      todayName: { color: tintColor, fontWeight: 600 },
+      todayNumberContainer: {
+        backgroundColor: tintColor,
+      },
+      dayName: { color: textColor },
+      dayNumber: { color: dayTextColor },
+      dayNumberContainer: {
+        backgroundColor: dayNumberContainer,
+      },
+    }),
+    [
+      backgroundColor,
+      borderColor,
+      dayNumberContainer,
+      dayTextColor,
+      eventBackground,
+      textColor,
+      tintColor,
+    ],
+  );
+
   if (isLoading) {
     return (
       <View style={styles.center}>
@@ -289,54 +387,18 @@ export default function ScheduleCalendarView({
         onPressPrevious={onPressPrevious}
         onPressNext={onPressNext}
       />
-      <CalendarContainer
-        ref={calendarRef}
+      <CalendarSection
+        calendarRef={calendarRef}
         numberOfDays={numberOfDays}
-        hideWeekDays={hideWeekDays} // we hide Sundays in week view
-        initialDate={INITIAL_DATE}
+        hideWeekDays={hideWeekDays}
         onChange={_onChange}
-        onRefresh={() => {
-          void refetch();
-        }}
-        isLoading={isFetching}
-        allowPinchToZoom={true}
-        hourWidth={50}
-        initialLocales={initialLocales}
-        locale="de"
+        onRefresh={onRefresh}
+        isFetching={isFetching}
         events={events}
         onPressEvent={onPressEvent}
-        scrollToNow={false}
-        start={420}
-        end={1200}
-        timeZone="Europe/Berlin"
-        theme={{
-          colors: {
-            background: backgroundColor,
-            border: borderColor,
-          },
-          eventContainerStyle: {
-            backgroundColor: eventBackground,
-            borderColor: borderColor,
-            borderWidth: 1,
-            borderRadius: 8,
-          },
-          nowIndicatorColor: "magenta",
-          headerBackgroundColor: backgroundColor,
-          hourTextStyle: { color: tintColor, fontWeight: "600" },
-          todayName: { color: tintColor, fontWeight: "600" },
-          todayNumberContainer: {
-            backgroundColor: tintColor,
-          },
-          dayName: { color: textColor },
-          dayNumber: { color: dayTextColor },
-          dayNumberContainer: {
-            backgroundColor: dayNumberContainer,
-          },
-        }}
-      >
-        <CalendarHeader />
-        <CalendarBody renderEvent={renderEvent} />
-      </CalendarContainer>
+        renderEvent={renderEvent}
+        theme={calendarTheme}
+      />
       <EventDetailSheet
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
