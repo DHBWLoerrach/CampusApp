@@ -2,7 +2,7 @@
   "expo": {
     "name": "Campus LÖ",
     "slug": "CampusApp",
-    "version": "3.0.11",
+    "version": "3.0.12",
     "orientation": "portrait",
     "scheme": "campusapp",
     "userInterfaceStyle": "automatic",
