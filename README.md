@@ -22,7 +22,11 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
 3. Die Abhängigkeiten bzw. npm-Pakete in Node.js installieren:
 
-   `npm install`
+   `npm ci`
+
+   **Wichtig für das Team (macOS + Windows):**
+   Für das initiale Setup immer `npm ci` verwenden, nicht `npm install`.
+   So werden exakt die Versionen aus `package-lock.json` installiert und unnötige Lockfile-Änderungen zwischen Betriebssystemen reduziert.
 
 4. Benötigte API-Keys (z.B. für die Mensa des SWFR) vom Projektverantwortlichen anfordern und in eine Datei `.env` eintragen
 
@@ -45,6 +49,18 @@ Vorbedingungen:
   `npx expo`
 
 womit der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet wird (Ausgabe für Tipps zum Start der App beachten). 
+
+## Abhängigkeiten ändern (add/update/remove)
+
+`npm ci` ist für ein reproduzierbares Setup gedacht.
+Wenn Abhängigkeiten geändert werden sollen, erfolgt das bewusst mit `npm install` oder `npm uninstall`:
+
+- **Hinzufügen:** `npm install <paket>` (bzw. `npm install -D <paket>` für Dev-Dependencies)
+- **Aktualisieren:** `npm install <paket>@<version>` oder `npm update <paket>`
+- **Entfernen:** `npm uninstall <paket>`
+
+Dabei werden `package.json` und `package-lock.json` aktualisiert.
+Beide Dateien müssen gemeinsam committed werden.
 
 ## Lizenz
 
