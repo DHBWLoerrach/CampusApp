@@ -159,28 +159,22 @@ const ImprintBody = () => (
       Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte
       waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente
       inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete
-      Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei bekannt werden
+      Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden
       von Rechtsverletzungen werden wir derartige Links umgehend entfernen. Die
       Duale Hochschule Baden-Württemberg begründet durch die Bereitstellung
       dieser Informationen kein Vertragsangebot über Auskünfte, Beratung oder
       ähnliche Vertragsbeziehungen. Jegliche Haftung für die Nutzung der Inhalte
-      der DHBW Lörrach Campus App oder die Richtigkeit der Inhalte oder die
-      Erreichbarkeit der Web Site wird ausgeschlossen. Die Duale Hochschule
-      Baden-Württemberg haftet daher nicht für konkrete, mittelbare und
-      unmittelbare Schäden oder Schäden, die durch fehlende
+      der DHBW Lörrach Campus App, die Richtigkeit der Inhalte oder die
+      Erreichbarkeit der Website wird ausgeschlossen. Die Duale Hochschule
+      Baden-Württemberg haftet daher nicht für konkrete, mittelbare oder
+      unmittelbare Schäden sowie Schäden, die durch fehlende
       Nutzungsmöglichkeiten, Datenverluste oder entgangene Gewinne entstehen
-      können, die im Zusammenhang mit der Nutzung von Dokumenten oder
-      Informationen entstehen, die auf dieser Web Site zugänglich sind. auf
-      deren Inhalte wir keinen Einfluss haben und für welche die DHBW Lörrach
-      keine Gewähr übernehmen kann. Für die Inhalte der verlinkten Seiten ist
-      stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die
-      verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche
-      Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der
-      Verlinkung nicht erkennbar. Es ist nicht auszuschließen, dass die Inhalte
-      im Nachhinein von den jeweiligen Anbietern verändert werden. Sollten Sie
-      der Ansicht sein, dass die verlinkten externen Seiten gegen geltendes
-      Recht verstoßen oder sonst unangemessene Inhalte enthalten, teilen Sie uns
-      dies bitte mit.
+      können und im Zusammenhang mit der Nutzung von Dokumenten oder
+      Informationen stehen, die auf dieser Website zugänglich sind. Es ist
+      nicht auszuschließen, dass die Inhalte im Nachhinein von den jeweiligen
+      Anbietern verändert werden. Sollten Sie der Ansicht sein, dass die
+      verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst
+      unangemessene Inhalte enthalten, teilen Sie uns dies bitte mit.
     </InfoText>
     <ThemedText style={styles.heading}>Urheberrecht</ThemedText>
     <InfoText>
