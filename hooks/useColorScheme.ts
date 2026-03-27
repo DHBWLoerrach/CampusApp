@@ -1,10 +1,10 @@
-import { useColorScheme as useRNColorScheme } from "react-native";
-import { useColorSchemeOverride } from "@/context/ColorSchemeContext";
+import { useColorScheme as useRNColorScheme } from 'react-native';
+import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 
 // Hook that respects the manual override (alwaysDark)
-export function useColorScheme() {
+export function useColorScheme(): 'light' | 'dark' {
   const scheme = useRNColorScheme();
   const { alwaysDark } = useColorSchemeOverride();
-  if (alwaysDark) return "dark";
-  return scheme;
+  if (alwaysDark) return 'dark';
+  return scheme === 'dark' ? 'dark' : 'light';
 }

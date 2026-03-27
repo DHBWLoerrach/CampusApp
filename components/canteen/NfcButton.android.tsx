@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -7,19 +7,19 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import NfcManager, { NfcTech } from "react-native-nfc-manager";
-import convertBytesToDouble from "@/lib/nfcHelper";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import NfcTriggerCard from "@/components/canteen/NfcTriggerCard";
+} from 'react-native';
+import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import convertBytesToDouble from '@/lib/nfcHelper';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import NfcTriggerCard from '@/components/canteen/NfcTriggerCard';
 
 type Props = {
   render?: (args: { onPress: () => void; isScanning: boolean }) => ReactNode;
 };
 
 export default function NfcButton({ render }: Props) {
-  const modalBg = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
+  const modalBg = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
   const [isScanning, setIsScanning] = useState(false);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
 
@@ -35,13 +35,13 @@ export default function NfcButton({ render }: Props) {
 
     if (!isNfcAvailable) {
       Alert.alert(
-        "Guthaben-Info",
-        "NFC scheint von deinem Gerät nicht unterstützt zu werden.",
+        'Guthaben-Info',
+        'NFC scheint von deinem Gerät nicht unterstützt zu werden.',
       );
       return;
     }
 
-    let timeoutHandle: number | null = null;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
     let timedOut = false;
 
     try {
@@ -54,7 +54,7 @@ export default function NfcButton({ render }: Props) {
       }, 5000);
 
       await NfcManager.requestTechnology(NfcTech.IsoDep);
-      if (timedOut) throw new Error("timeout");
+      if (timedOut) throw new Error('timeout');
 
       if (timeoutHandle) clearTimeout(timeoutHandle);
 
@@ -72,10 +72,10 @@ export default function NfcButton({ render }: Props) {
       );
     } catch (ex: any) {
       if (timedOut) {
-        setModalMessage("Zeitüberschreitung – keine CampusCard erkannt.");
+        setModalMessage('Zeitüberschreitung – keine CampusCard erkannt.');
       } else {
-        setModalMessage("NFC Fehler – bitte erneut versuchen.");
-        console.warn("NFC Fehler (Android):", ex);
+        setModalMessage('NFC Fehler – bitte erneut versuchen.');
+        console.warn('NFC Fehler (Android):', ex);
       }
     } finally {
       if (timeoutHandle) clearTimeout(timeoutHandle);
@@ -129,21 +129,21 @@ export default function NfcButton({ render }: Props) {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "#00000066",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#00000066',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modal: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 24,
     borderRadius: 12,
-    alignItems: "center",
+    alignItems: 'center',
     minWidth: 260,
   },
   text: {
     marginTop: 16,
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   // Card styles are in NfcTriggerCard
 });

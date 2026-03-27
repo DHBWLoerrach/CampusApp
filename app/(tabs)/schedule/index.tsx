@@ -54,7 +54,7 @@ export default function ScheduleList() {
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
-  const scheme = useColorScheme() ?? 'light';
+  const scheme = useColorScheme();
   const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
 
@@ -102,8 +102,8 @@ export default function ScheduleList() {
       Platform.OS === 'web'
         ? undefined
         : () => {
-          void Linking.openSettings();
-        };
+            void Linking.openSettings();
+          };
     return (
       <OfflineEmptyState
         message="Der Vorlesungsplan kann ohne Internetverbindung nicht geladen werden."
