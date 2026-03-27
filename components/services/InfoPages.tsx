@@ -76,8 +76,6 @@ const ImprintBody = () => (
     <InfoText>
       Duale Hochschule Baden-Württemberg Lörrach
       {"\n"}
-      Baden-Wuerttemberg Cooperative State University Lörrach
-      {"\n"}
       Hangstraße 46-50
       {"\n"}
       D-79539 Lörrach
@@ -160,20 +158,10 @@ const ImprintBody = () => (
       waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente
       inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete
       Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden
-      von Rechtsverletzungen werden wir derartige Links umgehend entfernen. Die
-      Duale Hochschule Baden-Württemberg begründet durch die Bereitstellung
-      dieser Informationen kein Vertragsangebot über Auskünfte, Beratung oder
-      ähnliche Vertragsbeziehungen. Jegliche Haftung für die Nutzung der Inhalte
-      der DHBW Lörrach Campus App, die Richtigkeit der Inhalte oder die
-      Erreichbarkeit der Website wird ausgeschlossen. Die Duale Hochschule
-      Baden-Württemberg haftet daher nicht für konkrete, mittelbare oder
-      unmittelbare Schäden sowie Schäden, die durch fehlende
-      Nutzungsmöglichkeiten, Datenverluste oder entgangene Gewinne entstehen
-      können und im Zusammenhang mit der Nutzung von Dokumenten oder
-      Informationen stehen, die auf dieser Website zugänglich sind. Es ist
-      nicht auszuschließen, dass die Inhalte im Nachhinein von den jeweiligen
-      Anbietern verändert werden. Sollten Sie der Ansicht sein, dass die
-      verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst
+      von Rechtsverletzungen werden wir derartige Links umgehend entfernen. Es
+      ist nicht auszuschließen, dass die Inhalte im Nachhinein von den
+      jeweiligen Anbietern verändert werden. Sollten Sie der Ansicht sein, dass
+      die verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst
       unangemessene Inhalte enthalten, teilen Sie uns dies bitte mit.
     </InfoText>
     <ThemedText style={styles.heading}>Urheberrecht</ThemedText>
