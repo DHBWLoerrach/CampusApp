@@ -13,8 +13,8 @@ export const CODE_COMPANION_IOS_URL =
   'https://apps.apple.com/app/dhbw-code-companion/id6758941958';
 
 export const CODE_COMPANION_FEATURES = [
-  'Lernpfade mit kurzen Erklärungen für JavaScript, Python und Java',
-  'KI-gestützte Quizfragen zum Üben und Wiederholen',
+  'Lernpfade mit kurzen Erklärungen',
+  'KI-Quizfragen zum Üben und Wiederholen',
   'Lernfortschritt mit Levels und Mastery je Thema',
 ] as const;
 

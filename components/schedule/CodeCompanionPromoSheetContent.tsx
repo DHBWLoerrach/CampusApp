@@ -83,10 +83,12 @@ export default function CodeCompanionPromoSheetContent({
             />
           </View>
           <View style={styles.heroText}>
-            <ThemedText style={styles.eyebrow}>KOSTENLOSES LERNANGEBOT</ThemedText>
+            <ThemedText style={styles.eyebrow}>
+              DEIN LERNBEGLEITER
+            </ThemedText>
             <ThemedText style={styles.lead}>
-              DHBW CodeCompanion ist ein kostenloses Lernangebot der DHBW zum
-              Lernen und Üben von JavaScript, Python und Java.
+              Mit der App CodeCompanion kannst du Programmieren lernen, üben
+              und vertiefen.
             </ThemedText>
           </View>
         </View>
@@ -110,7 +112,7 @@ export default function CodeCompanionPromoSheetContent({
             accessibilityHint="Öffnet die Android-App von CodeCompanion"
           >
             <ThemedText style={styles.primaryButtonText}>
-              Bei Google Play ansehen
+              Bei Google Play öffnen
             </ThemedText>
           </TouchableOpacity>
         ) : null}
@@ -135,7 +137,7 @@ export default function CodeCompanionPromoSheetContent({
                   : styles.primaryButtonText
               }
             >
-              Im App Store ansehen
+              Im App Store öffnen
             </ThemedText>
           </TouchableOpacity>
         ) : null}
