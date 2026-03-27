@@ -189,8 +189,10 @@ export default function ScheduleLayout() {
               },
             ]}
           >
-            <ThemedText style={[styles.reopenBannerText, { color: reopenTextColor }]}>
-              Kennst du schon die DHBW App CodeCompanion?
+            <ThemedText
+              style={[styles.reopenBannerText, { color: reopenTextColor }]}
+            >
+              Kennst du schon die DHBW App "CodeCompanion"?
             </ThemedText>
           </TouchableOpacity>
         ) : null}
