@@ -10,11 +10,14 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { topTabBarOptions } from '@/constants/Navigation';
 import BottomSheet from '@/components/ui/BottomSheet';
 import CourseSetup from '@/components/schedule/CourseSetup';
-import CodeCompanionPromoSheetContent from '@/components/schedule/CodeCompanionPromoSheetContent';
+import CodeCompanionPromoSheetContent, {
+  CodeCompanionPromoSheetTitle,
+} from '@/components/schedule/CodeCompanionPromoSheetContent';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useCourseContext } from '@/context/CourseContext';
 import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
 import {
+  CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD,
   dismissCodeCompanionPromo,
   getCodeCompanionPromoDismissed,
   getCodeCompanionPromoSeenCount,
@@ -129,7 +132,9 @@ export default function ScheduleLayout() {
     }
 
     if (promoDismissed === true || !isEligibleCourse) {
-      setPromoOpen(false);
+      if (promoOpen) {
+        setPromoOpen(false);
+      }
       promoOpenRef.current = false;
       return;
     }
@@ -137,7 +142,14 @@ export default function ScheduleLayout() {
     if (promoDismissed === false && promoSeenCount === 0) {
       showPromo();
     }
-  }, [isEligibleCourse, isLoading, promoDismissed, promoSeenCount, showPromo]);
+  }, [
+    isEligibleCourse,
+    isLoading,
+    promoDismissed,
+    promoOpen,
+    promoSeenCount,
+    showPromo,
+  ]);
 
   const closePromo = () => {
     promoOpenRef.current = false;
@@ -152,6 +164,7 @@ export default function ScheduleLayout() {
     try {
       await dismissCodeCompanionPromo();
     } catch (error) {
+      setPromoDismissed(false);
       console.warn('Failed to persist CodeCompanion promo state:', error);
     }
   };
@@ -206,7 +219,8 @@ export default function ScheduleLayout() {
     return null; // Or a loading spinner if you prefer
   }
 
-  const canHidePromoForever = (promoSeenCount ?? 0) >= 2;
+  const canHidePromoForever =
+    (promoSeenCount ?? 0) >= CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -264,6 +278,7 @@ export default function ScheduleLayout() {
         <BottomSheet
           visible={promoOpen}
           title="DHBW CodeCompanion"
+          titleContent={<CodeCompanionPromoSheetTitle />}
           onClose={closePromo}
         >
           <CodeCompanionPromoSheetContent

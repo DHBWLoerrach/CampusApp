@@ -16,11 +16,13 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 export default function BottomSheet({
   visible,
   title,
+  titleContent,
   onClose,
   children,
 }: {
   visible: boolean;
   title: string;
+  titleContent?: ReactNode;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -127,7 +129,9 @@ export default function BottomSheet({
         accessibilityViewIsModal
       >
         <View style={styles.handle} accessibilityElementsHidden />
-        <ThemedText style={styles.title}>{title}</ThemedText>
+        <View style={styles.titleContainer}>
+          {titleContent ?? <ThemedText style={styles.title}>{title}</ThemedText>}
+        </View>
         <ScrollView
           style={styles.content}
           contentContainerStyle={{ paddingBottom: 24 }}
@@ -177,6 +181,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     textAlign: "center",
+  },
+  titleContainer: {
+    alignItems: "center",
     marginBottom: 12,
   },
   content: {

@@ -6,6 +6,7 @@ import {
 } from '@/constants/StorageKeys';
 
 const CODE_COMPANION_ELIGIBLE_PREFIXES = ['TIF', 'WDS', 'WWI'] as const;
+export const CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD = 2;
 
 export const CODE_COMPANION_ANDROID_URL =
   'https://play.google.com/store/apps/details?id=de.dhbwloe.loerrach.CodeCompanion';
@@ -31,6 +32,11 @@ export function isCodeCompanionEligibleCourse(
   );
 }
 
+function parseCodeCompanionPromoSeenCount(raw: string | null): number {
+  const parsed = raw ? Number.parseInt(raw, 10) : 0;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
 export async function getCodeCompanionPromoDismissed(): Promise<boolean> {
   const savedDismissed = await Storage.getItem(
     CODE_COMPANION_PROMO_DISMISSED_KEY,
@@ -43,14 +49,18 @@ export async function dismissCodeCompanionPromo(): Promise<void> {
 }
 
 export async function getCodeCompanionPromoSeenCount(): Promise<number> {
-  const raw = await Storage.getItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY);
-  const parsed = raw ? Number.parseInt(raw, 10) : 0;
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  return parseCodeCompanionPromoSeenCount(
+    await Storage.getItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY),
+  );
 }
 
 export async function incrementCodeCompanionPromoSeenCount(): Promise<number> {
-  const current = await getCodeCompanionPromoSeenCount();
-  const next = current + 1;
-  await Storage.setItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY, String(next));
+  let next = 1;
+
+  await Storage.setItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY, (prevValue) => {
+    next = parseCodeCompanionPromoSeenCount(prevValue) + 1;
+    return String(next);
+  });
+
   return next;
 }

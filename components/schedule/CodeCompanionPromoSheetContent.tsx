@@ -24,6 +24,33 @@ interface CodeCompanionPromoSheetContentProps {
 
 const CODE_COMPANION_ICON = require("../../assets/images/codecompanion.png");
 
+export function CodeCompanionPromoSheetTitle() {
+  const backgroundColor = useThemeColor({}, "background");
+  const borderColor = useThemeColor({}, "border");
+
+  return (
+    <View style={styles.sheetTitleRow}>
+      <View
+        style={[
+          styles.sheetTitleIconFrame,
+          {
+            backgroundColor,
+            borderColor,
+          },
+        ]}
+      >
+        <Image
+          source={CODE_COMPANION_ICON}
+          style={styles.sheetTitleIcon}
+          accessibilityRole="image"
+          accessibilityLabel="App-Icon von DHBW CodeCompanion"
+        />
+      </View>
+      <ThemedText style={styles.sheetTitleText}>DHBW CodeCompanion</ThemedText>
+    </View>
+  );
+}
+
 function PromoBullet({ text }: { text: string }) {
   const textColor = useThemeColor({}, "text");
 
@@ -42,9 +69,9 @@ export default function CodeCompanionPromoSheetContent({
   onClose,
   onHideForever,
 }: CodeCompanionPromoSheetContentProps) {
-  const backgroundColor = useThemeColor({}, "background");
-  const borderColor = useThemeColor({}, "border");
   const cardBackground = useThemeColor({}, "dayNumberContainer");
+  const borderColor = useThemeColor({}, "border");
+  const secondaryTextColor = useThemeColor({}, "icon");
   const showAndroidButton = Platform.OS !== "ios";
   const showIosButton = Platform.OS !== "android";
 
@@ -65,33 +92,11 @@ export default function CodeCompanionPromoSheetContent({
   return (
     <View style={styles.container}>
       <View style={[styles.highlightCard, { backgroundColor: cardBackground }]}>
-        <View style={styles.heroRow}>
-          <View
-            style={[
-              styles.iconFrame,
-              {
-                backgroundColor,
-                borderColor,
-              },
-            ]}
-          >
-            <Image
-              source={CODE_COMPANION_ICON}
-              style={styles.icon}
-              accessibilityRole="image"
-              accessibilityLabel="App-Icon von DHBW CodeCompanion"
-            />
-          </View>
-          <View style={styles.heroText}>
-            <ThemedText style={styles.eyebrow}>
-              DEIN LERNBEGLEITER
-            </ThemedText>
-            <ThemedText style={styles.lead}>
-              Mit der App CodeCompanion kannst du Programmieren lernen, üben
-              und vertiefen.
-            </ThemedText>
-          </View>
-        </View>
+        <ThemedText style={styles.eyebrow}>DEIN LERNBEGLEITER</ThemedText>
+        <ThemedText style={styles.lead}>
+          Mit der App CodeCompanion kannst du Programmierthemen üben und
+          vertiefen.
+        </ThemedText>
       </View>
 
       <View style={styles.featureList}>
@@ -150,7 +155,9 @@ export default function CodeCompanionPromoSheetContent({
             accessibilityLabel="CodeCompanion-Hinweis nicht mehr automatisch anzeigen"
             accessibilityHint="Blendet diesen Hinweis dauerhaft aus"
           >
-            <ThemedText style={styles.dismissButtonText}>
+            <ThemedText
+              style={[styles.dismissButtonText, { color: secondaryTextColor }]}
+            >
               Nicht mehr automatisch anzeigen
             </ThemedText>
           </TouchableOpacity>
@@ -162,7 +169,11 @@ export default function CodeCompanionPromoSheetContent({
             accessibilityLabel="CodeCompanion-Hinweis schließen"
             accessibilityHint="Schließt diesen Hinweis"
           >
-            <ThemedText style={styles.dismissButtonText}>Schließen</ThemedText>
+            <ThemedText
+              style={[styles.dismissButtonText, { color: secondaryTextColor }]}
+            >
+              Schließen
+            </ThemedText>
           </TouchableOpacity>
         )}
       </View>
@@ -195,51 +206,34 @@ const styles = StyleSheet.create({
   },
   dismissButton: {
     alignItems: "center",
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   dismissButtonText: {
-    color: dhbwRed,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
   },
   eyebrow: {
+    alignSelf: "center",
     color: dhbwRed,
     fontSize: 14,
     fontWeight: "700",
     letterSpacing: 1.4,
-    marginBottom: 8,
+    marginBottom: 10,
+    textAlign: "center",
   },
   featureList: {
     gap: 10,
   },
-  heroRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 14,
-  },
-  heroText: {
-    flex: 1,
-    flexShrink: 1,
-  },
   highlightCard: {
     borderRadius: 20,
-    marginBottom: 16,
+    marginBottom: 14,
     paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  icon: {
-    borderRadius: 16,
-    height: 64,
-    width: 64,
-  },
-  iconFrame: {
-    borderRadius: 20,
-    borderWidth: 1,
-    padding: 4,
+    paddingVertical: 14,
   },
   lead: {
-    fontSize: 17,
-    lineHeight: 25,
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: "center",
   },
   primaryButton: {
     alignItems: "center",
@@ -266,6 +260,25 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     fontSize: 16,
+    fontWeight: "700",
+  },
+  sheetTitleIcon: {
+    borderRadius: 8,
+    height: 34,
+    width: 34,
+  },
+  sheetTitleIconFrame: {
+    borderRadius: 12,
+    borderWidth: 1,
+    padding: 4,
+  },
+  sheetTitleRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+  },
+  sheetTitleText: {
+    fontSize: 18,
     fontWeight: "700",
   },
 });
