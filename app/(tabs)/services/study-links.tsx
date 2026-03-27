@@ -1,5 +1,13 @@
 import LinksScreen from '@/components/services/LinksScreen';
 import { type IconSymbolName } from '@/components/ui/IconSymbol';
+import { Platform } from 'react-native';
+import {
+  CODE_COMPANION_ANDROID_URL,
+  CODE_COMPANION_IOS_URL,
+} from '@/lib/codeCompanionPromo';
+
+const codeCompanionUrl =
+  Platform.OS === 'ios' ? CODE_COMPANION_IOS_URL : CODE_COMPANION_ANDROID_URL;
 
 const links: {
   title: string;
@@ -45,6 +53,11 @@ const links: {
     title: 'Sprachen lernen',
     icon: 'translate',
     url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
+  },
+  {
+    title: 'CodeCompanion',
+    icon: 'graduationcap',
+    url: codeCompanionUrl,
   },
   {
     title: 'IT-Services Wiki',
