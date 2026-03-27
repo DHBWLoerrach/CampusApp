@@ -1,6 +1,5 @@
 import Storage from 'expo-sqlite/kv-store';
 import { withLayoutContext } from 'expo-router';
-import { useFocusEffect } from '@react-navigation/native';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabBar,
@@ -49,7 +48,6 @@ export default function ScheduleLayout() {
   const [promoDismissed, setPromoDismissed] = useState<boolean | null>(null);
   const [promoSeenCount, setPromoSeenCount] = useState<number | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
-  const [promoTemporarilyClosed, setPromoTemporarilyClosed] = useState(false);
   const promoOpenRef = useRef(false);
   const isEligibleCourse = isCodeCompanionEligibleCourse(selectedCourse);
   const reopenBackground = useThemeColor(
@@ -68,7 +66,6 @@ export default function ScheduleLayout() {
 
     promoOpenRef.current = true;
     setPromoOpen(true);
-    setPromoTemporarilyClosed(false);
     setPromoSeenCount((prev) => (prev ?? 0) + 1);
     incrementCodeCompanionPromoSeenCount().catch((error) => {
       console.warn('Failed to persist CodeCompanion promo seen count:', error);
@@ -126,38 +123,31 @@ export default function ScheduleLayout() {
     };
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      showPromo();
-    }, [showPromo]),
-  );
-
   useEffect(() => {
-    if (promoDismissed !== false || isLoading) {
+    if (isLoading || promoSeenCount === null) {
       return;
     }
 
-    if (isEligibleCourse) {
+    if (promoDismissed === true || !isEligibleCourse) {
+      setPromoOpen(false);
+      promoOpenRef.current = false;
+      return;
+    }
+
+    if (promoDismissed === false && promoSeenCount === 0) {
       showPromo();
-      return;
     }
-
-    setPromoOpen(false);
-    setPromoTemporarilyClosed(false);
-    promoOpenRef.current = false;
-  }, [isEligibleCourse, isLoading, promoDismissed, showPromo]);
+  }, [isEligibleCourse, isLoading, promoDismissed, promoSeenCount, showPromo]);
 
   const closePromo = () => {
     promoOpenRef.current = false;
     setPromoOpen(false);
-    setPromoTemporarilyClosed(true);
   };
 
   const dismissPromoForever = async () => {
     promoOpenRef.current = false;
     setPromoOpen(false);
     setPromoDismissed(true);
-    setPromoTemporarilyClosed(false);
 
     try {
       await dismissCodeCompanionPromo();
@@ -178,9 +168,9 @@ export default function ScheduleLayout() {
 
   const showPromoReopen =
     !promoOpen &&
-    promoTemporarilyClosed &&
     promoDismissed === false &&
-    isEligibleCourse;
+    isEligibleCourse &&
+    (promoSeenCount ?? 0) > 0;
 
   const renderTabBar = useCallback(
     (props: MaterialTopTabBarProps) => (
