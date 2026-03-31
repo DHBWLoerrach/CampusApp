@@ -33,9 +33,7 @@ const EUROPE_BERLIN_VTIMEZONE = [
 
 function normalizeTimezones(icalText) {
   let normalized = icalText;
-  for (const [winTz, ianaTz] of Object.entries(
-    WINDOWS_TO_IANA_TZID
-  )) {
+  for (const [winTz, ianaTz] of Object.entries(WINDOWS_TO_IANA_TZID)) {
     const esc = winTz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     normalized = normalized.replace(
       new RegExp(`(TZID=)${esc}(?=[;:])`, 'g'),
@@ -46,8 +44,9 @@ function normalizeTimezones(icalText) {
       `$1${ianaTz}`
     );
   }
-  const referencesBerlin =
-    /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(normalized);
+  const referencesBerlin = /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(
+    normalized
+  );
   const hasBerlinVTimezone =
     /BEGIN:VTIMEZONE[\s\S]*?TZID:Europe\/Berlin[\s\S]*?END:VTIMEZONE/.test(
       normalized

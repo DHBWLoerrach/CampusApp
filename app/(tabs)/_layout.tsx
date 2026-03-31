@@ -49,9 +49,9 @@ function TabsContent() {
   const otherCourses = useMemo(
     () =>
       (previousCourses || []).filter(
-        (c) => !!c && c.toUpperCase() !== (selectedCourse || '').toUpperCase(),
+        (c) => !!c && c.toUpperCase() !== (selectedCourse || '').toUpperCase()
       ),
-    [previousCourses, selectedCourse],
+    [previousCourses, selectedCourse]
   );
 
   return (

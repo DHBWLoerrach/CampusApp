@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,26 +8,26 @@ import {
   RefreshControl,
   StyleSheet,
   View,
-} from "react-native";
-import { Image } from "expo-image";
-import { useScrollToTop } from "@react-navigation/native";
-import { formatDistanceToNow, format } from "date-fns";
-import { de } from "date-fns/locale";
-import { useQuery } from "@tanstack/react-query";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
-import OfflineBanner from "@/components/ui/OfflineBanner";
-import OfflineEmptyState from "@/components/ui/OfflineEmptyState";
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useRefetchOnReconnect } from "@/hooks/useRefetchOnReconnect";
-import { dhbwRed } from "@/constants/Colors";
+} from 'react-native';
+import { Image } from 'expo-image';
+import { useScrollToTop } from '@react-navigation/native';
+import { formatDistanceToNow, format } from 'date-fns';
+import { de } from 'date-fns/locale';
+import { useQuery } from '@tanstack/react-query';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedView } from '@/components/ui/ThemedView';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
+import { dhbwRed } from '@/constants/Colors';
 import {
   fetchAndParseRSSFeed,
   type RSSFeed,
   type RSSItem,
-} from "@/lib/rssParser";
-import { openLink } from "@/lib/utils";
+} from '@/lib/rssParser';
+import { openLink } from '@/lib/utils';
 
 interface RSSFeedListProps {
   feedUrl: string;
@@ -35,11 +35,11 @@ interface RSSFeedListProps {
 
 type Item = RSSItem;
 
-const blurhash = "L|Ps0IwJxujtsUozW;Rj?^OXR*n%";
+const blurhash = 'L|Ps0IwJxujtsUozW;Rj?^OXR*n%';
 
 const handleOpen = async (url: string) => {
   if (!url) return;
-  await openLink(url + "#inhalt"); // Append anchor to focus main content
+  await openLink(url + '#inhalt'); // Append anchor to focus main content
 };
 
 function ListItem({ item }: { item: Item }) {
@@ -52,20 +52,20 @@ function ListItem({ item }: { item: Item }) {
 
   const date = hasValidPublishedDate
     ? publishedDate > now
-      ? format(publishedDate, "EEEE, dd.MM.yyyy", { locale: de })
+      ? format(publishedDate, 'EEEE, dd.MM.yyyy', { locale: de })
       : formatDistanceToNow(publishedDate, {
           addSuffix: true,
           locale: de,
         })
-    : "—";
+    : '—';
 
-  const shadowColor = useThemeColor({}, "text");
+  const shadowColor = useThemeColor({}, 'text');
 
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={`Beitrag öffnen: ${item.title}`}
-      onPress={() => handleOpen(item.link || "")}
+      onPress={() => handleOpen(item.link || '')}
       hitSlop={8}
     >
       <ThemedView
@@ -103,10 +103,10 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const ref = useRef<FlatList>(null);
   useScrollToTop(ref);
   const { isOnline, isOffline, isReady } = useOnlineStatus();
-  const tintColor = useThemeColor({}, "tint");
-  const backgroundColor = useThemeColor({}, "background");
+  const tintColor = useThemeColor({}, 'tint');
+  const backgroundColor = useThemeColor({}, 'background');
 
-  const queryKey = useMemo(() => ["rss", feedUrl], [feedUrl]);
+  const queryKey = useMemo(() => ['rss', feedUrl], [feedUrl]);
   const { data, error, isLoading, isFetching, refetch } = useQuery<
     RSSFeed,
     Error
@@ -144,7 +144,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const hasItems = items.length > 0;
   if (showOffline && !hasItems) {
     const onOpenSettings =
-      Platform.OS === "web"
+      Platform.OS === 'web'
         ? undefined
         : () => {
             void Linking.openSettings();
@@ -210,8 +210,8 @@ const CARD_H = 120;
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   card: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderRadius: 12,
     marginBottom: 16,
     minHeight: CARD_H,
@@ -243,18 +243,18 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     padding: 12,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   date: {
     fontSize: 14,
   },
   errorText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 16,
   },
   retryButton: {
@@ -265,6 +265,6 @@ const styles = StyleSheet.create({
   },
   retryText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

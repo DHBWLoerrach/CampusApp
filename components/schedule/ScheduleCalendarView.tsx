@@ -1,6 +1,6 @@
-import type { ComponentProps, RefObject } from "react";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import type { ComponentProps, RefObject } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import {
   CalendarBody,
   CalendarContainer,
@@ -8,18 +8,18 @@ import {
   CalendarKitHandle,
   LocaleConfigsProps,
   OnEventResponse,
-} from "@howljs/calendar-kit";
-import { useTimetable } from "@/hooks/useTimetable";
-import { useCourseContext } from "@/context/CourseContext";
-import Header from "@/components/schedule/CalendarHeader";
-import ErrorWithReloadButton from "@/components/ui/ErrorWithReloadButton";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { toLocalISOString } from "@/lib/utils";
-import { getScheduleCardLocationDisplay } from "@/lib/scheduleCardLocation";
-import BottomSheet from "@/components/ui/BottomSheet";
-import LinkifiedText from "@/components/ui/LinkifiedText";
-import { ThemedText } from "@/components/ui/ThemedText";
+} from '@howljs/calendar-kit';
+import { useTimetable } from '@/hooks/useTimetable';
+import { useCourseContext } from '@/context/CourseContext';
+import Header from '@/components/schedule/CalendarHeader';
+import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { toLocalISOString } from '@/lib/utils';
+import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
+import BottomSheet from '@/components/ui/BottomSheet';
+import LinkifiedText from '@/components/ui/LinkifiedText';
+import { ThemedText } from '@/components/ui/ThemedText';
 
 interface CalendarEvent {
   id: string;
@@ -35,15 +35,15 @@ interface CalendarEvent {
 }
 
 function getOptionalStringField(obj: unknown, field: string): string {
-  if (!obj || typeof obj !== "object") return "";
+  if (!obj || typeof obj !== 'object') return '';
   const value = (obj as Record<string, unknown>)[field];
-  return typeof value === "string" ? value : "";
+  return typeof value === 'string' ? value : '';
 }
 
 function getOptionalBooleanField(obj: unknown, field: string): boolean | null {
-  if (!obj || typeof obj !== "object") return null;
+  if (!obj || typeof obj !== 'object') return null;
   const value = (obj as Record<string, unknown>)[field];
-  return typeof value === "boolean" ? value : null;
+  return typeof value === 'boolean' ? value : null;
 }
 
 interface ScheduleCalendarViewProps {
@@ -62,7 +62,7 @@ const _initialAtMidnight = new Date(
   0,
   0,
   0,
-  0,
+  0
 );
 if (_initialAtMidnight.getDay() === 0) {
   _initialAtMidnight.setDate(_initialAtMidnight.getDate() + 1);
@@ -71,15 +71,15 @@ const INITIAL_DATE = toLocalISOString(_initialAtMidnight);
 
 const initialLocales: Record<string, Partial<LocaleConfigsProps>> = {
   de: {
-    weekDayShort: "So_Mo_Di_Mi_Do_Fr_Sa".split("_"),
-    meridiem: { ante: "vorm.", post: "nachm." },
-    more: "mehr",
+    weekDayShort: 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+    meridiem: { ante: 'vorm.', post: 'nachm.' },
+    more: 'mehr',
   },
 };
 
 type CalendarContainerProps = ComponentProps<typeof CalendarContainer>;
 type CalendarBodyProps = ComponentProps<typeof CalendarBody>;
-type CalendarBodyRenderEvent = NonNullable<CalendarBodyProps["renderEvent"]>;
+type CalendarBodyRenderEvent = NonNullable<CalendarBodyProps['renderEvent']>;
 type CalendarBodyRenderEventEvent = Parameters<CalendarBodyRenderEvent>[0];
 type CalendarBodyRenderEventSize = Parameters<CalendarBodyRenderEvent>[1];
 
@@ -87,13 +87,13 @@ interface CalendarSectionProps {
   calendarRef: RefObject<CalendarKitHandle | null>;
   numberOfDays: number;
   hideWeekDays: number[];
-  onChange: CalendarContainerProps["onChange"];
-  onRefresh: CalendarContainerProps["onRefresh"];
+  onChange: CalendarContainerProps['onChange'];
+  onRefresh: CalendarContainerProps['onRefresh'];
   isFetching: boolean;
-  events: CalendarContainerProps["events"];
-  onPressEvent: CalendarContainerProps["onPressEvent"];
+  events: CalendarContainerProps['events'];
+  onPressEvent: CalendarContainerProps['onPressEvent'];
   renderEvent: CalendarBodyRenderEvent;
-  theme: CalendarContainerProps["theme"];
+  theme: CalendarContainerProps['theme'];
 }
 
 const CalendarSection = memo(function CalendarSection({
@@ -135,7 +135,7 @@ const CalendarSection = memo(function CalendarSection({
   );
 });
 
-CalendarSection.displayName = "CalendarSection";
+CalendarSection.displayName = 'CalendarSection';
 
 export default function ScheduleCalendarView({
   numberOfDays,
@@ -143,23 +143,23 @@ export default function ScheduleCalendarView({
 }: ScheduleCalendarViewProps) {
   const { selectedCourse } = useCourseContext();
   const [selectedEvent, setSelectedEvent] = useState<OnEventResponse | null>(
-    null,
+    null
   );
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
-    selectedCourse || undefined,
+    selectedCourse || undefined
   );
   const calendarRef = useRef<CalendarKitHandle>(null);
   const [currentDate, setCurrentDate] = useState(INITIAL_DATE);
 
-  const borderColor = useThemeColor({}, "border");
-  const tintColor = useThemeColor({}, "tint");
-  const backgroundColor = useThemeColor({}, "background");
-  const dayNumberContainer = useThemeColor({}, "dayNumberContainer");
-  const dayTextColor = useThemeColor({}, "dayTextColor");
-  const textColor = useThemeColor({}, "text");
-  const eventBackground = useThemeColor({}, "eventBackground");
-  const eventTextColor = useThemeColor({}, "eventTextColor");
-  const secondaryText = useThemeColor({}, "icon");
+  const borderColor = useThemeColor({}, 'border');
+  const tintColor = useThemeColor({}, 'tint');
+  const backgroundColor = useThemeColor({}, 'background');
+  const dayNumberContainer = useThemeColor({}, 'dayNumberContainer');
+  const dayTextColor = useThemeColor({}, 'dayTextColor');
+  const textColor = useThemeColor({}, 'text');
+  const eventBackground = useThemeColor({}, 'eventBackground');
+  const eventTextColor = useThemeColor({}, 'eventTextColor');
+  const secondaryText = useThemeColor({}, 'icon');
 
   // Transform timetable data to CalendarView format
   const events = useMemo((): CalendarEvent[] => {
@@ -183,7 +183,7 @@ export default function ScheduleCalendarView({
           // Ensure All‑Day events (chips) adopt our brand tint color
           color: tintColor,
           // Keep white titles only for All‑Day chips
-          titleColor: isAllDay ? "#fff" : undefined,
+          titleColor: isAllDay ? '#fff' : undefined,
         });
       });
     });
@@ -211,19 +211,25 @@ export default function ScheduleCalendarView({
     calendarRef.current?.goToNextPage();
   }, [calendarRef]);
 
-  const onPressEvent = useCallback((event: OnEventResponse) => {
-    setSelectedEvent(event);
-  }, [setSelectedEvent]);
+  const onPressEvent = useCallback(
+    (event: OnEventResponse) => {
+      setSelectedEvent(event);
+    },
+    [setSelectedEvent]
+  );
 
   const onRefresh = useCallback(() => {
     void refetch();
   }, [refetch]);
 
   const renderEvent = useCallback<CalendarBodyRenderEvent>(
-    (event: CalendarBodyRenderEventEvent, _size: CalendarBodyRenderEventSize) => {
+    (
+      event: CalendarBodyRenderEventEvent,
+      _size: CalendarBodyRenderEventSize
+    ) => {
       const rawLocation =
-        typeof event.location === "string" ? event.location : "";
-      const rawDescription = getOptionalStringField(event, "description");
+        typeof event.location === 'string' ? event.location : '';
+      const rawDescription = getOptionalStringField(event, 'description');
       const {
         roomText,
         isOnline: online,
@@ -236,19 +242,19 @@ export default function ScheduleCalendarView({
       const showExtraIndicator = !!extraTextCollapsed || hasHiddenUrls;
 
       return (
-        <View style={{ height: "100%", padding: 4 }}>
+        <View style={{ height: '100%', padding: 4 }}>
           <Text
             numberOfLines={8}
             style={[
               {
                 fontSize: 12,
-                fontWeight: "600",
+                fontWeight: '600',
                 color: eventTextColor,
               },
               event.titleColor ? { color: event.titleColor as string } : null,
             ]}
           >
-            {event.title || ""}
+            {event.title || ''}
           </Text>
 
           {/* Compact meta row with icon for Online/Raum */}
@@ -321,10 +327,10 @@ export default function ScheduleCalendarView({
         </View>
       );
     },
-    [eventTextColor, secondaryText],
+    [eventTextColor, secondaryText]
   );
 
-  const calendarTheme = useMemo<CalendarContainerProps["theme"]>(
+  const calendarTheme = useMemo<CalendarContainerProps['theme']>(
     () => ({
       colors: {
         background: backgroundColor,
@@ -336,7 +342,7 @@ export default function ScheduleCalendarView({
         borderWidth: 1,
         borderRadius: 8,
       },
-      nowIndicatorColor: "magenta",
+      nowIndicatorColor: 'magenta',
       headerBackgroundColor: backgroundColor,
       hourTextStyle: { color: tintColor, fontWeight: 600 },
       todayName: { color: tintColor, fontWeight: 600 },
@@ -357,7 +363,7 @@ export default function ScheduleCalendarView({
       eventBackground,
       textColor,
       tintColor,
-    ],
+    ]
   );
 
   if (isLoading) {
@@ -413,13 +419,13 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   metaRowSmall: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
     minWidth: 0,
   },
@@ -435,7 +441,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   detailLabel: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 8,
   },
 });
@@ -447,9 +453,9 @@ function EventDetailSheet({
   event: OnEventResponse | null;
   onClose: () => void;
 }) {
-  const secondaryText = useThemeColor({}, "icon");
-  const tintColor = useThemeColor({}, "tint");
-  const textColor = useThemeColor({}, "text");
+  const secondaryText = useThemeColor({}, 'icon');
+  const tintColor = useThemeColor({}, 'tint');
+  const textColor = useThemeColor({}, 'text');
 
   if (!event) return null;
 
@@ -460,33 +466,33 @@ function EventDetailSheet({
   const startDate = new Date(startTime);
   const endDate = new Date(endTime);
 
-  const rawLocation = typeof event.location === "string" ? event.location : "";
-  const rawDescription = getOptionalStringField(event, "description");
+  const rawLocation = typeof event.location === 'string' ? event.location : '';
+  const rawDescription = getOptionalStringField(event, 'description');
   const { roomText, isOnline, extraTextExpanded } =
     getScheduleCardLocationDisplay({
       location: rawLocation,
       description: rawDescription,
     });
 
-  const d = startDate.toLocaleDateString("de-DE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  const d = startDate.toLocaleDateString('de-DE', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   });
-  const isAllDay = getOptionalBooleanField(event, "allDay") ?? false;
+  const isAllDay = getOptionalBooleanField(event, 'allDay') ?? false;
 
-  let timeString = "";
+  let timeString = '';
   if (isAllDay) {
-    timeString = "Ganzer Tag";
+    timeString = 'Ganzer Tag';
   } else {
-    const t = startDate.toLocaleTimeString("de-DE", {
-      hour: "numeric",
-      minute: "numeric",
+    const t = startDate.toLocaleTimeString('de-DE', {
+      hour: 'numeric',
+      minute: 'numeric',
     });
-    const t2 = endDate.toLocaleTimeString("de-DE", {
-      hour: "numeric",
-      minute: "numeric",
+    const t2 = endDate.toLocaleTimeString('de-DE', {
+      hour: 'numeric',
+      minute: 'numeric',
     });
     timeString = `${t} - ${t2} Uhr`;
   }
@@ -494,27 +500,29 @@ function EventDetailSheet({
   return (
     <BottomSheet
       visible={!!event}
-      title={event.title || "Termin-Details"}
+      title={event.title || 'Termin-Details'}
       onClose={onClose}
     >
       <View style={{ gap: 12 }}>
         <View>
-          <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+          <ThemedText style={{ fontWeight: '600', color: secondaryText }}>
             ZEIT
           </ThemedText>
           <ThemedText style={styles.detailText}>
             {d}
-            {"\n"}
+            {'\n'}
             {timeString}
           </ThemedText>
         </View>
 
         {(roomText || isOnline) && (
           <View>
-            <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+            <ThemedText style={{ fontWeight: '600', color: secondaryText }}>
               ORT
             </ThemedText>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
+            >
               {roomText ? (
                 <ThemedText style={styles.detailText}>{roomText}</ThemedText>
               ) : (
@@ -526,7 +534,7 @@ function EventDetailSheet({
 
         {extraTextExpanded ? (
           <View>
-            <ThemedText style={{ fontWeight: "600", color: secondaryText }}>
+            <ThemedText style={{ fontWeight: '600', color: secondaryText }}>
               BESCHREIBUNG
             </ThemedText>
             <LinkifiedText

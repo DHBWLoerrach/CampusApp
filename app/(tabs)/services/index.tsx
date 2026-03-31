@@ -170,7 +170,7 @@ export default function ServicesScreen() {
   const [infoKey, setInfoKey] = useState<InfoKey | null>(null);
   const Active = useMemo(
     () => (infoKey ? INFO_PAGES[infoKey].Body : null),
-    [infoKey],
+    [infoKey]
   );
   const title = infoKey ? INFO_PAGES[infoKey].title : '';
 

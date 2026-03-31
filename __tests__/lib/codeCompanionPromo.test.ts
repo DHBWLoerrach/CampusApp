@@ -61,7 +61,7 @@ describe('codeCompanionPromo', () => {
 
       expect(mockSetItem).toHaveBeenCalledWith(
         CODE_COMPANION_PROMO_DISMISSED_KEY,
-        '1',
+        '1'
       );
     });
 
@@ -81,7 +81,7 @@ describe('codeCompanionPromo', () => {
       mockSetItem.mockImplementationOnce(
         async (
           key: string,
-          value: string | ((prevValue: string | null) => string),
+          value: string | ((prevValue: string | null) => string)
         ) => {
           expect(key).toBe(CODE_COMPANION_PROMO_SEEN_COUNT_KEY);
           expect(typeof value).toBe('function');
@@ -91,13 +91,13 @@ describe('codeCompanionPromo', () => {
           }
 
           expect(value('1')).toBe('2');
-        },
+        }
       );
 
       await expect(incrementCodeCompanionPromoSeenCount()).resolves.toBe(2);
       expect(mockSetItem).toHaveBeenCalledWith(
         CODE_COMPANION_PROMO_SEEN_COUNT_KEY,
-        expect.any(Function),
+        expect.any(Function)
       );
     });
 

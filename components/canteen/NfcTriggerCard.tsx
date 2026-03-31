@@ -1,13 +1,13 @@
-import { Pressable, StyleSheet } from "react-native";
-import { ThemedView } from "@/components/ui/ThemedView";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { Pressable, StyleSheet } from 'react-native';
+import { ThemedView } from '@/components/ui/ThemedView';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 type Props = { onPress: () => void };
 
 export default function NfcTriggerCard({ onPress }: Props) {
-  const iconColor = useThemeColor({}, "icon");
+  const iconColor = useThemeColor({}, 'icon');
 
   return (
     <ThemedView
@@ -37,13 +37,13 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
   title: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   elevated: {
     elevation: 3,

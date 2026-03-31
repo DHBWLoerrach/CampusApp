@@ -55,11 +55,11 @@ export default function ScheduleLayout() {
   const isEligibleCourse = isCodeCompanionEligibleCourse(selectedCourse);
   const reopenBackground = useThemeColor(
     { light: '#EAF3FF', dark: '#203146' },
-    'dayNumberContainer',
+    'dayNumberContainer'
   );
   const reopenTextColor = useThemeColor(
     { light: '#2A5D9F', dark: '#CFE2FF' },
-    'text',
+    'text'
   );
 
   const showPromo = useCallback(() => {
@@ -88,7 +88,7 @@ export default function ScheduleLayout() {
         setInitialSubTab(
           saved && (allowed as readonly string[]).includes(saved)
             ? (saved as SubTabName)
-            : 'index',
+            : 'index'
         );
       } catch {
         if (mounted) setInitialSubTab('index');
@@ -211,7 +211,7 @@ export default function ScheduleLayout() {
         ) : null}
       </View>
     ),
-    [reopenBackground, reopenTextColor, showPromo, showPromoReopen],
+    [reopenBackground, reopenTextColor, showPromo, showPromoReopen]
   );
 
   // Show loading while reading from storage
@@ -238,7 +238,7 @@ export default function ScheduleLayout() {
               listeners={{
                 focus: () => {
                   Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'index').catch(
-                    () => {},
+                    () => {}
                   );
                   // Keep local state in sync so remounts (e.g., after course change)
                   // restore the last viewed sub-tab instead of defaulting unexpectedly.
@@ -252,7 +252,7 @@ export default function ScheduleLayout() {
               listeners={{
                 focus: () => {
                   Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'week').catch(
-                    () => {},
+                    () => {}
                   );
                   setInitialSubTab('week');
                 },
@@ -264,7 +264,7 @@ export default function ScheduleLayout() {
               listeners={{
                 focus: () => {
                   Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'day').catch(
-                    () => {},
+                    () => {}
                   );
                   setInitialSubTab('day');
                 },

@@ -20,7 +20,7 @@ export const CODE_COMPANION_FEATURES = [
 ] as const;
 
 export function isCodeCompanionEligibleCourse(
-  course: string | null | undefined,
+  course: string | null | undefined
 ): boolean {
   if (!course?.trim()) {
     return false;
@@ -28,7 +28,7 @@ export function isCodeCompanionEligibleCourse(
 
   const canonicalCourse = resolveCourseAlias(course).trim().toUpperCase();
   return CODE_COMPANION_ELIGIBLE_PREFIXES.some((prefix) =>
-    canonicalCourse.startsWith(prefix),
+    canonicalCourse.startsWith(prefix)
   );
 }
 
@@ -39,7 +39,7 @@ function parseCodeCompanionPromoSeenCount(raw: string | null): number {
 
 export async function getCodeCompanionPromoDismissed(): Promise<boolean> {
   const savedDismissed = await Storage.getItem(
-    CODE_COMPANION_PROMO_DISMISSED_KEY,
+    CODE_COMPANION_PROMO_DISMISSED_KEY
   );
   return savedDismissed === '1';
 }
@@ -50,7 +50,7 @@ export async function dismissCodeCompanionPromo(): Promise<void> {
 
 export async function getCodeCompanionPromoSeenCount(): Promise<number> {
   return parseCodeCompanionPromoSeenCount(
-    await Storage.getItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY),
+    await Storage.getItem(CODE_COMPANION_PROMO_SEEN_COUNT_KEY)
   );
 }
 

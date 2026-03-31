@@ -1,16 +1,16 @@
-import type { FC } from "react";
-import { useMemo } from "react";
+import type { FC } from 'react';
+import { useMemo } from 'react';
 import {
   Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+} from 'react-native';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
-const ICON_SIZE = Platform.OS === "ios" ? 16 : 24;
+const ICON_SIZE = Platform.OS === 'ios' ? 16 : 24;
 
 interface HeaderProps {
   currentDate: string;
@@ -25,14 +25,14 @@ const Header: FC<HeaderProps> = ({
   onPressPrevious,
   onPressNext,
 }) => {
-  const tintColor = useThemeColor({}, "tint");
-  const backgroundColor = useThemeColor({}, "background");
+  const tintColor = useThemeColor({}, 'tint');
+  const backgroundColor = useThemeColor({}, 'background');
 
   const title = useMemo(() => {
-    if (!currentDate) return "";
-    return new Date(currentDate).toLocaleDateString("de-DE", {
-      year: "numeric",
-      month: "long",
+    if (!currentDate) return '';
+    return new Date(currentDate).toLocaleDateString('de-DE', {
+      year: 'numeric',
+      month: 'long',
     });
   }, [currentDate]);
 
@@ -69,7 +69,7 @@ const Header: FC<HeaderProps> = ({
           onPress={onPressToday}
         >
           <Text style={[styles.headerTitle, { color: tintColor }]}>
-            {Platform.OS === "android" ? "HEUTE" : "Heute"}
+            {Platform.OS === 'android' ? 'HEUTE' : 'Heute'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -80,27 +80,27 @@ const Header: FC<HeaderProps> = ({
 export default Header;
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 12,
   },
   headerRightContent: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flexGrow: 1,
-    alignItems: "center",
+    alignItems: 'center',
     flexShrink: 1,
   },
   headerTitle: {
     flexGrow: 1,
     flexShrink: 1,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
     marginLeft: 8,
   },
   navigation: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 4,
   },
 });

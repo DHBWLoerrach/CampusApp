@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -8,10 +8,10 @@ import {
   StyleSheet,
   View,
   useWindowDimensions,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { useThemeColor } from "@/hooks/useThemeColor";
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function BottomSheet({
   visible,
@@ -26,7 +26,7 @@ export default function BottomSheet({
   onClose: () => void;
   children: ReactNode;
 }) {
-  const background = useThemeColor({}, "background");
+  const background = useThemeColor({}, 'background');
   const insets = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
   const [isMounted, setIsMounted] = useState(visible);
@@ -54,7 +54,9 @@ export default function BottomSheet({
     const fadeTo = visible ? 1 : 0;
 
     const sheetDuration = visible ? 360 : 300;
-    const sheetEasing = visible ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic);
+    const sheetEasing = visible
+      ? Easing.out(Easing.cubic)
+      : Easing.in(Easing.cubic);
     const backdropDuration = visible ? 240 : 200;
     const backdropEasing = visible
       ? Easing.out(Easing.cubic)
@@ -130,7 +132,9 @@ export default function BottomSheet({
       >
         <View style={styles.handle} accessibilityElementsHidden />
         <View style={styles.titleContainer}>
-          {titleContent ?? <ThemedText style={styles.title}>{title}</ThemedText>}
+          {titleContent ?? (
+            <ThemedText style={styles.title}>{title}</ThemedText>
+          )}
         </View>
         <ScrollView
           style={styles.content}
@@ -146,15 +150,15 @@ export default function BottomSheet({
 
 const styles = StyleSheet.create({
   backdrop: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
   sheet: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
@@ -162,31 +166,31 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingHorizontal: 20,
-    maxHeight: "80%",
-    shadowColor: "#000",
+    maxHeight: '80%',
+    shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: -6 },
     elevation: 14,
   },
   handle: {
-    alignSelf: "center",
+    alignSelf: 'center',
     width: 36,
     height: 5,
     borderRadius: 3,
-    backgroundColor: "rgba(255,255,255,0.35)",
+    backgroundColor: 'rgba(255,255,255,0.35)',
     marginBottom: 8,
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
   },
   titleContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 12,
   },
   content: {
-    maxHeight: "100%",
+    maxHeight: '100%',
   },
 });

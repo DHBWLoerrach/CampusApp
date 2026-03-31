@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import { Modal, View, StyleSheet, Pressable } from "react-native";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useThemeColor } from "@/hooks/useThemeColor";
+import { ReactNode } from 'react';
+import { Modal, View, StyleSheet, Pressable } from 'react-native';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 // Generic reusable modal
 export default function InfoModal({
@@ -16,8 +16,8 @@ export default function InfoModal({
   children: ReactNode;
   onClose: () => void;
 }) {
-  const background = useThemeColor({}, "background");
-  const iconColor = useThemeColor({}, "text");
+  const background = useThemeColor({}, 'background');
+  const iconColor = useThemeColor({}, 'text');
 
   return (
     <Modal
@@ -47,9 +47,9 @@ export default function InfoModal({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.55)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 16,
   },
   content: {
@@ -57,16 +57,16 @@ const styles = StyleSheet.create({
     paddingTop: 52,
     paddingHorizontal: 20,
     paddingBottom: 28,
-    maxHeight: "88%",
-    width: "100%",
-    shadowColor: "#000",
+    maxHeight: '88%',
+    width: '100%',
+    shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
     elevation: 12,
   },
   closeBtn: {
-    position: "absolute",
+    position: 'absolute',
     top: 8,
     right: 8,
     padding: 4,
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
     marginBottom: 12,
   },
 });

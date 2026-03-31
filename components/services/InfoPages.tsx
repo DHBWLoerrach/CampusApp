@@ -1,18 +1,18 @@
-import { Pressable, StyleSheet, View } from "react-native";
-import { Link } from "expo-router";
-import * as Application from "expo-application";
-import { disclaimerText } from "@/constants/InfoTexts";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { openLink } from "@/lib/utils";
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Link } from 'expo-router';
+import * as Application from 'expo-application';
+import { disclaimerText } from '@/constants/InfoTexts';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { openLink } from '@/lib/utils';
 
 export type InfoKey =
-  | "about"
-  | "imprint"
-  | "disclaimer"
-  | "privacy"
-  | "feedback";
+  | 'about'
+  | 'imprint'
+  | 'disclaimer'
+  | 'privacy'
+  | 'feedback';
 
 type InfoDef = { title: string; Body: React.ComponentType };
 
@@ -25,7 +25,7 @@ const InfoText = ({
   children: React.ReactNode;
   isLink?: boolean;
 }) => {
-  const tintColor = useThemeColor({}, "tint");
+  const tintColor = useThemeColor({}, 'tint');
   return (
     <ThemedText style={[styles.text, style, isLink && { color: tintColor }]}>
       {children}
@@ -46,7 +46,7 @@ const AboutBody = () => {
       <InfoText>
         Die Campus App wird beständig weiterentwickelt. Dafür freuen wir uns auf
         euer Feedback und eure Verbesserungsvorschläge per E-Mail:
-        {"\n"}
+        {'\n'}
         <Link href="mailto:apps@dhbw-loerrach.de">
           <InfoText isLink>apps@dhbw-loerrach.de</InfoText>
         </Link>
@@ -54,9 +54,9 @@ const AboutBody = () => {
       <InfoText>
         Diese App ist ein Open Source Projekt. Der Quellcode ist verfügbar
         unter:
-        {"\n"}
+        {'\n'}
         <Pressable
-          onPress={() => openLink("https://github.com/DHBWLoerrach/CampusApp")}
+          onPress={() => openLink('https://github.com/DHBWLoerrach/CampusApp')}
           accessible
           accessibilityLabel={`Quellcode der App`}
           accessibilityHint={`Öffnet den Quellcode der App auf GitHub im Browser`}
@@ -75,22 +75,22 @@ const ImprintBody = () => (
     <ThemedText style={styles.heading}>Herausgeber</ThemedText>
     <InfoText>
       Duale Hochschule Baden-Württemberg Lörrach
-      {"\n"}
+      {'\n'}
       Hangstraße 46-50
-      {"\n"}
+      {'\n'}
       D-79539 Lörrach
     </InfoText>
     <InfoText>
       <Link href="tel:+49762120710">
         <InfoText isLink>+49 7621 2071 0</InfoText>
       </Link>
-      {"\n"}
+      {'\n'}
       <Link href="mailto:info@dhbw-loerrach.de">
         <InfoText isLink>info@dhbw-loerrach.de</InfoText>
       </Link>
-      {"\n"}
+      {'\n'}
       <Pressable
-        onPress={() => openLink("https://www.dhbw-loerrach.de")}
+        onPress={() => openLink('https://www.dhbw-loerrach.de')}
         accessible
         accessibilityLabel={`Webseite der DHBW Lörrach`}
         accessibilityHint={`Öffnet die Webseite der DHBW Lörrach im Browser`}
@@ -109,28 +109,28 @@ const ImprintBody = () => (
     <InfoText>
       Umsatzsteuer-Identifikationsnummer gemäß §27a Umsatzsteuergesetz:
       DE287664832
-      {"\n"}
+      {'\n'}
       Wirtschafts-Identifikationsnummer (W-IdNr.): DE287664832-00001
     </InfoText>
     <ThemedText style={styles.heading}>Zuständige Aufsichtsbehörde</ThemedText>
     <InfoText>
       Ministerium für Wissenschaft, Forschung und Kunst des Landes
       Baden-Württemberg
-      {"\n"}
+      {'\n'}
       Königstraße 46
-      {"\n"}
+      {'\n'}
       D-70173 Stuttgart
     </InfoText>
     <InfoText>
-      Telefon: +49 711 279 0{"\n"}
+      Telefon: +49 711 279 0{'\n'}
       Telefax: +49 711 279 3081
-      {"\n"}
+      {'\n'}
       <Link href="mailto:poststelle@mwk.bwl.de">
         <InfoText isLink>poststelle@mwk.bwl.de</InfoText>
       </Link>
-      {"\n"}
+      {'\n'}
       <Pressable
-        onPress={() => openLink("https://mwk.baden-wuerttemberg.de")}
+        onPress={() => openLink('https://mwk.baden-wuerttemberg.de')}
         accessible
         accessibilityLabel={`Webseite des Ministeriums für Wissenschaft, Forschung und Kunst des Landes Baden-Württemberg`}
         accessibilityHint={`Öffnet die Webseite des Ministeriums für Wissenschaft, Forschung und Kunst des Landes Baden-Württemberg im Browser`}
@@ -157,11 +157,11 @@ const ImprintBody = () => (
       Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte
       waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente
       inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete
-      Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden
-      von Rechtsverletzungen werden wir derartige Links umgehend entfernen. Es
-      ist nicht auszuschließen, dass die Inhalte im Nachhinein von den
-      jeweiligen Anbietern verändert werden. Sollten Sie der Ansicht sein, dass
-      die verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst
+      Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von
+      Rechtsverletzungen werden wir derartige Links umgehend entfernen. Es ist
+      nicht auszuschließen, dass die Inhalte im Nachhinein von den jeweiligen
+      Anbietern verändert werden. Sollten Sie der Ansicht sein, dass die
+      verlinkten externen Seiten gegen geltendes Recht verstoßen oder sonst
       unangemessene Inhalte enthalten, teilen Sie uns dies bitte mit.
     </InfoText>
     <ThemedText style={styles.heading}>Urheberrecht</ThemedText>
@@ -178,7 +178,7 @@ const ImprintBody = () => (
 );
 
 const DisclaimerBody = () => {
-  const textColor = useThemeColor({}, "text");
+  const textColor = useThemeColor({}, 'text');
 
   return (
     <>
@@ -229,10 +229,10 @@ const PrivacyBody = () => (
     </InfoText>
     <InfoText>
       Unsere Datenschutzerklärung finden Sie unter:
-      {"\n"}
+      {'\n'}
       <Pressable
         onPress={() =>
-          openLink("https://www.dhbw-loerrach.de/datenschutz#inhalt")
+          openLink('https://www.dhbw-loerrach.de/datenschutz#inhalt')
         }
         accessible
         accessibilityLabel={`Webseite zum Datenschutz der DHBW Lörrach`}
@@ -246,17 +246,17 @@ const PrivacyBody = () => (
 );
 
 export const INFO_PAGES: Record<InfoKey, InfoDef> = {
-  about: { title: "Über diese App", Body: AboutBody },
-  imprint: { title: "Impressum", Body: ImprintBody },
-  disclaimer: { title: "Haftung", Body: DisclaimerBody },
-  privacy: { title: "Datenschutz", Body: PrivacyBody },
-  feedback: { title: "Feedback", Body: FeedbackBody },
+  about: { title: 'Über diese App', Body: AboutBody },
+  imprint: { title: 'Impressum', Body: ImprintBody },
+  disclaimer: { title: 'Haftung', Body: DisclaimerBody },
+  privacy: { title: 'Datenschutz', Body: PrivacyBody },
+  feedback: { title: 'Feedback', Body: FeedbackBody },
 };
 
 const styles = StyleSheet.create({
   heading: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 4,
   },
   text: {
@@ -265,8 +265,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   disclaimerContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     marginBottom: 12,
   },
   disclaimerIcon: {
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
   },
   disclaimerText: {
     flex: 1,
-    fontStyle: "italic",
+    fontStyle: 'italic',
     marginBottom: 0, // Override default margin
   },
 });

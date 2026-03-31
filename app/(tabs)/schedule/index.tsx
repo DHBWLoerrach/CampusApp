@@ -28,7 +28,7 @@ const formatDateHeader = (dateString: string): string => {
   const date = new Date(dateString);
   // Add time to avoid timezone issues when creating the date object
   const adjustedDate = new Date(
-    date.valueOf() + date.getTimezoneOffset() * 60 * 1000,
+    date.valueOf() + date.getTimezoneOffset() * 60 * 1000
   );
 
   return adjustedDate.toLocaleDateString('de-DE', {
@@ -47,7 +47,7 @@ export default function ScheduleList() {
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
-    selectedCourse || undefined,
+    selectedCourse || undefined
   );
   const { isOnline, isOffline, isReady } = useOnlineStatus();
 

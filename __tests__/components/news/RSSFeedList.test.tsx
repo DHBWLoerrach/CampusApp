@@ -77,9 +77,7 @@ describe('RSSFeedList', () => {
 
     expect(getByText('Keine Internetverbindung')).toBeTruthy();
     expect(
-      getByText(
-        'Inhalte können ohne Internetverbindung nicht geladen werden.'
-      )
+      getByText('Inhalte können ohne Internetverbindung nicht geladen werden.')
     ).toBeTruthy();
     expect(getByText('Einstellungen öffnen')).toBeTruthy();
     expect(getByText('Erneut versuchen')).toBeTruthy();
@@ -105,9 +103,7 @@ describe('RSSFeedList', () => {
     );
 
     expect(getByText('Offline')).toBeTruthy();
-    expect(
-      getByText('Inhalte können nicht aktualisiert werden.')
-    ).toBeTruthy();
+    expect(getByText('Inhalte können nicht aktualisiert werden.')).toBeTruthy();
     expect(getByText('Beitrag 1')).toBeTruthy();
   });
 

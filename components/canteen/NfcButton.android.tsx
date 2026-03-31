@@ -36,7 +36,7 @@ export default function NfcButton({ render }: Props) {
     if (!isNfcAvailable) {
       Alert.alert(
         'Guthaben-Info',
-        'NFC scheint von deinem Gerät nicht unterstützt zu werden.',
+        'NFC scheint von deinem Gerät nicht unterstützt zu werden.'
       );
       return;
     }
@@ -64,11 +64,11 @@ export default function NfcButton({ render }: Props) {
 
       const { balance, lastTransaction } = convertBytesToDouble(
         balanceBytes,
-        lastTransactionBytes,
+        lastTransactionBytes
       );
 
       setModalMessage(
-        `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€\n(Angaben ohne Gewähr)`,
+        `Guthaben: ${balance}€\nLetzte Transaktion: ${lastTransaction}€\n(Angaben ohne Gewähr)`
       );
     } catch (ex: any) {
       if (timedOut) {

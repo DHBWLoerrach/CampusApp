@@ -6,15 +6,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-} from "react-native";
-import { dhbwRed } from "@/constants/Colors";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { useThemeColor } from "@/hooks/useThemeColor";
+} from 'react-native';
+import { dhbwRed } from '@/constants/Colors';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import {
   CODE_COMPANION_ANDROID_URL,
   CODE_COMPANION_FEATURES,
   CODE_COMPANION_IOS_URL,
-} from "@/lib/codeCompanionPromo";
+} from '@/lib/codeCompanionPromo';
 
 interface CodeCompanionPromoSheetContentProps {
   canHideForever: boolean;
@@ -22,11 +22,11 @@ interface CodeCompanionPromoSheetContentProps {
   onHideForever: () => void;
 }
 
-const CODE_COMPANION_ICON = require("../../assets/images/codecompanion.png");
+const CODE_COMPANION_ICON = require('../../assets/images/codecompanion.png');
 
 export function CodeCompanionPromoSheetTitle() {
-  const backgroundColor = useThemeColor({}, "background");
-  const borderColor = useThemeColor({}, "border");
+  const backgroundColor = useThemeColor({}, 'background');
+  const borderColor = useThemeColor({}, 'border');
 
   return (
     <View style={styles.sheetTitleRow}>
@@ -52,7 +52,7 @@ export function CodeCompanionPromoSheetTitle() {
 }
 
 function PromoBullet({ text }: { text: string }) {
-  const textColor = useThemeColor({}, "text");
+  const textColor = useThemeColor({}, 'text');
 
   return (
     <View style={styles.bulletRow}>
@@ -69,11 +69,11 @@ export default function CodeCompanionPromoSheetContent({
   onClose,
   onHideForever,
 }: CodeCompanionPromoSheetContentProps) {
-  const cardBackground = useThemeColor({}, "dayNumberContainer");
-  const borderColor = useThemeColor({}, "border");
-  const secondaryTextColor = useThemeColor({}, "icon");
-  const showAndroidButton = Platform.OS !== "ios";
-  const showIosButton = Platform.OS !== "android";
+  const cardBackground = useThemeColor({}, 'dayNumberContainer');
+  const borderColor = useThemeColor({}, 'border');
+  const secondaryTextColor = useThemeColor({}, 'icon');
+  const showAndroidButton = Platform.OS !== 'ios';
+  const showIosButton = Platform.OS !== 'android';
 
   const handleOpenStore = async (url: string) => {
     onClose();
@@ -81,10 +81,10 @@ export default function CodeCompanionPromoSheetContent({
     try {
       await Linking.openURL(url);
     } catch (error) {
-      console.warn("Failed to open CodeCompanion store URL:", error);
+      console.warn('Failed to open CodeCompanion store URL:', error);
       Alert.alert(
-        "Link konnte nicht geöffnet werden",
-        "Der Store-Link für CodeCompanion konnte nicht geöffnet werden.",
+        'Link konnte nicht geöffnet werden',
+        'Der Store-Link für CodeCompanion konnte nicht geöffnet werden.'
       );
     }
   };
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     width: 8,
   },
   bulletRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 12,
   },
   bulletText: {
@@ -205,21 +205,21 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   dismissButton: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 2,
   },
   dismissButtonText: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   eyebrow: {
-    alignSelf: "center",
+    alignSelf: 'center',
     color: dhbwRed,
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: '700',
     letterSpacing: 1.4,
     marginBottom: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   featureList: {
     gap: 10,
@@ -233,34 +233,34 @@ const styles = StyleSheet.create({
   lead: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: "center",
+    textAlign: 'center',
   },
   primaryButton: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: dhbwRed,
     borderRadius: 14,
     minHeight: 48,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   primaryButtonText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   secondaryButton: {
-    alignItems: "center",
+    alignItems: 'center',
     borderRadius: 14,
     borderWidth: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     minHeight: 48,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   secondaryButtonText: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   sheetTitleIcon: {
     borderRadius: 8,
@@ -273,12 +273,12 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   sheetTitleRow: {
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: 8,
   },
   sheetTitleText: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
 });

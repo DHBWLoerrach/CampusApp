@@ -12,7 +12,7 @@ describe('useRefetchOnReconnect', () => {
     const onReconnect = jest.fn();
 
     renderHook(() =>
-      useRefetchOnReconnect({ isOnline: true, isReady: true, onReconnect }),
+      useRefetchOnReconnect({ isOnline: true, isReady: true, onReconnect })
     );
 
     expect(onReconnect).not.toHaveBeenCalled();
@@ -22,7 +22,7 @@ describe('useRefetchOnReconnect', () => {
     const onReconnect = jest.fn();
 
     renderHook(() =>
-      useRefetchOnReconnect({ isOnline: false, isReady: true, onReconnect }),
+      useRefetchOnReconnect({ isOnline: false, isReady: true, onReconnect })
     );
 
     expect(onReconnect).not.toHaveBeenCalled();
@@ -34,7 +34,7 @@ describe('useRefetchOnReconnect', () => {
     const { rerender } = renderHook<void, HookProps>(
       ({ isOnline, isReady, onReconnect }) =>
         useRefetchOnReconnect({ isOnline, isReady, onReconnect }),
-      { initialProps: { isOnline: false, isReady: true, onReconnect } },
+      { initialProps: { isOnline: false, isReady: true, onReconnect } }
     );
 
     expect(onReconnect).not.toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe('useRefetchOnReconnect', () => {
     const { rerender } = renderHook<void, HookProps>(
       ({ isOnline, isReady, onReconnect }) =>
         useRefetchOnReconnect({ isOnline, isReady, onReconnect }),
-      { initialProps: { isOnline: true, isReady: true, onReconnect } },
+      { initialProps: { isOnline: true, isReady: true, onReconnect } }
     );
 
     // Transition to offline
@@ -66,7 +66,7 @@ describe('useRefetchOnReconnect', () => {
     const { rerender } = renderHook<void, HookProps>(
       ({ isOnline, isReady, onReconnect }) =>
         useRefetchOnReconnect({ isOnline, isReady, onReconnect }),
-      { initialProps: { isOnline: false, isReady: false, onReconnect } },
+      { initialProps: { isOnline: false, isReady: false, onReconnect } }
     );
 
     // Transition to online while not ready
@@ -81,7 +81,7 @@ describe('useRefetchOnReconnect', () => {
     const { rerender } = renderHook<void, HookProps>(
       ({ isOnline, isReady, onReconnect }) =>
         useRefetchOnReconnect({ isOnline, isReady, onReconnect }),
-      { initialProps: { isOnline: false, isReady: true, onReconnect } },
+      { initialProps: { isOnline: false, isReady: true, onReconnect } }
     );
 
     // Go online
@@ -110,7 +110,7 @@ describe('useRefetchOnReconnect', () => {
           isReady: true,
           onReconnect: onReconnect1,
         },
-      },
+      }
     );
 
     // Update callback before going online

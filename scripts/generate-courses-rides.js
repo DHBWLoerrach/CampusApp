@@ -18,9 +18,7 @@ function getArg(name) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === flag)
-      return argv[i + 1] && !argv[i + 1].startsWith('--')
-        ? argv[i + 1]
-        : '';
+      return argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : '';
     if (withEq.test(a)) return a.split('=')[1] ?? '';
   }
   return undefined;
@@ -99,8 +97,7 @@ function nextDayKeys(days, startKeyOverride) {
 
 // Parse start date CLI/env -> YYYY-MM-DD (in TZ)
 function resolveStartKey() {
-  const raw =
-    getArg('start-date') ?? getArg('start') ?? START_DATE_RAW;
+  const raw = getArg('start-date') ?? getArg('start') ?? START_DATE_RAW;
   if (!raw) return dateKeyTZ(new Date());
 
   const s = String(raw).trim();
@@ -112,9 +109,10 @@ function resolveStartKey() {
   if (/^tomorrow$/i.test(s)) {
     const [y, m, d] = todayKey.split('-').map(Number);
     const t = new Date(Date.UTC(y, m - 1, d + 1));
-    return `${t.getUTCFullYear()}-${String(
-      t.getUTCMonth() + 1
-    ).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(t.getUTCDate()).padStart(2, '0')}`;
   }
 
   // Expect YYYY-MM-DD; ignore any time-of-day portion if passed
@@ -125,15 +123,14 @@ function resolveStartKey() {
     const da = Number(m[3]);
     // Normalize via UTC to ensure a valid calendar date
     const t = new Date(Date.UTC(y, mo - 1, da));
-    const norm = `${t.getUTCFullYear()}-${String(
-      t.getUTCMonth() + 1
-    ).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
+    const norm = `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(t.getUTCDate()).padStart(2, '0')}`;
     return norm;
   }
 
-  console.warn(
-    `Unrecognized start date: "${s}". Falling back to today.`
-  );
+  console.warn(`Unrecognized start date: "${s}". Falling back to today.`);
   return todayKey;
 }
 
@@ -167,22 +164,12 @@ function normalizeTimezones(icalText) {
   let s = icalText;
   for (const [win, iana] of Object.entries(WINDOWS_TO_IANA_TZID)) {
     const esc = win.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    s = s.replace(
-      new RegExp(`(TZID=)${esc}(?=[;:])`, 'g'),
-      `$1${iana}`
-    );
-    s = s.replace(
-      new RegExp(`(TZID:)${esc}(?=\\r?\\n)`, 'g'),
-      `$1${iana}`
-    );
+    s = s.replace(new RegExp(`(TZID=)${esc}(?=[;:])`, 'g'), `$1${iana}`);
+    s = s.replace(new RegExp(`(TZID:)${esc}(?=\\r?\\n)`, 'g'), `$1${iana}`);
   }
-  const refsBerlin = /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(
-    s
-  );
+  const refsBerlin = /TZID=Europe\/Berlin|TZID:Europe\/Berlin/.test(s);
   const hasBerlinVTZ =
-    /BEGIN:VTIMEZONE[\s\S]*?TZID:Europe\/Berlin[\s\S]*?END:VTIMEZONE/.test(
-      s
-    );
+    /BEGIN:VTIMEZONE[\s\S]*?TZID:Europe\/Berlin[\s\S]*?END:VTIMEZONE/.test(s);
   if (refsBerlin && !hasBerlinVTZ) {
     s = s.replace(
       /BEGIN:VCALENDAR\r?\n/,
@@ -285,8 +272,7 @@ function sliceTimedEventPerDay(startJs, endJs) {
     const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
     const sliceStart = cursorStart;
     const sliceEnd = endJs < dayEnd ? endJs : dayEnd;
-    if (sliceEnd > sliceStart)
-      out.push({ start: sliceStart, end: sliceEnd }); // ignore zero-length
+    if (sliceEnd > sliceStart) out.push({ start: sliceStart, end: sliceEnd }); // ignore zero-length
     cursorStart = sliceEnd;
   }
   return out;
@@ -372,10 +358,7 @@ async function main() {
     // Write into global aggregation with sanity filters
     for (const [dKey, agg] of perDay.entries()) {
       const { firstStartMin, lastEndMin } = agg;
-      if (
-        !Number.isFinite(firstStartMin) ||
-        !Number.isFinite(lastEndMin)
-      )
+      if (!Number.isFinite(firstStartMin) || !Number.isFinite(lastEndMin))
         continue;
       if (lastEndMin < firstStartMin) continue;
       if (firstStartMin === 0 && lastEndMin === 0) continue; // defensive
@@ -399,9 +382,9 @@ async function main() {
     days: [],
   };
   for (const dKey of dayKeys) {
-    const items = Array.from(
-      (byDay.get(dKey) || new Map()).values()
-    ).sort((a, b) => a.course.localeCompare(b.course));
+    const items = Array.from((byDay.get(dKey) || new Map()).values()).sort(
+      (a, b) => a.course.localeCompare(b.course)
+    );
     out.days.push({ date: dKey, courses: items });
   }
 
@@ -419,10 +402,7 @@ async function main() {
     }
   }
 
-  debugPrint(
-    out,
-    (process.env.DEBUG_COURSES || '').split(',').filter(Boolean)
-  );
+  debugPrint(out, (process.env.DEBUG_COURSES || '').split(',').filter(Boolean));
 
   await fs.mkdir(OUT_DIR, { recursive: true });
   const outPath = path.join(OUT_DIR, OUT_FILE);
@@ -440,18 +420,14 @@ async function main() {
 
 function debugPrint(outJson, coursesToCheck = [], nearTolMin = 10) {
   if (!coursesToCheck.length) return;
-  const set = new Set(
-    coursesToCheck.map((s) => s.trim().toUpperCase())
-  );
+  const set = new Set(coursesToCheck.map((s) => s.trim().toUpperCase()));
   console.log(
     '\n[DEBUG] Per-day first/last (mins since midnight) + near (±' +
       nearTolMin +
       'm):'
   );
   for (const day of outJson.days) {
-    const me = day.courses.filter((c) =>
-      set.has(c.course.toUpperCase())
-    );
+    const me = day.courses.filter((c) => set.has(c.course.toUpperCase()));
     if (!me.length) continue;
     const label = new Intl.DateTimeFormat('de-DE', {
       weekday: 'short',
@@ -481,9 +457,7 @@ function debugPrint(outJson, coursesToCheck = [], nearTolMin = 10) {
         `${r.course}: ${r.firstStartMin}→${r.lastEndMin} (${hhmm(
           r.firstStartMin
         )}–${hhmm(r.lastEndMin)})  ` +
-        `| Hin≈: [${nearHin.join(', ')}]  | Zurück≈: [${nearRue.join(
-          ', '
-        )}]`
+        `| Hin≈: [${nearHin.join(', ')}]  | Zurück≈: [${nearRue.join(', ')}]`
       );
     });
     console.log(`  ${label}  ` + lines.join('  ||  '));
