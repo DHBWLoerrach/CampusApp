@@ -20,6 +20,8 @@
 - `npm run test`: Run Jest unit tests.
 - `npm run test:watch`: Run Jest in watch mode.
 - `npm run test:ics`: Run the `.ics` parsing script for schedule data.
+- `npm run format`: Format all files with Prettier.
+- `npm run check:format`: Check formatting without writing changes.
 - EAS builds: Use Expo EAS (see `eas.json`) for CI/release builds.
 
 ## Coding Style & Naming Conventions
@@ -29,7 +31,7 @@
 - Constants: PascalCase files; exported constants in UPPER_SNAKE_CASE where appropriate.
 - Path alias `@/*` is available (see `tsconfig.json`).
 - After finishing work, run the following commands and fix any linting or type errors before committing:
-  - Files are formatted: `npx prettier --write`
+  - Files are formatted: `npm run format`
   - Typecheck with `npx tsc --noEmit`
   - Run Linter with `npm run lint`
 - Code comments always in English
