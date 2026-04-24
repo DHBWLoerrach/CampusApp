@@ -55,7 +55,7 @@ const links: {
     url: 'https://moodle.dhbw-loerrach.de/moodle/course/view.php?id=124',
   },
   {
-    title: 'CodeCompanion',
+    title: 'Code Companion',
     icon: 'graduationcap',
     url: codeCompanionUrl,
   },

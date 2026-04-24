@@ -43,10 +43,10 @@ export function CodeCompanionPromoSheetTitle() {
           source={CODE_COMPANION_ICON}
           style={styles.sheetTitleIcon}
           accessibilityRole="image"
-          accessibilityLabel="App-Icon von DHBW CodeCompanion"
+          accessibilityLabel="App-Icon von DHBW Code Companion"
         />
       </View>
-      <ThemedText style={styles.sheetTitleText}>DHBW CodeCompanion</ThemedText>
+      <ThemedText style={styles.sheetTitleText}>DHBW Code Companion</ThemedText>
     </View>
   );
 }
@@ -81,10 +81,10 @@ export default function CodeCompanionPromoSheetContent({
     try {
       await Linking.openURL(url);
     } catch (error) {
-      console.warn('Failed to open CodeCompanion store URL:', error);
+      console.warn('Failed to open Code Companion store URL:', error);
       Alert.alert(
         'Link konnte nicht geöffnet werden',
-        'Der Store-Link für CodeCompanion konnte nicht geöffnet werden.'
+        'Der Store-Link für Code Companion konnte nicht geöffnet werden.'
       );
     }
   };
@@ -94,7 +94,7 @@ export default function CodeCompanionPromoSheetContent({
       <View style={[styles.highlightCard, { backgroundColor: cardBackground }]}>
         <ThemedText style={styles.eyebrow}>DEIN LERNBEGLEITER</ThemedText>
         <ThemedText style={styles.lead}>
-          Mit der App CodeCompanion kannst du Programmierthemen üben und
+          Mit der App Code Companion kannst du Programmierthemen üben und
           vertiefen.
         </ThemedText>
       </View>
@@ -113,8 +113,8 @@ export default function CodeCompanionPromoSheetContent({
               void handleOpenStore(CODE_COMPANION_ANDROID_URL);
             }}
             accessibilityRole="button"
-            accessibilityLabel="CodeCompanion für Android öffnen"
-            accessibilityHint="Öffnet die Android-App von CodeCompanion"
+            accessibilityLabel="Code Companion für Android öffnen"
+            accessibilityHint="Öffnet die Android-App von Code Companion"
           >
             <ThemedText style={styles.primaryButtonText}>
               Bei Google Play öffnen
@@ -132,8 +132,8 @@ export default function CodeCompanionPromoSheetContent({
               void handleOpenStore(CODE_COMPANION_IOS_URL);
             }}
             accessibilityRole="button"
-            accessibilityLabel="CodeCompanion für iOS öffnen"
-            accessibilityHint="Öffnet CodeCompanion im App Store"
+            accessibilityLabel="Code Companion für iOS öffnen"
+            accessibilityHint="Öffnet Code Companion im App Store"
           >
             <ThemedText
               style={
@@ -152,7 +152,7 @@ export default function CodeCompanionPromoSheetContent({
             style={styles.dismissButton}
             onPress={onHideForever}
             accessibilityRole="button"
-            accessibilityLabel="CodeCompanion-Hinweis nicht mehr automatisch anzeigen"
+            accessibilityLabel="Code Companion-Hinweis nicht mehr automatisch anzeigen"
             accessibilityHint="Blendet diesen Hinweis dauerhaft aus"
           >
             <ThemedText
@@ -166,7 +166,7 @@ export default function CodeCompanionPromoSheetContent({
             style={styles.dismissButton}
             onPress={onClose}
             accessibilityRole="button"
-            accessibilityLabel="CodeCompanion-Hinweis schließen"
+            accessibilityLabel="Code Companion-Hinweis schließen"
             accessibilityHint="Schließt diesen Hinweis"
           >
             <ThemedText

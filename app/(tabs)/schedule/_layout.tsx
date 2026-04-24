@@ -71,7 +71,7 @@ export default function ScheduleLayout() {
     setPromoOpen(true);
     setPromoSeenCount((prev) => (prev ?? 0) + 1);
     incrementCodeCompanionPromoSeenCount().catch((error) => {
-      console.warn('Failed to persist CodeCompanion promo seen count:', error);
+      console.warn('Failed to persist Code Companion promo seen count:', error);
     });
   }, [isEligibleCourse, promoDismissed]);
 
@@ -113,7 +113,7 @@ export default function ScheduleLayout() {
           setPromoSeenCount(seenCount);
         }
       } catch (error) {
-        console.warn('Failed to load CodeCompanion promo state:', error);
+        console.warn('Failed to load Code Companion promo state:', error);
         if (mounted) {
           setPromoDismissed(false);
           setPromoSeenCount(0);
@@ -165,7 +165,7 @@ export default function ScheduleLayout() {
       await dismissCodeCompanionPromo();
     } catch (error) {
       setPromoDismissed(false);
-      console.warn('Failed to persist CodeCompanion promo state:', error);
+      console.warn('Failed to persist Code Companion promo state:', error);
     }
   };
 
@@ -193,8 +193,8 @@ export default function ScheduleLayout() {
           <TouchableOpacity
             onPress={showPromo}
             accessibilityRole="button"
-            accessibilityLabel="DHBW CodeCompanion erneut öffnen"
-            accessibilityHint="Öffnet den Hinweis zu DHBW CodeCompanion erneut"
+            accessibilityLabel="DHBW Code Companion erneut öffnen"
+            accessibilityHint="Öffnet den Hinweis zu DHBW Code Companion erneut"
             style={[
               styles.reopenBanner,
               {
@@ -205,7 +205,7 @@ export default function ScheduleLayout() {
             <ThemedText
               style={[styles.reopenBannerText, { color: reopenTextColor }]}
             >
-              Kennst du schon die DHBW App CodeCompanion?
+              Kennst du schon die DHBW App Code Companion?
             </ThemedText>
           </TouchableOpacity>
         ) : null}
@@ -277,7 +277,7 @@ export default function ScheduleLayout() {
         )}
         <BottomSheet
           visible={promoOpen}
-          title="DHBW CodeCompanion"
+          title="DHBW Code Companion"
           titleContent={<CodeCompanionPromoSheetTitle />}
           onClose={closePromo}
         >

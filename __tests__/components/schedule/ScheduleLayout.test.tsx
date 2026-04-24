@@ -101,7 +101,7 @@ jest.mock('@/components/ui/TopTabLabel', () => ({
   default: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-describe('ScheduleLayout CodeCompanion promo', () => {
+describe('ScheduleLayout Code Companion promo', () => {
   let consoleWarnSpy: jest.SpiedFunction<typeof console.warn>;
 
   beforeEach(() => {
@@ -133,7 +133,7 @@ describe('ScheduleLayout CodeCompanion promo', () => {
     const { getByText } = render(<ScheduleLayout />);
 
     await waitFor(() => {
-      expect(getByText('DHBW CodeCompanion')).toBeTruthy();
+      expect(getByText('DHBW Code Companion')).toBeTruthy();
     });
 
     expect(mockIncrementSeenCount).toHaveBeenCalledTimes(1);
@@ -153,7 +153,7 @@ describe('ScheduleLayout CodeCompanion promo', () => {
     });
 
     expect(
-      queryByText('Kennst du schon die DHBW App CodeCompanion?')
+      queryByText('Kennst du schon die DHBW App Code Companion?')
     ).toBeNull();
     expect(queryByText('Nicht mehr automatisch anzeigen')).toBeNull();
     expect(mockIncrementSeenCount).not.toHaveBeenCalled();
@@ -168,9 +168,9 @@ describe('ScheduleLayout CodeCompanion promo', () => {
       expect(mockGetDismissed).toHaveBeenCalledTimes(1);
     });
 
-    expect(queryByText('DHBW CodeCompanion')).toBeNull();
+    expect(queryByText('DHBW Code Companion')).toBeNull();
     expect(
-      queryByText('Kennst du schon die DHBW App CodeCompanion?')
+      queryByText('Kennst du schon die DHBW App Code Companion?')
     ).toBeNull();
     expect(mockIncrementSeenCount).not.toHaveBeenCalled();
   });
@@ -186,13 +186,13 @@ describe('ScheduleLayout CodeCompanion promo', () => {
 
     await waitFor(() => {
       expect(
-        getByText('Kennst du schon die DHBW App CodeCompanion?')
+        getByText('Kennst du schon die DHBW App Code Companion?')
       ).toBeTruthy();
     });
 
     expect(queryByText('Nicht mehr automatisch anzeigen')).toBeNull();
 
-    fireEvent.press(getByText('Kennst du schon die DHBW App CodeCompanion?'));
+    fireEvent.press(getByText('Kennst du schon die DHBW App Code Companion?'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
@@ -210,11 +210,11 @@ describe('ScheduleLayout CodeCompanion promo', () => {
 
     await waitFor(() => {
       expect(
-        getByText('Kennst du schon die DHBW App CodeCompanion?')
+        getByText('Kennst du schon die DHBW App Code Companion?')
       ).toBeTruthy();
     });
 
-    fireEvent.press(getByText('Kennst du schon die DHBW App CodeCompanion?'));
+    fireEvent.press(getByText('Kennst du schon die DHBW App Code Companion?'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
@@ -225,7 +225,7 @@ describe('ScheduleLayout CodeCompanion promo', () => {
     await waitFor(() => {
       expect(mockDismissPromo).toHaveBeenCalledTimes(1);
       expect(
-        getByText('Kennst du schon die DHBW App CodeCompanion?')
+        getByText('Kennst du schon die DHBW App Code Companion?')
       ).toBeTruthy();
     });
   });
