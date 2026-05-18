@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -40,18 +40,6 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
   // Disabled button uses same tint color with reduced opacity (see Welcome screen)
 
   const showOffline = isReady && isOffline;
-
-  // Keep previous courses sorted ascending for display
-  const sortedPreviousCourses = useMemo(
-    () =>
-      [...previousCourses].sort((a, b) =>
-        a.localeCompare(b, 'de', {
-          sensitivity: 'base',
-          numeric: true,
-        })
-      ),
-    [previousCourses]
-  );
 
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
@@ -180,7 +168,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
                     keyboardShouldPersistTaps="handled"
                     keyboardDismissMode="on-drag"
                   >
-                    {sortedPreviousCourses.map((course) => (
+                    {previousCourses.map((course) => (
                       <View
                         key={course}
                         style={[styles.historyItem, { borderColor }]}
