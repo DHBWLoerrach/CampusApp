@@ -136,7 +136,10 @@ async function fetchRawIcalData(course: string): Promise<string> {
   const icalUrl = generateIcalUrl(course);
   const response = await fetch(icalUrl);
   if (!response.ok) {
-    throw new Error(`Network response was not ok: ${response.statusText}`);
+    const statusDetails = response.statusText
+      ? `HTTP ${response.status} ${response.statusText}`
+      : `HTTP ${response.status}`;
+    throw new Error(`Kalender konnte nicht geladen werden (${statusDetails})`);
   }
   return response.text();
 }
