@@ -27,7 +27,7 @@
     "expo-application": "~55.0.15",
     "expo-checkbox": "~55.0.4",
     "expo-constants": "~55.0.7",
-    "expo-dev-client": "~55.0.33",
+    "expo-dev-client": "~55.0.34",
     "expo-font": "~55.0.4",
     "expo-image": "~55.0.10",
     "expo-linking": "~55.0.15",
