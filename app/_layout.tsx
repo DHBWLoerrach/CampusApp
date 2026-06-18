@@ -14,6 +14,9 @@ import {
   useColorSchemeOverride,
 } from '@/context/ColorSchemeContext';
 import { RoleProvider, useRoleContext } from '@/context/RoleContext';
+import { configureQueryOnlineManager } from '@/lib/queryOnlineManager';
+
+configureQueryOnlineManager();
 
 function RootNavigator() {
   const colorScheme = useColorScheme();

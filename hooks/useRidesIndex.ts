@@ -27,5 +27,6 @@ export function useRidesIndex() {
     gcTime: 1000 * 60 * 60 * 48, // 48h
     // Only fetch once a day; don't refetch on mount while fresh
     refetchOnMount: false,
+    refetchOnReconnect: 'always',
   });
 }

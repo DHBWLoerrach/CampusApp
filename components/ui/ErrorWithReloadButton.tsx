@@ -5,14 +5,20 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function ErrorWithReloadButton({
   error,
+  message,
   isFetching,
   refetch,
 }: {
   error: Error;
+  message?: string;
   isFetching: boolean;
   refetch: () => void;
 }) {
   const tintColor = useThemeColor({}, 'tint');
+  const errorMessage =
+    message?.trim() ||
+    error.message.trim() ||
+    'Bitte versuchen Sie es später erneut.';
 
   return (
     <ThemedView style={styles.center}>
@@ -20,7 +26,7 @@ export default function ErrorWithReloadButton({
         Ein Fehler ist aufgetreten:
       </ThemedText>
       <ThemedText style={[styles.errorText, { color: tintColor }]}>
-        {error.message}
+        {errorMessage}
       </ThemedText>
       <View style={{ marginTop: 12 }}>
         <Button

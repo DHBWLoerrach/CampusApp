@@ -27,6 +27,18 @@ describe('ErrorWithReloadButton', () => {
     expect(getByText('Netzwerkfehler')).toBeTruthy();
   });
 
+  it('uses a fallback when the error message is empty', () => {
+    const { getByText } = render(
+      <ErrorWithReloadButton
+        error={new Error('')}
+        isFetching={false}
+        refetch={mockRefetch}
+      />
+    );
+
+    expect(getByText('Bitte versuchen Sie es später erneut.')).toBeTruthy();
+  });
+
   it('shows "Neu laden" button when not fetching', () => {
     const { getByText } = render(
       <ErrorWithReloadButton

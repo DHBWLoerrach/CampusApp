@@ -4,7 +4,6 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 
 // ---- Data hook ----
@@ -182,18 +181,12 @@ export default function RideMatchSheetContent({
 }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [mode, setMode] = useState<MatchMode>('exact');
-  const { data: ridesIndex, isLoading, error, refetch } = useRidesIndex();
-  const { isOnline, isOffline, isReady } = useOnlineStatus();
+  const { data: ridesIndex, isLoading, error } = useRidesIndex();
+  const { isOffline, isReady } = useOnlineStatus();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   // Auto-refresh when the device comes back online
-  useRefetchOnReconnect({
-    isOnline,
-    isReady,
-    onReconnect: () => void refetch(),
-  });
-
   const showOffline = isReady && isOffline;
 
   // Precompute day rows once

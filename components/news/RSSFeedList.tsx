@@ -2,9 +2,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Linking,
   Pressable,
-  Platform,
   RefreshControl,
   StyleSheet,
   View,
@@ -20,7 +18,6 @@ import OfflineBanner from '@/components/ui/OfflineBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
 import { dhbwRed } from '@/constants/Colors';
 import {
   fetchAndParseRSSFeed,
@@ -102,7 +99,7 @@ function ListItem({ item }: { item: Item }) {
 export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const ref = useRef<FlatList>(null);
   useScrollToTop(ref);
-  const { isOnline, isOffline, isReady } = useOnlineStatus();
+  const { isOffline, isReady } = useOnlineStatus();
   const tintColor = useThemeColor({}, 'tint');
   const backgroundColor = useThemeColor({}, 'background');
 
@@ -116,16 +113,10 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     staleTime: 1000 * 60 * 15, // 15 minutes
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
     retry: 1,
+    refetchOnReconnect: 'always',
   });
 
   const items = data?.items ?? [];
-
-  // Auto-refresh when the device comes back online (while this screen is mounted)
-  useRefetchOnReconnect({
-    isOnline,
-    isReady,
-    onReconnect: () => void refetch(),
-  });
 
   const onRefresh = useCallback(() => {
     void refetch();
@@ -143,15 +134,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
   const showOffline = isReady && isOffline;
   const hasItems = items.length > 0;
   if (showOffline && !hasItems) {
-    const onOpenSettings =
-      Platform.OS === 'web'
-        ? undefined
-        : () => {
-            void Linking.openSettings();
-          };
-    return (
-      <OfflineEmptyState onOpenSettings={onOpenSettings} onRetry={onRefresh} />
-    );
+    return <OfflineEmptyState onRetry={onRefresh} />;
   }
 
   // No data + error: show the existing retry UI.

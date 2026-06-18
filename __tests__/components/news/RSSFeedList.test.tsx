@@ -154,11 +154,10 @@ describe('RSSFeedList', () => {
     expect(getByText('Beitrag 1')).toBeTruthy();
   });
 
-  it('refetches when coming back online', () => {
-    const refetch = jest.fn();
+  it('always refetches on reconnect even while cached data is fresh', () => {
     mockUseOnlineStatus.mockReturnValue({
-      isOnline: false,
-      isOffline: true,
+      isOnline: true,
+      isOffline: false,
       isReady: true,
     });
     mockUseQuery.mockReturnValue({
@@ -166,22 +165,16 @@ describe('RSSFeedList', () => {
       error: null,
       isLoading: false,
       isFetching: false,
-      refetch,
-      dataUpdatedAt: 1,
+      refetch: jest.fn(),
+      dataUpdatedAt: 0,
     });
 
-    const { rerender } = render(
-      <RSSFeedList feedUrl="https://example.com/rss" />
+    render(<RSSFeedList feedUrl="https://example.com/rss" />);
+
+    expect(mockUseQuery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        refetchOnReconnect: 'always',
+      })
     );
-
-    // Simulate coming back online
-    mockUseOnlineStatus.mockReturnValue({
-      isOnline: true,
-      isOffline: false,
-      isReady: true,
-    });
-    rerender(<RSSFeedList feedUrl="https://example.com/rss" />);
-
-    expect(refetch).toHaveBeenCalledTimes(1);
   });
 });

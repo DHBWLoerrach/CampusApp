@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Linking,
   Platform,
   ScrollView,
   StyleSheet,
@@ -32,7 +31,6 @@ import { useRoleContext } from '@/context/RoleContext';
 import type { Role } from '@/constants/Roles';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
 
 function resolveMealPrice(
   prices: CanteenMeal['prices'],
@@ -105,7 +103,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const isDark = useColorScheme() === 'dark';
   const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
   const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
-  const { isOnline, isOffline, isReady } = useOnlineStatus();
+  const { isOffline, isReady } = useOnlineStatus();
 
   const { data, isLoading, isFetching, error, refetch } = useQuery<
     { days: CanteenDay[] },
@@ -117,13 +115,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
       const days = normalizeCanteenData(raw);
       return { days };
     },
-  });
-
-  // Auto-refresh when the device comes back online
-  useRefetchOnReconnect({
-    isOnline,
-    isReady,
-    onReconnect: () => void refetch(),
+    refetchOnReconnect: 'always',
   });
 
   const meals: CanteenMeal[] = data?.days
@@ -135,16 +127,9 @@ export default function CanteenDayView({ date }: { date: Date }) {
 
   // Offline + no data: show dedicated empty state
   if (showOffline && !hasData && !isLoading) {
-    const onOpenSettings =
-      Platform.OS === 'web'
-        ? undefined
-        : () => {
-            void Linking.openSettings();
-          };
     return (
       <OfflineEmptyState
         message="Der Speiseplan kann ohne Internetverbindung nicht geladen werden."
-        onOpenSettings={onOpenSettings}
         onRetry={() => void refetch()}
       />
     );

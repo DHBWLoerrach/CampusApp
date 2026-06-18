@@ -13,13 +13,22 @@ import { useTimetable } from '@/hooks/useTimetable';
 import { useCourseContext } from '@/context/CourseContext';
 import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
+import OfflineBanner from '@/components/ui/OfflineBanner';
+import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { toLocalISOString } from '@/lib/utils';
 import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
 import BottomSheet from '@/components/ui/BottomSheet';
 import LinkifiedText from '@/components/ui/LinkifiedText';
 import { ThemedText } from '@/components/ui/ThemedText';
+import {
+  getTimetableErrorMessage,
+  SCHEDULE_OFFLINE_MESSAGE,
+  SCHEDULE_STALE_ERROR_MESSAGE,
+  SCHEDULE_STALE_OFFLINE_MESSAGE,
+} from '@/components/schedule/timetableErrorMessage';
 
 interface CalendarEvent {
   id: string;
@@ -148,6 +157,7 @@ export default function ScheduleCalendarView({
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
     selectedCourse || undefined
   );
+  const { isOffline, isReady } = useOnlineStatus();
   const calendarRef = useRef<CalendarKitHandle>(null);
   const [currentDate, setCurrentDate] = useState(INITIAL_DATE);
 
@@ -366,6 +376,18 @@ export default function ScheduleCalendarView({
     ]
   );
 
+  const showOffline = isReady && isOffline;
+  const hasData = data !== undefined;
+
+  if (showOffline && !hasData) {
+    return (
+      <OfflineEmptyState
+        message={SCHEDULE_OFFLINE_MESSAGE}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
   if (isLoading) {
     return (
       <View style={styles.center}>
@@ -375,10 +397,11 @@ export default function ScheduleCalendarView({
     );
   }
 
-  if (isError) {
+  if (isError && !hasData) {
     return (
       <ErrorWithReloadButton
-        error={error as Error}
+        error={error}
+        message={getTimetableErrorMessage(error)}
         isFetching={isFetching}
         refetch={refetch}
       />
@@ -387,6 +410,18 @@ export default function ScheduleCalendarView({
 
   return (
     <View style={styles.container}>
+      {showOffline && hasData ? (
+        <OfflineBanner
+          message={SCHEDULE_STALE_OFFLINE_MESSAGE}
+          style={styles.banner}
+        />
+      ) : isError && hasData ? (
+        <OfflineBanner
+          title="Nicht aktualisiert"
+          message={SCHEDULE_STALE_ERROR_MESSAGE}
+          style={styles.banner}
+        />
+      ) : null}
       <Header
         currentDate={currentDate}
         onPressToday={_onPressToday}
@@ -422,6 +457,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  banner: {
+    marginHorizontal: 12,
+    marginTop: 8,
+    marginBottom: 4,
   },
   metaRowSmall: {
     flexDirection: 'row',

@@ -1,4 +1,13 @@
-import { __parseIcalForTest } from '@/lib/icalService';
+import {
+  __parseIcalForTest,
+  CalendarError,
+  CalendarErrorCode,
+  getStructuredTimetable,
+} from '@/lib/icalService';
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 function berlinYmd(date: Date): string {
   return new Intl.DateTimeFormat('en-CA', {
@@ -17,6 +26,72 @@ function berlinTime(date: Date): string {
     hour12: false,
   }).format(date);
 }
+
+describe('icalService network errors', () => {
+  it('includes the HTTP status when the calendar response has no status text', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: '',
+    } as Response);
+
+    await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
+      code: CalendarErrorCode.Http,
+      status: 500,
+    });
+  });
+
+  it('preserves the cause of fetch failures', async () => {
+    const cause = new Error('Network failed');
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(global, 'fetch').mockRejectedValue(cause);
+
+    await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
+      code: CalendarErrorCode.Network,
+      cause,
+    });
+  });
+
+  it('does not map aborted requests to calendar network errors', async () => {
+    const abortError = Object.assign(new Error('Aborted'), {
+      name: 'AbortError',
+    });
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(global, 'fetch').mockRejectedValue(abortError);
+
+    await expect(getStructuredTimetable('TIF25A')).rejects.toBe(abortError);
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('maps failures while reading the response body to a network error', async () => {
+    const cause = new Error('Body stream interrupted');
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      text: jest.fn().mockRejectedValue(cause),
+    } as unknown as Response);
+
+    await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
+      code: CalendarErrorCode.Network,
+      cause,
+    });
+  });
+
+  it('preserves the cause of calendar parsing failures', async () => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      text: jest.fn().mockResolvedValue('not an ical document'),
+    } as unknown as Response);
+
+    await expect(getStructuredTimetable('TIF25A')).rejects.toEqual(
+      expect.objectContaining<Partial<CalendarError>>({
+        code: CalendarErrorCode.Parse,
+        cause: expect.anything(),
+      })
+    );
+  });
+});
 
 describe('icalService (DST + multi-day)', () => {
   it('splits all-day events across DST boundaries into correct calendar days', () => {

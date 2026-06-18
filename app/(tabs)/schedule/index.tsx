@@ -1,8 +1,6 @@
 import { useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
-  Linking,
-  Platform,
   RefreshControl,
   SectionList,
   StyleSheet,
@@ -15,13 +13,18 @@ import { useCourseContext } from '@/context/CourseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { useRefetchOnReconnect } from '@/hooks/useRefetchOnReconnect';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
+import {
+  getTimetableErrorMessage,
+  SCHEDULE_OFFLINE_MESSAGE,
+  SCHEDULE_STALE_ERROR_MESSAGE,
+  SCHEDULE_STALE_OFFLINE_MESSAGE,
+} from '@/components/schedule/timetableErrorMessage';
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -49,7 +52,7 @@ export default function ScheduleList() {
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
     selectedCourse || undefined
   );
-  const { isOnline, isOffline, isReady } = useOnlineStatus();
+  const { isOffline, isReady } = useOnlineStatus();
 
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
@@ -57,13 +60,6 @@ export default function ScheduleList() {
   const scheme = useColorScheme();
   const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
-
-  // Auto-refresh when the device comes back online
-  useRefetchOnReconnect({
-    isOnline,
-    isReady,
-    onReconnect: () => void refetch(),
-  });
 
   // useMemo will re-calculate the sections only when the timetable data changes.
   // This is a performance optimization.
@@ -85,6 +81,18 @@ export default function ScheduleList() {
     return futureSections;
   }, [data]);
 
+  const showOffline = isReady && isOffline;
+  const hasData = data !== undefined;
+
+  if (showOffline && !hasData) {
+    return (
+      <OfflineEmptyState
+        message={SCHEDULE_OFFLINE_MESSAGE}
+        onRetry={() => void refetch()}
+      />
+    );
+  }
+
   if (isLoading) {
     return (
       <ThemedView style={styles.center}>
@@ -94,30 +102,11 @@ export default function ScheduleList() {
     );
   }
 
-  // Offline + no data: show dedicated empty state
-  const showOffline = isReady && isOffline;
-  const hasData = sections.length > 0;
-  if (showOffline && !hasData) {
-    const onOpenSettings =
-      Platform.OS === 'web'
-        ? undefined
-        : () => {
-            void Linking.openSettings();
-          };
-    return (
-      <OfflineEmptyState
-        message="Der Vorlesungsplan kann ohne Internetverbindung nicht geladen werden."
-        onOpenSettings={onOpenSettings}
-        onRetry={() => void refetch()}
-      />
-    );
-  }
-
-  // Online + error + no data: show error state
   if (isError && !hasData) {
     return (
       <ErrorWithReloadButton
-        error={error as Error}
+        error={error}
+        message={getTimetableErrorMessage(error)}
         isFetching={isFetching}
         refetch={refetch}
       />
@@ -126,7 +115,18 @@ export default function ScheduleList() {
 
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
-      {showOffline && hasData ? <OfflineBanner style={styles.banner} /> : null}
+      {showOffline && hasData ? (
+        <OfflineBanner
+          message={SCHEDULE_STALE_OFFLINE_MESSAGE}
+          style={styles.banner}
+        />
+      ) : isError && hasData ? (
+        <OfflineBanner
+          title="Nicht aktualisiert"
+          message={SCHEDULE_STALE_ERROR_MESSAGE}
+          style={styles.banner}
+        />
+      ) : null}
       <SectionList
         ref={ref}
         sections={sections}

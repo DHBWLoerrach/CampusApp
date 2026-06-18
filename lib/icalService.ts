@@ -21,6 +21,42 @@ export interface StructuredTimetable {
   [dateKey: string]: TimetableEvent[];
 }
 
+export enum CalendarErrorCode {
+  InvalidCourse = 'INVALID_COURSE',
+  Network = 'NETWORK',
+  Http = 'HTTP',
+  Parse = 'PARSE',
+}
+
+export class CalendarError extends Error {
+  constructor(
+    public readonly code: CalendarErrorCode,
+    options?: {
+      cause?: unknown;
+      status?: number;
+      statusText?: string;
+    }
+  ) {
+    super(code, { cause: options?.cause });
+    this.name = 'CalendarError';
+    this.status = options?.status;
+    this.statusText = options?.statusText;
+  }
+
+  readonly status?: number;
+  readonly statusText?: string;
+}
+
+function isAbortError(error: unknown, signal?: AbortSignal): boolean {
+  if (signal?.aborted) return true;
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'name' in error &&
+    error.name === 'AbortError'
+  );
+}
+
 const CALENDAR_TIMEZONE = 'Europe/Berlin';
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
@@ -132,16 +168,26 @@ export async function validateCourse(course: string): Promise<boolean> {
 /**
  * Fetches the raw iCal data from the specified URL for a given course.
  */
-async function fetchRawIcalData(course: string): Promise<string> {
+async function fetchRawIcalData(
+  course: string,
+  signal?: AbortSignal
+): Promise<string> {
   const icalUrl = generateIcalUrl(course);
-  const response = await fetch(icalUrl);
-  if (!response.ok) {
-    const statusDetails = response.statusText
-      ? `HTTP ${response.status} ${response.statusText}`
-      : `HTTP ${response.status}`;
-    throw new Error(`Kalender konnte nicht geladen werden (${statusDetails})`);
+  try {
+    const response = await fetch(icalUrl, { signal });
+    if (!response.ok) {
+      throw new CalendarError(CalendarErrorCode.Http, {
+        status: response.status,
+        statusText: response.statusText || undefined,
+      });
+    }
+    return await response.text();
+  } catch (error) {
+    if (error instanceof CalendarError) throw error;
+    if (isAbortError(error, signal)) throw error;
+    console.warn('Calendar fetch failed:', error);
+    throw new CalendarError(CalendarErrorCode.Network, { cause: error });
   }
-  return response.text();
 }
 
 /**
@@ -437,15 +483,21 @@ function structureEventsByDay(events: TimetableEvent[]): StructuredTimetable {
  * Orchestrator – fetches, parses and structures the course timetable for a specific course.
  */
 export async function getStructuredTimetable(
-  course: string
+  course: string,
+  signal?: AbortSignal
 ): Promise<StructuredTimetable> {
   if (!course || course.trim() === '') {
-    throw new Error('Kurs muss angegeben werden');
+    throw new CalendarError(CalendarErrorCode.InvalidCourse);
   }
 
-  const raw = await fetchRawIcalData(course.trim());
-  const flatEvents = parseAndTransformIcal(raw);
-  return structureEventsByDay(flatEvents);
+  const raw = await fetchRawIcalData(course.trim(), signal);
+  try {
+    const flatEvents = parseAndTransformIcal(raw);
+    return structureEventsByDay(flatEvents);
+  } catch (error) {
+    console.warn('Calendar parsing failed:', error);
+    throw new CalendarError(CalendarErrorCode.Parse, { cause: error });
+  }
 }
 
 // Test helper: parse raw ICS to flat events (used by local verification script)

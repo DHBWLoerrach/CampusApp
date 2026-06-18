@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getStructuredTimetable, StructuredTimetable } from '@/lib/icalService';
+import {
+  CalendarError,
+  CalendarErrorCode,
+  getStructuredTimetable,
+  StructuredTimetable,
+} from '@/lib/icalService';
 
 /**
  * A custom React Hook to fetch and manage the timetable data for a specific course.
@@ -7,14 +12,14 @@ import { getStructuredTimetable, StructuredTimetable } from '@/lib/icalService';
  */
 export function useTimetable(course?: string) {
   const normalizedCourse = course?.trim() || undefined;
-  return useQuery<StructuredTimetable, Error>({
+  return useQuery<StructuredTimetable, CalendarError>({
     // We specify the success and error types
     queryKey: ['schedule', normalizedCourse], // Include course in the key for proper caching per course
-    queryFn: () => {
+    queryFn: ({ signal }) => {
       if (!normalizedCourse) {
-        throw new Error('Kein Kurs ausgewählt');
+        throw new CalendarError(CalendarErrorCode.InvalidCourse);
       }
-      return getStructuredTimetable(normalizedCourse);
+      return getStructuredTimetable(normalizedCourse, signal);
     },
 
     // Only run the query if we have a course
@@ -23,10 +28,13 @@ export function useTimetable(course?: string) {
     // Caching configuration:
     staleTime: 1000 * 60 * 60 * 4, // Data is considered "fresh" for 4 hours. No refetch on mount.
     gcTime: 1000 * 60 * 60 * 12, // Data stays in cache for 12 hours after being unused.
+    retry: (failureCount, error) =>
+      error.code === CalendarErrorCode.Network && failureCount < 2,
 
     // Always refetch when a component mounts/subscribes (e.g., after switching courses),
     // even if cache is still fresh according to staleTime. This guarantees up-to-date data
     // when the user switches between different courses.
     refetchOnMount: 'always',
+    refetchOnReconnect: 'always',
   });
 }
