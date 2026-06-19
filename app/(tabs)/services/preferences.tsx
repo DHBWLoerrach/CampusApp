@@ -14,7 +14,7 @@ export default function PreferencesScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
         <ThemedView style={styles.content}>
           {/* Card: Dark Mode preference */}
           <ThemedView style={[styles.card, { borderColor }]}>
@@ -66,14 +66,10 @@ const styles = StyleSheet.create({
   // Card base style used to visually separate settings
   card: {
     borderRadius: 12,
+    borderCurve: 'continuous',
     padding: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    // Subtle shadow for iOS and elevation for Android
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 2,
+    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
   },
   cardTitle: {
     fontSize: 16,

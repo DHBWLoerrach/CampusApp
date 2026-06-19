@@ -34,6 +34,7 @@ export default function NfcTriggerCard({ onPress }: Props) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
+    borderCurve: 'continuous',
     padding: 12,
   },
   row: {
@@ -46,9 +47,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   elevated: {
-    elevation: 3,
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
 });

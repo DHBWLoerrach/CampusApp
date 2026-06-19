@@ -175,6 +175,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
         </>
       ) : (
         <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={styles.listContent}
           stickyHeaderIndices={
             showNfcHeader ? [showOffline ? 1 : 0] : undefined
@@ -359,13 +360,11 @@ const styles = StyleSheet.create({
 
   card: {
     borderRadius: 12,
+    borderCurve: 'continuous',
     padding: 14,
   },
   elevated: {
-    elevation: 3,
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   cardHeader: {
     flexDirection: 'row',

@@ -11,6 +11,8 @@ interface LectureCardProps {
   event: TimetableEvent;
 }
 
+const CARD_BOX_SHADOW = '0 1px 2px rgba(0, 0, 0, 0.15)';
+
 // Helper to format time range in German format (e.g., 09:00–12:15)
 const formatTimeRange = (start: Date, end: Date) => {
   const startTime = start.toLocaleTimeString('de-DE', {
@@ -65,8 +67,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
         {
           backgroundColor: cardBg,
           borderColor,
-          shadowOpacity: scheme === 'dark' ? 0 : styles.card.shadowOpacity,
-          elevation: scheme === 'dark' ? 0 : styles.card.elevation,
+          boxShadow: scheme === 'dark' ? 'none' : CARD_BOX_SHADOW,
         },
       ]}
     >
@@ -271,14 +272,10 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
 const styles = StyleSheet.create({
   card: {
     borderRadius: 8,
+    borderCurve: 'continuous',
     padding: 12,
     marginBottom: 8,
     borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 1.41,
-    elevation: 2,
   },
   metaRow: {
     flexDirection: 'row',

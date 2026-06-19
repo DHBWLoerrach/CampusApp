@@ -50,6 +50,7 @@ export default function SafetyScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
   card: {
     width: '48%',
     borderRadius: 14,
+    borderCurve: 'continuous',
     overflow: 'hidden',
     height: 100,
   },

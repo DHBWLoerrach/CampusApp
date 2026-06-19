@@ -129,6 +129,7 @@ export default function ScheduleList() {
       ) : null}
       <SectionList
         ref={ref}
+        contentInsetAdjustmentBehavior="automatic"
         sections={sections}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item) => item.uid}

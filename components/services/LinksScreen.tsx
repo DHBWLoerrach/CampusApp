@@ -56,6 +56,7 @@ export default function LinksScreen({
     <ThemedView style={styles.container}>
       <FlatList
         data={links}
+        contentInsetAdjustmentBehavior="automatic"
         renderItem={({ item }) => <LinkItem item={item} />}
         keyExtractor={(item) => item.title}
         contentContainerStyle={styles.listContent}
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderRadius: 12,
+    borderCurve: 'continuous',
     marginBottom: 8,
     borderWidth: StyleSheet.hairlineWidth,
   },

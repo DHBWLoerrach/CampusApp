@@ -1,12 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  Image,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import InfoModal from '@/components/services/InfoModal';
@@ -37,14 +30,8 @@ function ServiceCard({
         {
           backgroundColor: cardBg,
           borderColor: borderColor,
-          /* iOS */
-          shadowColor: '#000000',
-          shadowOpacity: 0.15,
-          shadowRadius: 10,
-          shadowOffset: { width: 0, height: 4 },
-          /* Android */
-          elevation: Platform.OS === 'android' ? 4 : 0,
-          opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.15)',
+          opacity: process.env.EXPO_OS === 'ios' && pressed ? 0.7 : 1,
         },
       ]}
       onPress={onPress}
@@ -178,6 +165,7 @@ export default function ServicesScreen() {
     <ThemedView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -273,6 +261,7 @@ const styles = StyleSheet.create({
     width: 114,
     minHeight: 88,
     borderRadius: 12,
+    borderCurve: 'continuous',
     borderWidth: 0.5,
   },
   cardContent: {
@@ -297,5 +286,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '70%',
     borderRadius: 12,
+    borderCurve: 'continuous',
   },
 });

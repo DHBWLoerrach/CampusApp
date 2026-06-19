@@ -54,16 +54,13 @@ const styles = StyleSheet.create({
   },
   content: {
     borderRadius: 20,
+    borderCurve: 'continuous',
     paddingTop: 52,
     paddingHorizontal: 20,
     paddingBottom: 28,
     maxHeight: '88%',
     width: '100%',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 12,
+    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
   },
   closeBtn: {
     position: 'absolute',
