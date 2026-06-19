@@ -156,16 +156,16 @@ export function summarizeAllergensAndLabels(
   const src = `${labels ?? ''} ${allergens ?? ''}`.toLowerCase().trim();
   if (!src) return undefined;
 
-  // Helper to test presence while avoiding "-frei" false positives
-  const has = (re: RegExp) =>
-    re.test(src) && !/(gluten\s*frei|laktose\s*frei|milch\s*frei)/i.test(src);
+  // Strip "-frei" claims (e.g. "glutenfrei", "laktosefreie") so a "free-from"
+  // note for one allergen does not hide unrelated allergens that are present.
+  const cleaned = src.replace(/[a-zäöüß]+\s*frei[a-zäöüß]*/gi, ' ');
+
+  // Helper to test presence on the cleaned text
+  const has = (re: RegExp) => re.test(cleaned);
 
   const foundAllergens: string[] = [];
   // Group gluten-related cereals under "Gluten"
-  if (
-    has(/gluten|weizen|roggen|gerste|dinkel|hafer/) &&
-    !/gluten\s*frei/i.test(src)
-  )
+  if (has(/gluten|weizen|roggen|gerste|dinkel|hafer/))
     foundAllergens.push('Gluten');
   if (has(/milch|laktose/)) foundAllergens.push('Milch');
   if (has(/ei(er)?\b/)) foundAllergens.push('Ei');
