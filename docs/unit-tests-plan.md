@@ -161,7 +161,7 @@ In `jest.config.js` oder `package.json` ggf. `transformIgnorePatterns` anpassen 
 **Mocking-Strategie:**
 
 - `AsyncStorage` → `@react-native-async-storage/async-storage/jest/async-storage-mock`
-- Navigation → `jest.mock('@react-navigation/native')`
+- Navigation → `jest.mock('expo-router/react-navigation')`
 - Context-Provider wrappen für Theme/Role/Course
 
 ### 5.4 Beispiel-Teststruktur

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -12,6 +12,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function BottomSheet({
   visible,
@@ -30,12 +32,9 @@ export default function BottomSheet({
   const insets = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
   const [isMounted, setIsMounted] = useState(visible);
-  const sheetProgress = useRef(new Animated.Value(visible ? 0 : 1)).current;
-  const backdropOpacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const [sheetProgress] = useState(() => new Animated.Value(visible ? 0 : 1));
+  const [backdropOpacity] = useState(() => new Animated.Value(visible ? 1 : 0));
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const AnimatedPressable = useRef(
-    Animated.createAnimatedComponent(Pressable)
-  ).current;
 
   useEffect(() => {
     if (closeTimeout.current) {
@@ -44,6 +43,8 @@ export default function BottomSheet({
     }
 
     if (visible && !isMounted) {
+      // The sheet must be mounted before the opening animation can run.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsMounted(true);
       return;
     }
@@ -97,10 +98,14 @@ export default function BottomSheet({
     };
   }, [visible, isMounted, sheetProgress, backdropOpacity]);
 
-  const sheetTranslateY = sheetProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, Math.max(0, screenHeight)],
-  });
+  const sheetTranslateY = useMemo(
+    () =>
+      sheetProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, Math.max(0, screenHeight)],
+      }),
+    [screenHeight, sheetProgress]
+  );
 
   return (
     <Modal

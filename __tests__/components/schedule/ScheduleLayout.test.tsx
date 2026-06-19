@@ -17,7 +17,7 @@ jest.mock('expo-router', () => ({
   withLayoutContext: (Navigator: any) => Navigator,
 }));
 
-jest.mock('@react-navigation/material-top-tabs', () => {
+jest.mock('expo-router/js-top-tabs', () => {
   const React = require('react');
   const { View, Text } = require('react-native');
 

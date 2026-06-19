@@ -4,7 +4,7 @@ import {
   createMaterialTopTabNavigator,
   MaterialTopTabBar,
   type MaterialTopTabBarProps,
-} from '@react-navigation/material-top-tabs';
+} from 'expo-router/js-top-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { topTabBarOptions } from '@/constants/Navigation';
@@ -133,6 +133,8 @@ export default function ScheduleLayout() {
 
     if (promoDismissed === true || !isEligibleCourse) {
       if (promoOpen) {
+        // Close the sheet when the selected course can no longer show this promo.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPromoOpen(false);
       }
       promoOpenRef.current = false;

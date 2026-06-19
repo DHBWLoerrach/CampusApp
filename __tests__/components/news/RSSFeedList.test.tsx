@@ -21,7 +21,7 @@ jest.mock('expo-image', () => ({
   Image: 'Image',
 }));
 
-jest.mock('@react-navigation/native', () => ({
+jest.mock('expo-router/react-navigation', () => ({
   useScrollToTop: jest.fn(),
 }));
 

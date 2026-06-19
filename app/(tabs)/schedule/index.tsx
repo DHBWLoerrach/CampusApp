@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop } from 'expo-router/react-navigation';
 import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/schedule/LectureCard';
 import { useCourseContext } from '@/context/CourseContext';
