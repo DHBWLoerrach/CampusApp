@@ -229,6 +229,7 @@ export default function ServicesScreen() {
       >
         <ScrollView
           style={styles.scroll}
+          contentInsetAdjustmentBehavior="never"
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={true}
         >

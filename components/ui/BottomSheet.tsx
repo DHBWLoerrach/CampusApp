@@ -143,6 +143,7 @@ export default function BottomSheet({
         </View>
         <ScrollView
           style={styles.content}
+          contentInsetAdjustmentBehavior="never"
           contentContainerStyle={{ paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
         >
