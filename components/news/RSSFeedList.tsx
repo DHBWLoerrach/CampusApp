@@ -17,6 +17,7 @@ import { ThemedView } from '@/components/ui/ThemedView';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { dhbwRed } from '@/constants/Colors';
 import {
@@ -41,6 +42,8 @@ const handleOpen = async (url: string) => {
 
 function ListItem({ item }: { item: Item }) {
   const thumb = item.enclosures?.[0]?.url;
+  const colorScheme = useColorScheme();
+  const borderColor = useThemeColor({}, 'border');
   const now = new Date();
 
   const publishedDate = item.published ? new Date(item.published) : null;
@@ -56,8 +59,6 @@ function ListItem({ item }: { item: Item }) {
         })
     : '—';
 
-  const shadowColor = useThemeColor({}, 'text');
-
   return (
     <Pressable
       accessibilityRole="link"
@@ -66,7 +67,12 @@ function ListItem({ item }: { item: Item }) {
       hitSlop={8}
     >
       <ThemedView
-        style={[styles.card, { shadowColor }]}
+        style={[
+          styles.card,
+          colorScheme === 'dark'
+            ? [styles.cardDark, { borderColor }]
+            : styles.cardLight,
+        ]}
         lightColor="#fff"
         darkColor="#333"
       >
@@ -168,6 +174,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
       <FlatList
         ref={ref}
         data={items}
+        contentInsetAdjustmentBehavior="automatic"
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => <ListItem item={item} />}
         contentContainerStyle={styles.listContent}
@@ -210,12 +217,15 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     borderRadius: 12,
+    borderCurve: 'continuous',
     marginBottom: 16,
     minHeight: CARD_H,
-    elevation: 5,
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+  },
+  cardLight: {
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.15)',
+  },
+  cardDark: {
+    borderWidth: StyleSheet.hairlineWidth,
   },
   thumb: {
     width: CARD_H,
