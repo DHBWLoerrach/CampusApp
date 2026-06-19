@@ -1,7 +1,7 @@
 // Fallback for using MaterialIcons and MaterialCommunityIcons on Android and web.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons/static';
+import MaterialCommunityIcons from '@react-native-vector-icons/material-design-icons/static';
 import { ComponentProps } from 'react';
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
 

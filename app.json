@@ -58,7 +58,9 @@
       "expo-web-browser",
       "expo-sqlite",
       "expo-font",
-      "expo-image"
+      "expo-image",
+      "@react-native-vector-icons/material-icons",
+      "@react-native-vector-icons/material-design-icons"
     ],
     "experiments": {
       "typedRoutes": true,
