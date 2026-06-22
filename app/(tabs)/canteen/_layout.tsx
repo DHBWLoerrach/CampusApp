@@ -1,58 +1,112 @@
-import { createMaterialTopTabNavigator } from 'expo-router/js-top-tabs';
-import { withLayoutContext } from 'expo-router';
-import { addDays, format } from 'date-fns';
-import { de } from 'date-fns/locale';
-import { weekdayDates } from '@/lib/canteenService';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { topTabBarOptions } from '@/constants/Navigation';
-import TopTabLabel from '@/components/ui/TopTabLabel';
+import { useState } from 'react';
+import { Stack } from 'expo-router';
+import { View } from 'react-native';
+import BottomSheet from '@/components/ui/BottomSheet';
+import HeaderIconButton from '@/components/ui/HeaderIconButton';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ThemedText } from '@/components/ui/ThemedText';
+import { navBarOptions } from '@/constants/Navigation';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
-const Tab = createMaterialTopTabNavigator();
-const TopTabs = withLayoutContext(Tab.Navigator);
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 30, // 30 minutes
-      gcTime: 1000 * 60 * 60 * 6, // 6 hours
-      retry: 1,
-    },
-  },
-});
-
-function titleForIndex(index: number) {
-  const dates = weekdayDates(5);
-  const d = dates[index];
-  if (!(d instanceof Date) || isNaN(d.getTime())) return '—';
-  const todayKey = format(new Date(), 'yyyy-MM-dd');
-  const tomorrowKey = format(addDays(new Date(), 1), 'yyyy-MM-dd');
-  const key = format(d, 'yyyy-MM-dd');
-  if (key === todayKey) return 'Heute';
-  if (key === tomorrowKey) return 'Morgen';
-  return format(d, 'EE', { locale: de }).replace('.', '');
-}
-
-export default function CanteenLayout() {
-  const enhancedTabBarOptions = {
-    ...topTabBarOptions,
-    swipeEnabled: true,
-    tabBarItemStyle: { flex: 1, paddingHorizontal: 0 },
-    tabBarLabel: (props: {
-      focused: boolean;
-      children: string;
-      color?: string;
-    }) => <TopTabLabel {...props} />,
-  };
+export default function CanteenStackLayout() {
+  const [canteenInfoOpen, setCanteenInfoOpen] = useState(false);
+  const textColor = useThemeColor({}, 'text');
+  const tintColor = useThemeColor({}, 'tint');
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TopTabs screenOptions={enhancedTabBarOptions}>
-        <TopTabs.Screen name="index" options={{ title: titleForIndex(0) }} />
-        <TopTabs.Screen name="day1" options={{ title: titleForIndex(1) }} />
-        <TopTabs.Screen name="day2" options={{ title: titleForIndex(2) }} />
-        <TopTabs.Screen name="day3" options={{ title: titleForIndex(3) }} />
-        <TopTabs.Screen name="day4" options={{ title: titleForIndex(4) }} />
-      </TopTabs>
-    </QueryClientProvider>
+    <>
+      <Stack screenOptions={navBarOptions}>
+        <Stack.Screen
+          name="(sections)"
+          options={{
+            title: 'Mensa',
+            headerRight: () => (
+              <HeaderIconButton
+                onPress={() => setCanteenInfoOpen(true)}
+                name="clock"
+                color={tintColor}
+                accessibilityLabel="Mensa-Informationen anzeigen"
+                accessibilityHint="Blendet Infos zur Mensa Campus Hangstraße ein"
+              />
+            ),
+          }}
+        />
+      </Stack>
+      <BottomSheet
+        visible={canteenInfoOpen}
+        title="Mensa Hangstraße"
+        onClose={() => setCanteenInfoOpen(false)}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
+          >
+            <IconSymbol name="clock" size={20} color={textColor} />
+          </View>
+          <ThemedText accessibilityLabel="Öffnungszeiten: Montag bis Freitag neun Uhr dreißig bis dreizehn Uhr fünfundvierzig">
+            Mo–Fr 9:30–13:45
+          </ThemedText>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 8,
+          }}
+        >
+          <View
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
+          >
+            <IconSymbol name="fork.knife" size={20} color={textColor} />
+          </View>
+          <ThemedText accessibilityLabel="Essensausgabe: elf Uhr fünfundvierzig bis dreizehn Uhr dreißig">
+            Ausgabe 11:45–13:30
+          </ThemedText>
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 10,
+          }}
+        >
+          <View
+            accessible={false}
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            style={{
+              width: 24,
+              alignItems: 'center',
+              marginRight: 8,
+            }}
+          >
+            <IconSymbol name="eurosign" size={20} color={textColor} />
+          </View>
+          <ThemedText style={{ flexShrink: 1 }}>
+            Preise je nach Personengruppe – ändern unter{' '}
+            <ThemedText style={{ fontStyle: 'italic' }}>
+              Services &gt; Einstellungen
+            </ThemedText>
+            .
+          </ThemedText>
+        </View>
+      </BottomSheet>
+    </>
   );
 }

@@ -1,26 +1,10 @@
-import { createMaterialTopTabNavigator } from 'expo-router/js-top-tabs';
-import { withLayoutContext } from 'expo-router';
-import { topTabBarOptions } from '@/constants/Navigation';
-import TopTabLabel from '@/components/ui/TopTabLabel';
+import { Stack } from 'expo-router';
+import { navBarOptions } from '@/constants/Navigation';
 
-const Tab = createMaterialTopTabNavigator();
-const TopTabs = withLayoutContext(Tab.Navigator);
-
-export default function NewsLayout() {
-  const enhancedTabBarOptions = {
-    ...topTabBarOptions,
-    swipeEnabled: true,
-    tabBarLabel: (props: {
-      focused: boolean;
-      children: string;
-      color?: string;
-    }) => <TopTabLabel {...props} />,
-  };
-
+export default function NewsStackLayout() {
   return (
-    <TopTabs screenOptions={enhancedTabBarOptions}>
-      <TopTabs.Screen name="index" options={{ title: 'Aktuelles' }} />
-      <TopTabs.Screen name="events" options={{ title: 'Termine' }} />
-    </TopTabs>
+    <Stack screenOptions={navBarOptions}>
+      <Stack.Screen name="(sections)" options={{ title: 'DHBW Lörrach' }} />
+    </Stack>
   );
 }

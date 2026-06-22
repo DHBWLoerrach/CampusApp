@@ -25,7 +25,7 @@ describe('TopTabLabel', () => {
     const { getByText } = render(
       <TopTabLabel focused={false}>Tab</TopTabLabel>
     );
-    expect(getByText('Tab').props.style.opacity).toBe(0.7);
+    expect(getByText('Tab').props.style.opacity).toBe(0.82);
   });
 
   it('uses custom color when provided', () => {
@@ -37,8 +37,8 @@ describe('TopTabLabel', () => {
     expect(getByText('Tab').props.style.color).toBe('red');
   });
 
-  it('defaults to white color', () => {
+  it('defaults to neutral color', () => {
     const { getByText } = render(<TopTabLabel focused={true}>Tab</TopTabLabel>);
-    expect(getByText('Tab').props.style.color).toBe('white');
+    expect(getByText('Tab').props.style.color).toBe('#5C6971');
   });
 });

@@ -1,5 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
-import ScheduleLayout from '@/app/(tabs)/schedule/_layout';
+import ScheduleLayout from '@/app/(tabs)/schedule/(sections)/_layout';
 
 const mockStorageGetItem = jest.fn();
 const mockUseCourseContext = jest.fn();
@@ -14,6 +14,7 @@ jest.mock('expo-sqlite/kv-store', () => ({
 }));
 
 jest.mock('expo-router', () => ({
+  useIsFocused: () => true,
   withLayoutContext: (Navigator: any) => Navigator,
 }));
 

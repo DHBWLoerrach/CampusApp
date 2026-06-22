@@ -6,24 +6,20 @@ import {
   LAST_SCHEDULE_SUBTAB_KEY,
   LAST_TAB_KEY,
 } from '@/constants/StorageKeys';
+import {
+  getRootTabHref,
+  getScheduleSubTabHref,
+  isRootTabName,
+  isScheduleSubTabName,
+  type RootTabName,
+  type ScheduleSubTabName,
+} from '@/constants/Navigation';
 
 export default function Page() {
   const { selectedRole, acceptedTerms, isLoading } = useRoleContext();
-  type TabName = 'news' | 'schedule' | 'canteen' | 'services';
-  type ScheduleSubTab = 'index' | 'week' | 'day';
-  type TabHref =
-    | '/(tabs)/news'
-    | '/(tabs)/schedule'
-    | '/(tabs)/canteen'
-    | '/(tabs)/services';
-  type ScheduleHref =
-    | '/(tabs)/schedule'
-    | '/(tabs)/schedule/week'
-    | '/(tabs)/schedule/day';
-
-  const [lastTab, setLastTab] = useState<TabName | null>(null);
+  const [lastTab, setLastTab] = useState<RootTabName | null>(null);
   const [lastScheduleSubTab, setLastScheduleSubTab] =
-    useState<ScheduleSubTab | null>(null);
+    useState<ScheduleSubTabName | null>(null);
 
   // Read last tab so the initial redirect lands on it
   useEffect(() => {
@@ -32,31 +28,14 @@ export default function Page() {
       try {
         const saved = await Storage.getItem(LAST_TAB_KEY);
         if (!mounted) return;
-        const allowed: readonly TabName[] = [
-          'news',
-          'schedule',
-          'canteen',
-          'services',
-        ];
-        setLastTab(
-          saved && (allowed as readonly string[]).includes(saved)
-            ? (saved as TabName)
-            : 'news'
-        );
+        setLastTab(saved && isRootTabName(saved) ? saved : 'news');
         // If schedule is the last tab, also read which sub-tab was active
         if (saved === 'schedule') {
           const sub = (await Storage.getItem(LAST_SCHEDULE_SUBTAB_KEY)) as
             | string
             | null;
-          const allowedSubs: readonly ScheduleSubTab[] = [
-            'index',
-            'week',
-            'day',
-          ];
           setLastScheduleSubTab(
-            sub && (allowedSubs as readonly string[]).includes(sub)
-              ? (sub as ScheduleSubTab)
-              : 'index'
+            sub && isScheduleSubTabName(sub) ? sub : 'index'
           );
         } else {
           setLastScheduleSubTab(null);
@@ -80,20 +59,9 @@ export default function Page() {
     // Wait for sub-tab read
     return null;
   }
-  const hrefMap: Record<TabName, TabHref> = {
-    news: '/(tabs)/news',
-    schedule: '/(tabs)/schedule',
-    canteen: '/(tabs)/canteen',
-    services: '/(tabs)/services',
-  };
   if (lastTab !== 'schedule') {
-    return <Redirect href={hrefMap[lastTab]} />;
+    return <Redirect href={getRootTabHref(lastTab)} />;
   }
-  const scheduleHrefMap: Record<ScheduleSubTab, ScheduleHref> = {
-    index: '/(tabs)/schedule',
-    week: '/(tabs)/schedule/week',
-    day: '/(tabs)/schedule/day',
-  };
   const target = lastScheduleSubTab ?? 'index';
-  return <Redirect href={scheduleHrefMap[target]} />;
+  return <Redirect href={getScheduleSubTabHref(target)} />;
 }

@@ -22,7 +22,7 @@ export default function WelcomeScreen() {
   const onStart = async () => {
     if (!disclaimerChecked || !pendingRole) return;
     await Promise.all([setSelectedRole(pendingRole), setAcceptedTerms(true)]);
-    router.replace('/(tabs)/news');
+    router.replace('/news');
   };
 
   const disabled = !disclaimerChecked || !pendingRole;

@@ -11,9 +11,10 @@ export default function TopTabLabel({ focused, children, color }: Props) {
     <Text
       numberOfLines={1}
       style={{
-        color: color ?? 'white',
-        opacity: focused ? 1 : 0.7,
+        color: color ?? '#5C6971',
+        opacity: focused ? 1 : 0.82,
         fontSize: 14,
+        fontWeight: focused ? '700' : '500',
       }}
     >
       {children}
