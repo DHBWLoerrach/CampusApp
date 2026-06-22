@@ -29,14 +29,14 @@ function titleForIndex(index: number) {
   const key = format(d, 'yyyy-MM-dd');
   if (key === todayKey) return 'Heute';
   if (key === tomorrowKey) return 'Morgen';
-  return format(d, 'EEE dd.MM', { locale: de });
+  return format(d, 'EE', { locale: de }).replace('.', '');
 }
 
 export default function CanteenLayout() {
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
     swipeEnabled: true,
-    tabBarItemStyle: { paddingHorizontal: 0 },
+    tabBarItemStyle: { flex: 1, paddingHorizontal: 0 },
     tabBarLabel: (props: {
       focused: boolean;
       children: string;

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { de } from 'date-fns/locale';
 import {
   CanteenDay,
   CanteenMeal,
@@ -92,13 +93,29 @@ function extractMealTags(meal: CanteenMeal): MealTag[] {
   return tags;
 }
 
+function CanteenDateHeader({
+  date,
+  borderColor,
+}: {
+  date: Date;
+  borderColor: string;
+}) {
+  return (
+    <View style={[styles.dateHeader, { borderBottomColor: borderColor }]}>
+      <ThemedText type="defaultSemiBold" style={styles.dateHeaderTitle}>
+        {format(date, 'EEEE, d. MMMM', { locale: de })}
+      </ThemedText>
+    </View>
+  );
+}
+
 export default function CanteenDayView({ date }: { date: Date }) {
   const safeDate =
     date instanceof Date && !isNaN(date.getTime()) ? date : new Date();
   const { selectedRole } = useRoleContext();
   const tintColor = useThemeColor({}, 'tint');
   const badgeBg = useThemeColor({}, 'dayNumberContainer');
-  const badgeBorder = useThemeColor({}, 'border');
+  const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
   const isDark = useColorScheme() === 'dark';
   const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
@@ -128,15 +145,19 @@ export default function CanteenDayView({ date }: { date: Date }) {
   // Offline + no data: show dedicated empty state
   if (showOffline && !hasData && !isLoading) {
     return (
-      <OfflineEmptyState
-        message="Der Speiseplan kann ohne Internetverbindung nicht geladen werden."
-        onRetry={() => void refetch()}
-      />
+      <ThemedView style={styles.container}>
+        <CanteenDateHeader date={safeDate} borderColor={borderColor} />
+        <OfflineEmptyState
+          message="Der Speiseplan kann ohne Internetverbindung nicht geladen werden."
+          onRetry={() => void refetch()}
+        />
+      </ThemedView>
     );
   }
 
   return (
     <ThemedView style={styles.container}>
+      <CanteenDateHeader date={safeDate} borderColor={borderColor} />
       {isLoading ? (
         <View style={styles.center}>
           <ActivityIndicator />
@@ -249,7 +270,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
                         styles.priceBadge,
                         {
                           backgroundColor: badgeBg,
-                          borderColor: badgeBorder,
+                          borderColor,
                         },
                       ]}
                       accessibilityLabel={`Preis: ${price.display}`}
@@ -356,6 +377,17 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 24,
     gap: 12,
+  },
+  dateHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  dateHeaderTitle: {
+    fontSize: 16,
+    lineHeight: 22,
   },
 
   card: {
