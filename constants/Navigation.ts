@@ -5,6 +5,10 @@ export const navBarOptions = {
   headerStyle: {
     backgroundColor: 'transparent',
   },
+  headerTitleStyle: {
+    fontSize: 20,
+    fontWeight: '700' as const,
+  },
   headerShadowVisible: false,
   tabBarActiveTintColor: dhbwRed,
 };

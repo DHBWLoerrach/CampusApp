@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Stack } from 'expo-router';
-import { TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -68,15 +68,18 @@ export default function ScheduleStackLayout() {
                         alignItems: 'center',
                       }}
                     >
-                      <ThemedText
+                      <Text
+                        numberOfLines={1}
                         style={{
-                          color: textColor,
+                          color: tintColor,
+                          fontSize: 15,
                           fontWeight: '700',
+                          lineHeight: 22,
                           marginRight: 6,
                         }}
                       >
                         {scheduleTitle}
-                      </ThemedText>
+                      </Text>
                       <IconSymbol
                         name="chevron.down"
                         size={14}
