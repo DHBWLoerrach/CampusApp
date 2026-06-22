@@ -7,7 +7,11 @@ import {
 } from 'expo-router/js-top-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { topTabBarOptions } from '@/constants/Navigation';
+import {
+  topTabBarOptions,
+  isScheduleSubTabName,
+  type ScheduleSubTabName,
+} from '@/constants/Navigation';
 import BottomSheet from '@/components/ui/BottomSheet';
 import CourseSetup from '@/components/schedule/CourseSetup';
 import CodeCompanionPromoSheetContent, {
@@ -43,12 +47,12 @@ const queryClient = new QueryClient({
   },
 });
 
-type SubTabName = 'index' | 'week' | 'day';
-
 export default function ScheduleLayout() {
   const { selectedCourse, setSelectedCourse, isLoading } = useCourseContext();
   const isFocused = useIsFocused();
-  const [initialSubTab, setInitialSubTab] = useState<SubTabName | null>(null);
+  const [initialSubTab, setInitialSubTab] = useState<ScheduleSubTabName | null>(
+    null
+  );
   const [promoDismissed, setPromoDismissed] = useState<boolean | null>(null);
   const [promoSeenCount, setPromoSeenCount] = useState<number | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
@@ -85,11 +89,8 @@ export default function ScheduleLayout() {
           | string
           | null;
         if (!mounted) return;
-        const allowed: readonly SubTabName[] = ['index', 'week', 'day'];
         setInitialSubTab(
-          saved && (allowed as readonly string[]).includes(saved)
-            ? (saved as SubTabName)
-            : 'index'
+          saved && isScheduleSubTabName(saved) ? saved : 'index'
         );
       } catch {
         if (mounted) setInitialSubTab('index');
@@ -178,6 +179,15 @@ export default function ScheduleLayout() {
     }
   };
 
+  // Persist the focused sub-tab and keep local state in sync so a remount
+  // (e.g. after course change, which toggles CourseSetup/TopTabs) restores the
+  // last viewed sub-tab. Guarded so re-focusing the active tab does not trigger
+  // a redundant render.
+  const persistSubTab = useCallback((name: ScheduleSubTabName) => {
+    Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, name).catch(() => {});
+    setInitialSubTab((prev) => (prev === name ? prev : name));
+  }, []);
+
   // Enhanced tab options with course display
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
@@ -238,46 +248,27 @@ export default function ScheduleLayout() {
           // Show tabs when course is selected
           <TopTabs
             screenOptions={enhancedTabBarOptions}
+            // Restore the last viewed sub-tab. Two entry paths rely on this:
+            // a cold start arrives via the /schedule/<sub> redirect
+            // (app/index.tsx), while a remount after course selection has no
+            // navigation event, so initialRouteName carries the persisted value.
             initialRouteName={initialSubTab}
             tabBar={renderTabBar}
           >
             <TopTabs.Screen
               name="index"
               options={{ title: 'Liste' }}
-              listeners={{
-                focus: () => {
-                  Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'index').catch(
-                    () => {}
-                  );
-                  // Keep local state in sync so remounts (e.g., after course change)
-                  // restore the last viewed sub-tab instead of defaulting unexpectedly.
-                  setInitialSubTab('index');
-                },
-              }}
+              listeners={{ focus: () => persistSubTab('index') }}
             />
             <TopTabs.Screen
               name="week"
               options={{ title: 'Woche' }}
-              listeners={{
-                focus: () => {
-                  Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'week').catch(
-                    () => {}
-                  );
-                  setInitialSubTab('week');
-                },
-              }}
+              listeners={{ focus: () => persistSubTab('week') }}
             />
             <TopTabs.Screen
               name="day"
               options={{ title: 'Tag' }}
-              listeners={{
-                focus: () => {
-                  Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, 'day').catch(
-                    () => {}
-                  );
-                  setInitialSubTab('day');
-                },
-              }}
+              listeners={{ focus: () => persistSubTab('day') }}
             />
           </TopTabs>
         ) : (

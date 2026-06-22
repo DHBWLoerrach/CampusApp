@@ -1,7 +1,3 @@
-import CanteenDayView from '@/components/canteen/CanteenDayView';
-import { weekdayDates } from '@/lib/canteenService';
+import { createCanteenDayScreen } from '@/components/canteen/CanteenDayScreen';
 
-export default function CanteenScreen() {
-  const [first] = weekdayDates(5);
-  return <CanteenDayView date={first} />;
-}
+export default createCanteenDayScreen(0);
