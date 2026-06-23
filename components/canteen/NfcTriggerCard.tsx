@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet } from 'react-native';
-import { ThemedView } from '@/components/ui/ThemedView';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -7,46 +6,60 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 type Props = { onPress: () => void };
 
 export default function NfcTriggerCard({ onPress }: Props) {
-  const iconColor = useThemeColor({}, 'icon');
+  const backgroundColor = useThemeColor(
+    { light: '#fff', dark: '#222' },
+    'background'
+  );
+  const borderColor = useThemeColor(
+    { light: 'rgba(92, 105, 113, 0.28)', dark: 'rgba(218, 218, 218, 0.22)' },
+    'border'
+  );
+  const iconColor = useThemeColor({}, 'tint');
+  const chevronColor = useThemeColor({}, 'icon');
 
   return (
-    <ThemedView
-      style={[styles.card, styles.elevated]}
-      lightColor="#fff"
-      darkColor="#222"
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel="CampusCard-Guthaben prüfen"
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor, borderColor, opacity: pressed ? 0.72 : 1 },
+      ]}
+      hitSlop={8}
     >
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel="Guthaben der CampusCard abfragen"
-        style={styles.row}
-        hitSlop={8}
-      >
-        <IconSymbol name="wallet.bifold" size={18} color={iconColor} />
-        <ThemedText style={styles.title}>
-          Guthaben der CampusCard abfragen
-        </ThemedText>
-      </Pressable>
-    </ThemedView>
+      <IconSymbol name="wallet.bifold" size={19} color={iconColor} />
+      <ThemedText style={styles.title} numberOfLines={1}>
+        CampusCard-Guthaben prüfen
+      </ThemedText>
+      <IconSymbol
+        name="chevron.right"
+        size={15}
+        color={chevronColor}
+        style={styles.chevron}
+      />
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    minHeight: 42,
+    borderRadius: 10,
     borderCurve: 'continuous',
-    padding: 12,
-  },
-  row: {
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 18,
   },
-  elevated: {
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  chevron: {
+    marginLeft: 'auto',
   },
 });
