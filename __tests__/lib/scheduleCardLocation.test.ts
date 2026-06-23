@@ -92,6 +92,7 @@ describe('getScheduleCardLocationDisplay', () => {
       description: '',
     });
     expect(meta.isOnline).toBe(true);
+    expect(meta.hasUrls).toBe(true);
     expect(meta.hasHiddenUrls).toBe(true);
     expect(meta.extraTextCollapsed).toBe('https://a.example/test');
     expect(meta.extraTextExpanded).toBe(

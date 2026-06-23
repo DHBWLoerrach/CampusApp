@@ -227,6 +227,7 @@ export function getScheduleCardLocationDisplay(args: {
     isOnline,
     extraTextCollapsed,
     extraTextExpanded,
+    hasUrls: urls.length > 0,
     hasHiddenUrls: urls.length > 1,
   } as const;
 }

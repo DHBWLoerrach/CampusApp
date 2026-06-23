@@ -37,16 +37,11 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
     scheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
 
   // Derive room and online link from the location, then decide if event is online
-  const {
-    roomText,
-    isOnline,
-    extraTextCollapsed,
-    extraTextExpanded,
-    hasHiddenUrls,
-  } = getScheduleCardLocationDisplay({
-    location: event.location,
-    description: event.description,
-  });
+  const { roomText, isOnline, extraTextCollapsed, extraTextExpanded, hasUrls } =
+    getScheduleCardLocationDisplay({
+      location: event.location,
+      description: event.description,
+    });
 
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);
@@ -54,8 +49,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const [extraMeasured, setExtraMeasured] = useState(false);
   const [isExtraMultiline, setIsExtraMultiline] = useState(false);
   const [isExtraExpanded, setIsExtraExpanded] = useState(false);
-  const canExpandExtra =
-    !!extraTextExpanded && (hasHiddenUrls || isExtraMultiline);
+  const canExpandExtra = !!extraTextExpanded && (hasUrls || isExtraMultiline);
   const visibleExtraText = isExtraExpanded
     ? extraTextExpanded
     : extraTextCollapsed;
@@ -222,7 +216,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
       {!!visibleExtraText && (
         <View style={styles.extraRow}>
           <View style={styles.extraTextWrap}>
-            {!extraMeasured && !!extraTextExpanded && (
+            {!hasUrls && !extraMeasured && !!extraTextExpanded && (
               <Text
                 onTextLayout={(e) => {
                   setIsExtraMultiline(e.nativeEvent.lines.length > 1);
@@ -239,6 +233,7 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
             )}
             <LinkifiedText
               value={visibleExtraText}
+              fullUrl={isExtraExpanded}
               numberOfLines={isExtraExpanded ? undefined : 1}
               style={[styles.extraText, { color: secondaryText }]}
             />
@@ -346,6 +341,10 @@ const styles = StyleSheet.create({
   },
   extraChevronButton: {
     marginLeft: 8,
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   // Invisible measuring text (same width, without numberOfLines)
   measureGhost: {
