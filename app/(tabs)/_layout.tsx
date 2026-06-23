@@ -51,7 +51,13 @@ export default function TabLayout() {
     <QueryClientProvider client={queryClient}>
       <CourseProvider>
         <LastTabPersistence />
-        <NativeTabs tintColor={dhbwRed} minimizeBehavior="onScrollDown">
+        <NativeTabs
+          tintColor={dhbwRed}
+          minimizeBehavior="onScrollDown"
+          // Always show tab labels on Android (Material default hides them on
+          // inactive tabs). iOS already shows all labels regardless.
+          labelVisibilityMode="labeled"
+        >
           {ROOT_TABS.map((tab) => (
             <NativeTabs.Trigger key={tab.name} name={tab.name}>
               <NativeTabs.Trigger.Icon sf={tab.sfIcon} md={tab.mdIcon} />
