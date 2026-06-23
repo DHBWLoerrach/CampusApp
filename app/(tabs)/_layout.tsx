@@ -57,6 +57,8 @@ export default function TabLayout() {
           // Always show tab labels on Android (Material default hides them on
           // inactive tabs). iOS already shows all labels regardless.
           labelVisibilityMode="labeled"
+          // Slightly smaller labels so they sit better with all labels visible.
+          labelStyle={{ fontSize: 10 }}
         >
           {ROOT_TABS.map((tab) => (
             <NativeTabs.Trigger key={tab.name} name={tab.name}>
