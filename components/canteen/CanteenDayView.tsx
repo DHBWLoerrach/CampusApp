@@ -12,6 +12,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CanteenDay,
   CanteenMeal,
@@ -118,6 +119,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
   const borderColor = useThemeColor({}, 'border');
   const iconColor = useThemeColor({}, 'icon');
   const isDark = useColorScheme() === 'dark';
+  const insets = useSafeAreaInsets();
   const [expandedMap, setExpandedMap] = useState<Record<number, boolean>>({});
   const showNfcHeader = ['android', 'ios'].includes(Platform.OS);
   const { isOffline, isReady } = useOnlineStatus();
@@ -197,7 +199,10 @@ export default function CanteenDayView({ date }: { date: Date }) {
       ) : (
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: insets.bottom + 96 },
+          ]}
           stickyHeaderIndices={
             showNfcHeader ? [showOffline ? 1 : 0] : undefined
           }
@@ -375,7 +380,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 12,
-    paddingBottom: 24,
     gap: 12,
   },
   dateHeader: {
