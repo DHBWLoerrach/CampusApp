@@ -17,7 +17,6 @@ import {
 } from '@/lib/codeCompanionPromo';
 
 interface CodeCompanionPromoSheetContentProps {
-  canHideForever: boolean;
   onClose: () => void;
   onHideForever: () => void;
 }
@@ -65,7 +64,6 @@ function PromoBullet({ text }: { text: string }) {
 }
 
 export default function CodeCompanionPromoSheetContent({
-  canHideForever,
   onClose,
   onHideForever,
 }: CodeCompanionPromoSheetContentProps) {
@@ -147,35 +145,33 @@ export default function CodeCompanionPromoSheetContent({
           </TouchableOpacity>
         ) : null}
 
-        {canHideForever ? (
-          <TouchableOpacity
-            style={styles.dismissButton}
-            onPress={onHideForever}
-            accessibilityRole="button"
-            accessibilityLabel="Code Companion-Hinweis nicht mehr automatisch anzeigen"
-            accessibilityHint="Blendet diesen Hinweis dauerhaft aus"
+        <TouchableOpacity
+          style={styles.dismissButton}
+          onPress={onHideForever}
+          accessibilityRole="button"
+          accessibilityLabel="Code Companion-Hinweis nicht mehr automatisch anzeigen"
+          accessibilityHint="Blendet diesen Hinweis dauerhaft aus"
+        >
+          <ThemedText
+            style={[styles.dismissButtonText, { color: secondaryTextColor }]}
           >
-            <ThemedText
-              style={[styles.dismissButtonText, { color: secondaryTextColor }]}
-            >
-              Nicht mehr automatisch anzeigen
-            </ThemedText>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.dismissButton}
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel="Code Companion-Hinweis schließen"
-            accessibilityHint="Schließt diesen Hinweis"
+            Nicht mehr automatisch anzeigen
+          </ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.dismissButton}
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel="Code Companion-Hinweis schließen"
+          accessibilityHint="Schließt diesen Hinweis"
+        >
+          <ThemedText
+            style={[styles.dismissButtonText, { color: secondaryTextColor }]}
           >
-            <ThemedText
-              style={[styles.dismissButtonText, { color: secondaryTextColor }]}
-            >
-              Schließen
-            </ThemedText>
-          </TouchableOpacity>
-        )}
+            Schließen
+          </ThemedText>
+        </TouchableOpacity>
       </View>
     </View>
   );
