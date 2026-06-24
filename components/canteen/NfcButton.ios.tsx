@@ -44,9 +44,12 @@ export default function NfcButton({ render }: Props) {
         lastTransactionBytes
       );
 
-      NfcManager.setAlertMessageIOS(
+      await NfcManager.setAlertMessageIOS(
         `Guthaben: ${balance} €\nLetzte Transaktion: ${lastTransaction} €\n(Angaben ohne Gewähr)`
       );
+
+      // Give the iOS NFC sheet time to show the result before closing the session.
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     } catch (ex: any) {
       const isCancelledByUser =
         ex instanceof Error &&
