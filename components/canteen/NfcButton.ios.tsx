@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Vibration } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
 import convertBytesToDouble from '@/lib/nfcHelper';
 import NfcTriggerCard from '@/components/canteen/NfcTriggerCard';
@@ -43,6 +43,8 @@ export default function NfcButton({ render }: Props) {
         balanceBytes,
         lastTransactionBytes
       );
+
+      Vibration.vibrate(100);
 
       await NfcManager.setAlertMessageIOS(
         `Guthaben: ${balance} €\nLetzte Transaktion: ${lastTransaction} €\n(Angaben ohne Gewähr)`
