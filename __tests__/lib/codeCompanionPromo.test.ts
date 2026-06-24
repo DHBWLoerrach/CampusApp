@@ -7,17 +7,11 @@ jest.mock('expo-sqlite/kv-store', () => ({
 }));
 
 import {
-  CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD,
   dismissCodeCompanionPromo,
   getCodeCompanionPromoDismissed,
-  getCodeCompanionPromoSeenCount,
-  incrementCodeCompanionPromoSeenCount,
   isCodeCompanionEligibleCourse,
 } from '@/lib/codeCompanionPromo';
-import {
-  CODE_COMPANION_PROMO_DISMISSED_KEY,
-  CODE_COMPANION_PROMO_SEEN_COUNT_KEY,
-} from '@/constants/StorageKeys';
+import { CODE_COMPANION_PROMO_DISMISSED_KEY } from '@/constants/StorageKeys';
 
 describe('codeCompanionPromo', () => {
   beforeEach(() => {
@@ -65,44 +59,5 @@ describe('codeCompanionPromo', () => {
       );
     });
 
-    it('treats a missing seen counter as zero', async () => {
-      mockGetItem.mockResolvedValueOnce(null);
-
-      await expect(getCodeCompanionPromoSeenCount()).resolves.toBe(0);
-    });
-
-    it('normalizes invalid seen counter values to zero', async () => {
-      mockGetItem.mockResolvedValueOnce('invalid');
-
-      await expect(getCodeCompanionPromoSeenCount()).resolves.toBe(0);
-    });
-
-    it('increments the seen counter via a storage update function', async () => {
-      mockSetItem.mockImplementationOnce(
-        async (
-          key: string,
-          value: string | ((prevValue: string | null) => string)
-        ) => {
-          expect(key).toBe(CODE_COMPANION_PROMO_SEEN_COUNT_KEY);
-          expect(typeof value).toBe('function');
-
-          if (typeof value !== 'function') {
-            throw new Error('Expected updater function');
-          }
-
-          expect(value('1')).toBe('2');
-        }
-      );
-
-      await expect(incrementCodeCompanionPromoSeenCount()).resolves.toBe(2);
-      expect(mockSetItem).toHaveBeenCalledWith(
-        CODE_COMPANION_PROMO_SEEN_COUNT_KEY,
-        expect.any(Function)
-      );
-    });
-
-    it('exposes the permanent dismiss threshold as a named constant', () => {
-      expect(CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD).toBe(2);
-    });
   });
 });
