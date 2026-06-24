@@ -61,7 +61,8 @@ export default function NfcSheetScreen() {
         if (timedOut) {
           setState({
             status: 'error',
-            message: 'Zeitüberschreitung – keine CampusCard erkannt.',
+            message:
+              'Zeitüberschreitung – keine CampusCard erkannt. Versuche es noch einmal.',
           });
         } else {
           setState({
@@ -109,12 +110,15 @@ export default function NfcSheetScreen() {
             onPress={() => router.back()}
             accessibilityRole="button"
             accessibilityLabel="Sheet schließen"
+            hitSlop={8}
             style={({ pressed }) => [
               styles.button,
-              { backgroundColor: tintColor, opacity: pressed ? 0.8 : 1 },
+              { opacity: pressed ? 0.5 : 1 },
             ]}
           >
-            <Text style={styles.buttonText}>Fertig</Text>
+            <Text style={[styles.buttonText, { color: tintColor }]}>
+              Fertig
+            </Text>
           </Pressable>
         </>
       )}
@@ -139,11 +143,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 28,
-    borderRadius: 10,
-    borderCurve: 'continuous',
   },
   buttonText: {
-    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
