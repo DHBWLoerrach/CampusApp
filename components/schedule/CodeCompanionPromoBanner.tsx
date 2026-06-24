@@ -39,6 +39,9 @@ export default function CodeCompanionPromoBanner({
       </View>
 
       <View style={styles.texts}>
+        <ThemedText style={[styles.eyebrow, { color: secondaryTextColor }]}>
+          APP-TIPP
+        </ThemedText>
         <ThemedText style={styles.title}>DHBW Code Companion</ThemedText>
         <ThemedText style={[styles.subtitle, { color: secondaryTextColor }]}>
           Quizfragen · Lernpfade · Lernfortschritt
@@ -77,6 +80,12 @@ const styles = StyleSheet.create({
   texts: {
     flex: 1,
     minWidth: 0,
+  },
+  eyebrow: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    marginBottom: 1,
   },
   title: {
     fontSize: 15,

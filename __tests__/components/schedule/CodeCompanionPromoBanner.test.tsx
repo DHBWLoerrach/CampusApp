@@ -10,11 +10,12 @@ jest.mock('@/components/ui/IconSymbol', () => ({
 }));
 
 describe('CodeCompanionPromoBanner', () => {
-  it('renders the title and subtitle', () => {
+  it('renders the eyebrow, title and subtitle', () => {
     const { getByText } = render(
       <CodeCompanionPromoBanner onPress={() => {}} />
     );
 
+    expect(getByText('APP-TIPP')).toBeTruthy();
     expect(getByText('DHBW Code Companion')).toBeTruthy();
     expect(getByText('Quizfragen · Lernpfade · Lernfortschritt')).toBeTruthy();
   });
