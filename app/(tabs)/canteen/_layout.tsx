@@ -31,6 +31,16 @@ export default function CanteenStackLayout() {
             ),
           }}
         />
+        <Stack.Screen
+          name="nfc-sheet"
+          options={{
+            presentation: 'formSheet',
+            sheetAllowedDetents: [0.3],
+            sheetGrabberVisible: true,
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        />
       </Stack>
       <BottomSheet
         visible={canteenInfoOpen}
