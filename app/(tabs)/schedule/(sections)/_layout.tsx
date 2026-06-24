@@ -6,7 +6,7 @@ import {
   type MaterialTopTabBarProps,
 } from 'expo-router/js-top-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import {
   topTabBarOptions,
   isScheduleSubTabName,
@@ -14,22 +14,18 @@ import {
 } from '@/constants/Navigation';
 import BottomSheet from '@/components/ui/BottomSheet';
 import CourseSetup from '@/components/schedule/CourseSetup';
+import CodeCompanionPromoBanner from '@/components/schedule/CodeCompanionPromoBanner';
 import CodeCompanionPromoSheetContent, {
   CodeCompanionPromoSheetTitle,
 } from '@/components/schedule/CodeCompanionPromoSheetContent';
-import { ThemedText } from '@/components/ui/ThemedText';
 import { useCourseContext } from '@/context/CourseContext';
 import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
 import {
-  CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD,
   dismissCodeCompanionPromo,
   getCodeCompanionPromoDismissed,
-  getCodeCompanionPromoSeenCount,
-  incrementCodeCompanionPromoSeenCount,
   isCodeCompanionEligibleCourse,
 } from '@/lib/codeCompanionPromo';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
 const Tab = createMaterialTopTabNavigator();
@@ -54,18 +50,9 @@ export default function ScheduleLayout() {
     null
   );
   const [promoDismissed, setPromoDismissed] = useState<boolean | null>(null);
-  const [promoSeenCount, setPromoSeenCount] = useState<number | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
   const promoOpenRef = useRef(false);
   const isEligibleCourse = isCodeCompanionEligibleCourse(selectedCourse);
-  const reopenBackground = useThemeColor(
-    { light: '#EAF3FF', dark: '#203146' },
-    'dayNumberContainer'
-  );
-  const reopenTextColor = useThemeColor(
-    { light: '#2A5D9F', dark: '#CFE2FF' },
-    'text'
-  );
 
   const showPromo = useCallback(() => {
     if (promoDismissed !== false || !isEligibleCourse || promoOpenRef.current) {
@@ -74,10 +61,6 @@ export default function ScheduleLayout() {
 
     promoOpenRef.current = true;
     setPromoOpen(true);
-    setPromoSeenCount((prev) => (prev ?? 0) + 1);
-    incrementCodeCompanionPromoSeenCount().catch((error) => {
-      console.warn('Failed to persist Code Companion promo seen count:', error);
-    });
   }, [isEligibleCourse, promoDismissed]);
 
   // Read last opened schedule sub-tab so we can set it as initial route
@@ -106,19 +89,14 @@ export default function ScheduleLayout() {
 
     (async () => {
       try {
-        const [dismissed, seenCount] = await Promise.all([
-          getCodeCompanionPromoDismissed(),
-          getCodeCompanionPromoSeenCount(),
-        ]);
+        const dismissed = await getCodeCompanionPromoDismissed();
         if (mounted) {
           setPromoDismissed(dismissed);
-          setPromoSeenCount(seenCount);
         }
       } catch (error) {
         console.warn('Failed to load Code Companion promo state:', error);
         if (mounted) {
           setPromoDismissed(false);
-          setPromoSeenCount(0);
         }
       }
     })();
@@ -134,7 +112,7 @@ export default function ScheduleLayout() {
       return;
     }
 
-    if (isLoading || promoSeenCount === null) {
+    if (isLoading || promoDismissed === null) {
       return;
     }
 
@@ -145,21 +123,8 @@ export default function ScheduleLayout() {
         setPromoOpen(false);
       }
       promoOpenRef.current = false;
-      return;
     }
-
-    if (promoDismissed === false && promoSeenCount === 0) {
-      showPromo();
-    }
-  }, [
-    isEligibleCourse,
-    isFocused,
-    isLoading,
-    promoDismissed,
-    promoOpen,
-    promoSeenCount,
-    showPromo,
-  ]);
+  }, [isEligibleCourse, isFocused, isLoading, promoDismissed, promoOpen]);
 
   const closePromo = () => {
     promoOpenRef.current = false;
@@ -199,47 +164,24 @@ export default function ScheduleLayout() {
   };
 
   const showPromoReopen =
-    !promoOpen &&
-    promoDismissed === false &&
-    isEligibleCourse &&
-    (promoSeenCount ?? 0) > 0;
+    !promoOpen && promoDismissed === false && isEligibleCourse;
 
   const renderTabBar = useCallback(
     (props: MaterialTopTabBarProps) => (
       <View>
         <MaterialTopTabBar {...props} />
         {showPromoReopen ? (
-          <TouchableOpacity
-            onPress={showPromo}
-            accessibilityRole="button"
-            accessibilityLabel="DHBW Code Companion erneut öffnen"
-            accessibilityHint="Öffnet den Hinweis zu DHBW Code Companion erneut"
-            style={[
-              styles.reopenBanner,
-              {
-                backgroundColor: reopenBackground,
-              },
-            ]}
-          >
-            <ThemedText
-              style={[styles.reopenBannerText, { color: reopenTextColor }]}
-            >
-              Kennst du schon die DHBW App Code Companion?
-            </ThemedText>
-          </TouchableOpacity>
+          <CodeCompanionPromoBanner onPress={showPromo} />
         ) : null}
       </View>
     ),
-    [reopenBackground, reopenTextColor, showPromo, showPromoReopen]
+    [showPromo, showPromoReopen]
   );
 
   // Show loading while reading from storage
   if (isLoading || initialSubTab === null) {
     return null; // Or a loading spinner if you prefer
   }
-
-  const canHidePromoForever =
-    (promoSeenCount ?? 0) >= CODE_COMPANION_PROMO_HIDE_FOREVER_THRESHOLD;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -282,7 +224,6 @@ export default function ScheduleLayout() {
           onClose={closePromo}
         >
           <CodeCompanionPromoSheetContent
-            canHideForever={canHidePromoForever}
             onClose={closePromo}
             onHideForever={() => {
               void dismissPromoForever();
@@ -293,18 +234,3 @@ export default function ScheduleLayout() {
     </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  reopenBanner: {
-    marginHorizontal: 12,
-    marginTop: 8,
-    marginBottom: 4,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  reopenBannerText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-});

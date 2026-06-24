@@ -4,8 +4,6 @@ import ScheduleLayout from '@/app/(tabs)/schedule/(sections)/_layout';
 const mockStorageGetItem = jest.fn();
 const mockUseCourseContext = jest.fn();
 const mockGetDismissed = jest.fn();
-const mockGetSeenCount = jest.fn();
-const mockIncrementSeenCount = jest.fn();
 const mockDismissPromo = jest.fn();
 
 jest.mock('expo-sqlite/kv-store', () => ({
@@ -52,9 +50,14 @@ jest.mock('@/hooks/useThemeColor', () => ({
         background: '#ffffff',
         border: '#d0d0d0',
         dayNumberContainer: '#eef5ff',
+        icon: '#687076',
         text: '#11181c',
       }) as Record<string, string>
     )[colorName] ?? '#11181c',
+}));
+
+jest.mock('@/components/ui/IconSymbol', () => ({
+  IconSymbol: () => null,
 }));
 
 jest.mock('@/context/CourseContext', () => ({
@@ -67,10 +70,6 @@ jest.mock('@/lib/codeCompanionPromo', () => {
     ...actual,
     getCodeCompanionPromoDismissed: (...args: unknown[]) =>
       mockGetDismissed(...args),
-    getCodeCompanionPromoSeenCount: (...args: unknown[]) =>
-      mockGetSeenCount(...args),
-    incrementCodeCompanionPromoSeenCount: (...args: unknown[]) =>
-      mockIncrementSeenCount(...args),
     dismissCodeCompanionPromo: (...args: unknown[]) =>
       mockDismissPromo(...args),
   };
@@ -110,8 +109,6 @@ describe('ScheduleLayout Code Companion promo', () => {
     mockStorageGetItem.mockReset();
     mockUseCourseContext.mockReset();
     mockGetDismissed.mockReset();
-    mockGetSeenCount.mockReset();
-    mockIncrementSeenCount.mockReset();
     mockDismissPromo.mockReset();
 
     mockStorageGetItem.mockResolvedValue('index');
@@ -121,8 +118,6 @@ describe('ScheduleLayout Code Companion promo', () => {
       isLoading: false,
     });
     mockGetDismissed.mockResolvedValue(false);
-    mockGetSeenCount.mockResolvedValue(0);
-    mockIncrementSeenCount.mockResolvedValue(1);
     mockDismissPromo.mockResolvedValue(undefined);
   });
 
@@ -130,17 +125,18 @@ describe('ScheduleLayout Code Companion promo', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  it('shows the promo for an existing eligible course when promo keys are still missing', async () => {
-    const { getByText } = render(<ScheduleLayout />);
+  it('shows the banner for an eligible course without auto-opening the sheet', async () => {
+    const { getByText, queryByText } = render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(getByText('DHBW Code Companion')).toBeTruthy();
     });
 
-    expect(mockIncrementSeenCount).toHaveBeenCalledTimes(1);
+    // Sheet content is not rendered until the banner is tapped.
+    expect(queryByText('Nicht mehr automatisch anzeigen')).toBeNull();
   });
 
-  it('does not show the promo for ineligible courses', async () => {
+  it('does not show the banner for ineligible courses', async () => {
     mockUseCourseContext.mockReturnValue({
       selectedCourse: 'BWL24A',
       setSelectedCourse: jest.fn(),
@@ -153,14 +149,10 @@ describe('ScheduleLayout Code Companion promo', () => {
       expect(mockGetDismissed).toHaveBeenCalledTimes(1);
     });
 
-    expect(
-      queryByText('Kennst du schon die DHBW App Code Companion?')
-    ).toBeNull();
-    expect(queryByText('Nicht mehr automatisch anzeigen')).toBeNull();
-    expect(mockIncrementSeenCount).not.toHaveBeenCalled();
+    expect(queryByText('DHBW Code Companion')).toBeNull();
   });
 
-  it('does not show the promo when it was permanently dismissed', async () => {
+  it('does not show the banner when permanently dismissed', async () => {
     mockGetDismissed.mockResolvedValue(true);
 
     const { queryByText } = render(<ScheduleLayout />);
@@ -170,52 +162,33 @@ describe('ScheduleLayout Code Companion promo', () => {
     });
 
     expect(queryByText('DHBW Code Companion')).toBeNull();
-    expect(
-      queryByText('Kennst du schon die DHBW App Code Companion?')
-    ).toBeNull();
-    expect(mockIncrementSeenCount).not.toHaveBeenCalled();
   });
 
-  it('shows a reopen banner after closing and enables permanent dismiss on the second open', async () => {
-    const { getByText, queryByText } = render(<ScheduleLayout />);
+  it('opens the sheet with both actions when the banner is tapped', async () => {
+    const { getByLabelText, getByText } = render(<ScheduleLayout />);
 
     await waitFor(() => {
-      expect(getByText('Schließen')).toBeTruthy();
+      expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
 
-    fireEvent.press(getByText('Schließen'));
-
-    await waitFor(() => {
-      expect(
-        getByText('Kennst du schon die DHBW App Code Companion?')
-      ).toBeTruthy();
-    });
-
-    expect(queryByText('Nicht mehr automatisch anzeigen')).toBeNull();
-
-    fireEvent.press(getByText('Kennst du schon die DHBW App Code Companion?'));
+    fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
     });
-
-    expect(mockIncrementSeenCount).toHaveBeenCalledTimes(2);
+    expect(getByText('Schließen')).toBeTruthy();
   });
 
-  it('restores the reopen banner when permanent dismiss persistence fails', async () => {
-    mockGetSeenCount.mockResolvedValue(1);
-    mockIncrementSeenCount.mockResolvedValue(2);
+  it('restores the banner when permanent dismiss persistence fails', async () => {
     mockDismissPromo.mockRejectedValueOnce(new Error('storage failed'));
 
-    const { getByText } = render(<ScheduleLayout />);
+    const { getByLabelText, getByText } = render(<ScheduleLayout />);
 
     await waitFor(() => {
-      expect(
-        getByText('Kennst du schon die DHBW App Code Companion?')
-      ).toBeTruthy();
+      expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
 
-    fireEvent.press(getByText('Kennst du schon die DHBW App Code Companion?'));
+    fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
@@ -225,9 +198,7 @@ describe('ScheduleLayout Code Companion promo', () => {
 
     await waitFor(() => {
       expect(mockDismissPromo).toHaveBeenCalledTimes(1);
-      expect(
-        getByText('Kennst du schon die DHBW App Code Companion?')
-      ).toBeTruthy();
+      expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
   });
 });
