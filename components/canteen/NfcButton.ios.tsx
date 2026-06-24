@@ -47,7 +47,7 @@ export default function NfcButton({ render }: Props) {
       Vibration.vibrate(100);
 
       await NfcManager.setAlertMessageIOS(
-        `Guthaben: ${balance} €\nLetzte Transaktion: ${lastTransaction} €\n(Angaben ohne Gewähr)`
+        `Guthaben (ohne Gewähr): ${balance} €\nLetzte Transaktion: ${lastTransaction} €`
       );
 
       // Give the iOS NFC sheet time to show the result before closing the session.
