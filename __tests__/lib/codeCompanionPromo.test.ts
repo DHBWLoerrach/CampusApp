@@ -58,6 +58,5 @@ describe('codeCompanionPromo', () => {
         '1'
       );
     });
-
   });
 });

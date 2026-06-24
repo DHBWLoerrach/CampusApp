@@ -24,7 +24,12 @@ export default function CodeCompanionPromoBanner({
       accessibilityHint="Öffnet den Hinweis zu DHBW Code Companion"
       style={[styles.card, { backgroundColor: cardBackground, borderColor }]}
     >
-      <View style={[styles.iconFrame, { backgroundColor: cardBackground, borderColor }]}>
+      <View
+        style={[
+          styles.iconFrame,
+          { backgroundColor: cardBackground, borderColor },
+        ]}
+      >
         <Image
           source={CODE_COMPANION_ICON}
           style={styles.icon}
