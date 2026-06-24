@@ -191,7 +191,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
         <>
           <View style={styles.center}>
             <ThemedText type="defaultSemiBold" style={styles.hint}>
-              Kein Speiseplan für {format(safeDate, 'dd.MM.yyyy')} gefunden.
+              Kein Speiseplan gefunden.
             </ThemedText>
             {showNfcHeader ? <NfcButton /> : null}
           </View>

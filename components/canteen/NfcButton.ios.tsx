@@ -30,7 +30,7 @@ export default function NfcButton({ render }: Props) {
     try {
       await NfcManager.requestTechnology(NfcTech.MifareIOS, {
         alertMessage:
-          'Halte deine CampusCard an den oberen Rand deines Handys…',
+          'Halte deine CampusCard an den oberen Rand deines iPhones…',
       });
 
       await NfcManager.sendMifareCommandIOS([0x5a, 0x5f, 0x84, 0x15]);
@@ -45,7 +45,7 @@ export default function NfcButton({ render }: Props) {
       );
 
       NfcManager.setAlertMessageIOS(
-        `Guthaben: ${balance}€ — Letzte Transaktion: ${lastTransaction}€\n(Angaben ohne Gewähr)`
+        `Guthaben: ${balance} €\nLetzte Transaktion: ${lastTransaction} €\n(Angaben ohne Gewähr)`
       );
     } catch (ex: any) {
       const isCancelledByUser =
