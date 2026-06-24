@@ -35,8 +35,9 @@ Two problems motivated this redesign:
 
 ## Non-Goals
 
-- Redesigning the large promo `BottomSheet` content/layout (only the hide-forever
-  gating changes).
+- Redesigning the large promo `BottomSheet` visual layout. Only its action buttons
+  change: it now always shows both "Nicht mehr automatisch anzeigen" and
+  "Schließen" (see below), and the `canHideForever` prop is removed.
 - Changing course eligibility (`TIF`/`WDS`/`WWI` prefixes stay).
 - Adding a per-banner dismiss (X) control. Removal stays via the sheet only.
 
@@ -46,8 +47,11 @@ Two problems motivated this redesign:
   is shown directly. The sheet opens only when the user taps the banner.
 - **Banner visible** whenever: course is eligible **and** the promo is not dismissed
   forever. No `seenCount` condition.
-- **Removal** stays via the sheet → "hide forever", but is **allowed on the first
-  sheet open** (previously gated until the second).
+- **Removal** stays via the sheet → "hide forever", but is **always available** (no
+  more `seenCount >= 2` gate). The sheet now always renders both "Nicht mehr
+  automatisch anzeigen" (permanent dismiss) and "Schließen" (close once) stacked,
+  instead of switching between them. The `canHideForever` prop on
+  `CodeCompanionPromoSheetContent` is removed.
 - **Remove `seenCount` entirely.** It is no longer used by any path:
   - `constants/StorageKeys.ts`: drop the `codeCompanionPromoSeenCount` key.
   - `lib/codeCompanionPromo.ts`: remove `getCodeCompanionPromoSeenCount`,
@@ -68,8 +72,10 @@ Two problems motivated this redesign:
 └──────────────────────────────────────────┘
 ```
 
-- White card with a subtle shadow/border, `borderRadius` ~14 — matches the
-  appointment cards below it.
+- White card matching the appointment cards below it: `borderRadius: 8`,
+  `borderCurve: 'continuous'`, `borderWidth: 1`, `padding: 12`, background from the
+  `background` theme color and border from the `border` theme color (flat, no
+  shadow — same as `LectureCard`).
 - App icon (`assets/images/codecompanion.png`) on the left inside a framed
   container, reusing the style already used in `CodeCompanionPromoSheetTitle`
   (background + border, rounded).
@@ -100,7 +106,10 @@ Two problems motivated this redesign:
   - Replace the inline blue pill JSX with `<CodeCompanionPromoBanner />`.
   - Remove the blue `reopenBackground` / `reopenTextColor` theme hooks and the
     `reopenBanner` / `reopenBannerText` styles.
-  - `canHidePromoForever` becomes always `true` while the sheet is open.
+  - Remove the `canHidePromoForever` variable and stop passing `canHideForever` to
+    the sheet.
+- `components/schedule/CodeCompanionPromoSheetContent.tsx`: drop the `canHideForever`
+  prop; always render both "Nicht mehr automatisch anzeigen" and "Schließen".
 
 ## Testing
 
