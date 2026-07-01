@@ -55,10 +55,10 @@ export default function SafetyScreen() {
         showsVerticalScrollIndicator={false}
       >
         <ThemedText style={styles.introText}>
-          Ihre Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
-          zusammengestellt, in denen wir Sie über verschiedene Sicherheitshemen
-          an der DHBW Lörrach informieren. Sie erfahren, wie Sie sich vor
-          Unfällen schützen können und welche Sicherheitseinrichtungen es an den
+          Deine Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
+          zusammengestellt, in denen wir dich über verschiedene Sicherheitshemen
+          an der DHBW Lörrach informieren. Du erfährst, wie du dich vor Unfällen
+          schützen kannst und welche Sicherheitseinrichtungen es an den
           Standorten gibt. Viel Spaß!
         </ThemedText>
         <ThemedView style={styles.grid}>

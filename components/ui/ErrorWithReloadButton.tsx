@@ -18,7 +18,7 @@ export default function ErrorWithReloadButton({
   const errorMessage =
     message?.trim() ||
     error.message.trim() ||
-    'Bitte versuchen Sie es später erneut.';
+    'Bitte versuche es später erneut.';
 
   return (
     <ThemedView style={styles.center}>

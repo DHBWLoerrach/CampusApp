@@ -1,7 +1,7 @@
 import { CalendarError, CalendarErrorCode } from '@/lib/icalService';
 
 const DEFAULT_MESSAGE =
-  'Der Vorlesungsplan konnte nicht geladen werden. Bitte versuchen Sie es erneut.';
+  'Der Vorlesungsplan konnte nicht geladen werden. Bitte versuche es erneut.';
 
 export function getTimetableErrorMessage(error: unknown): string {
   if (!(error instanceof CalendarError)) {
@@ -12,7 +12,7 @@ export function getTimetableErrorMessage(error: unknown): string {
     case CalendarErrorCode.Http:
       return `Der Kalenderdienst hat mit HTTP ${error.status ?? 'Fehler'} geantwortet.`;
     case CalendarErrorCode.Network:
-      return 'Der Kalenderdienst ist derzeit nicht erreichbar. Bitte versuchen Sie es erneut.';
+      return 'Der Kalenderdienst ist derzeit nicht erreichbar. Bitte versuche es erneut.';
     case CalendarErrorCode.Parse:
       return 'Die Kalenderdaten haben ein ungültiges Format und konnten nicht verarbeitet werden.';
     case CalendarErrorCode.InvalidCourse:

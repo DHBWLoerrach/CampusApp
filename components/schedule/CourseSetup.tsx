@@ -43,7 +43,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
 
   const handleValidateAndSetCourse = async () => {
     if (!inputValue.trim()) {
-      Alert.alert('Fehler', 'Bitte geben Sie einen Kursnamen ein.');
+      Alert.alert('Fehler', 'Bitte gib einen Kursnamen ein.');
       return;
     }
 
@@ -51,7 +51,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
     if (showOffline) {
       Alert.alert(
         'Keine Internetverbindung',
-        'Neue Kurse können nur online geprüft werden. Wählen Sie einen bereits verwendeten Kurs aus der Liste oder verbinden Sie sich mit dem Internet.'
+        'Neue Kurse können nur online geprüft werden. Wähle einen bereits verwendeten Kurs aus der Liste oder verbinde dich mit dem Internet.'
       );
       return;
     }
@@ -69,7 +69,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
           'Ungültiger Kurs',
           `Der Kurs "${inputValue
             .trim()
-            .toUpperCase()}" konnte nicht gefunden werden. Bitte überprüfen Sie den Namen.`
+            .toUpperCase()}" konnte nicht gefunden werden. Bitte überprüfe den Namen.`
         );
       }
     } catch {
@@ -190,7 +190,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
                           onPress={() => {
                             Alert.alert(
                               'Entfernen bestätigen',
-                              `Möchten Sie den Kurs "${course}" aus der Liste entfernen?`,
+                              `Möchtest du den Kurs "${course}" aus der Liste entfernen?`,
                               [
                                 {
                                   text: 'Abbrechen',
