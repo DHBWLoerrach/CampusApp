@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import InfoModal from '@/components/services/InfoModal';
 import { INFO_PAGES, type InfoKey } from '@/components/services/InfoPages';
@@ -12,16 +12,19 @@ import { openLink } from '@/lib/utils';
 
 function ServiceCard({
   title,
+  displayTitle,
   icon,
   onPress,
 }: {
   title: string;
+  displayTitle?: string;
   icon: IconSymbolName;
   onPress?: () => void;
 }) {
   const cardBg = useThemeColor({}, 'background');
   const iconColor = useThemeColor({}, 'icon');
   const borderColor = useThemeColor({}, 'border');
+  const visibleTitle = displayTitle ?? title;
 
   return (
     <Pressable
@@ -48,7 +51,14 @@ function ServiceCard({
         <View style={styles.iconContainer}>
           <IconSymbol size={32} name={icon} color={iconColor} />
         </View>
-        <ThemedText style={styles.cardTitle}>{title}</ThemedText>
+        {/* Required so the soft hyphens in `displayTitle` break on Android;
+            iOS/Web ignore this prop but honor the soft hyphens directly. */}
+        <ThemedText
+          style={styles.cardTitle}
+          android_hyphenationFrequency="normal"
+        >
+          {visibleTitle}
+        </ThemedText>
       </View>
     </Pressable>
   );
@@ -58,10 +68,16 @@ type ServiceGroup = {
   title: string;
   services: {
     title: string;
+    // Presentation-only variant of `title` for line breaking (e.g. soft
+    // hyphens). Must match `title` in wording; `title` stays the source of
+    // truth for logic, keys and accessibility. Note: soft hyphens only take
+    // effect on Android when the rendering Text sets android_hyphenationFrequency.
+    displayTitle?: string;
     icon: IconSymbolName;
     url?: string;
     image?: any;
     content?: InfoKey;
+    route?: Href;
   }[];
 };
 
@@ -102,16 +118,22 @@ const serviceGroups: ServiceGroup[] = [
       {
         title: 'Weitere Links…',
         icon: 'link',
+        route: '/services/study-links',
       },
     ],
   },
   {
     title: 'Hilfe und Regeln',
     services: [
-      { title: 'Beratung und Hilfe', icon: 'phone' },
-      { title: 'Sicherheit', icon: 'shield' },
+      {
+        title: 'Beratung und Hilfe',
+        icon: 'phone',
+        route: '/services/help-links',
+      },
+      { title: 'Sicherheit', icon: 'shield', route: '/services/safety' },
       {
         title: 'Hausordnung',
+        displayTitle: 'Haus\u00ADordnung',
         icon: 'building',
         url: 'https://dhbw-loerrach.de/hausordnung',
       },
@@ -120,7 +142,12 @@ const serviceGroups: ServiceGroup[] = [
   {
     title: 'App-Infos',
     services: [
-      { title: 'Einstellungen', icon: 'gearshape' },
+      {
+        title: 'Einstellungen',
+        displayTitle: 'Ein\u00ADstel\u00ADlun\u00ADgen',
+        icon: 'gearshape',
+        route: '/services/preferences',
+      },
       { title: 'Feedback', icon: 'envelope', content: 'feedback' },
       { title: 'Über', icon: 'info.square', content: 'about' },
       {
@@ -129,26 +156,18 @@ const serviceGroups: ServiceGroup[] = [
         content: 'disclaimer',
       },
       { title: 'Impressum', icon: 'text.page', content: 'imprint' },
-      { title: 'Datenschutz', icon: 'eye', content: 'privacy' },
+      {
+        title: 'Datenschutz',
+        displayTitle: 'Daten\u00ADschutz',
+        icon: 'eye',
+        content: 'privacy',
+      },
     ],
   },
 ] as const;
 
 export default function ServicesScreen() {
   const router = useRouter();
-  const handlePress = (name: string) => {
-    if (name === 'Weitere Links…') {
-      router.push('/services/study-links');
-    } else if (name === 'Sicherheit') {
-      router.push('/services/safety');
-    } else if (name === 'Beratung und Hilfe') {
-      router.push('/services/help-links');
-    } else if (name === 'Einstellungen') {
-      router.push('/services/preferences');
-    } else {
-      console.log(`Pressed: ${name}`);
-    }
-  };
 
   const [imageModal, setImageModal] = useState<{
     title: string;
@@ -173,24 +192,27 @@ export default function ServicesScreen() {
           <View key={group.title} style={styles.section}>
             <ThemedText style={styles.sectionTitle}>{group.title}</ThemedText>
             <View style={styles.grid}>
-              {group.services.map(({ title, icon, url, image, content }) => (
-                <ServiceCard
-                  key={title}
-                  title={title}
-                  icon={icon}
-                  onPress={() => {
-                    if (image) {
-                      setImageModal({ title, source: image });
-                    } else if (url) {
-                      openLink(url);
-                    } else if (content) {
-                      setInfoKey(content);
-                    } else {
-                      handlePress(title);
-                    }
-                  }}
-                />
-              ))}
+              {group.services.map(
+                ({ title, displayTitle, icon, url, image, content, route }) => (
+                  <ServiceCard
+                    key={title}
+                    title={title}
+                    displayTitle={displayTitle}
+                    icon={icon}
+                    onPress={() => {
+                      if (image) {
+                        setImageModal({ title, source: image });
+                      } else if (url) {
+                        openLink(url);
+                      } else if (content) {
+                        setInfoKey(content);
+                      } else if (route) {
+                        router.push(route);
+                      }
+                    }}
+                  />
+                )
+              )}
             </View>
           </View>
         ))}
@@ -280,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
-    lineHeight: 13,
+    lineHeight: 16,
   },
   modalImage: {
     width: '100%',
