@@ -36,7 +36,7 @@ describe('ErrorWithReloadButton', () => {
       />
     );
 
-    expect(getByText('Bitte versuchen Sie es später erneut.')).toBeTruthy();
+    expect(getByText('Bitte versuche es später erneut.')).toBeTruthy();
   });
 
   it('shows "Neu laden" button when not fetching', () => {
