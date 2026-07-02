@@ -65,7 +65,7 @@ const AboutBody = () => {
           <InfoText isLink>https://github.com/DHBWLoerrach/CampusApp</InfoText>
         </Pressable>
       </InfoText>
-      <InfoText>Version der Campus App: {`${versionString}`}</InfoText>
+      <InfoText>Version der App: {`${versionString}`}</InfoText>
     </>
   );
 };
