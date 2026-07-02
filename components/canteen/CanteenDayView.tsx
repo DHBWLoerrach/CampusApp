@@ -177,6 +177,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
         </View>
       ) : closure ? (
         <>
+          {showNfcHeader ? <NfcButton /> : null}
           <View style={styles.center}>
             <ThemedText type="defaultSemiBold" style={styles.hint}>
               Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
@@ -184,16 +185,15 @@ export default function CanteenDayView({ date }: { date: Date }) {
             {closure.reason ? (
               <ThemedText style={styles.small}>{closure.reason}</ThemedText>
             ) : null}
-            {showNfcHeader ? <NfcButton /> : null}
           </View>
         </>
       ) : meals.length === 0 ? (
         <>
+          {showNfcHeader ? <NfcButton /> : null}
           <View style={styles.center}>
             <ThemedText type="defaultSemiBold" style={styles.hint}>
               Kein Speiseplan gefunden.
             </ThemedText>
-            {showNfcHeader ? <NfcButton /> : null}
           </View>
         </>
       ) : (
