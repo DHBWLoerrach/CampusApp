@@ -5,6 +5,8 @@ export const COURSE_ALIAS_MAP: Record<string, string> = {
   wwi23b: 'wwi23b-am',
   wwi25a: 'wwi25a-am',
   wwi25b: 'wwi25b-am',
+  wwi26a: 'wwi26a-am',
+  wwi26b: 'wwi26b-am',
 };
 
 /**
