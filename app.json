@@ -20,12 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/monochrome-icon.png"
       },
-      "permissions": [
-        "NFC",
-        "android.permission.NFC",
-        "NFC",
-        "android.permission.NFC"
-      ],
+      "permissions": ["android.permission.NFC"],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "web": {
