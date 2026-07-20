@@ -41,14 +41,26 @@ Vorbedingungen:
 - Android Studio bzw. das Android SDK muss für die Android-App installiert sein
 - Nur für macOS relevant: XCode muss installiert sein
 
-- Android `npx expo run:android` 
+- Android `npx expo run:android`
 - iOS (nur auf macOS möglich): `npx expo run:ios`
 
-7. Ein development build muss nur dann neu erstellt werden, wenn die (nativen) Abhängigkeiten sich geändert haben. Sobald auf dem Testgerät ein Dev-Build installiert ist, reicht 
+7. Ein development build muss nur dann neu erstellt werden, wenn die (nativen) Abhängigkeiten sich geändert haben. Sobald auf dem Testgerät ein Dev-Build installiert ist, reicht
 
-  `npx expo`
+`npx expo`
 
-womit der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet wird (Ausgabe für Tipps zum Start der App beachten). 
+womit der Entwicklungsserver (Metro-Bundler) für das Projekt gestartet wird (Ausgabe für Tipps zum Start der App beachten).
+
+### Umgebungsvariablen (`.env`)
+
+Kopiere `.env.example` nach `.env` und trage die Werte ein. Alle
+`EXPO_PUBLIC_*`-Variablen werden beim Build in die App eingebettet.
+
+| Variable                    | Erforderlich | Bedeutung                                                                        |
+| --------------------------- | ------------ | -------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_SWFR_API_KEY`  | Ja           | API-Key für den Mensa-Speiseplan (SWFR). Beim Projektverantwortlichen anfordern. |
+| `EXPO_PUBLIC_RIDES_ENABLED` | Nein         | Zeigt die Mitfahr-Funktion im Stundenplan. Standard: `false`.                    |
+| `EXPO_PUBLIC_RIDES_SOURCE`  | Nein         | Quelle der Mitfahr-Daten: `remote` (Standard) oder `file` (nur Dev).             |
+| `EXPO_PUBLIC_RIDES_URL`     | Nein         | Überschreibt die URL der Mitfahr-Daten. Standardwert ist fest hinterlegt.        |
 
 ## Abhängigkeiten ändern (add/update/remove)
 
