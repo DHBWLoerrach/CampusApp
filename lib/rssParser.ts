@@ -99,7 +99,7 @@ function extractEnclosures(item: any): { url: string }[] | undefined {
 /**
  * Parse RSS feed XML and return structured data with
  */
-function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
+export function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
   const parser = new XMLParser(parserOptions);
   const result = parser.parse(xmlString);
 
