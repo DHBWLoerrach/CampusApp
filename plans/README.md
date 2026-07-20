@@ -15,7 +15,7 @@ in any order.
 |------|------------------------------------------------|----------|--------|------------|--------|
 | 001  | Unit tests for RSS and canteen XML parsers     | P1       | M      | —          | DONE   |
 | 002  | Add `.env.example` and document env variables  | P2       | S      | —          | DONE   |
-| 003  | Deduplicate Android NFC permissions in app.json| P3       | S      | —          | TODO   |
+| 003  | Deduplicate Android NFC permissions in app.json| P3       | S      | —          | DONE   |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale)
 
