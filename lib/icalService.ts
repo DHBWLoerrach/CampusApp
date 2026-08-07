@@ -320,6 +320,30 @@ function getRecurrenceExceptions(
   return result;
 }
 
+// Complete HTML comments, including the Outlook `<!--[if …]> … <![endif]-->` blocks.
+const HTML_COMMENT_REGEX = /<!--[\s\S]*?-->/g;
+// Downlevel-revealed conditional comments (`<![if !mso]>` / `<![endif]-->`) are not
+// wrapped in `<!-- -->`, so Exchange leaves the bare marker behind when it converts
+// an HTML body to the plain-text DESCRIPTION.
+const CONDITIONAL_COMMENT_REGEX = /<!\[\s*(?:end)?if[^\]]*\]\s*(?:-->|>)/gi;
+
+/**
+ * Strips HTML comment leftovers from Exchange-generated DESCRIPTION values and
+ * discards descriptions that carry nothing but markup and whitespace.
+ */
+function sanitizeDescription(
+  rawDescription: string | null | undefined
+): string | undefined {
+  if (!rawDescription) return undefined;
+
+  const cleaned = rawDescription
+    .replace(HTML_COMMENT_REGEX, '')
+    .replace(CONDITIONAL_COMMENT_REGEX, '')
+    .trim();
+
+  return cleaned.length > 0 ? cleaned : undefined;
+}
+
 /**
  * Parses the iCal text, expands recurring events (including Exchange quirks),
  * splits multi‑day events, and returns a flat list.
@@ -372,7 +396,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: occStart.toJSDate(),
           end: occEnd.toJSDate(),
           location: occurrence.item.location || '',
-          description: occurrence.item.description || undefined,
+          description: sanitizeDescription(occurrence.item.description),
           allDay: !!occStart.isDate,
         });
       }
@@ -439,7 +463,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           start: sliceStart,
           end: sliceEnd,
           location: event.location || '',
-          description: event.description || undefined,
+          description: sanitizeDescription(event.description),
           allDay: sliceAllDay,
         });
       }
@@ -453,7 +477,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       start: event.startDate.toJSDate(),
       end: event.endDate.toJSDate(),
       location: event.location || '',
-      description: event.description || undefined,
+      description: sanitizeDescription(event.description),
       allDay: !!event.startDate.isDate,
     });
   });

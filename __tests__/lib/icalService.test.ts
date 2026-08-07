@@ -156,3 +156,61 @@ describe('icalService (DST + multi-day)', () => {
     expect(berlinTime(events[2].end)).toBe('17:00');
   });
 });
+
+describe('icalService description sanitizing', () => {
+  function parseDescription(rawDescription: string): string | undefined {
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//CampusApp Test//EN',
+      'BEGIN:VEVENT',
+      'UID:description-test',
+      'SUMMARY:Lecture',
+      'DTSTART;TZID=W. Europe Standard Time:20250210T130000',
+      'DTEND;TZID=W. Europe Standard Time:20250210T170000',
+      `DESCRIPTION:${rawDescription}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\n');
+
+    return __parseIcalForTest(ics)[0].description;
+  }
+
+  it('drops leftover conditional comment markers from Outlook exports', () => {
+    expect(
+      parseDescription(
+        '\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n<![endif]-->\\n\\n\\n\\nDeadline 16.08.\\n\\n\\n\\n'
+      )
+    ).toBe('Deadline 16.08.');
+  });
+
+  it('drops descriptions that only carry markup and whitespace', () => {
+    expect(
+      parseDescription(
+        '\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n<![endif]-->\\n\\n\\n\\n \\n\\n\\n\\n'
+      )
+    ).toBeUndefined();
+  });
+
+  it('drops complete HTML comments including their content', () => {
+    expect(
+      parseDescription(
+        '<!--[if gte mso 9]><xml>junk</xml><![endif]-->Raum A261'
+      )
+    ).toBe('Raum A261');
+  });
+
+  it('keeps multi-line content intact', () => {
+    expect(
+      parseDescription(
+        '\\n<![endif]-->\\n\\nAchtung: Beginn 13 Uhr\\nRaum A261\\n\\n'
+      )
+    ).toBe('Achtung: Beginn 13 Uhr\nRaum A261');
+  });
+
+  it('leaves descriptions without markup untouched', () => {
+    expect(parseDescription('Link im Moodle-Raum von Hrn. Bernecker')).toBe(
+      'Link im Moodle-Raum von Hrn. Bernecker'
+    );
+  });
+});
