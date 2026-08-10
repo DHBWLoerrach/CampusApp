@@ -180,10 +180,15 @@ export default function CanteenDayView({ date }: { date: Date }) {
           {showNfcHeader ? <NfcButton /> : null}
           <View style={styles.center}>
             <ThemedText type="defaultSemiBold" style={styles.hint}>
-              Mensa am {format(safeDate, 'dd.MM.yyyy')} geschlossen.
+              {closure.scope === 'building'
+                ? `Mensa am ${format(safeDate, 'dd.MM.yyyy')} geschlossen.`
+                : `Keine Essensausgabe am ${format(safeDate, 'dd.MM.yyyy')}.`}
             </ThemedText>
-            {closure.reason ? (
-              <ThemedText style={styles.small}>{closure.reason}</ThemedText>
+            <ThemedText style={styles.hint}>
+              {closure.title}: {closure.rangeLabel}
+            </ThemedText>
+            {closure.note ? (
+              <ThemedText style={styles.small}>{closure.note}</ThemedText>
             ) : null}
           </View>
         </>

@@ -9,8 +9,10 @@ import {
 } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { weekdayDates } from '@/lib/canteenService';
+import { getCanteenClosureForDates } from '@/lib/canteenClosures';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
+import CanteenClosedScreen from '@/components/canteen/CanteenClosedScreen';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
 const Tab = createMaterialTopTabNavigator();
@@ -70,6 +72,22 @@ export default function CanteenLayout() {
     }),
     [currentDayKey]
   );
+
+  // Recomputed on day change so the tabs come back by themselves as soon as the
+  // first open weekday enters the rolling window.
+  const closure = useMemo(
+    () => getCanteenClosureForDates(weekdayDates(5)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentDayKey]
+  );
+
+  if (closure) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <CanteenClosedScreen closure={closure} />
+      </QueryClientProvider>
+    );
+  }
 
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
