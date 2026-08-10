@@ -6,3 +6,5 @@ export const LAST_TAB_KEY = 'lastTab';
 export const LAST_SCHEDULE_SUBTAB_KEY = 'lastScheduleSubtab';
 // Hide the CodeCompanion promo permanently after the user dismisses it once
 export const CODE_COMPANION_PROMO_DISMISSED_KEY = 'codeCompanionPromoDismissed';
+// Cached block plan per course; suffixed with the course code
+export const BLOCK_PLAN_CACHE_KEY_PREFIX = 'blockPlanCache:';

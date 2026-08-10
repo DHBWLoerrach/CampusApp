@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
@@ -7,9 +7,13 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import RideMatchSheetContent from '@/components/schedule/RideMatchSheetContent';
 import { useCourseContext } from '@/context/CourseContext';
-import { RIDES_FEATURE_ENABLED } from '@/constants/FeatureFlags';
+import {
+  BLOCK_PLAN_FEATURE_ENABLED,
+  RIDES_FEATURE_ENABLED,
+} from '@/constants/FeatureFlags';
 import { navBarOptions } from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useBlockPlan } from '@/hooks/useBlockPlan';
 
 export default function ScheduleStackLayout() {
   const [carpoolOpen, setCarpoolOpen] = useState(false);
@@ -19,6 +23,15 @@ export default function ScheduleStackLayout() {
   const textColor = useThemeColor({}, 'text');
   const borderColor = useThemeColor({}, 'border');
   const tintColor = useThemeColor({}, 'tint');
+
+  // Only expose the entry point once a remote or cached plan is available.
+  // Network, HTTP, and parsing errors must not suggest that a plan exists.
+  // Passing no course while the feature is off keeps the query disabled, so a
+  // disabled flag costs no request at all.
+  const { data: blockPlan } = useBlockPlan(
+    BLOCK_PLAN_FEATURE_ENABLED ? (selectedCourse ?? undefined) : undefined
+  );
+  const hasBlockPlan = BLOCK_PLAN_FEATURE_ENABLED && blockPlan?.plan != null;
 
   const scheduleTitle = selectedCourse
     ? selectedCourse.toUpperCase()
@@ -90,19 +103,35 @@ export default function ScheduleStackLayout() {
                 )
               : undefined,
             headerRight:
-              selectedCourse && RIDES_FEATURE_ENABLED
+              selectedCourse && (RIDES_FEATURE_ENABLED || hasBlockPlan)
                 ? () => (
-                    <HeaderIconButton
-                      onPress={() => setCarpoolOpen(true)}
-                      name="car"
-                      color={tintColor}
-                      accessibilityLabel="Carpool öffnen"
-                      accessibilityHint="Öffnet Carpool-Informationen"
-                    />
+                    <View
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
+                      {RIDES_FEATURE_ENABLED && (
+                        <HeaderIconButton
+                          onPress={() => setCarpoolOpen(true)}
+                          name="car"
+                          color={tintColor}
+                          accessibilityLabel="Carpool öffnen"
+                          accessibilityHint="Öffnet Carpool-Informationen"
+                        />
+                      )}
+                      {hasBlockPlan && (
+                        <HeaderIconButton
+                          onPress={() => router.push('/schedule/block-plan')}
+                          name="calendar.badge.clock"
+                          color={tintColor}
+                          accessibilityLabel="Blockplan öffnen"
+                          accessibilityHint="Zeigt Theorie- und Praxisphasen aller Semester"
+                        />
+                      )}
+                    </View>
                   )
                 : undefined,
           }}
         />
+        <Stack.Screen name="block-plan" options={{ title: 'Blockplan' }} />
       </Stack>
       {RIDES_FEATURE_ENABLED && (
         <BottomSheet

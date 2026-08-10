@@ -5,6 +5,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import OfflineBanner from '@/components/ui/OfflineBanner';
+import { hexToRgba } from '@/lib/utils';
 
 // ---- Data hook ----
 import { useRidesIndex } from '@/hooks/useRidesIndex';
@@ -75,15 +76,6 @@ function mmToHHMM(mm: number | null | undefined): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 }
 
-// Convert a hex color like #RRGGBB to an rgba() string with alpha
-function hexToRgba(hex: string, alpha: number): string {
-  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex);
-  if (!m) return hex;
-  const r = parseInt(m[1], 16);
-  const g = parseInt(m[2], 16);
-  const b = parseInt(m[3], 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 // Clamp minutes to a 0..1439 range for safe display
 function clampDayMinutes(mm: number | null | undefined): number | null {
   if (mm == null || !Number.isFinite(mm)) return null;

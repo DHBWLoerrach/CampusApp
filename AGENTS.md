@@ -4,7 +4,7 @@
 
 - `app/`: Expo Router entry (screens, layouts). Tabs live in `app/(tabs)/` with routes like `news`, `schedule`, `canteen`, `services`.
 - `components/`: Reusable UI and feature components (e.g., `ui/`, `news/`). Prefer colocating simple component styles with the component.
-- `lib/`: Framework-agnostic helpers (API clients, parsers, utils). Keep side effects out of `lib`.
+- `lib/`: Framework-agnostic helpers (API clients, parsers, storage adapters, utils). "Framework-agnostic" means no React and no JSX — I/O such as `fetch` or `expo-sqlite/kv-store` is expected here (see `ridesService.ts`, `codeCompanionPromo.ts`). Keep side effects out of module scope: importing a `lib` module must not read, write, or fetch anything on its own.
 - `constants/`: App-wide constants and keys (e.g., `StorageKeys.ts`).
 - `context/` and `hooks/`: React Context providers and custom hooks.
 - `assets/`: Fonts, images, screenshots. Load fonts in `app/_layout.tsx`.

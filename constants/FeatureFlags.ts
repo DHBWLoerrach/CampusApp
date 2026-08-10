@@ -18,3 +18,12 @@ export const RIDES_FEATURE_ENABLED: boolean = parseBoolEnv(
   process.env.EXPO_PUBLIC_RIDES_ENABLED as string | undefined,
   false
 );
+
+// Hide/Show the block plan (Blockplan) UI entry in the Schedule header.
+// Defaults to off: while the plan API is not live, every schedule visit would
+// otherwise spend a failing request plus retries on it.
+// EXPO_PUBLIC_BLOCKPLAN_ENABLED=true will enable the lookup and the icon.
+export const BLOCK_PLAN_FEATURE_ENABLED: boolean = parseBoolEnv(
+  process.env.EXPO_PUBLIC_BLOCKPLAN_ENABLED as string | undefined,
+  false
+);

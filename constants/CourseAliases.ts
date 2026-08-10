@@ -18,3 +18,23 @@ export function resolveCourseAlias(input: string): string {
   const norm = input.trim().toLowerCase();
   return COURSE_ALIAS_MAP[norm] ?? norm;
 }
+
+// Reverse lookup table, built once from COURSE_ALIAS_MAP.
+const COURSE_ALIAS_REVERSE_MAP: Record<string, string> = Object.fromEntries(
+  Object.entries(COURSE_ALIAS_MAP).map(([alias, canonical]) => [
+    canonical,
+    alias,
+  ])
+);
+
+/**
+ * Inverse of `resolveCourseAlias`: maps a canonical course name back to the
+ * plain course designation students use (e.g. 'wwi25a-am' -> 'wwi25a').
+ *
+ * The canonical names exist only to address the OWA mailboxes behind the iCal
+ * feed. Services that key on the official course code need the plain form.
+ */
+export function unresolveCourseAlias(input: string): string {
+  const norm = input.trim().toLowerCase();
+  return COURSE_ALIAS_REVERSE_MAP[norm] ?? norm;
+}

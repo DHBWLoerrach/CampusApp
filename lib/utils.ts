@@ -44,6 +44,17 @@ export const toLocalISOString = (date: Date): string => {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${sign}${offsetH}:${offsetM}`;
 };
 
+// Convert a hex color like #RRGGBB to an rgba() string with alpha.
+// Returns the input unchanged when it is not a plain 6-digit hex color.
+export const hexToRgba = (hex: string, alpha: number): string => {
+  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex);
+  if (!m) return hex;
+  const r = parseInt(m[1], 16);
+  const g = parseInt(m[2], 16);
+  const b = parseInt(m[3], 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 // --- Schedule/Event helpers ---
 // Extract URL and room text from a location string (first URL is considered the online link)
 const URL_REGEX_SINGLE = /(https?:\/\/[^\s]+)/i;
