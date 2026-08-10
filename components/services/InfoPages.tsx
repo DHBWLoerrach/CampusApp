@@ -8,11 +8,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
 export type InfoKey =
-  | 'about'
-  | 'imprint'
-  | 'disclaimer'
-  | 'privacy'
-  | 'feedback';
+  'about' | 'imprint' | 'disclaimer' | 'privacy' | 'feedback';
 
 type InfoDef = { title: string; Body: React.ComponentType };
 

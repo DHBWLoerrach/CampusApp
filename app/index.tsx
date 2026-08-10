@@ -32,8 +32,7 @@ export default function Page() {
         // If schedule is the last tab, also read which sub-tab was active
         if (saved === 'schedule') {
           const sub = (await Storage.getItem(LAST_SCHEDULE_SUBTAB_KEY)) as
-            | string
-            | null;
+            string | null;
           setLastScheduleSubTab(
             sub && isScheduleSubTabName(sub) ? sub : 'index'
           );

@@ -69,8 +69,7 @@ export default function ScheduleLayout() {
     (async () => {
       try {
         const saved = (await Storage.getItem(LAST_SCHEDULE_SUBTAB_KEY)) as
-          | string
-          | null;
+          string | null;
         if (!mounted) return;
         setInitialSubTab(
           saved && isScheduleSubTabName(saved) ? saved : 'index'
