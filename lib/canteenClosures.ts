@@ -23,7 +23,7 @@ export type CanteenClosure = {
 // One entry per closure, ranges must not overlap. Order does not matter.
 export const CANTEEN_CLOSURES: CanteenClosure[] = [
   {
-    from: '2026-08-05',
+    from: '2026-08-03',
     through: '2026-09-13',
     title: 'Betriebsferien',
     scope: 'service',
