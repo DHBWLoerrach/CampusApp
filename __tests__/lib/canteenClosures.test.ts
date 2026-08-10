@@ -61,7 +61,18 @@ describe('canteen closure configuration', () => {
 });
 
 describe('describeClosure', () => {
-  it('describes the range in German, with the year once when it does not span years', () => {
+  it('names the month once when the closure stays within it', () => {
+    expect(
+      describeClosure({ ...summerBreak, through: '2026-08-13' }).rangeLabel
+    ).toBe('4. – 13. August 2026');
+  });
+
+  it('labels the last closed day without a year', () => {
+    expect(describeClosure(summerBreak).endLabel).toBe('13. September');
+    expect(describeClosure(winterBreak).endLabel).toBe('6. Januar');
+  });
+
+  it('names both months, and the year once, within the same year', () => {
     expect(describeClosure(summerBreak).rangeLabel).toBe(
       '4. August – 13. September 2026'
     );

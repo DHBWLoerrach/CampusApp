@@ -23,7 +23,7 @@ export type CanteenClosure = {
 // One entry per closure, ranges must not overlap. Order does not matter.
 export const CANTEEN_CLOSURES: CanteenClosure[] = [
   {
-    from: '2026-08-04',
+    from: '2026-08-05',
     through: '2026-09-13',
     title: 'Betriebsferien',
     scope: 'service',
@@ -45,6 +45,8 @@ export type ClosureInfo = {
   scope: CanteenClosure['scope'];
   /** e.g. "4. August – 13. September 2026" */
   rangeLabel: string;
+  /** Last closed day without the year, e.g. "13. September" */
+  endLabel: string;
   /** e.g. "Essensausgabe wieder ab" */
   reopeningCaption: string;
   /** e.g. "Montag, 14. September" */
@@ -72,18 +74,21 @@ function reopeningDate(through: string): Date {
 export function describeClosure(closure: CanteenClosure): ClosureInfo {
   const start = parseISO(closure.from);
   const end = parseISO(closure.through);
-  // Repeat the year on both ends only when the closure spans a year boundary.
+  // Name month and year on the start only when the end does not already carry
+  // them: "4. – 13. August 2026", "4. August – 13. September 2026",
+  // "21. Dezember 2026 – 6. Januar 2027".
   const sameYear = start.getFullYear() === end.getFullYear();
-  const startLabel = format(start, sameYear ? 'd. MMMM' : 'd. MMMM yyyy', {
-    locale: de,
-  });
-  const endLabel = format(end, 'd. MMMM yyyy', { locale: de });
+  const sameMonth = sameYear && start.getMonth() === end.getMonth();
+  const startPattern = sameMonth ? 'd.' : sameYear ? 'd. MMMM' : 'd. MMMM yyyy';
+  const rangeStartLabel = format(start, startPattern, { locale: de });
+  const rangeEndLabel = format(end, 'd. MMMM yyyy', { locale: de });
 
   return {
     title: closure.title,
     note: closure.note,
     scope: closure.scope,
-    rangeLabel: `${startLabel} – ${endLabel}`,
+    rangeLabel: `${rangeStartLabel} – ${rangeEndLabel}`,
+    endLabel: format(end, 'd. MMMM', { locale: de }),
     reopeningCaption:
       closure.scope === 'building'
         ? 'Wieder geöffnet ab'

@@ -181,11 +181,11 @@ export default function CanteenDayView({ date }: { date: Date }) {
           <View style={styles.center}>
             <ThemedText type="defaultSemiBold" style={styles.hint}>
               {closure.scope === 'building'
-                ? `Mensa am ${format(safeDate, 'dd.MM.yyyy')} geschlossen.`
-                : `Keine Essensausgabe am ${format(safeDate, 'dd.MM.yyyy')}.`}
+                ? 'Mensa geschlossen'
+                : 'Keine Essensausgabe'}
             </ThemedText>
             <ThemedText style={styles.hint}>
-              {closure.title}: {closure.rangeLabel}
+              {closure.title} bis {closure.endLabel}
             </ThemedText>
             {closure.note ? (
               <ThemedText style={styles.small}>{closure.note}</ThemedText>
