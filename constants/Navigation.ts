@@ -1,13 +1,16 @@
 import { Colors, dhbwRed } from '@/constants/Colors';
 
+export const NAV_HEADER_TITLE_FONT_SIZE = 18;
+export const NAV_HEADER_TITLE_FONT_WEIGHT = '700' as const;
+
 export const navBarOptions = {
   headerTintColor: dhbwRed,
   headerStyle: {
     backgroundColor: 'transparent',
   },
   headerTitleStyle: {
-    fontSize: 20,
-    fontWeight: '700' as const,
+    fontSize: NAV_HEADER_TITLE_FONT_SIZE,
+    fontWeight: NAV_HEADER_TITLE_FONT_WEIGHT,
   },
   headerShadowVisible: false,
   tabBarActiveTintColor: dhbwRed,

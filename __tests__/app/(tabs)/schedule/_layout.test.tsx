@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import ScheduleStackLayout from '@/app/(tabs)/schedule/_layout';
+import { navBarOptions } from '@/constants/Navigation';
 
 const mockUseCourseContext = jest.fn();
 const mockUseBlockPlan = jest.fn();
@@ -91,6 +93,22 @@ describe('ScheduleStackLayout block plan entry point', () => {
     const { queryByLabelText } = render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeTruthy();
+  });
+
+  it('uses the shared navigation title typography for the course switcher', () => {
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    const { getByText } = render(<ScheduleStackLayout />);
+    const courseTitleStyle = StyleSheet.flatten(
+      getByText('TIF26A').props.style
+    );
+
+    expect(courseTitleStyle.fontSize).toBe(
+      navBarOptions.headerTitleStyle.fontSize
+    );
+    expect(courseTitleStyle.fontWeight).toBe(
+      navBarOptions.headerTitleStyle.fontWeight
+    );
   });
 
   it('hides the icon when the API reports no plan for the course', () => {

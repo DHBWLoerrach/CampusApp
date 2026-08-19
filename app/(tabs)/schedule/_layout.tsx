@@ -11,7 +11,11 @@ import {
   BLOCK_PLAN_FEATURE_ENABLED,
   RIDES_FEATURE_ENABLED,
 } from '@/constants/FeatureFlags';
-import { navBarOptions } from '@/constants/Navigation';
+import {
+  NAV_HEADER_TITLE_FONT_SIZE,
+  NAV_HEADER_TITLE_FONT_WEIGHT,
+  navBarOptions,
+} from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useBlockPlan } from '@/hooks/useBlockPlan';
 
@@ -85,9 +89,8 @@ export default function ScheduleStackLayout() {
                         numberOfLines={1}
                         style={{
                           color: tintColor,
-                          fontSize: 15,
-                          fontWeight: '700',
-                          lineHeight: 22,
+                          fontSize: NAV_HEADER_TITLE_FONT_SIZE,
+                          fontWeight: NAV_HEADER_TITLE_FONT_WEIGHT,
                           marginRight: 6,
                         }}
                       >
@@ -95,7 +98,7 @@ export default function ScheduleStackLayout() {
                       </Text>
                       <IconSymbol
                         name="chevron.down"
-                        size={14}
+                        size={16}
                         color={tintColor}
                       />
                     </View>
