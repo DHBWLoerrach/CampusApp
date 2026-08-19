@@ -12,9 +12,8 @@ import { useTimetable } from '@/hooks/useTimetable';
 import LectureCard from '@/components/schedule/LectureCard';
 import { useCourseContext } from '@/context/CourseContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { Colors } from '@/constants/Colors';
+import { useTodayInBerlin } from '@/hooks/useTodayInBerlin';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
@@ -82,21 +81,18 @@ export default function ScheduleList() {
   // Theme-aware colors
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
-  const scheme = useColorScheme();
-  const sectionHeaderText = Colors[scheme].dayTextColor;
-  const sectionHeaderDivider = Colors[scheme].border;
+  const sectionHeaderText = useThemeColor({}, 'text');
+  const sectionHeaderDivider = useThemeColor({}, 'border');
+  const today = useTodayInBerlin();
 
   // useMemo will re-calculate the sections only when the timetable data changes.
   // This is a performance optimization.
   const sections = useMemo<ScheduleSection[]>(() => {
     if (!data) return [];
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Set to midnight to compare dates correctly
-
     // 1. Filter out past days and transform into SectionList format
     const futureSections = Object.keys(data)
-      .filter((dateKey) => new Date(dateKey) >= today) // Keep today and future days
+      .filter((dateKey) => dateKey >= today) // Keep today and future days
       .sort() // Sort keys chronologically (YYYY-MM-DD string format allows this)
       .map((dateKey) => ({
         title: dateKey, // We use the raw date key as the title for now
@@ -104,27 +100,34 @@ export default function ScheduleList() {
       }));
 
     return futureSections;
-  }, [data]);
+  }, [data, today]);
 
   const renderSectionHeader = useCallback(
     ({
       section,
     }: {
       section: SectionListData<TimetableEvent, ScheduleSection>;
-    }) => (
-      <ThemedText
-        style={[
-          styles.sectionHeader,
-          {
-            borderBottomColor: sectionHeaderDivider,
-            color: sectionHeaderText,
-          },
-        ]}
-      >
-        {formatDateHeader(section.title)}
-      </ThemedText>
-    ),
-    [sectionHeaderDivider, sectionHeaderText]
+    }) => {
+      const isToday = section.title === today;
+      const label = formatDateHeader(section.title);
+
+      return (
+        <ThemedText
+          accessibilityRole="header"
+          accessibilityLabel={isToday ? `Heute, ${label}` : label}
+          style={[
+            styles.sectionHeader,
+            {
+              borderBottomColor: sectionHeaderDivider,
+              color: isToday ? tintColor : sectionHeaderText,
+            },
+          ]}
+        >
+          {label}
+        </ThemedText>
+      );
+    },
+    [sectionHeaderDivider, sectionHeaderText, tintColor, today]
   );
 
   const showOffline = isReady && isOffline;
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
   },
   lectureSeparator: {
