@@ -1,28 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { dhbwRed } from '@/constants/Colors';
-import { hexToRgba } from '@/lib/utils';
 import type { YmdDate } from '@/lib/berlinDate';
 import {
   getPhaseDurationDays,
-  getPhaseProgress,
+  isPhaseActiveOn,
   type BlockPlanPhase,
 } from '@/lib/blockPlanDomain';
 import {
   formatPhaseDuration,
   formatPhaseRange,
-  formatRemaining,
   getPhaseDisplay,
 } from '@/components/schedule/blockPlanPhaseDisplay';
-
-const CARD_BOX_SHADOW = '0 1px 2px rgba(0, 0, 0, 0.15)';
-
-// Tint wash behind the running phase. Derived from the brand color so it stays
-// in sync with `tint` instead of repeating the literal.
-const HIGHLIGHT_BG_DARK = hexToRgba(dhbwRed, 0.12);
-const HIGHLIGHT_BG_LIGHT = hexToRgba(dhbwRed, 0.06);
 
 interface BlockPlanPhaseCardProps {
   phase: BlockPlanPhase;
@@ -34,7 +23,6 @@ export default function BlockPlanPhaseCard({
   phase,
   today,
 }: BlockPlanPhaseCardProps) {
-  const scheme = useColorScheme() ?? 'light';
   const cardBg = useThemeColor({}, 'background');
   const textColor = useThemeColor({}, 'text');
   const secondaryText = useThemeColor({}, 'icon');
@@ -42,21 +30,13 @@ export default function BlockPlanPhaseCard({
   const tintColor = useThemeColor({}, 'tint');
 
   const { label, icon } = getPhaseDisplay(phase.type);
-  const progress = getPhaseProgress(phase, today);
-  const isCurrent = progress !== null;
+  const isCurrent = isPhaseActiveOn(phase, today);
   const isPast = phase.endDate < today;
 
-  // Derived once and reused by both the visible text and the accessibility
-  // label — these run for every row of a virtualized list.
+  // Derived once and reused by visible text and the accessibility label. The
+  // summary owns progress details, keeping this list row deliberately compact.
   const rangeText = formatPhaseRange(phase);
   const durationText = formatPhaseDuration(getPhaseDurationDays(phase));
-  const remainingText = progress
-    ? formatRemaining(progress.daysRemaining)
-    : null;
-
-  const accentColor = isCurrent ? tintColor : secondaryText;
-  const highlightBg =
-    scheme === 'dark' ? HIGHLIGHT_BG_DARK : HIGHLIGHT_BG_LIGHT;
 
   return (
     <View
@@ -66,56 +46,49 @@ export default function BlockPlanPhaseCard({
         label,
         rangeText,
         durationText,
-        remainingText ? `Aktuell, ${remainingText}` : null,
+        isCurrent ? 'Aktuell' : null,
+        isPast ? 'Abgeschlossen' : null,
       ]
         .filter(Boolean)
         .join(', ')}
       style={[
         styles.card,
         {
-          backgroundColor: isCurrent ? highlightBg : cardBg,
-          borderColor: isCurrent ? tintColor : borderColor,
-          borderLeftColor: accentColor,
-          boxShadow: scheme === 'dark' ? 'none' : CARD_BOX_SHADOW,
+          backgroundColor: cardBg,
+          borderColor,
+          borderLeftColor: isCurrent ? tintColor : borderColor,
+          borderLeftWidth: isCurrent ? 4 : 1,
         },
-        isPast && styles.pastCard,
       ]}
     >
       <View style={styles.headerRow}>
         <IconSymbol
           name={icon}
           size={16}
-          color={accentColor}
-          style={styles.headerIcon}
+          color={secondaryText}
+          style={[styles.headerIcon, isPast ? styles.pastIcon : null]}
         />
-        <Text style={[styles.title, { color: textColor }]}>{label}</Text>
-        {isCurrent && (
+        <Text
+          style={[
+            styles.title,
+            isCurrent ? styles.currentTitle : null,
+            { color: isPast ? secondaryText : textColor },
+          ]}
+        >
+          {label}
+        </Text>
+        {isCurrent ? (
           <View style={[styles.badge, { backgroundColor: tintColor }]}>
             <Text style={styles.badgeText}>Aktuell</Text>
           </View>
-        )}
+        ) : null}
       </View>
 
-      <Text style={[styles.range, { color: secondaryText }]}>{rangeText}</Text>
+      <Text style={[styles.range, { color: textColor }]}>{rangeText}</Text>
 
       <Text style={[styles.meta, { color: secondaryText }]}>
         {durationText}
-        {remainingText ? ` · ${remainingText}` : ''}
       </Text>
-
-      {isCurrent && (
-        <View style={[styles.progressTrack, { borderColor }]}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                backgroundColor: tintColor,
-                width: `${Math.min(100, Math.max(2, progress.ratio * 100))}%`,
-              },
-            ]}
-          />
-        </View>
-      )}
     </View>
   );
 }
@@ -126,10 +99,6 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     padding: 12,
     borderWidth: 1,
-    borderLeftWidth: 4,
-  },
-  pastCard: {
-    opacity: 0.55,
   },
   headerRow: {
     flexDirection: 'row',
@@ -140,13 +109,19 @@ const styles = StyleSheet.create({
   headerIcon: {
     marginRight: 6,
   },
+  pastIcon: {
+    opacity: 0.7,
+  },
   title: {
     fontSize: 15,
     fontWeight: 'bold',
     flexShrink: 1,
   },
+  currentTitle: {
+    marginRight: 12,
+  },
   badge: {
-    marginLeft: 8,
+    marginLeft: 'auto',
     borderRadius: 999,
     borderCurve: 'continuous',
     paddingHorizontal: 8,
@@ -164,18 +139,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 2,
     opacity: 0.9,
-  },
-  progressTrack: {
-    height: 4,
-    borderRadius: 999,
-    borderCurve: 'continuous',
-    borderWidth: StyleSheet.hairlineWidth,
-    marginTop: 8,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 999,
-    borderCurve: 'continuous',
   },
 });

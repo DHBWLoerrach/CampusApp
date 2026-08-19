@@ -95,6 +95,7 @@ const MAPPING = {
   // Block plan (theory/practice phases)
   briefcase: { name: 'work-outline', source: 'material' },
   'calendar.badge.clock': { name: 'event-note', source: 'material' },
+  archivebox: { name: 'archive', source: 'material' },
   // Utility/actions
   'doc.on.doc': { name: 'content-copy', source: 'community' },
   'square.and.arrow.up': { name: 'share', source: 'material' },

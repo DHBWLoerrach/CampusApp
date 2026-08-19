@@ -1,17 +1,30 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  Pressable,
   RefreshControl,
   SectionList,
   StyleSheet,
   View,
 } from 'react-native';
+import Animated, {
+  Easing,
+  FadeInDown,
+  FadeOutUp,
+  ReduceMotion,
+  useAnimatedStyle,
+  useReducedMotion,
+  withTiming,
+} from 'react-native-reanimated';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
+import BlockPlanArchivedPhaseRow from '@/components/schedule/BlockPlanArchivedPhaseRow';
 import BlockPlanPhaseCard from '@/components/schedule/BlockPlanPhaseCard';
 import {
   formatDay,
@@ -40,7 +53,176 @@ import {
   isBeforeFirstPhase,
   type BlockPlan,
   type BlockPlanPhaseRef,
+  type BlockPlanSemester,
 } from '@/lib/blockPlanDomain';
+
+const ARCHIVE_ENTERING = FadeInDown.duration(200).reduceMotion(
+  ReduceMotion.System
+);
+const ARCHIVE_EXITING = FadeOutUp.duration(150).reduceMotion(
+  ReduceMotion.System
+);
+const SUMMARY_BOX_SHADOW = '0 1px 2px rgba(0, 0, 0, 0.15)';
+const ARCHIVE_REVEAL_DISTANCE = 160;
+
+function NoItemSeparator() {
+  return null;
+}
+
+function PhaseCardSeparator() {
+  return <View style={styles.phaseCardSeparator} />;
+}
+
+function ArchiveChevron({
+  isExpanded,
+  color,
+}: {
+  isExpanded: boolean;
+  color: string;
+}) {
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      transform: [
+        {
+          rotate: withTiming(isExpanded ? '180deg' : '0deg', {
+            duration: 200,
+            easing: Easing.out(Easing.cubic),
+            reduceMotion: ReduceMotion.System,
+          }),
+        },
+      ],
+    }),
+    [isExpanded]
+  );
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <IconSymbol name="chevron.down" size={22} color={color} />
+    </Animated.View>
+  );
+}
+
+function isPastSemester(semester: BlockPlanSemester, today: YmdDate): boolean {
+  return semester.phases.every((phase) => phase.endDate < today);
+}
+
+function PhaseProgressBar({
+  ratio,
+  trackColor,
+  fillColor,
+}: {
+  ratio: number;
+  trackColor: string;
+  fillColor: string;
+}) {
+  const normalizedRatio = Math.min(1, Math.max(0, ratio));
+  const percentage = Math.round(normalizedRatio * 100);
+
+  return (
+    <View
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="Fortschritt der aktuellen Phase"
+      accessibilityValue={{
+        min: 0,
+        max: 100,
+        now: percentage,
+        text: `${percentage} Prozent`,
+      }}
+      style={[styles.phaseProgressTrack, { backgroundColor: trackColor }]}
+    >
+      <View
+        testID="block-plan-progress-fill"
+        style={[
+          styles.phaseProgressFill,
+          {
+            backgroundColor: fillColor,
+            width: `${normalizedRatio * 100}%`,
+          },
+        ]}
+      />
+    </View>
+  );
+}
+
+function BlockPlanSectionHeader({
+  title,
+  isArchive,
+  isFirstArchivedSemester,
+  isExpanded,
+  pressedBackgroundColor,
+  dividerColor,
+  textColor,
+  testID,
+  onToggle,
+}: {
+  title: string;
+  isArchive: boolean;
+  isFirstArchivedSemester: boolean;
+  isExpanded: boolean;
+  pressedBackgroundColor: string;
+  dividerColor: string;
+  textColor: string;
+  testID: string;
+  onToggle: () => void;
+}) {
+  const content = (
+    <>
+      <View style={styles.sectionHeaderTitleRow}>
+        {isArchive ? (
+          <IconSymbol
+            name="archivebox"
+            size={18}
+            color={textColor}
+            style={styles.sectionHeaderIcon}
+          />
+        ) : null}
+        <ThemedText style={[styles.sectionHeaderText, { color: textColor }]}>
+          {title}
+        </ThemedText>
+      </View>
+      {isArchive ? (
+        <ArchiveChevron isExpanded={isExpanded} color={textColor} />
+      ) : null}
+    </>
+  );
+
+  if (!isArchive) {
+    return (
+      <View
+        testID={testID}
+        style={[
+          styles.sectionHeader,
+          styles.semesterHeader,
+          isFirstArchivedSemester ? styles.firstArchivedSemesterHeader : null,
+          { borderBottomColor: dividerColor },
+        ]}
+      >
+        {content}
+      </View>
+    );
+  }
+
+  return (
+    <Pressable
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={`${title} ${isExpanded ? 'einklappen' : 'aufklappen'}`}
+      accessibilityState={{ expanded: isExpanded }}
+      onPress={onToggle}
+      style={({ pressed }) => [
+        styles.sectionHeader,
+        styles.archiveHeader,
+        {
+          backgroundColor: pressed ? pressedBackgroundColor : 'transparent',
+          borderColor: dividerColor,
+        },
+      ]}
+    >
+      {content}
+    </Pressable>
+  );
+}
 
 /**
  * Compact summary above the list: where the student stands today and what
@@ -54,9 +236,11 @@ function BlockPlanSummary({
   today: YmdDate;
 }) {
   const borderColor = useThemeColor({}, 'border');
-  const bgColor = useThemeColor({}, 'dayNumberContainer');
+  const bgColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const secondaryText = useThemeColor({}, 'icon');
+  const progressTrackColor = useThemeColor({}, 'dayNumberContainer');
+  const scheme = useColorScheme() ?? 'light';
 
   const current = findCurrentPhase(plan, today);
   const next = findNextPhase(plan, today);
@@ -86,7 +270,18 @@ function BlockPlanSummary({
   const upcoming = current && next ? next : null;
 
   return (
-    <View style={[styles.summary, { backgroundColor: bgColor, borderColor }]}>
+    <View
+      testID="block-plan-summary"
+      style={[
+        styles.summary,
+        {
+          backgroundColor: bgColor,
+          borderColor,
+          borderLeftColor: tintColor,
+          boxShadow: scheme === 'dark' ? 'none' : SUMMARY_BOX_SHADOW,
+        },
+      ]}
+    >
       <View style={styles.summaryHeaderRow}>
         <IconSymbol
           name="calendar.badge.clock"
@@ -99,17 +294,31 @@ function BlockPlanSummary({
         </ThemedText>
       </View>
 
-      {detail && (
+      {detail ? (
         <ThemedText style={[styles.summaryDetail, { color: secondaryText }]}>
           {detail}
         </ThemedText>
-      )}
+      ) : null}
 
-      {upcoming && (
-        <ThemedText style={[styles.summaryDetail, { color: secondaryText }]}>
+      {progress ? (
+        <PhaseProgressBar
+          ratio={progress.ratio}
+          trackColor={progressTrackColor}
+          fillColor={tintColor}
+        />
+      ) : null}
+
+      {upcoming ? (
+        <ThemedText
+          style={[
+            styles.summaryDetail,
+            progress ? styles.summaryUpcomingAfterProgress : null,
+            { color: secondaryText },
+          ]}
+        >
           {`Danach: ${getPhaseDisplay(upcoming.phase.type).label} (${upcoming.semesterNumber}. Semester)`}
         </ThemedText>
-      )}
+      ) : null}
     </View>
   );
 }
@@ -124,27 +333,106 @@ export default function BlockPlanView() {
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const scheme = useColorScheme() ?? 'light';
-  const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
+  const reduceMotion = useReducedMotion();
 
   // One reference day for the whole screen, so every card judges past/current
   // against the same date. Refreshes itself at midnight and on app resume.
   const today = useTodayInBerlin();
+  const sectionListRef = useRef<SectionList<BlockPlanPhaseRef>>(null);
+  const scrollOffset = useRef(0);
+  const shouldRevealPastArchive = useRef(false);
+  const [expandedPastArchives, setExpandedPastArchives] = useState<Set<string>>(
+    () => new Set()
+  );
 
   const plan = data?.plan;
+  const archiveCourseCode = plan?.course.code;
+  const isPastArchiveExpanded = archiveCourseCode
+    ? expandedPastArchives.has(archiveCourseCode)
+    : false;
+
+  const togglePastArchive = useCallback(() => {
+    if (!archiveCourseCode) return;
+
+    shouldRevealPastArchive.current = !isPastArchiveExpanded;
+    setExpandedPastArchives((expanded) => {
+      const next = new Set(expanded);
+      if (next.has(archiveCourseCode)) {
+        next.delete(archiveCourseCode);
+      } else {
+        next.add(archiveCourseCode);
+      }
+      return next;
+    });
+  }, [archiveCourseCode, isPastArchiveExpanded]);
 
   const sections = useMemo(() => {
     if (!plan) return [];
-    return plan.semesters.map((semester) => ({
+
+    const toSemesterSection = (
+      semester: BlockPlanSemester,
+      isArchivedSemester: boolean,
+      isFirstArchivedSemester = false
+    ) => ({
+      key: `${plan.course.code}-semester-${semester.number}`,
       title: `${semester.number}. Semester`,
-      // Each row carries its semester number so the list keys stay unique even
-      // if the payload repeats the same phase across two semesters.
+      isArchive: false,
+      isArchivedSemester,
+      isFirstArchivedSemester,
+      ItemSeparatorComponent: isArchivedSemester ? NoItemSeparator : undefined,
       data: semester.phases.map<BlockPlanPhaseRef>((phase) => ({
         semesterNumber: semester.number,
         phase,
       })),
-    }));
-  }, [plan]);
+    });
+    const pastSemesters = plan.semesters.filter((semester) =>
+      isPastSemester(semester, today)
+    );
+    const visibleSemesters = plan.semesters.filter(
+      (semester) => !isPastSemester(semester, today)
+    );
+    const archiveSections =
+      pastSemesters.length > 0
+        ? [
+            {
+              key: `${plan.course.code}-past-archive`,
+              title: `Vergangene Semester (${pastSemesters.length})`,
+              isArchive: true,
+              isArchivedSemester: false,
+              isFirstArchivedSemester: false,
+              data: [] as BlockPlanPhaseRef[],
+            },
+          ]
+        : [];
+
+    return [
+      ...visibleSemesters.map((semester) => toSemesterSection(semester, false)),
+      ...archiveSections,
+      ...(isPastArchiveExpanded
+        ? pastSemesters.map((semester, index) =>
+            toSemesterSection(semester, true, index === 0)
+          )
+        : []),
+    ];
+  }, [isPastArchiveExpanded, plan, today]);
+
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      scrollOffset.current = event.nativeEvent.contentOffset.y;
+    },
+    []
+  );
+
+  const revealPastArchive = useCallback(() => {
+    if (!shouldRevealPastArchive.current) return;
+
+    shouldRevealPastArchive.current = false;
+    sectionListRef.current?.getScrollResponder()?.scrollTo({
+      animated: !reduceMotion,
+      y: scrollOffset.current + ARCHIVE_REVEAL_DISTANCE,
+    });
+  }, [reduceMotion]);
 
   const showOffline = isReady && isOffline;
   const hasResolvedResult = data !== undefined;
@@ -226,8 +514,12 @@ export default function BlockPlanView() {
       )}
 
       <SectionList
+        ref={sectionListRef}
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
+        onContentSizeChange={revealPastArchive}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item, index) =>
           `${item.semesterNumber}-${item.phase.type}-${item.phase.startDate}-${index}`
@@ -235,22 +527,48 @@ export default function BlockPlanView() {
         ListHeaderComponent={
           plan ? <BlockPlanSummary plan={plan} today={today} /> : null
         }
-        renderItem={({ item }) => (
-          <BlockPlanPhaseCard phase={item.phase} today={today} />
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <ThemedText
-            style={[
-              styles.sectionHeader,
-              {
-                backgroundColor: sectionHeaderBg,
-                color: sectionHeaderText,
-              },
-            ]}
-          >
-            {title}
-          </ThemedText>
-        )}
+        renderItem={({ item, index, section }) => {
+          if (section.isArchivedSemester) {
+            return (
+              <Animated.View
+                entering={ARCHIVE_ENTERING}
+                exiting={ARCHIVE_EXITING}
+              >
+                <BlockPlanArchivedPhaseRow
+                  phase={item.phase}
+                  showDivider={index < section.data.length - 1}
+                />
+              </Animated.View>
+            );
+          }
+
+          return <BlockPlanPhaseCard phase={item.phase} today={today} />;
+        }}
+        renderSectionHeader={({ section }) => {
+          const header = (
+            <BlockPlanSectionHeader
+              title={section.title}
+              isArchive={section.isArchive}
+              isFirstArchivedSemester={section.isFirstArchivedSemester}
+              isExpanded={isPastArchiveExpanded}
+              pressedBackgroundColor={Colors[scheme].dayNumberContainer}
+              dividerColor={Colors[scheme].border}
+              textColor={sectionHeaderText}
+              testID={`block-plan-section-${section.key}`}
+              onToggle={togglePastArchive}
+            />
+          );
+          return section.isArchivedSemester ? (
+            <Animated.View
+              entering={ARCHIVE_ENTERING}
+              exiting={ARCHIVE_EXITING}
+            >
+              {header}
+            </Animated.View>
+          ) : (
+            header
+          );
+        }}
         ListEmptyComponent={() => (
           <ThemedView style={styles.center}>
             <ThemedText>
@@ -258,8 +576,7 @@ export default function BlockPlanView() {
             </ThemedText>
           </ThemedView>
         )}
-        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-        SectionSeparatorComponent={() => <View style={{ height: 4 }} />}
+        ItemSeparatorComponent={PhaseCardSeparator}
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
@@ -291,19 +608,52 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 4,
   },
+  phaseCardSeparator: {
+    height: 8,
+  },
   sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  archiveHeader: {
+    minHeight: 48,
     borderRadius: 8,
     borderCurve: 'continuous',
-    paddingVertical: 8,
+    borderWidth: 1,
     paddingHorizontal: 12,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 24,
+  },
+  semesterHeader: {
+    minHeight: 34,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    marginTop: 16,
+    marginBottom: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  firstArchivedSemesterHeader: {
+    marginTop: 8,
+  },
+  sectionHeaderText: {
+    fontSize: 15,
+    fontWeight: '600',
+    flexShrink: 1,
+  },
+  sectionHeaderTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 0,
+    flex: 1,
+  },
+  sectionHeaderIcon: {
+    marginRight: 8,
   },
   summary: {
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
+    borderLeftWidth: 4,
     padding: 12,
     marginTop: 12,
   },
@@ -324,5 +674,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     marginTop: 2,
+  },
+  phaseProgressTrack: {
+    height: 3,
+    borderRadius: 999,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+    marginTop: 8,
+  },
+  phaseProgressFill: {
+    height: '100%',
+    borderRadius: 999,
+    borderCurve: 'continuous',
+  },
+  summaryUpcomingAfterProgress: {
+    marginTop: 8,
   },
 });
