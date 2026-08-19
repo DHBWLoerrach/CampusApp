@@ -633,7 +633,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   firstArchivedSemesterHeader: {
-    marginTop: 8,
+    marginTop: 4,
   },
   sectionHeaderText: {
     fontSize: 15,

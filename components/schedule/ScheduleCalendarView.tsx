@@ -352,7 +352,7 @@ export default function ScheduleCalendarView({
         borderWidth: 1,
         borderRadius: 8,
       },
-      nowIndicatorColor: 'magenta',
+      nowIndicatorColor: tintColor,
       headerBackgroundColor: backgroundColor,
       hourTextStyle: { color: tintColor, fontWeight: 600 },
       todayName: { color: tintColor, fontWeight: 600 },

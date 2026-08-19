@@ -210,7 +210,7 @@ describe('BlockPlanView', () => {
       StyleSheet.flatten(
         getByTestId('block-plan-section-TIF26A-semester-1').props.style
       ).marginTop
-    ).toBe(8);
+    ).toBe(4);
     const pastPhaseRow = getByLabelText(
       'Theoriephase, 1. Okt. – 20. Dez. 2026, 12 Wochen, Abgeschlossen'
     );
@@ -269,7 +269,7 @@ describe('BlockPlanView', () => {
       StyleSheet.flatten(
         getByTestId('block-plan-section-TIF26A-semester-1').props.style
       ).marginTop
-    ).toBe(8);
+    ).toBe(4);
     expect(
       StyleSheet.flatten(
         getByTestId('block-plan-section-TIF26A-semester-2').props.style

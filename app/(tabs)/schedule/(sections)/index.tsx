@@ -1,9 +1,10 @@
-import { useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   RefreshControl,
   SectionList,
   StyleSheet,
+  type SectionListData,
   View,
 } from 'react-native';
 import { useScrollToTop } from 'expo-router/react-navigation';
@@ -25,6 +26,12 @@ import {
   SCHEDULE_STALE_ERROR_MESSAGE,
   SCHEDULE_STALE_OFFLINE_MESSAGE,
 } from '@/components/schedule/timetableErrorMessage';
+import type { TimetableEvent } from '@/lib/icalService';
+
+type ScheduleSection = {
+  title: string;
+  data: TimetableEvent[];
+};
 
 // Helper function to format the date header (e.g., "Tuesday, November 21")
 const formatDateHeader = (dateString: string): string => {
@@ -42,11 +49,29 @@ const formatDateHeader = (dateString: string): string => {
   });
 };
 
+function LectureSeparator() {
+  return <View style={styles.lectureSeparator} />;
+}
+
+function ScheduleEmptyState() {
+  return (
+    <ThemedView style={styles.center}>
+      <ThemedText>
+        Keine anstehenden Termine gefunden. Vielleicht Ferien? 🏖️
+      </ThemedText>
+    </ThemedView>
+  );
+}
+
+function renderLecture({ item }: { item: TimetableEvent }) {
+  return <LectureCard event={item} />;
+}
+
 /**
  * Main schedule component - now uses shared QueryClient from layout
  */
 export default function ScheduleList() {
-  const ref = useRef<SectionList>(null);
+  const ref = useRef<SectionList<TimetableEvent, ScheduleSection>>(null);
   useScrollToTop(ref);
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
@@ -58,12 +83,12 @@ export default function ScheduleList() {
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const scheme = useColorScheme();
-  const sectionHeaderBg = Colors[scheme].dayNumberContainer;
   const sectionHeaderText = Colors[scheme].dayTextColor;
+  const sectionHeaderDivider = Colors[scheme].border;
 
   // useMemo will re-calculate the sections only when the timetable data changes.
   // This is a performance optimization.
-  const sections = useMemo(() => {
+  const sections = useMemo<ScheduleSection[]>(() => {
     if (!data) return [];
 
     const today = new Date();
@@ -80,6 +105,27 @@ export default function ScheduleList() {
 
     return futureSections;
   }, [data]);
+
+  const renderSectionHeader = useCallback(
+    ({
+      section,
+    }: {
+      section: SectionListData<TimetableEvent, ScheduleSection>;
+    }) => (
+      <ThemedText
+        style={[
+          styles.sectionHeader,
+          {
+            borderBottomColor: sectionHeaderDivider,
+            color: sectionHeaderText,
+          },
+        ]}
+      >
+        {formatDateHeader(section.title)}
+      </ThemedText>
+    ),
+    [sectionHeaderDivider, sectionHeaderText]
+  );
 
   const showOffline = isReady && isOffline;
   const hasData = data !== undefined;
@@ -133,29 +179,10 @@ export default function ScheduleList() {
         sections={sections}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item) => item.uid}
-        renderItem={({ item }) => <LectureCard event={item} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <ThemedText
-            style={[
-              styles.sectionHeader,
-              {
-                backgroundColor: sectionHeaderBg,
-                color: sectionHeaderText,
-              },
-            ]}
-          >
-            {formatDateHeader(title)}
-          </ThemedText>
-        )}
-        ListEmptyComponent={() => (
-          <ThemedView style={styles.center}>
-            <ThemedText>
-              Keine anstehenden Termine gefunden. Vielleicht Ferien? 🏖️
-            </ThemedText>
-          </ThemedView>
-        )}
-        // Add some spacing between items
-        ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
+        renderItem={renderLecture}
+        renderSectionHeader={renderSectionHeader}
+        ListEmptyComponent={ScheduleEmptyState}
+        ItemSeparatorComponent={LectureSeparator}
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
@@ -185,11 +212,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   sectionHeader: {
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
+    minHeight: 34,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    marginTop: 16,
+    marginBottom: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  lectureSeparator: {
+    height: 8,
   },
 });
