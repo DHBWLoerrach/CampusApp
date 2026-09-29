@@ -24,6 +24,7 @@
     "date-fns": "^4.1.0",
     "expo": "~57.0.25",
     "expo-application": "~57.0.3",
+    "expo-build-properties": "~57.0.22",
     "expo-checkbox": "~57.0.0",
     "expo-constants": "~57.0.3",
     "expo-dev-client": "~57.0.19",
