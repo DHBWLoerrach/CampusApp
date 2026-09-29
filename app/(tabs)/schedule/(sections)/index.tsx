@@ -19,6 +19,7 @@ import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import OfflineBanner from '@/components/ui/OfflineBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
+import EmptyState from '@/components/ui/EmptyState';
 import {
   getTimetableErrorMessage,
   SCHEDULE_OFFLINE_MESSAGE,
@@ -54,11 +55,12 @@ function LectureSeparator() {
 
 function ScheduleEmptyState() {
   return (
-    <ThemedView style={styles.center}>
-      <ThemedText>
-        Keine anstehenden Termine gefunden. Vielleicht Ferien? 🏖️
-      </ThemedText>
-    </ThemedView>
+    <EmptyState
+      icon="calendar"
+      title="Keine anstehenden Vorlesungen"
+      message="Für deinen Kurs sind aktuell keine weiteren Termine eingetragen. Neue Termine erscheinen hier, sobald der Plan aktualisiert wird."
+      style={styles.emptyState}
+    />
   );
 }
 
@@ -208,6 +210,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop: 50,
+  },
+  emptyState: {
     marginTop: 50,
   },
   banner: {
