@@ -3,6 +3,7 @@ import CanteenLayout from '@/app/(tabs)/canteen/(sections)/_layout';
 
 let mockWindowWidth = 390;
 let mockFontScale = 1;
+let mockRightInset = 0;
 
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -13,6 +14,20 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
     fontScale: mockFontScale,
   }),
 }));
+
+jest.mock('react-native-safe-area-context', () => {
+  const { View } = require('react-native');
+
+  return {
+    SafeAreaView: ({ children }: any) => <View>{children}</View>,
+    useSafeAreaInsets: () => ({
+      top: 0,
+      right: mockRightInset,
+      bottom: 0,
+      left: 0,
+    }),
+  };
+});
 
 // Renders each screen's title so the tab labels can be asserted on.
 jest.mock('expo-router', () => {
@@ -46,6 +61,7 @@ describe('CanteenLayout weekday tab titles', () => {
     // Monday, so the window is Mon–Fri of the same week.
     jest.setSystemTime(new Date(2026, 9, 26, 10, 0));
     mockFontScale = 1;
+    mockRightInset = 0;
   });
 
   afterEach(() => {
@@ -97,5 +113,17 @@ describe('CanteenLayout weekday tab titles', () => {
     for (const title of ['Mittwoch', 'Donnerstag', 'Freitag']) {
       expect(screen.getByText(title)).toBeTruthy();
     }
+  });
+
+  it('excludes side insets from the width available to the tabs', () => {
+    // Wide enough on its own, but the status bar column takes 84 dp.
+    mockWindowWidth = 650;
+    mockRightInset = 84;
+    render(<CanteenLayout />);
+
+    for (const title of ['Mi', 'Do', 'Fr']) {
+      expect(screen.getByText(title)).toBeTruthy();
+    }
+    expect(screen.queryByText('Donnerstag')).toBeNull();
   });
 });

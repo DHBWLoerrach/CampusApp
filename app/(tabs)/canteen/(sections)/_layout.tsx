@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { createMaterialTopTabNavigator } from 'expo-router/js-top-tabs';
 import { withLayoutContext } from 'expo-router';
 import {
@@ -72,9 +76,12 @@ export default function CanteenLayout() {
   // Reacts to fold/unfold, rotation, split-screen and system font size: wide
   // windows have room for full weekday names in the five equally sized tabs.
   // Labels grow with fontScale, so larger text needs a proportionally wider
-  // window, otherwise "Donnerstag" would truncate to "Donner…".
+  // window, otherwise "Donnerstag" would truncate to "Donner…". Side insets
+  // are excluded because the tab bar is padded by them (see below).
   const { width, fontScale } = useWindowDimensions();
-  const longWeekday = width / fontScale >= MEDIUM_WINDOW_MIN_WIDTH;
+  const insets = useSafeAreaInsets();
+  const tabBarWidth = width - insets.left - insets.right;
+  const longWeekday = tabBarWidth / fontScale >= MEDIUM_WINDOW_MIN_WIDTH;
   const titles = useMemo(
     () => ({
       index: titleForIndex(0, currentDayKey, longWeekday),
@@ -97,7 +104,9 @@ export default function CanteenLayout() {
   if (closure) {
     return (
       <QueryClientProvider client={queryClient}>
-        <CanteenClosedScreen closure={closure} />
+        <SafeAreaView edges={['left', 'right']} style={{ flex: 1 }}>
+          <CanteenClosedScreen closure={closure} />
+        </SafeAreaView>
       </QueryClientProvider>
     );
   }
@@ -115,13 +124,18 @@ export default function CanteenLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TopTabs screenOptions={enhancedTabBarOptions}>
-        <TopTabs.Screen name="index" options={{ title: titles.index }} />
-        <TopTabs.Screen name="day1" options={{ title: titles.day1 }} />
-        <TopTabs.Screen name="day2" options={{ title: titles.day2 }} />
-        <TopTabs.Screen name="day3" options={{ title: titles.day3 }} />
-        <TopTabs.Screen name="day4" options={{ title: titles.day4 }} />
-      </TopTabs>
+      {/* The native stack header keeps clear of side insets (e.g. the status
+          bar column on a folded cover display), the JS tab bar and the day
+          views do not, so pad them horizontally here. */}
+      <SafeAreaView edges={['left', 'right']} style={{ flex: 1 }}>
+        <TopTabs screenOptions={enhancedTabBarOptions}>
+          <TopTabs.Screen name="index" options={{ title: titles.index }} />
+          <TopTabs.Screen name="day1" options={{ title: titles.day1 }} />
+          <TopTabs.Screen name="day2" options={{ title: titles.day2 }} />
+          <TopTabs.Screen name="day3" options={{ title: titles.day3 }} />
+          <TopTabs.Screen name="day4" options={{ title: titles.day4 }} />
+        </TopTabs>
+      </SafeAreaView>
     </QueryClientProvider>
   );
 }

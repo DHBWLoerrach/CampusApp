@@ -7,6 +7,7 @@ import {
 } from 'expo-router/js-top-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   topTabBarOptions,
   isScheduleSubTabName,
@@ -185,37 +186,41 @@ export default function ScheduleLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <>
-        {selectedCourse ? (
-          // Show tabs when course is selected
-          <TopTabs
-            screenOptions={enhancedTabBarOptions}
-            // Restore the last viewed sub-tab. Two entry paths rely on this:
-            // a cold start arrives via the /schedule/<sub> redirect
-            // (app/index.tsx), while a remount after course selection has no
-            // navigation event, so initialRouteName carries the persisted value.
-            initialRouteName={initialSubTab}
-            tabBar={renderTabBar}
-          >
-            <TopTabs.Screen
-              name="index"
-              options={{ title: 'Liste' }}
-              listeners={{ focus: () => persistSubTab('index') }}
-            />
-            <TopTabs.Screen
-              name="week"
-              options={{ title: 'Woche' }}
-              listeners={{ focus: () => persistSubTab('week') }}
-            />
-            <TopTabs.Screen
-              name="day"
-              options={{ title: 'Tag' }}
-              listeners={{ focus: () => persistSubTab('day') }}
-            />
-          </TopTabs>
-        ) : (
-          // Show course setup when no course is selected
-          <CourseSetup onCourseSelected={setSelectedCourse} />
-        )}
+        {/* Keeps the JS tab bar and content clear of side insets, which the
+            native stack header above already respects. */}
+        <SafeAreaView edges={['left', 'right']} style={{ flex: 1 }}>
+          {selectedCourse ? (
+            // Show tabs when course is selected
+            <TopTabs
+              screenOptions={enhancedTabBarOptions}
+              // Restore the last viewed sub-tab. Two entry paths rely on this:
+              // a cold start arrives via the /schedule/<sub> redirect
+              // (app/index.tsx), while a remount after course selection has no
+              // navigation event, so initialRouteName carries the persisted value.
+              initialRouteName={initialSubTab}
+              tabBar={renderTabBar}
+            >
+              <TopTabs.Screen
+                name="index"
+                options={{ title: 'Liste' }}
+                listeners={{ focus: () => persistSubTab('index') }}
+              />
+              <TopTabs.Screen
+                name="week"
+                options={{ title: 'Woche' }}
+                listeners={{ focus: () => persistSubTab('week') }}
+              />
+              <TopTabs.Screen
+                name="day"
+                options={{ title: 'Tag' }}
+                listeners={{ focus: () => persistSubTab('day') }}
+              />
+            </TopTabs>
+          ) : (
+            // Show course setup when no course is selected
+            <CourseSetup onCourseSelected={setSelectedCourse} />
+          )}
+        </SafeAreaView>
         <BottomSheet
           visible={promoOpen}
           title="DHBW Code Companion"
