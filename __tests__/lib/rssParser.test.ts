@@ -1,6 +1,51 @@
-import { parseRSSFeed } from '@/lib/rssParser';
+import { fetchAndParseRSSFeed, parseRSSFeed } from '@/lib/rssParser';
+
+const EMPTY_FEED =
+  '<rss version="2.0"><channel><title>News</title></channel></rss>';
+
+function mockResponse(
+  body: string,
+  overrides: Partial<Response> = {}
+): Response {
+  return {
+    ok: true,
+    status: 200,
+    text: async () => body,
+    ...overrides,
+  } as Response;
+}
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 describe('parseRSSFeed', () => {
+  it.each([EMPTY_FEED, '<rss version="2.0"><channel /></rss>'])(
+    'accepts an empty RSS channel: %s',
+    (xml) => {
+      expect(parseRSSFeed(xml)).toEqual({ items: [] });
+    }
+  );
+
+  it.each([
+    '',
+    '<html><body>Service unavailable</body></html>',
+    '<rss version="2.0" />',
+    '<rss><channel>Not a channel</channel></rss>',
+    '<rss><channel /><channel /></rss>',
+  ])('rejects responses without a valid RSS channel: %s', (xml) => {
+    expect(() => parseRSSFeed(xml)).toThrow('Invalid RSS feed');
+  });
+
+  it.each([
+    '<rss><channel><title>a',
+    '<rss><channel><item><title>x</title>',
+    '<rss><channel><item><title>x</title><guid>x-1</guid>',
+    '<rss><channel></rss>',
+  ])('rejects truncated or malformed XML: %s', (xml) => {
+    expect(() => parseRSSFeed(xml)).toThrow('Invalid RSS feed');
+  });
+
   it('parses a standard feed with a single item', () => {
     const xml = [
       '<rss version="2.0">',
@@ -125,5 +170,37 @@ describe('parseRSSFeed', () => {
     const feed = parseRSSFeed(xml);
     expect(feed.items).toHaveLength(2);
     expect(feed.items.map((i) => i.title)).toEqual(['First', 'Second']);
+  });
+});
+
+describe('fetchAndParseRSSFeed', () => {
+  it.each([404, 503])('rejects HTTP %s', async (status) => {
+    jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue(
+        mockResponse('<html>Fetch failed</html>', { ok: false, status })
+      );
+
+    await expect(
+      fetchAndParseRSSFeed('https://example.com/rss')
+    ).rejects.toThrow(`HTTP ${status}`);
+  });
+
+  it('rejects a successful HTTP response containing an HTML page', async () => {
+    jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue(mockResponse('<html><body>Maintenance</body></html>'));
+
+    await expect(
+      fetchAndParseRSSFeed('https://example.com/rss')
+    ).rejects.toThrow('Invalid RSS feed');
+  });
+
+  it('accepts a successful response containing an empty RSS feed', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse(EMPTY_FEED));
+
+    await expect(
+      fetchAndParseRSSFeed('https://example.com/rss')
+    ).resolves.toEqual({ items: [] });
   });
 });

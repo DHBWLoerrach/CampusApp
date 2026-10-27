@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ui/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
-export default function OfflineBanner({
+export default function StatusBanner({
   title = 'Offline',
   message = 'Inhalte können nicht aktualisiert werden.',
   style,

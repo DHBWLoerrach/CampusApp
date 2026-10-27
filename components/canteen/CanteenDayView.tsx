@@ -27,7 +27,7 @@ import NfcButton from '@/components/canteen/NfcButton';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useRoleContext } from '@/context/RoleContext';
 import type { Role } from '@/constants/Roles';
@@ -222,7 +222,7 @@ export default function CanteenDayView({ date }: { date: Date }) {
           }
         >
           {showOffline && hasData ? (
-            <OfflineBanner style={styles.banner} />
+            <StatusBanner style={styles.banner} />
           ) : null}
           {showNfcHeader ? <NfcButton /> : null}
           {meals.map((m, idx) => {

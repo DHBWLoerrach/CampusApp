@@ -4,7 +4,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import { hexToRgba } from '@/lib/utils';
 
 // ---- Data hook ----
@@ -262,7 +262,7 @@ export default function RideMatchSheetContent({
         </ThemedText>
       </View>
 
-      {showOffline && <OfflineBanner style={styles.banner} />}
+      {showOffline && <StatusBanner style={styles.banner} />}
 
       {isLoading && (
         <ThemedText style={[styles.info, styles.muted]}>

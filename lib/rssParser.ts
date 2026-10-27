@@ -1,4 +1,4 @@
-import { XMLParser } from 'fast-xml-parser';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 
 // XML parser configuration
 const parserOptions = {
@@ -97,14 +97,27 @@ function extractEnclosures(item: any): { url: string }[] | undefined {
 }
 
 /**
- * Parse RSS feed XML and return structured data with
+ * Parse a complete RSS document and return structured feed data.
  */
 export function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
+  if (XMLValidator.validate(xmlString) !== true) {
+    throw new Error('Invalid RSS feed: malformed XML.');
+  }
+
   const parser = new XMLParser(parserOptions);
   const result = parser.parse(xmlString);
+  const channel = result?.rss?.channel;
+
+  // fast-xml-parser represents an empty <channel /> as an empty string.
+  if (
+    channel == null ||
+    (channel !== '' && (typeof channel !== 'object' || Array.isArray(channel)))
+  ) {
+    throw new Error('Invalid RSS feed: missing or invalid channel.');
+  }
 
   // Navigate to RSS items
-  const rssItems = result?.rss?.channel?.item || [];
+  const rssItems = channel.item || [];
   const itemsArray = Array.isArray(rssItems) ? rssItems : [rssItems];
 
   const items: RSSItem[] = itemsArray
@@ -127,6 +140,11 @@ export function parseRSSFeed(xmlString: string, feedUrl?: string): RSSFeed {
  * Fetch and parse RSS feed
  */
 export async function fetchAndParseRSSFeed(feedUrl: string): Promise<RSSFeed> {
-  const xml = await fetch(feedUrl).then((r) => r.text());
+  const response = await fetch(feedUrl);
+  if (!response.ok) {
+    throw new Error(`RSS feed request failed: HTTP ${response.status}`);
+  }
+
+  const xml = await response.text();
   return parseRSSFeed(xml, feedUrl);
 }

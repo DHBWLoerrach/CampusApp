@@ -13,7 +13,7 @@ import { useTimetable } from '@/hooks/useTimetable';
 import { useCourseContext } from '@/context/CourseContext';
 import Header from '@/components/schedule/CalendarHeader';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
@@ -411,12 +411,12 @@ export default function ScheduleCalendarView({
   return (
     <View style={styles.container}>
       {showOffline && hasData ? (
-        <OfflineBanner
+        <StatusBanner
           message={SCHEDULE_STALE_OFFLINE_MESSAGE}
           style={styles.banner}
         />
       ) : isError && hasData ? (
-        <OfflineBanner
+        <StatusBanner
           title="Nicht aktualisiert"
           message={SCHEDULE_STALE_ERROR_MESSAGE}
           style={styles.banner}

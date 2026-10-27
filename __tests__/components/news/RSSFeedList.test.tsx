@@ -83,7 +83,7 @@ describe('RSSFeedList', () => {
     expect(getByText('Erneut versuchen')).toBeTruthy();
   });
 
-  it('shows offline banner when offline but items exist', () => {
+  it('prioritizes the offline banner over refresh errors when items exist', () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: false,
       isOffline: true,
@@ -91,20 +91,21 @@ describe('RSSFeedList', () => {
     });
     mockUseQuery.mockReturnValue({
       data: sampleFeed(),
-      error: null,
+      error: new Error('Refresh failed'),
       isLoading: false,
       isFetching: false,
       refetch: jest.fn(),
       dataUpdatedAt: 1,
     });
 
-    const { getByText } = render(
+    const { getByText, queryByText } = render(
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
     expect(getByText('Offline')).toBeTruthy();
     expect(getByText('Inhalte können nicht aktualisiert werden.')).toBeTruthy();
     expect(getByText('Beitrag 1')).toBeTruthy();
+    expect(queryByText('Nicht aktualisiert')).toBeNull();
   });
 
   it('shows error state when online and no items', () => {
@@ -127,7 +128,7 @@ describe('RSSFeedList', () => {
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
-    expect(getByText('Fehler beim Laden des RSS-Feeds')).toBeTruthy();
+    expect(getByText('Inhalte konnten nicht geladen werden')).toBeTruthy();
     fireEvent.press(getByText('Erneut versuchen'));
     expect(refetch).toHaveBeenCalledTimes(1);
   });

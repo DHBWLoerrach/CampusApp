@@ -19,7 +19,7 @@ import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { validateCourse } from '@/lib/icalService';
 import { useCourseContext } from '@/context/CourseContext';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 
 interface CourseSetupProps {
   onCourseSelected: (course: string) => void;
@@ -92,7 +92,7 @@ export default function CourseSetup({ onCourseSelected }: CourseSetupProps) {
         >
           <View style={styles.contentContainer}>
             {showOffline && (
-              <OfflineBanner
+              <StatusBanner
                 style={styles.banner}
                 message="Neue Kurse können nur online geprüft werden."
               />

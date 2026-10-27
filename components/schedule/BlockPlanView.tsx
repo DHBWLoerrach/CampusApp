@@ -22,7 +22,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import BlockPlanArchivedPhaseRow from '@/components/schedule/BlockPlanArchivedPhaseRow';
 import BlockPlanPhaseCard from '@/components/schedule/BlockPlanPhaseCard';
@@ -492,12 +492,12 @@ export default function BlockPlanView() {
     <ThemedView style={[styles.container, { backgroundColor }]}>
       {isStale ? (
         showOffline ? (
-          <OfflineBanner
+          <StatusBanner
             message={BLOCK_PLAN_STALE_OFFLINE_MESSAGE}
             style={styles.banner}
           />
         ) : (
-          <OfflineBanner
+          <StatusBanner
             title="Nicht aktualisiert"
             message={BLOCK_PLAN_STALE_ERROR_MESSAGE}
             style={styles.banner}
@@ -506,7 +506,7 @@ export default function BlockPlanView() {
       ) : null}
 
       {plan?.isPartial && (
-        <OfflineBanner
+        <StatusBanner
           title="Unvollständig"
           message={BLOCK_PLAN_PARTIAL_MESSAGE}
           style={styles.banner}

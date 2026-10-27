@@ -17,7 +17,7 @@ import { useTodayInBerlin } from '@/hooks/useTodayInBerlin';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import EmptyState from '@/components/ui/EmptyState';
 import {
@@ -167,12 +167,12 @@ export default function ScheduleList() {
   return (
     <ThemedView style={[styles.container, { backgroundColor }]}>
       {showOffline && hasData ? (
-        <OfflineBanner
+        <StatusBanner
           message={SCHEDULE_STALE_OFFLINE_MESSAGE}
           style={styles.banner}
         />
       ) : isError && hasData ? (
-        <OfflineBanner
+        <StatusBanner
           title="Nicht aktualisiert"
           message={SCHEDULE_STALE_ERROR_MESSAGE}
           style={styles.banner}

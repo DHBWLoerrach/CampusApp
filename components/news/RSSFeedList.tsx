@@ -14,7 +14,7 @@ import { de } from 'date-fns/locale';
 import { useQuery } from '@tanstack/react-query';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
-import OfflineBanner from '@/components/ui/OfflineBanner';
+import StatusBanner from '@/components/ui/StatusBanner';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -148,7 +148,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     return (
       <ThemedView style={styles.centered}>
         <ThemedText style={styles.errorText}>
-          Fehler beim Laden des RSS-Feeds
+          Inhalte konnten nicht geladen werden
         </ThemedText>
         <Pressable
           style={[styles.retryButton, { borderColor: tintColor }]}
@@ -168,7 +168,14 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
     <ThemedView style={styles.container}>
       {showOffline && hasItems ? (
         <View style={styles.bannerWrap}>
-          <OfflineBanner />
+          <StatusBanner />
+        </View>
+      ) : error && hasItems ? (
+        <View style={styles.bannerWrap}>
+          <StatusBanner
+            title="Nicht aktualisiert"
+            message="Die Inhalte konnten nicht aktualisiert werden. Es werden zuletzt geladene Inhalte angezeigt."
+          />
         </View>
       ) : null}
       <FlatList
