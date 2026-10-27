@@ -442,6 +442,12 @@ describe('course code normalization', () => {
   it('uppercases the course and strips the OWA mailbox suffix', () => {
     expect(toBlockPlanCourseCode('tif26a')).toBe('TIF26A');
     expect(toBlockPlanCourseCode('WWI25A-AM')).toBe('WWI25A');
-    expect(toBlockPlanCourseCode(' wwi26b-am ')).toBe('WWI26B');
+    expect(toBlockPlanCourseCode(' wwi25b-am ')).toBe('WWI25B');
+  });
+
+  it('keeps course codes without an alias entry unchanged apart from case', () => {
+    // WWI26 courses have plain mailboxes, so their aliases were removed.
+    expect(toBlockPlanCourseCode('wwi26b-am')).toBe('WWI26B-AM');
+    expect(toBlockPlanCourseCode(' wwi26b ')).toBe('WWI26B');
   });
 });
