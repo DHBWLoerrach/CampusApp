@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from 'expo-router/js-top-tabs';
 import { withLayoutContext } from 'expo-router';
 import {
@@ -12,6 +13,7 @@ import { weekdayDates } from '@/lib/canteenService';
 import { getCanteenClosureForDates } from '@/lib/canteenClosures';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
+import { MEDIUM_WINDOW_MIN_WIDTH } from '@/constants/Layout';
 import CanteenClosedScreen from '@/components/canteen/CanteenClosedScreen';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
@@ -32,7 +34,11 @@ function todayKey() {
   return format(new Date(), 'yyyy-MM-dd');
 }
 
-function titleForIndex(index: number, currentTodayKey: string) {
+function titleForIndex(
+  index: number,
+  currentTodayKey: string,
+  longWeekday: boolean
+) {
   const dates = weekdayDates(5);
   const d = dates[index];
   if (!(d instanceof Date) || isNaN(d.getTime())) return '—';
@@ -40,6 +46,7 @@ function titleForIndex(index: number, currentTodayKey: string) {
   const key = format(d, 'yyyy-MM-dd');
   if (key === currentTodayKey) return 'Heute';
   if (key === tomorrowKey) return 'Morgen';
+  if (longWeekday) return format(d, 'EEEE', { locale: de });
   return format(d, 'EE', { locale: de }).replace('.', '');
 }
 
@@ -62,15 +69,21 @@ function useCurrentDayKey() {
 
 export default function CanteenLayout() {
   const currentDayKey = useCurrentDayKey();
+  // Reacts to fold/unfold, rotation, split-screen and system font size: wide
+  // windows have room for full weekday names in the five equally sized tabs.
+  // Labels grow with fontScale, so larger text needs a proportionally wider
+  // window, otherwise "Donnerstag" would truncate to "Donner…".
+  const { width, fontScale } = useWindowDimensions();
+  const longWeekday = width / fontScale >= MEDIUM_WINDOW_MIN_WIDTH;
   const titles = useMemo(
     () => ({
-      index: titleForIndex(0, currentDayKey),
-      day1: titleForIndex(1, currentDayKey),
-      day2: titleForIndex(2, currentDayKey),
-      day3: titleForIndex(3, currentDayKey),
-      day4: titleForIndex(4, currentDayKey),
+      index: titleForIndex(0, currentDayKey, longWeekday),
+      day1: titleForIndex(1, currentDayKey, longWeekday),
+      day2: titleForIndex(2, currentDayKey, longWeekday),
+      day3: titleForIndex(3, currentDayKey, longWeekday),
+      day4: titleForIndex(4, currentDayKey, longWeekday),
     }),
-    [currentDayKey]
+    [currentDayKey, longWeekday]
   );
 
   // Recomputed on day change so the tabs come back by themselves as soon as the
