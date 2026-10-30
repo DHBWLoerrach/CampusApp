@@ -73,7 +73,9 @@ function renderLecture({ item }: { item: TimetableEvent }) {
  */
 export default function ScheduleList() {
   const ref = useRef<SectionList<TimetableEvent, ScheduleSection>>(null);
-  useScrollToTop(ref);
+  // SectionList scrolls via getScrollResponder() at runtime, but the hook's
+  // type does not accept the return type React Native 0.88 declares for it.
+  useScrollToTop(ref as unknown as Parameters<typeof useScrollToTop>[0]);
   const { selectedCourse } = useCourseContext();
   const { data, isLoading, isError, error, refetch, isFetching } = useTimetable(
     selectedCourse || undefined
@@ -191,7 +193,9 @@ export default function ScheduleList() {
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
-            onRefresh={refetch}
+            onRefresh={() => {
+              void refetch();
+            }}
             tintColor={tintColor}
           />
         }

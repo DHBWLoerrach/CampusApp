@@ -180,6 +180,7 @@ export default function RSSFeedList({ feedUrl }: RSSFeedListProps) {
       ) : null}
       <FlatList
         ref={ref}
+        testID="rss-feed-list"
         data={items}
         contentInsetAdjustmentBehavior="automatic"
         keyExtractor={(i) => i.id}

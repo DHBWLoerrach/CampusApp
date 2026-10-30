@@ -10,8 +10,8 @@ jest.mock('@/components/ui/IconSymbol', () => ({
 }));
 
 describe('CodeCompanionPromoBanner', () => {
-  it('renders the title and subtitle', () => {
-    const { getByText } = render(
+  it('renders the title and subtitle', async () => {
+    const { getByText } = await render(
       <CodeCompanionPromoBanner onPress={() => {}} />
     );
 
@@ -19,13 +19,13 @@ describe('CodeCompanionPromoBanner', () => {
     expect(getByText('Lern-App fürs Programmieren')).toBeTruthy();
   });
 
-  it('calls onPress when tapped', () => {
+  it('calls onPress when tapped', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText } = await render(
       <CodeCompanionPromoBanner onPress={onPress} />
     );
 
-    fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
+    await fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
 
     expect(onPress).toHaveBeenCalledTimes(1);
   });

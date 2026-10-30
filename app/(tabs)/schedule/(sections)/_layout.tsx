@@ -1,14 +1,15 @@
 import Storage from 'expo-sqlite/kv-store';
-import { useIsFocused, withLayoutContext } from 'expo-router';
+import { useIsFocused, useRouter } from 'expo-router';
 import {
-  createMaterialTopTabNavigator,
   MaterialTopTabBar,
+  TopTabs,
   type MaterialTopTabBarProps,
 } from 'expo-router/js-top-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+  getScheduleSubTabHref,
   topTabBarOptions,
   isScheduleSubTabName,
   type ScheduleSubTabName,
@@ -29,9 +30,6 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
-const Tab = createMaterialTopTabNavigator();
-const TopTabs = withLayoutContext(Tab.Navigator);
-
 // Create a shared query client instance for all schedule views
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,9 +45,12 @@ const queryClient = new QueryClient({
 export default function ScheduleLayout() {
   const { selectedCourse, setSelectedCourse, isLoading } = useCourseContext();
   const isFocused = useIsFocused();
+  const router = useRouter();
   const [initialSubTab, setInitialSubTab] = useState<ScheduleSubTabName | null>(
     null
   );
+  const [restoringSubTab, setRestoringSubTab] =
+    useState<ScheduleSubTabName | null>(null);
   const [promoDismissed, setPromoDismissed] = useState<boolean | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
   const promoOpenRef = useRef(false);
@@ -151,16 +152,16 @@ export default function ScheduleLayout() {
   const persistSubTab = useCallback((name: ScheduleSubTabName) => {
     Storage.setItem(LAST_SCHEDULE_SUBTAB_KEY, name).catch(() => {});
     setInitialSubTab((prev) => (prev === name ? prev : name));
+    setRestoringSubTab((prev) => (prev === name ? null : prev));
   }, []);
 
   // Enhanced tab options with course display
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
-    tabBarLabel: (props: {
-      focused: boolean;
-      children: string;
-      color?: string;
-    }) => <TopTabLabel {...props} />,
+    tabBarLabel: TopTabLabel,
+    // The pager misses the scroll event of an animated jump right after mount,
+    // which would leave the tab indicator on the first tab.
+    animationEnabled: restoringSubTab === null,
   };
 
   const showPromoReopen =
@@ -183,6 +184,16 @@ export default function ScheduleLayout() {
     return null; // Or a loading spinner if you prefer
   }
 
+  // Restore the last viewed sub-tab. Two entry paths rely on the route: a cold
+  // start arrives via the /schedule/<sub> redirect (app/index.tsx), while the
+  // tabs remounted after course selection would start on their first screen.
+  // The router applies navigation after the course update has mounted the tabs.
+  const handleCourseSelected = (course: string) => {
+    setRestoringSubTab(initialSubTab);
+    setSelectedCourse(course);
+    router.navigate(getScheduleSubTabHref(initialSubTab));
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -193,11 +204,6 @@ export default function ScheduleLayout() {
             // Show tabs when course is selected
             <TopTabs
               screenOptions={enhancedTabBarOptions}
-              // Restore the last viewed sub-tab. Two entry paths rely on this:
-              // a cold start arrives via the /schedule/<sub> redirect
-              // (app/index.tsx), while a remount after course selection has no
-              // navigation event, so initialRouteName carries the persisted value.
-              initialRouteName={initialSubTab}
               tabBar={renderTabBar}
             >
               <TopTabs.Screen
@@ -218,7 +224,7 @@ export default function ScheduleLayout() {
             </TopTabs>
           ) : (
             // Show course setup when no course is selected
-            <CourseSetup onCourseSelected={setSelectedCourse} />
+            <CourseSetup onCourseSelected={handleCourseSelected} />
           )}
         </SafeAreaView>
         <BottomSheet

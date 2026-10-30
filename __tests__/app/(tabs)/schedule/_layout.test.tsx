@@ -87,18 +87,18 @@ describe('ScheduleStackLayout block plan entry point', () => {
     });
   });
 
-  it('shows the block plan icon when the course has a plan', () => {
+  it('shows the block plan icon when the course has a plan', async () => {
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeTruthy();
   });
 
-  it('uses the shared navigation title typography for the course switcher', () => {
+  it('uses the shared navigation title typography for the course switcher', async () => {
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
-    const { getByText } = render(<ScheduleStackLayout />);
+    const { getByText } = await render(<ScheduleStackLayout />);
     const courseTitleStyle = StyleSheet.flatten(
       getByText('TIF26A').props.style
     );
@@ -111,69 +111,69 @@ describe('ScheduleStackLayout block plan entry point', () => {
     );
   });
 
-  it('hides the icon when the API reports no plan for the course', () => {
+  it('hides the icon when the API reports no plan for the course', async () => {
     mockUseBlockPlan.mockReturnValue({
       data: { plan: null, fromCache: false },
     });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeNull();
   });
 
-  it('hides the icon while the plan is still loading', () => {
+  it('hides the icon while the plan is still loading', async () => {
     mockUseBlockPlan.mockReturnValue({ data: undefined, isLoading: true });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeNull();
   });
 
-  it('hides the block plan icon after a loading error without cached data', () => {
+  it('hides the block plan icon after a loading error without cached data', async () => {
     mockUseBlockPlan.mockReturnValue({
       data: undefined,
       isError: true,
       error: new Error('Network request failed'),
     });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeNull();
   });
 
-  it('shows the block plan icon when a cached plan is available', () => {
+  it('shows the block plan icon when a cached plan is available', async () => {
     mockUseBlockPlan.mockReturnValue({
       data: { ...PLAN_RESULT, fromCache: true },
       isError: true,
       error: new Error('Network request failed'),
     });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeTruthy();
   });
 
-  it('queries the block plan for the selected course', () => {
+  it('queries the block plan for the selected course', async () => {
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
-    render(<ScheduleStackLayout />);
+    await render(<ScheduleStackLayout />);
 
     expect(mockUseBlockPlan).toHaveBeenCalledWith('TIF26A');
   });
 
-  it('spends no request on the block plan while the feature is disabled', () => {
+  it('spends no request on the block plan while the feature is disabled', async () => {
     // The plan API is not live yet, so a disabled flag has to cost nothing —
     // passing no course keeps the query disabled instead of merely hiding it.
     mockBlockPlanEnabled = false;
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(mockUseBlockPlan).toHaveBeenCalledWith(undefined);
     expect(queryByLabelText('Blockplan öffnen')).toBeNull();
   });
 
-  it('does not query without a selected course', () => {
+  it('does not query without a selected course', async () => {
     mockUseCourseContext.mockReturnValue({
       selectedCourse: null,
       setSelectedCourse: jest.fn(),
@@ -181,7 +181,7 @@ describe('ScheduleStackLayout block plan entry point', () => {
     });
     mockUseBlockPlan.mockReturnValue({ data: undefined });
 
-    const { queryByLabelText } = render(<ScheduleStackLayout />);
+    const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(mockUseBlockPlan).toHaveBeenCalledWith(undefined);
     expect(queryByLabelText('Blockplan öffnen')).toBeNull();

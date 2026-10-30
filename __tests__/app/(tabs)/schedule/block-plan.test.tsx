@@ -42,19 +42,19 @@ describe('BlockPlanScreen', () => {
     mockBlockPlanEnabled = true;
   });
 
-  it('renders the block plan while the feature is enabled', () => {
-    const { getByText } = render(<BlockPlanScreen />);
+  it('renders the block plan while the feature is enabled', async () => {
+    const { getByText } = await render(<BlockPlanScreen />);
 
     expect(getByText('block plan')).toBeTruthy();
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 
-  it('redirects away instead of loading a plan while the feature is disabled', () => {
+  it('redirects away instead of loading a plan while the feature is disabled', async () => {
     // The header entry point is hidden, but the route stays addressable by
     // deep link — rendering the view would fire a request regardless.
     mockBlockPlanEnabled = false;
 
-    render(<BlockPlanScreen />);
+    await render(<BlockPlanScreen />);
 
     expect(mockBlockPlanView).not.toHaveBeenCalled();
     expect(mockRedirect).toHaveBeenCalledWith('/schedule');

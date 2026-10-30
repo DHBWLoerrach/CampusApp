@@ -13,16 +13,16 @@ describe('useTodayInBerlin', () => {
     jest.restoreAllMocks();
   });
 
-  it('starts on the current Berlin day', () => {
-    const { result } = renderHook(() => useTodayInBerlin());
+  it('starts on the current Berlin day', async () => {
+    const { result } = await renderHook(() => useTodayInBerlin());
 
     expect(result.current).toBe('2027-06-30');
   });
 
-  it('rolls over once Berlin midnight passes', () => {
-    const { result } = renderHook(() => useTodayInBerlin());
+  it('rolls over once Berlin midnight passes', async () => {
+    const { result } = await renderHook(() => useTodayInBerlin());
 
-    act(() => {
+    await act(() => {
       jest.setSystemTime(new Date('2027-06-30T22:00:01Z')); // 00:00 in Berlin
       jest.advanceTimersByTime(30 * 60 * 1000 + 1000);
     });
@@ -30,7 +30,7 @@ describe('useTodayInBerlin', () => {
     expect(result.current).toBe('2027-07-01');
   });
 
-  it('resyncs when the app returns to the foreground', () => {
+  it('resyncs when the app returns to the foreground', async () => {
     // Timers are unreliable in the background, so a resume must re-read the day.
     let notify: ((state: string) => void) | undefined;
     jest
@@ -40,10 +40,10 @@ describe('useTodayInBerlin', () => {
         return { remove: jest.fn() } as never;
       });
 
-    const { result } = renderHook(() => useTodayInBerlin());
+    const { result } = await renderHook(() => useTodayInBerlin());
     expect(result.current).toBe('2027-06-30');
 
-    act(() => {
+    await act(() => {
       jest.setSystemTime(new Date('2027-07-02T09:00:00Z'));
       notify?.('active');
     });
@@ -51,7 +51,7 @@ describe('useTodayInBerlin', () => {
     expect(result.current).toBe('2027-07-02');
   });
 
-  it('ignores a move to the background', () => {
+  it('ignores a move to the background', async () => {
     let notify: ((state: string) => void) | undefined;
     jest
       .spyOn(AppState, 'addEventListener')
@@ -60,9 +60,9 @@ describe('useTodayInBerlin', () => {
         return { remove: jest.fn() } as never;
       });
 
-    const { result } = renderHook(() => useTodayInBerlin());
+    const { result } = await renderHook(() => useTodayInBerlin());
 
-    act(() => {
+    await act(() => {
       jest.setSystemTime(new Date('2027-07-02T09:00:00Z'));
       notify?.('background');
     });
@@ -70,15 +70,15 @@ describe('useTodayInBerlin', () => {
     expect(result.current).toBe('2027-06-30');
   });
 
-  it('cleans up its timer and subscription on unmount', () => {
+  it('cleans up its timer and subscription on unmount', async () => {
     const remove = jest.fn();
     jest
       .spyOn(AppState, 'addEventListener')
       .mockReturnValue({ remove } as never);
     const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout');
 
-    const { unmount } = renderHook(() => useTodayInBerlin());
-    unmount();
+    const { unmount } = await renderHook(() => useTodayInBerlin());
+    await unmount();
 
     expect(remove).toHaveBeenCalled();
     expect(clearTimeoutSpy).toHaveBeenCalled();

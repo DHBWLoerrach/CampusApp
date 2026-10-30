@@ -8,7 +8,6 @@ import {
   waitFor,
   type RenderResult,
 } from '@testing-library/react-native';
-import { FlatList } from 'react-native';
 import RSSFeedList from '@/components/news/RSSFeedList';
 
 jest.mock('@/hooks/useOnlineStatus', () => ({
@@ -56,9 +55,9 @@ function createWrapper(queryClient: QueryClient) {
   };
 }
 
-function triggerPullToRefresh(screen: RenderResult) {
-  act(() => {
-    screen.UNSAFE_getByType(FlatList).props.refreshControl.props.onRefresh();
+async function triggerPullToRefresh(screen: RenderResult) {
+  await act(() => {
+    screen.getByTestId('rss-feed-list').props.refreshControl.props.onRefresh();
   });
 }
 
@@ -89,7 +88,7 @@ describe('RSSFeedList integration', () => {
         status: 503,
       })
     );
-    const screen = render(<RSSFeedList feedUrl={FEED_URL} />, {
+    const screen = await render(<RSSFeedList feedUrl={FEED_URL} />, {
       wrapper: createWrapper(queryClient),
     });
 
@@ -99,7 +98,7 @@ describe('RSSFeedList integration', () => {
     expect(screen.queryByText('Keine Einträge gefunden.')).toBeNull();
 
     fetchMock.mockResolvedValue(mockResponse(FEED_XML));
-    fireEvent.press(screen.getByText('Erneut versuchen'));
+    await fireEvent.press(screen.getByText('Erneut versuchen'));
 
     expect(await screen.findByText('Beitrag 1')).toBeTruthy();
     expect(
@@ -134,7 +133,7 @@ describe('RSSFeedList integration', () => {
       const fetchMock = jest
         .spyOn(global, 'fetch')
         .mockResolvedValue(mockResponse(FEED_XML));
-      const screen = render(<RSSFeedList feedUrl={FEED_URL} />, {
+      const screen = await render(<RSSFeedList feedUrl={FEED_URL} />, {
         wrapper: createWrapper(queryClient),
       });
 
@@ -143,7 +142,7 @@ describe('RSSFeedList integration', () => {
       const previousData = queryClient.getQueryData(FEED_QUERY_KEY);
       fetchMock.mockResolvedValue(mockResponse(body, response));
 
-      triggerPullToRefresh(screen);
+      await triggerPullToRefresh(screen);
 
       await waitFor(() => {
         expect(queryClient.getQueryState(FEED_QUERY_KEY)?.status).toBe('error');
@@ -163,7 +162,7 @@ describe('RSSFeedList integration', () => {
         mockResponse(FEED_XML.replace('Beitrag 1', 'Beitrag 2'))
       );
 
-      triggerPullToRefresh(screen);
+      await triggerPullToRefresh(screen);
 
       expect(await screen.findByText('Beitrag 2')).toBeTruthy();
       expect(screen.queryByText('Nicht aktualisiert')).toBeNull();

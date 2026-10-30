@@ -21,7 +21,7 @@ export const topTabBarOptions = {
   tabBarActiveTintColor: dhbwRed,
   tabBarInactiveTintColor: Colors.light.icon,
   tabBarIndicatorStyle: { backgroundColor: dhbwRed, height: 3 },
-  tabBarLabelStyle: { fontSize: 14, fontWeight: '600' },
+  tabBarLabelStyle: { fontSize: 14, fontWeight: '600' as const },
   tabBarStyle: { backgroundColor: 'transparent' },
   tabBarPressColor: 'rgba(226, 0, 26, 0.12)',
   tabBarPressOpacity: 0.85,

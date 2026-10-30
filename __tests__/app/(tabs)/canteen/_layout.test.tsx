@@ -30,21 +30,14 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 // Renders each screen's title so the tab labels can be asserted on.
-jest.mock('expo-router', () => {
+jest.mock('expo-router/js-top-tabs', () => {
   const { View, Text } = require('react-native');
 
-  return {
-    withLayoutContext: () => {
-      const Navigator = ({ children }: any) => <View>{children}</View>;
-      Navigator.Screen = ({ options }: any) => <Text>{options?.title}</Text>;
-      return Navigator;
-    },
-  };
-});
+  const TopTabs = ({ children }: any) => <View>{children}</View>;
+  TopTabs.Screen = ({ options }: any) => <Text>{options?.title}</Text>;
 
-jest.mock('expo-router/js-top-tabs', () => ({
-  createMaterialTopTabNavigator: () => ({ Navigator: () => null }),
-}));
+  return { TopTabs };
+});
 
 jest.mock('@/lib/canteenClosures', () => ({
   getCanteenClosureForDates: () => null,
@@ -68,9 +61,9 @@ describe('CanteenLayout weekday tab titles', () => {
     jest.useRealTimers();
   });
 
-  it('abbreviates weekdays on narrow windows', () => {
+  it('abbreviates weekdays on narrow windows', async () => {
     mockWindowWidth = 390;
-    render(<CanteenLayout />);
+    await render(<CanteenLayout />);
 
     for (const title of ['Heute', 'Morgen', 'Mi', 'Do', 'Fr']) {
       expect(screen.getByText(title)).toBeTruthy();
@@ -78,9 +71,9 @@ describe('CanteenLayout weekday tab titles', () => {
     expect(screen.queryByText('Mittwoch')).toBeNull();
   });
 
-  it('spells out weekdays on medium-width windows', () => {
+  it('spells out weekdays on medium-width windows', async () => {
     mockWindowWidth = 600;
-    render(<CanteenLayout />);
+    await render(<CanteenLayout />);
 
     for (const title of [
       'Heute',
@@ -94,10 +87,10 @@ describe('CanteenLayout weekday tab titles', () => {
     expect(screen.queryByText('Mi')).toBeNull();
   });
 
-  it('keeps abbreviations on medium-width windows with large system text', () => {
+  it('keeps abbreviations on medium-width windows with large system text', async () => {
     mockWindowWidth = 600;
     mockFontScale = 1.5;
-    render(<CanteenLayout />);
+    await render(<CanteenLayout />);
 
     for (const title of ['Heute', 'Morgen', 'Mi', 'Do', 'Fr']) {
       expect(screen.getByText(title)).toBeTruthy();
@@ -105,21 +98,21 @@ describe('CanteenLayout weekday tab titles', () => {
     expect(screen.queryByText('Donnerstag')).toBeNull();
   });
 
-  it('spells out weekdays with large system text when the window is wide enough', () => {
+  it('spells out weekdays with large system text when the window is wide enough', async () => {
     mockWindowWidth = 900;
     mockFontScale = 1.5;
-    render(<CanteenLayout />);
+    await render(<CanteenLayout />);
 
     for (const title of ['Mittwoch', 'Donnerstag', 'Freitag']) {
       expect(screen.getByText(title)).toBeTruthy();
     }
   });
 
-  it('excludes side insets from the width available to the tabs', () => {
+  it('excludes side insets from the width available to the tabs', async () => {
     // Wide enough on its own, but the status bar column takes 84 dp.
     mockWindowWidth = 650;
     mockRightInset = 84;
-    render(<CanteenLayout />);
+    await render(<CanteenLayout />);
 
     for (const title of ['Mi', 'Do', 'Fr']) {
       expect(screen.getByText(title)).toBeTruthy();

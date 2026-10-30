@@ -142,10 +142,12 @@ describe('BlockPlanView', () => {
     jest.useRealTimers();
   });
 
-  it('renders every semester with its phases', () => {
+  it('renders every semester with its phases', async () => {
     mockQuery();
 
-    const { getByTestId, getByText, getAllByText } = render(<BlockPlanView />);
+    const { getByTestId, getByText, getAllByText } = await render(
+      <BlockPlanView />
+    );
 
     expect(getByText('1. Semester')).toBeTruthy();
     expect(getByText('2. Semester')).toBeTruthy();
@@ -163,7 +165,7 @@ describe('BlockPlanView', () => {
     });
   });
 
-  it('groups past semesters in one expandable archive', () => {
+  it('groups past semesters in one expandable archive', async () => {
     jest.setSystemTime(new Date('2027-05-02T10:00:00Z'));
     mockQuery();
     const scrollTo = jest.fn();
@@ -172,12 +174,12 @@ describe('BlockPlanView', () => {
       .mockReturnValue({ scrollTo } as never);
 
     const {
-      UNSAFE_getByType,
+      getAllByTestId,
       getByLabelText,
       getByTestId,
       getByText,
       queryByText,
-    } = render(<BlockPlanView />);
+    } = await render(<BlockPlanView />);
 
     const expandButton = getByLabelText('Vergangene Semester (1) aufklappen');
     expect(expandButton.props.accessibilityState).toEqual({ expanded: false });
@@ -192,15 +194,19 @@ describe('BlockPlanView', () => {
     expect(getByText('2. Semester')).toBeTruthy();
     expect(getByText('19. Apr. – 11. Juli 2027')).toBeTruthy();
     expect(
-      UNSAFE_getByType(SectionList).props.sections.map(
-        (section: { key: string }) => section.key
+      getAllByTestId(/^block-plan-section-/).map(
+        (section) => section.props.testID
       )
-    ).toEqual(['TIF26A-semester-2', 'TIF26A-past-archive']);
+    ).toEqual([
+      'block-plan-section-TIF26A-semester-2',
+      'block-plan-section-TIF26A-past-archive',
+    ]);
 
-    UNSAFE_getByType(SectionList).props.onScroll({
+    const list = getByTestId('block-plan-list');
+    await fireEvent.scroll(list, {
       nativeEvent: { contentOffset: { y: 240 } },
     });
-    fireEvent.press(expandButton);
+    await fireEvent.press(expandButton);
 
     const collapseButton = getByLabelText('Vergangene Semester (1) einklappen');
     expect(collapseButton.props.accessibilityState).toEqual({ expanded: true });
@@ -233,35 +239,34 @@ describe('BlockPlanView', () => {
           .props.style
       ).color
     ).toBe('#11181c');
-    UNSAFE_getByType(SectionList).props.onContentSizeChange(320, 1200);
+    await fireEvent(list, 'contentSizeChange', 320, 1200);
     expect(scrollTo).toHaveBeenCalledWith({
       animated: true,
       y: 400,
     });
 
-    fireEvent.press(collapseButton);
+    await fireEvent.press(collapseButton);
 
     expect(getByLabelText('Vergangene Semester (1) aufklappen')).toBeTruthy();
     expect(queryByText('1. Semester')).toBeNull();
     expect(queryByText('1. Okt. – 20. Dez. 2026')).toBeNull();
-    UNSAFE_getByType(SectionList).props.onContentSizeChange(320, 800);
+    await fireEvent(list, 'contentSizeChange', 320, 800);
     expect(scrollTo).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps a completed plan accessible through the archive', () => {
+  it('keeps a completed plan accessible through the archive', async () => {
     jest.setSystemTime(new Date('2027-08-02T10:00:00Z'));
     mockQuery();
 
-    const { getByLabelText, getByTestId, getByText, queryByText } = render(
-      <BlockPlanView />
-    );
+    const { getByLabelText, getByTestId, getByText, queryByText } =
+      await render(<BlockPlanView />);
 
     expect(getByText('Der Blockplan ist abgeschlossen')).toBeTruthy();
     expect(
       queryByText('Für diesen Kurs ist kein Blockplan hinterlegt.')
     ).toBeNull();
 
-    fireEvent.press(getByLabelText('Vergangene Semester (2) aufklappen'));
+    await fireEvent.press(getByLabelText('Vergangene Semester (2) aufklappen'));
 
     expect(getByText('1. Semester')).toBeTruthy();
     expect(getByText('2. Semester')).toBeTruthy();
@@ -277,7 +282,7 @@ describe('BlockPlanView', () => {
     ).toBe(16);
   });
 
-  it('marks the phase containing today as current', () => {
+  it('marks the phase containing today as current', async () => {
     mockQuery();
 
     const {
@@ -286,7 +291,7 @@ describe('BlockPlanView', () => {
       getByTestId,
       getByText,
       queryByText,
-    } = render(<BlockPlanView />);
+    } = await render(<BlockPlanView />);
 
     expect(getByText('Aktuell')).toBeTruthy();
     const currentPhaseCard = getByLabelText(
@@ -307,8 +312,7 @@ describe('BlockPlanView', () => {
       ).marginRight
     ).toBe(12);
     expect(
-      StyleSheet.flatten(getByText('Aktuell').parent?.parent?.props.style)
-        .marginLeft
+      StyleSheet.flatten(getByText('Aktuell').parent?.props.style).marginLeft
     ).toBe('auto');
     const upcomingPhaseCard = getByLabelText(
       'Praxisphase, 21. Dez. 2026 – 18. Apr. 2027, 17 Wochen'
@@ -346,11 +350,11 @@ describe('BlockPlanView', () => {
     expect(getByText('1. Semester · Theoriephase')).toBeTruthy();
   });
 
-  it('announces the upcoming phase before the study period starts', () => {
+  it('announces the upcoming phase before the study period starts', async () => {
     jest.setSystemTime(new Date('2026-09-15T10:00:00Z'));
     mockQuery();
 
-    const { getByText, queryByLabelText, queryByText } = render(
+    const { getByText, queryByLabelText, queryByText } = await render(
       <BlockPlanView />
     );
 
@@ -360,26 +364,26 @@ describe('BlockPlanView', () => {
     expect(queryByLabelText('Fortschritt der aktuellen Phase')).toBeNull();
   });
 
-  it('shows a stale-data banner when the cached plan is used', () => {
+  it('shows a stale-data banner when the cached plan is used', async () => {
     mockQuery({ data: { plan: PLAN, fromCache: true } });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(getByText('Nicht aktualisiert')).toBeTruthy();
   });
 
-  it('keeps the stale-data banner hidden while the request is still running', () => {
+  it('keeps the stale-data banner hidden while the request is still running', async () => {
     // Cold start with a cached plan: the request has not failed yet, so the
     // banner must not flash up before the response arrives.
     mockQuery({ data: { plan: PLAN, fromCache: true }, isFetching: true });
 
-    const { queryByText, getByText } = render(<BlockPlanView />);
+    const { queryByText, getByText } = await render(<BlockPlanView />);
 
     expect(queryByText('Nicht aktualisiert')).toBeNull();
     expect(getByText('1. Semester')).toBeTruthy();
   });
 
-  it('shows the stale-data banner when a refresh failed', () => {
+  it('shows the stale-data banner when a refresh failed', async () => {
     mockQuery({
       data: { plan: PLAN, fromCache: true },
       isError: true,
@@ -387,51 +391,51 @@ describe('BlockPlanView', () => {
       isFetching: false,
     });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(getByText('Nicht aktualisiert')).toBeTruthy();
   });
 
-  it('warns when the payload was only partially readable', () => {
+  it('warns when the payload was only partially readable', async () => {
     mockQuery({
       data: { plan: { ...PLAN, isPartial: true }, fromCache: false },
     });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(getByText('Unvollständig')).toBeTruthy();
   });
 
-  it('stays silent about completeness for an intact plan', () => {
+  it('stays silent about completeness for an intact plan', async () => {
     mockQuery();
 
-    const { queryByText } = render(<BlockPlanView />);
+    const { queryByText } = await render(<BlockPlanView />);
 
     expect(queryByText('Unvollständig')).toBeNull();
   });
 
-  it('does not claim the programme has not started during a gap between phases', () => {
+  it('does not claim the programme has not started during a gap between phases', async () => {
     // The gap between the first and the second phase of GAP_PLAN.
     jest.setSystemTime(new Date('2027-02-15T10:00:00Z'));
     mockQuery({ data: { plan: GAP_PLAN, fromCache: false } });
 
-    const { getByText, queryByText } = render(<BlockPlanView />);
+    const { getByText, queryByText } = await render(<BlockPlanView />);
 
     expect(queryByText('Das Studium hat noch nicht begonnen')).toBeNull();
     expect(getByText('Zurzeit läuft keine Phase')).toBeTruthy();
     expect(getByText(/Weiter ab 1\. Apr\. 2027/)).toBeTruthy();
   });
 
-  it('still announces the start before the very first phase', () => {
+  it('still announces the start before the very first phase', async () => {
     jest.setSystemTime(new Date('2026-09-15T10:00:00Z'));
     mockQuery({ data: { plan: GAP_PLAN, fromCache: false } });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(getByText('Das Studium hat noch nicht begonnen')).toBeTruthy();
   });
 
-  it('shows the offline state immediately instead of a spinner', () => {
+  it('shows the offline state immediately instead of a spinner', async () => {
     // networkMode 'always' keeps the request running while offline; the UI must
     // not wait for it to time out before saying so.
     mockUseOnlineStatus.mockReturnValue({
@@ -441,13 +445,13 @@ describe('BlockPlanView', () => {
     });
     mockQuery({ data: undefined, isLoading: true });
 
-    const { getByText, queryByText } = render(<BlockPlanView />);
+    const { getByText, queryByText } = await render(<BlockPlanView />);
 
     expect(getByText('Keine Internetverbindung')).toBeTruthy();
     expect(queryByText('Blockplan wird geladen...')).toBeNull();
   });
 
-  it('marks a cached plan as stale right away while offline', () => {
+  it('marks a cached plan as stale right away while offline', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: false,
       isOffline: true,
@@ -455,16 +459,16 @@ describe('BlockPlanView', () => {
     });
     mockQuery({ data: { plan: PLAN, fromCache: true }, isFetching: true });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(getByText('Offline')).toBeTruthy();
   });
 
-  it('asks for a course when none is selected', () => {
+  it('asks for a course when none is selected', async () => {
     mockUseCourseContext.mockReturnValue({ selectedCourse: null });
     mockQuery({ data: undefined });
 
-    const { getByText } = render(<BlockPlanView />);
+    const { getByText } = await render(<BlockPlanView />);
 
     expect(
       getByText('Bitte wähle zuerst einen Kurs aus, um den Blockplan zu sehen.')

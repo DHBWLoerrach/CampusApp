@@ -4,8 +4,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { createMaterialTopTabNavigator } from 'expo-router/js-top-tabs';
-import { withLayoutContext } from 'expo-router';
+import { TopTabs } from 'expo-router/js-top-tabs';
 import {
   addDays,
   differenceInMilliseconds,
@@ -20,9 +19,6 @@ import { topTabBarOptions } from '@/constants/Navigation';
 import { MEDIUM_WINDOW_MIN_WIDTH } from '@/constants/Layout';
 import CanteenClosedScreen from '@/components/canteen/CanteenClosedScreen';
 import TopTabLabel from '@/components/ui/TopTabLabel';
-
-const Tab = createMaterialTopTabNavigator();
-const TopTabs = withLayoutContext(Tab.Navigator);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -115,11 +111,7 @@ export default function CanteenLayout() {
     ...topTabBarOptions,
     swipeEnabled: true,
     tabBarItemStyle: { flex: 1, paddingHorizontal: 0 },
-    tabBarLabel: (props: {
-      focused: boolean;
-      children: string;
-      color?: string;
-    }) => <TopTabLabel {...props} />,
+    tabBarLabel: TopTabLabel,
   };
 
   return (

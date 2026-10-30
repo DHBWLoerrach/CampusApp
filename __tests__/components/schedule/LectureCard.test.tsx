@@ -36,11 +36,11 @@ const createEvent = (overrides?: Partial<TimetableEvent>): TimetableEvent => ({
 });
 
 describe('LectureCard', () => {
-  it('expands online links from the chevron button without text measurement', () => {
+  it('expands online links from the chevron button without text measurement', async () => {
     const longUrl =
       'https://teams.microsoft.com/l/meetup-join/19%3ameeting_abcdef1234567890%40thread.v2/0?context=%7B%22Tid%22%3A%22dhbw%22%7D';
 
-    const { getByLabelText, getByText, queryByText } = render(
+    const { getByLabelText, getByText, queryByText } = await render(
       <LectureCard event={createEvent({ description: longUrl })} />
     );
 
@@ -48,7 +48,7 @@ describe('LectureCard', () => {
     expect(getByText('https://teams.microsoft.com/…')).toBeTruthy();
     expect(queryByText(longUrl)).toBeNull();
 
-    fireEvent.press(getByLabelText('Mehr anzeigen'));
+    await fireEvent.press(getByLabelText('Mehr anzeigen'));
 
     expect(getByLabelText('Weniger anzeigen')).toBeTruthy();
     expect(getByText(longUrl)).toBeTruthy();

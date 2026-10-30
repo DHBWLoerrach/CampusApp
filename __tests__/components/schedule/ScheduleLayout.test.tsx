@@ -5,6 +5,7 @@ const mockStorageGetItem = jest.fn();
 const mockUseCourseContext = jest.fn();
 const mockGetDismissed = jest.fn();
 const mockDismissPromo = jest.fn();
+const mockRouterNavigate = jest.fn();
 
 jest.mock('expo-sqlite/kv-store', () => ({
   getItem: (...args: unknown[]) => mockStorageGetItem(...args),
@@ -13,7 +14,7 @@ jest.mock('expo-sqlite/kv-store', () => ({
 
 jest.mock('expo-router', () => ({
   useIsFocused: () => true,
-  withLayoutContext: (Navigator: any) => Navigator,
+  useRouter: () => ({ navigate: mockRouterNavigate }),
 }));
 
 jest.mock('expo-router/js-top-tabs', () => {
@@ -38,7 +39,7 @@ jest.mock('expo-router/js-top-tabs', () => {
   Navigator.Screen = ({ children }: any) => <View>{children}</View>;
 
   return {
-    createMaterialTopTabNavigator: () => ({ Navigator }),
+    TopTabs: Navigator,
     MaterialTopTabBar,
   };
 });
@@ -91,10 +92,18 @@ jest.mock('@/components/ui/BottomSheet', () => {
   };
 });
 
-jest.mock('@/components/schedule/CourseSetup', () => ({
-  __esModule: true,
-  default: () => null,
-}));
+jest.mock('@/components/schedule/CourseSetup', () => {
+  const { Text } = require('react-native');
+
+  return {
+    __esModule: true,
+    default: ({
+      onCourseSelected,
+    }: {
+      onCourseSelected: (course: string) => void;
+    }) => <Text onPress={() => onCourseSelected('TIF24A')}>Kurs wählen</Text>,
+  };
+});
 
 jest.mock('@/components/ui/TopTabLabel', () => ({
   __esModule: true,
@@ -110,6 +119,7 @@ describe('ScheduleLayout Code Companion promo', () => {
     mockUseCourseContext.mockReset();
     mockGetDismissed.mockReset();
     mockDismissPromo.mockReset();
+    mockRouterNavigate.mockReset();
 
     mockStorageGetItem.mockResolvedValue('index');
     mockUseCourseContext.mockReturnValue({
@@ -126,7 +136,7 @@ describe('ScheduleLayout Code Companion promo', () => {
   });
 
   it('shows the banner for an eligible course without auto-opening the sheet', async () => {
-    const { getByText, queryByText } = render(<ScheduleLayout />);
+    const { getByText, queryByText } = await render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(getByText('DHBW Code Companion')).toBeTruthy();
@@ -143,7 +153,7 @@ describe('ScheduleLayout Code Companion promo', () => {
       isLoading: false,
     });
 
-    const { queryByText } = render(<ScheduleLayout />);
+    const { queryByText } = await render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(mockGetDismissed).toHaveBeenCalledTimes(1);
@@ -155,7 +165,7 @@ describe('ScheduleLayout Code Companion promo', () => {
   it('does not show the banner when permanently dismissed', async () => {
     mockGetDismissed.mockResolvedValue(true);
 
-    const { queryByText } = render(<ScheduleLayout />);
+    const { queryByText } = await render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(mockGetDismissed).toHaveBeenCalledTimes(1);
@@ -165,13 +175,13 @@ describe('ScheduleLayout Code Companion promo', () => {
   });
 
   it('opens the sheet with both actions when the banner is tapped', async () => {
-    const { getByLabelText, getByText } = render(<ScheduleLayout />);
+    const { getByLabelText, getByText } = await render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
 
-    fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
+    await fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
@@ -182,23 +192,39 @@ describe('ScheduleLayout Code Companion promo', () => {
   it('restores the banner when permanent dismiss persistence fails', async () => {
     mockDismissPromo.mockRejectedValueOnce(new Error('storage failed'));
 
-    const { getByLabelText, getByText } = render(<ScheduleLayout />);
+    const { getByLabelText, getByText } = await render(<ScheduleLayout />);
 
     await waitFor(() => {
       expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
 
-    fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
+    await fireEvent.press(getByLabelText('DHBW Code Companion öffnen'));
 
     await waitFor(() => {
       expect(getByText('Nicht mehr automatisch anzeigen')).toBeTruthy();
     });
 
-    fireEvent.press(getByText('Nicht mehr automatisch anzeigen'));
+    await fireEvent.press(getByText('Nicht mehr automatisch anzeigen'));
 
     await waitFor(() => {
       expect(mockDismissPromo).toHaveBeenCalledTimes(1);
       expect(getByLabelText('DHBW Code Companion öffnen')).toBeTruthy();
     });
+  });
+
+  it('restores the last sub-tab after a course is selected', async () => {
+    const setSelectedCourse = jest.fn();
+    mockStorageGetItem.mockResolvedValue('week');
+    mockUseCourseContext.mockReturnValue({
+      selectedCourse: null,
+      setSelectedCourse,
+      isLoading: false,
+    });
+
+    const { findByText } = await render(<ScheduleLayout />);
+    await fireEvent.press(await findByText('Kurs wählen'));
+
+    expect(setSelectedCourse).toHaveBeenCalledWith('TIF24A');
+    expect(mockRouterNavigate).toHaveBeenCalledWith('/schedule/week');
   });
 });

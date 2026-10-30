@@ -89,7 +89,7 @@ describe('useBlockPlan integration', () => {
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    const { result, unmount } = renderHook(() => useBlockPlan('TIF26A'), {
+    const { result, unmount } = await renderHook(() => useBlockPlan('TIF26A'), {
       wrapper: createWrapper(queryClient),
     });
 
@@ -101,7 +101,7 @@ describe('useBlockPlan integration', () => {
         });
       });
     } finally {
-      unmount();
+      await unmount();
       queryClient.clear();
     }
   });
@@ -120,7 +120,7 @@ describe('useBlockPlan integration', () => {
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    const { result, unmount } = renderHook(() => useBlockPlan('TIF26A'), {
+    const { result, unmount } = await renderHook(() => useBlockPlan('TIF26A'), {
       wrapper: createWrapper(queryClient),
     });
 
@@ -153,7 +153,7 @@ describe('useBlockPlan integration', () => {
         statusText: 'OK',
         json: async () => PLAN,
       });
-      unmount();
+      await unmount();
       queryClient.clear();
     }
   });
@@ -175,7 +175,7 @@ describe('useBlockPlan integration', () => {
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    const { result, unmount } = renderHook(() => useBlockPlan('TIF26A'), {
+    const { result, unmount } = await renderHook(() => useBlockPlan('TIF26A'), {
       wrapper: createWrapper(queryClient),
     });
 
@@ -192,7 +192,7 @@ describe('useBlockPlan integration', () => {
         expect(result.current.data?.plan).toBeNull();
       });
     } finally {
-      unmount();
+      await unmount();
       queryClient.clear();
     }
   });
@@ -212,7 +212,7 @@ describe('useBlockPlan integration', () => {
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
-    const { result, unmount } = renderHook(() => useBlockPlan('TIF26A'), {
+    const { result, unmount } = await renderHook(() => useBlockPlan('TIF26A'), {
       wrapper: createWrapper(queryClient),
     });
 
@@ -224,7 +224,7 @@ describe('useBlockPlan integration', () => {
         });
       });
 
-      act(() => {
+      await act(() => {
         onlineManager.setOnline(true);
       });
 
@@ -235,7 +235,7 @@ describe('useBlockPlan integration', () => {
         });
       });
     } finally {
-      unmount();
+      await unmount();
       queryClient.clear();
     }
   });

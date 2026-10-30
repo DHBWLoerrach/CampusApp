@@ -29,8 +29,8 @@ it('navigates to the sheet when NFC is available', async () => {
   mockIsSupported.mockResolvedValue(true);
   mockIsEnabled.mockResolvedValue(true);
 
-  const { getByText } = render(<NfcButton render={renderTrigger} />);
-  fireEvent.press(getByText('scan'));
+  const { getByText } = await render(<NfcButton render={renderTrigger} />);
+  await fireEvent.press(getByText('scan'));
 
   await waitFor(() =>
     expect(router.push).toHaveBeenCalledWith('/canteen/nfc-sheet')
@@ -42,8 +42,8 @@ it('shows an alert and does not navigate when NFC is unavailable', async () => {
   mockIsEnabled.mockResolvedValue(false);
   const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
-  const { getByText } = render(<NfcButton render={renderTrigger} />);
-  fireEvent.press(getByText('scan'));
+  const { getByText } = await render(<NfcButton render={renderTrigger} />);
+  await fireEvent.press(getByText('scan'));
 
   await waitFor(() => expect(alertSpy).toHaveBeenCalled());
   expect(router.push).not.toHaveBeenCalled();

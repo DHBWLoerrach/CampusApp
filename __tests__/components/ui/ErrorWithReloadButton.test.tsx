@@ -14,8 +14,8 @@ describe('ErrorWithReloadButton', () => {
     mockRefetch.mockClear();
   });
 
-  it('displays error message', () => {
-    const { getByText } = render(
+  it('displays error message', async () => {
+    const { getByText } = await render(
       <ErrorWithReloadButton
         error={testError}
         isFetching={false}
@@ -27,8 +27,8 @@ describe('ErrorWithReloadButton', () => {
     expect(getByText('Netzwerkfehler')).toBeTruthy();
   });
 
-  it('uses a fallback when the error message is empty', () => {
-    const { getByText } = render(
+  it('uses a fallback when the error message is empty', async () => {
+    const { getByText } = await render(
       <ErrorWithReloadButton
         error={new Error('')}
         isFetching={false}
@@ -39,8 +39,8 @@ describe('ErrorWithReloadButton', () => {
     expect(getByText('Bitte versuche es später erneut.')).toBeTruthy();
   });
 
-  it('shows "Neu laden" button when not fetching', () => {
-    const { getByText } = render(
+  it('shows "Neu laden" button when not fetching', async () => {
+    const { getByText } = await render(
       <ErrorWithReloadButton
         error={testError}
         isFetching={false}
@@ -51,8 +51,8 @@ describe('ErrorWithReloadButton', () => {
     expect(getByText('Neu laden')).toBeTruthy();
   });
 
-  it('shows "Wird neu geladen…" button when fetching', () => {
-    const { getByText } = render(
+  it('shows "Wird neu geladen…" button when fetching', async () => {
+    const { getByText } = await render(
       <ErrorWithReloadButton
         error={testError}
         isFetching={true}
@@ -63,8 +63,8 @@ describe('ErrorWithReloadButton', () => {
     expect(getByText('Wird neu geladen…')).toBeTruthy();
   });
 
-  it('calls refetch when button is pressed', () => {
-    const { getByText } = render(
+  it('calls refetch when button is pressed', async () => {
+    const { getByText } = await render(
       <ErrorWithReloadButton
         error={testError}
         isFetching={false}
@@ -72,12 +72,12 @@ describe('ErrorWithReloadButton', () => {
       />
     );
 
-    fireEvent.press(getByText('Neu laden'));
+    await fireEvent.press(getByText('Neu laden'));
     expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 
-  it('has correct accessibility label', () => {
-    const { getByLabelText } = render(
+  it('has correct accessibility label', async () => {
+    const { getByLabelText } = await render(
       <ErrorWithReloadButton
         error={testError}
         isFetching={false}

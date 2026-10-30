@@ -515,6 +515,7 @@ export default function BlockPlanView() {
 
       <SectionList
         ref={sectionListRef}
+        testID="block-plan-list"
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
         onContentSizeChange={revealPastArchive}
@@ -525,7 +526,7 @@ export default function BlockPlanView() {
           `${item.semesterNumber}-${item.phase.type}-${item.phase.startDate}-${index}`
         }
         ListHeaderComponent={
-          plan ? <BlockPlanSummary plan={plan} today={today} /> : null
+          plan ? <BlockPlanSummary plan={plan} today={today} /> : undefined
         }
         renderItem={({ item, index, section }) => {
           if (section.isArchivedSemester) {
@@ -580,7 +581,9 @@ export default function BlockPlanView() {
         refreshControl={
           <RefreshControl
             refreshing={isFetching}
-            onRefresh={refetch}
+            onRefresh={() => {
+              void refetch();
+            }}
             tintColor={tintColor}
           />
         }

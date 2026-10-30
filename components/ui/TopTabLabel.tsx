@@ -1,9 +1,9 @@
-import { Text } from 'react-native';
+import { Text, type ColorValue } from 'react-native';
 
 type Props = {
   focused: boolean;
   children: string | number;
-  color?: string;
+  color?: ColorValue;
 };
 
 export default function TopTabLabel({ focused, children, color }: Props) {

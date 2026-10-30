@@ -56,7 +56,7 @@ describe('RSSFeedList', () => {
     openSettingsSpy.mockRestore();
   });
 
-  it('shows offline empty state when offline and no items', () => {
+  it('shows offline empty state when offline and no items', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: false,
       isOffline: true,
@@ -71,7 +71,7 @@ describe('RSSFeedList', () => {
       dataUpdatedAt: 0,
     });
 
-    const { getByText } = render(
+    const { getByText } = await render(
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
@@ -83,7 +83,7 @@ describe('RSSFeedList', () => {
     expect(getByText('Erneut versuchen')).toBeTruthy();
   });
 
-  it('prioritizes the offline banner over refresh errors when items exist', () => {
+  it('prioritizes the offline banner over refresh errors when items exist', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: false,
       isOffline: true,
@@ -98,7 +98,7 @@ describe('RSSFeedList', () => {
       dataUpdatedAt: 1,
     });
 
-    const { getByText, queryByText } = render(
+    const { getByText, queryByText } = await render(
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
@@ -108,7 +108,7 @@ describe('RSSFeedList', () => {
     expect(queryByText('Nicht aktualisiert')).toBeNull();
   });
 
-  it('shows error state when online and no items', () => {
+  it('shows error state when online and no items', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: true,
       isOffline: false,
@@ -124,16 +124,16 @@ describe('RSSFeedList', () => {
       dataUpdatedAt: 0,
     });
 
-    const { getByText } = render(
+    const { getByText } = await render(
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
     expect(getByText('Inhalte konnten nicht geladen werden')).toBeTruthy();
-    fireEvent.press(getByText('Erneut versuchen'));
+    await fireEvent.press(getByText('Erneut versuchen'));
     expect(refetch).toHaveBeenCalledTimes(1);
   });
 
-  it('renders items when data is available', () => {
+  it('renders items when data is available', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: true,
       isOffline: false,
@@ -148,14 +148,14 @@ describe('RSSFeedList', () => {
       dataUpdatedAt: 0,
     });
 
-    const { getByText } = render(
+    const { getByText } = await render(
       <RSSFeedList feedUrl="https://example.com/rss" />
     );
 
     expect(getByText('Beitrag 1')).toBeTruthy();
   });
 
-  it('always refetches on reconnect even while cached data is fresh', () => {
+  it('always refetches on reconnect even while cached data is fresh', async () => {
     mockUseOnlineStatus.mockReturnValue({
       isOnline: true,
       isOffline: false,
@@ -170,7 +170,7 @@ describe('RSSFeedList', () => {
       dataUpdatedAt: 0,
     });
 
-    render(<RSSFeedList feedUrl="https://example.com/rss" />);
+    await render(<RSSFeedList feedUrl="https://example.com/rss" />);
 
     expect(mockUseQuery).toHaveBeenCalledWith(
       expect.objectContaining({

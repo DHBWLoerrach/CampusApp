@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { usePathname } from 'expo-router';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { NativeTabs } from 'expo-router/native-tabs';
 import Storage from 'expo-sqlite/kv-store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CourseProvider } from '@/context/CourseContext';
