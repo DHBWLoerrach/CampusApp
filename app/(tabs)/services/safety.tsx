@@ -59,7 +59,7 @@ export default function SafetyScreen() {
           <ThemedText style={styles.introText}>
             Deine Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
             zusammengestellt, in denen wir dich über verschiedene
-            Sicherheitshemen an der DHBW Lörrach informieren. Du erfährst, wie
+            Sicherheitsthemen an der DHBW Lörrach informieren. Du erfährst, wie
             du dich vor Unfällen schützen kannst und welche
             Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!
           </ThemedText>
@@ -127,10 +127,12 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '48%',
+    maxWidth: 320,
+    // Matches the images, whose text would be cropped on wider cards otherwise.
+    aspectRatio: 16 / 9,
     borderRadius: 14,
     borderCurve: 'continuous',
     overflow: 'hidden',
-    height: 100,
   },
   image: {
     width: '100%',
