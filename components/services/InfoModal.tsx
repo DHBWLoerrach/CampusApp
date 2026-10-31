@@ -1,8 +1,11 @@
 import { ReactNode } from 'react';
 import { Modal, View, StyleSheet, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+const BACKDROP_PADDING = 16;
 
 // Generic reusable modal
 export default function InfoModal({
@@ -18,6 +21,7 @@ export default function InfoModal({
 }) {
   const background = useThemeColor({}, 'background');
   const iconColor = useThemeColor({}, 'text');
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -26,7 +30,21 @@ export default function InfoModal({
       transparent
       onRequestClose={onClose}
     >
-      <View style={styles.backdrop}>
+      {/* The close button is the only way to dismiss the modal on iOS, so it
+          must stay clear of system UI such as the status bar column on a
+          folded cover display. */}
+      <View
+        testID="info-modal-backdrop"
+        style={[
+          styles.backdrop,
+          {
+            paddingTop: Math.max(BACKDROP_PADDING, insets.top),
+            paddingRight: Math.max(BACKDROP_PADDING, insets.right),
+            paddingBottom: Math.max(BACKDROP_PADDING, insets.bottom),
+            paddingLeft: Math.max(BACKDROP_PADDING, insets.left),
+          },
+        ]}
+      >
         <View style={[styles.content, { backgroundColor: background }]}>
           <Pressable
             onPress={onClose}
@@ -50,7 +68,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.55)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
   },
   content: {
     borderRadius: 20,

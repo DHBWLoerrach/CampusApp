@@ -21,6 +21,7 @@ import CodeCompanionPromoSheetContent, {
   CodeCompanionPromoSheetTitle,
 } from '@/components/schedule/CodeCompanionPromoSheetContent';
 import { useCourseContext } from '@/context/CourseContext';
+import { TOP_TABS_SAFE_AREA_INSETS } from '@/constants/Layout';
 import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
 import {
   dismissCodeCompanionPromo,
@@ -203,6 +204,7 @@ export default function ScheduleLayout() {
           {selectedCourse ? (
             // Show tabs when course is selected
             <TopTabs
+              safeAreaInsets={TOP_TABS_SAFE_AREA_INSETS}
               screenOptions={enhancedTabBarOptions}
               tabBar={renderTabBar}
             >

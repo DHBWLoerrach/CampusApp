@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors, dhbwRed } from '@/constants/Colors';
@@ -49,55 +50,57 @@ export default function SafetyScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <ThemedText style={styles.introText}>
-          Deine Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
-          zusammengestellt, in denen wir dich über verschiedene Sicherheitshemen
-          an der DHBW Lörrach informieren. Du erfährst, wie du dich vor Unfällen
-          schützen kannst und welche Sicherheitseinrichtungen es an den
-          Standorten gibt. Viel Spaß!
-        </ThemedText>
-        <ThemedView style={styles.grid}>
-          {links.map((item) => (
-            <Pressable
-              key={item.title}
-              onPress={() => openLink(item.url)}
-              style={({ pressed }) => [
-                styles.card,
-                {
-                  backgroundColor: pageBg,
-                  opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
-                },
-              ]}
-              android_ripple={{
-                color: Colors.light.tint + '30',
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={`${item.title} Video`}
-              accessibilityHint="Öffnet das Video in einem Browser"
-            >
-              <Image
-                source={item.img}
-                style={styles.image}
-                resizeMode="cover"
-                accessible
-                accessibilityLabel={item.title}
-              />
-            </Pressable>
-          ))}
-        </ThemedView>
-        <ThemedView style={styles.buttonContainer}>
-          <Button
-            title="Brandschutzordnung (PDF)"
-            color={dhbwRed}
-            onPress={() => openLink('https://dhbw-loerrach.de/brandschutz')}
-          />
-        </ThemedView>
-      </ScrollView>
+      <SafeAreaView edges={['left', 'right']} style={styles.container}>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <ThemedText style={styles.introText}>
+            Deine Sicherheit liegt uns am Herzen. Deshalb haben wir diese Videos
+            zusammengestellt, in denen wir dich über verschiedene
+            Sicherheitshemen an der DHBW Lörrach informieren. Du erfährst, wie
+            du dich vor Unfällen schützen kannst und welche
+            Sicherheitseinrichtungen es an den Standorten gibt. Viel Spaß!
+          </ThemedText>
+          <ThemedView style={styles.grid}>
+            {links.map((item) => (
+              <Pressable
+                key={item.title}
+                onPress={() => openLink(item.url)}
+                style={({ pressed }) => [
+                  styles.card,
+                  {
+                    backgroundColor: pageBg,
+                    opacity: Platform.OS === 'ios' && pressed ? 0.7 : 1,
+                  },
+                ]}
+                android_ripple={{
+                  color: Colors.light.tint + '30',
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={`${item.title} Video`}
+                accessibilityHint="Öffnet das Video in einem Browser"
+              >
+                <Image
+                  source={item.img}
+                  style={styles.image}
+                  resizeMode="cover"
+                  accessible
+                  accessibilityLabel={item.title}
+                />
+              </Pressable>
+            ))}
+          </ThemedView>
+          <ThemedView style={styles.buttonContainer}>
+            <Button
+              title="Brandschutzordnung (PDF)"
+              color={dhbwRed}
+              onPress={() => openLink('https://dhbw-loerrach.de/brandschutz')}
+            />
+          </ThemedView>
+        </ScrollView>
+      </SafeAreaView>
     </ThemedView>
   );
 }

@@ -16,7 +16,10 @@ import { weekdayDates } from '@/lib/canteenService';
 import { getCanteenClosureForDates } from '@/lib/canteenClosures';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { topTabBarOptions } from '@/constants/Navigation';
-import { MEDIUM_WINDOW_MIN_WIDTH } from '@/constants/Layout';
+import {
+  MEDIUM_WINDOW_MIN_WIDTH,
+  TOP_TABS_SAFE_AREA_INSETS,
+} from '@/constants/Layout';
 import CanteenClosedScreen from '@/components/canteen/CanteenClosedScreen';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
@@ -120,7 +123,10 @@ export default function CanteenLayout() {
           bar column on a folded cover display), the JS tab bar and the day
           views do not, so pad them horizontally here. */}
       <SafeAreaView edges={['left', 'right']} style={{ flex: 1 }}>
-        <TopTabs screenOptions={enhancedTabBarOptions}>
+        <TopTabs
+          safeAreaInsets={TOP_TABS_SAFE_AREA_INSETS}
+          screenOptions={enhancedTabBarOptions}
+        >
           <TopTabs.Screen name="index" options={{ title: titles.index }} />
           <TopTabs.Screen name="day1" options={{ title: titles.day1 }} />
           <TopTabs.Screen name="day2" options={{ title: titles.day2 }} />

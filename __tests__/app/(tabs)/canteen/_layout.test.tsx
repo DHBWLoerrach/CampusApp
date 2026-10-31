@@ -4,6 +4,7 @@ import CanteenLayout from '@/app/(tabs)/canteen/(sections)/_layout';
 let mockWindowWidth = 390;
 let mockFontScale = 1;
 let mockRightInset = 0;
+let mockTopTabsProps: any;
 
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -33,7 +34,10 @@ jest.mock('react-native-safe-area-context', () => {
 jest.mock('expo-router/js-top-tabs', () => {
   const { View, Text } = require('react-native');
 
-  const TopTabs = ({ children }: any) => <View>{children}</View>;
+  const TopTabs = (props: any) => {
+    mockTopTabsProps = props;
+    return <View>{props.children}</View>;
+  };
   TopTabs.Screen = ({ options }: any) => <Text>{options?.title}</Text>;
 
   return { TopTabs };
@@ -118,5 +122,13 @@ describe('CanteenLayout weekday tab titles', () => {
       expect(screen.getByText(title)).toBeTruthy();
     }
     expect(screen.queryByText('Donnerstag')).toBeNull();
+  });
+
+  it('keeps the tab bar from padding side insets a second time', async () => {
+    mockWindowWidth = 650;
+    mockRightInset = 84;
+    await render(<CanteenLayout />);
+
+    expect(mockTopTabsProps.safeAreaInsets).toEqual({ left: 0, right: 0 });
   });
 });

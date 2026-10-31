@@ -1,4 +1,5 @@
 import { FlatList, Platform, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
@@ -54,13 +55,15 @@ export default function LinksScreen({
 }) {
   return (
     <ThemedView style={styles.container}>
-      <FlatList
-        data={links}
-        contentInsetAdjustmentBehavior="automatic"
-        renderItem={({ item }) => <LinkItem item={item} />}
-        keyExtractor={(item) => item.title}
-        contentContainerStyle={styles.listContent}
-      />
+      <SafeAreaView edges={['left', 'right']} style={styles.container}>
+        <FlatList
+          data={links}
+          contentInsetAdjustmentBehavior="automatic"
+          renderItem={({ item }) => <LinkItem item={item} />}
+          keyExtractor={(item) => item.title}
+          contentContainerStyle={styles.listContent}
+        />
+      </SafeAreaView>
     </ThemedView>
   );
 }
