@@ -20,7 +20,7 @@
     "@react-native-community/netinfo": "12.0.1",
     "@react-native-vector-icons/material-design-icons": "^13.1.2",
     "@react-native-vector-icons/material-icons": "^13.1.2",
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "^5.105.1",
     "date-fns": "^4.1.0",
     "expo": "~58.0.22",
     "expo-application": "~58.1.2",
