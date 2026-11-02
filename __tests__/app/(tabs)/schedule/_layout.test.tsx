@@ -7,7 +7,8 @@ const mockUseCourseContext = jest.fn();
 const mockUseBlockPlan = jest.fn();
 
 // Renders the header buttons a Stack.Screen declares, both the custom header
-// views (Android) and the native toolbar items (iOS), so they can be asserted on.
+// views (web) and the native toolbar items (iOS, Android), so they can be
+// asserted on.
 jest.mock('expo-router', () => {
   const { Text, View } = require('react-native');
 
@@ -116,17 +117,34 @@ describe('ScheduleStackLayout block plan entry point', () => {
     );
   });
 
-  it('keeps the block plan icon as a custom header view on Android', async () => {
-    // Android toolbar buttons only take image icons, not SF Symbols.
+  it('declares the block plan icon as a native toolbar item with an image icon on Android', async () => {
+    // Android toolbar buttons only take image sources, not SF Symbols, so the
+    // icon is a Material Symbol asset.
     const platform = jest.replaceProperty(Platform, 'OS', 'android');
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
     try {
       const { getByLabelText } = await render(<ScheduleStackLayout />);
+      const item = getByLabelText('Blockplan öffnen');
 
-      expect(getByLabelText('Blockplan öffnen').props.accessibilityRole).toBe(
-        'button'
-      );
+      expect(item.props.accessibilityRole).toBe(undefined);
+      expect(item.props.children).not.toBe('calendar.badge.clock');
+    } finally {
+      platform.restore();
+    }
+  });
+
+  it('keeps the block plan icon as a custom header view on web', async () => {
+    // Stack.Toolbar renders nothing on web.
+    const platform = jest.replaceProperty(Platform, 'OS', 'web');
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    try {
+      const { getAllByLabelText } = await render(<ScheduleStackLayout />);
+      const items = getAllByLabelText('Blockplan öffnen');
+
+      expect(items).toHaveLength(1);
+      expect(items[0].props.accessibilityRole).toBe('button');
     } finally {
       platform.restore();
     }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import { Platform, View } from 'react-native';
+import ClockIcon from '@expo/material-symbols/schedule.xml';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -23,12 +24,11 @@ export default function CanteenStackLayout() {
           name="(sections)"
           options={{
             title: 'Mensa',
-            // Android toolbar buttons only take image icons, so Android keeps
-            // the custom header view.
+            // Stack.Toolbar renders nothing on web, so web keeps the custom
+            // header view.
             headerRight:
-              Platform.OS === 'ios'
-                ? undefined
-                : () => (
+              Platform.OS === 'web'
+                ? () => (
                     <HeaderIconButton
                       onPress={() => setCanteenInfoOpen(true)}
                       name="clock"
@@ -36,16 +36,19 @@ export default function CanteenStackLayout() {
                       accessibilityLabel={CANTEEN_INFO_LABEL}
                       accessibilityHint={CANTEEN_INFO_HINT}
                     />
-                  ),
+                  )
+                : undefined,
           }}
         >
-          {/* A native bar button item: iOS drops custom header views when it
-              moves the header items into the side column of a folded iPhone
-              Duo, which would leave no way to open the canteen info. */}
-          {Platform.OS === 'ios' ? (
+          {/* A native bar button item on iOS and Android. iOS drops custom
+              header views when it moves the header items into the side
+              column of a folded iPhone Duo, which would leave no way to open
+              the canteen info. Android takes Material Symbols as image
+              sources. */}
+          {Platform.OS !== 'web' ? (
             <Stack.Toolbar placement="right">
               <Stack.Toolbar.Button
-                icon="clock"
+                icon={Platform.OS === 'ios' ? 'clock' : ClockIcon}
                 tintColor={tintColor}
                 onPress={() => setCanteenInfoOpen(true)}
                 accessibilityLabel={CANTEEN_INFO_LABEL}

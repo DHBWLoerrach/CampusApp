@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { router, Stack } from 'expo-router';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import BlockPlanIcon from '@expo/material-symbols/calendar_clock.xml';
+import CarIcon from '@expo/material-symbols/directions_car.xml';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -105,10 +107,10 @@ export default function ScheduleStackLayout() {
                   </TouchableOpacity>
                 )
               : undefined,
-            // Android toolbar buttons only take image icons, so Android keeps
-            // the custom header view.
+            // Stack.Toolbar renders nothing on web, so web keeps the custom
+            // header view.
             headerRight:
-              Platform.OS !== 'ios' &&
+              Platform.OS === 'web' &&
               selectedCourse &&
               (RIDES_FEATURE_ENABLED || hasBlockPlan)
                 ? () => (
@@ -138,16 +140,17 @@ export default function ScheduleStackLayout() {
                 : undefined,
           }}
         >
-          {/* Native bar button items: iOS drops custom header views when it
-              moves the header items into the side column of a folded iPhone
-              Duo, which would hide these entry points. */}
-          {Platform.OS === 'ios' &&
+          {/* Native bar button items on iOS and Android. iOS drops custom
+              header views when it moves the header items into the side
+              column of a folded iPhone Duo, which would hide these entry
+              points. Android takes Material Symbols as image sources. */}
+          {Platform.OS !== 'web' &&
           selectedCourse &&
           (RIDES_FEATURE_ENABLED || hasBlockPlan) ? (
             <Stack.Toolbar placement="right">
               {RIDES_FEATURE_ENABLED ? (
                 <Stack.Toolbar.Button
-                  icon="car"
+                  icon={Platform.OS === 'ios' ? 'car' : CarIcon}
                   tintColor={tintColor}
                   onPress={() => setCarpoolOpen(true)}
                   accessibilityLabel="Carpool öffnen"
@@ -156,7 +159,11 @@ export default function ScheduleStackLayout() {
               ) : null}
               {hasBlockPlan ? (
                 <Stack.Toolbar.Button
-                  icon="calendar.badge.clock"
+                  icon={
+                    Platform.OS === 'ios'
+                      ? 'calendar.badge.clock'
+                      : BlockPlanIcon
+                  }
                   tintColor={tintColor}
                   onPress={() => router.push('/schedule/block-plan')}
                   accessibilityLabel="Blockplan öffnen"
