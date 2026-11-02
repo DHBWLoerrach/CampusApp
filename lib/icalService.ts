@@ -137,6 +137,45 @@ function berlinMidnight(ymd: string): Date {
   return new Date(t);
 }
 
+function ymdFromIcalDate(time: ICAL.Time): string {
+  const mm = String(time.month).padStart(2, '0');
+  const dd = String(time.day).padStart(2, '0');
+  return `${time.year}-${mm}-${dd}`;
+}
+
+/**
+ * Maps an all-day (DATE) range to one slice per Berlin calendar day.
+ * DATE values are calendar days, not instants, so they must not pass through
+ * the device timezone. The DHBW feed writes DTEND inclusively (single-day
+ * events carry DTEND = DTSTART, Easter runs Good Friday to Easter Monday), so
+ * an explicit end date counts as the last day of the event.
+ */
+function allDaySlices(
+  start: ICAL.Time,
+  end: ICAL.Time,
+  hasExplicitEnd: boolean
+): { start: Date; end: Date }[] {
+  const firstDay = ymdFromIcalDate(start);
+  // Without DTEND, ical.js derives an exclusive end (RFC 5545: one day)
+  const lastDay = hasExplicitEnd
+    ? ymdFromIcalDate(end)
+    : addDaysToYmd(ymdFromIcalDate(end), -1);
+  const dayCount = Math.max(
+    1,
+    Math.round(
+      (utcDayKeyFromYmd(lastDay) - utcDayKeyFromYmd(firstDay)) / MS_IN_DAY
+    ) + 1
+  );
+
+  return Array.from({ length: dayCount }, (_, offset) => {
+    const dayKey = addDaysToYmd(firstDay, offset);
+    return {
+      start: berlinMidnight(dayKey),
+      end: berlinMidnight(addDaysToYmd(dayKey, 1)),
+    };
+  });
+}
+
 /**
  * Generates the iCal URL for a given course.
  * Applies alias resolution and normalizes to lowercase for the mailbox name.
@@ -368,6 +407,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
 
   vevents.forEach((vevent) => {
     const event = new ICAL.Event(vevent);
+    const hasExplicitEnd = vevent.hasProperty('dtend');
 
     // 1️⃣ Recurring master events
     if (event.isRecurring()) {
@@ -390,6 +430,23 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         const occurrence = event.getOccurrenceDetails(next);
         const occStart = occurrence.startDate;
         const occEnd = occurrence.endDate;
+        if (occStart.isDate) {
+          const occurrenceKey = next.toString();
+          allDaySlices(occStart, occEnd, hasExplicitEnd).forEach(
+            (slice, offset) => {
+              allEvents.push({
+                uid: `${event.uid}-${occurrenceKey}-${offset}`,
+                title: occurrence.item.summary,
+                start: slice.start,
+                end: slice.end,
+                location: occurrence.item.location || '',
+                description: sanitizeDescription(occurrence.item.description),
+                allDay: true,
+              });
+            }
+          );
+          continue;
+        }
         allEvents.push({
           uid: `${event.uid}-${next.toString()}`,
           title: occurrence.item.summary,
@@ -397,13 +454,31 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
           end: occEnd.toJSDate(),
           location: occurrence.item.location || '',
           description: sanitizeDescription(occurrence.item.description),
-          allDay: !!occStart.isDate,
+          allDay: false,
         });
       }
       return; // ✅ done with recurring master; skip normal processing.
     }
 
-    // 2️⃣ Multi‑day single events → split into one per calendar day with proper day slices
+    // 2️⃣ All-day single events → one slice per Berlin calendar day
+    if (event.startDate.isDate) {
+      allDaySlices(event.startDate, event.endDate, hasExplicitEnd).forEach(
+        (slice, offset) => {
+          allEvents.push({
+            uid: `${event.uid}-${offset}`,
+            title: event.summary,
+            start: slice.start,
+            end: slice.end,
+            location: event.location || '',
+            description: sanitizeDescription(event.description),
+            allDay: true,
+          });
+        }
+      );
+      return;
+    }
+
+    // 3️⃣ Multi‑day timed events → split into one per calendar day with proper day slices
     if (event.duration && event.duration.days >= 1) {
       const jsStart = event.startDate.toJSDate();
       const jsEnd = event.endDate.toJSDate();
@@ -420,11 +495,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         (utcDayKeyFromYmd(endKey) - utcDayKeyFromYmd(startKey)) / MS_IN_DAY
       );
 
-      // Important: do not use event.duration.days here (for all-day events, DTEND is exclusive).
-      // Otherwise, a single-day holiday would be incorrectly split into two days.
       const daysToSplit = Math.max(0, totalDays);
-
-      const isAllDayEvent = !!event.startDate.isDate;
 
       for (let offset = 0; offset <= daysToSplit; offset += 1) {
         const dayKey = addDaysToYmd(startKey, offset);
@@ -436,26 +507,14 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
         const isLast = offset === daysToSplit;
 
         // Build start/end for this slice
-        const sliceStart = isAllDayEvent
-          ? sliceDayStart
-          : isFirst
-            ? jsStart
-            : sliceDayStart;
+        const sliceStart = isFirst ? jsStart : sliceDayStart;
+        const sliceEnd = isLast ? jsEnd : sliceDayEnd;
 
-        const sliceEnd = isAllDayEvent
-          ? sliceDayEnd
-          : isLast
-            ? jsEnd
-            : sliceDayEnd;
-
-        // Per-slice allDay:
-        // - Keep true for DATE-based (all-day) events
-        // - Or mark as allDay when this slice cleanly spans one full calendar day
-        //   (00:00 → next 00:00), inklusive 23/25h wegen DST.
-        const isFullDayAligned =
+        // Mark as allDay when this slice cleanly spans one full calendar day
+        // (00:00 → next 00:00), including 23/25h days around DST changes.
+        const sliceAllDay =
           sliceStart.getTime() === sliceDayStart.getTime() &&
           sliceEnd.getTime() === sliceDayEnd.getTime();
-        const sliceAllDay = isAllDayEvent || isFullDayAligned;
 
         allEvents.push({
           uid: `${event.uid}-${offset}`,
@@ -470,7 +529,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       return;
     }
 
-    // 3️⃣ Normal single (incl. recurrence‑exception) events
+    // 4️⃣ Normal single (incl. recurrence‑exception) timed events
     allEvents.push({
       uid: `${event.uid}-${event.startDate.toString()}`,
       title: event.summary,
@@ -478,7 +537,7 @@ function parseAndTransformIcal(icalText: string): TimetableEvent[] {
       end: event.endDate.toJSDate(),
       location: event.location || '',
       description: sanitizeDescription(event.description),
-      allDay: !!event.startDate.isDate,
+      allDay: false,
     });
   });
 

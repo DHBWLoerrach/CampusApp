@@ -19,6 +19,7 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { toLocalISOString } from '@/lib/utils';
+import { toCalendarEvents, type CalendarEvent } from '@/lib/calendarEvents';
 import { getScheduleCardLocationDisplay } from '@/lib/scheduleCardLocation';
 import BottomSheet from '@/components/ui/BottomSheet';
 import LinkifiedText from '@/components/ui/LinkifiedText';
@@ -30,18 +31,7 @@ import {
   SCHEDULE_STALE_OFFLINE_MESSAGE,
 } from '@/components/schedule/timetableErrorMessage';
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  start: { dateTime: string };
-  end: { dateTime: string };
-  location?: string;
-  description?: string;
-  allDay?: boolean;
-  // Calendar Kit supports per-event styling; use this to color All‑Day chips
-  color?: string;
-  titleColor?: string;
-}
+const CALENDAR_TIMEZONE = 'Europe/Berlin';
 
 function getOptionalStringField(obj: unknown, field: string): string {
   if (!obj || typeof obj !== 'object') return '';
@@ -135,7 +125,7 @@ const CalendarSection = memo(function CalendarSection({
       scrollToNow={false}
       start={420}
       end={1200}
-      timeZone="Europe/Berlin"
+      timeZone={CALENDAR_TIMEZONE}
       theme={theme}
     >
       <CalendarHeader />
@@ -173,34 +163,10 @@ export default function ScheduleCalendarView({
   const secondaryText = useThemeColor({}, 'icon');
 
   // Transform timetable data to CalendarView format
-  const events = useMemo((): CalendarEvent[] => {
-    if (!data) return [];
-
-    // Get all events (past and future) for full navigation
-    const allEvents: CalendarEvent[] = [];
-
-    Object.keys(data).forEach((dateKey) => {
-      data[dateKey].forEach((event) => {
-        const isAllDay = !!event.allDay;
-
-        allEvents.push({
-          id: event.uid,
-          title: event.title,
-          start: { dateTime: toLocalISOString(event.start) },
-          end: { dateTime: toLocalISOString(event.end) },
-          location: event.location,
-          description: event.description,
-          allDay: isAllDay,
-          // Ensure All‑Day events (chips) adopt our brand tint color
-          color: tintColor,
-          // Keep white titles only for All‑Day chips
-          titleColor: isAllDay ? '#fff' : undefined,
-        });
-      });
-    });
-
-    return allEvents;
-  }, [data, tintColor]);
+  const events = useMemo(
+    (): CalendarEvent[] => (data ? toCalendarEvents(data, tintColor) : []),
+    [data, tintColor]
+  );
 
   const _onChange = useCallback((date: string) => {
     setCurrentDate(date);
@@ -501,8 +467,14 @@ function EventDetailSheet({
 
   if (!event) return null;
 
-  const { dateTime: startTime } = event.start || {};
-  const { dateTime: endTime } = event.end || {};
+  // All-day events carry a Berlin calendar day; noon UTC falls on the same day
+  // in Berlin, so formatting in the campus timezone keeps the date intact
+  const startTime =
+    event.start?.dateTime ??
+    (event.start?.date ? `${event.start.date}T12:00:00Z` : undefined);
+  const endTime =
+    event.end?.dateTime ??
+    (event.end?.date ? `${event.end.date}T12:00:00Z` : undefined);
   if (!startTime || !endTime) return null;
 
   const startDate = new Date(startTime);
@@ -516,7 +488,9 @@ function EventDetailSheet({
       description: rawDescription,
     });
 
+  // The calendar grid shows Berlin time, so the details do as well
   const d = startDate.toLocaleDateString('de-DE', {
+    timeZone: CALENDAR_TIMEZONE,
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -529,10 +503,12 @@ function EventDetailSheet({
     timeString = 'Ganzer Tag';
   } else {
     const t = startDate.toLocaleTimeString('de-DE', {
+      timeZone: CALENDAR_TIMEZONE,
       hour: 'numeric',
       minute: 'numeric',
     });
     const t2 = endDate.toLocaleTimeString('de-DE', {
+      timeZone: CALENDAR_TIMEZONE,
       hour: 'numeric',
       minute: 'numeric',
     });

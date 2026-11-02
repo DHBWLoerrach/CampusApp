@@ -97,6 +97,7 @@ describe('icalService (DST + multi-day)', () => {
   it('splits all-day events across DST boundaries into correct calendar days', () => {
     // Europe/Berlin switches to DST on 2025-03-30. The gap makes the difference between
     // consecutive local midnights 23 hours, which must not reduce the day count.
+    // DTEND is inclusive in the DHBW feed, so the event covers three days.
     const ics = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -111,12 +112,17 @@ describe('icalService (DST + multi-day)', () => {
     ].join('\n');
 
     const events = __parseIcalForTest(ics);
-    expect(events).toHaveLength(2);
+    expect(events).toHaveLength(3);
     expect(events.map((e) => berlinYmd(e.start))).toEqual([
       '2025-03-30',
       '2025-03-31',
+      '2025-04-01',
     ]);
     expect(events.every((e) => e.allDay)).toBe(true);
+    // The DST day is 23 hours long
+    expect(events[0].end.getTime() - events[0].start.getTime()).toBe(
+      23 * 60 * 60 * 1000
+    );
   });
 
   it('splits timed event spanning multiple days (13:00 to 17:00 two days later)', () => {
