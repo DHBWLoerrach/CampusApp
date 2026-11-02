@@ -34,7 +34,13 @@ export default function WelcomeScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.container,
-          { paddingBottom: insets.bottom + 96 },
+          {
+            // Pad the content, not the screen, so the scroll view still spans
+            // the window while its content stays clear of side insets.
+            paddingLeft: SPACING + insets.left,
+            paddingRight: SPACING + insets.right,
+            paddingBottom: insets.bottom + 96,
+          },
         ]}
       >
         <View style={styles.headerImageContainer}>

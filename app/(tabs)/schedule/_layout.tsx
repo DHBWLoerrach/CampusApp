@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { router, Stack } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -105,8 +105,12 @@ export default function ScheduleStackLayout() {
                   </TouchableOpacity>
                 )
               : undefined,
+            // Android toolbar buttons only take image icons, so Android keeps
+            // the custom header view.
             headerRight:
-              selectedCourse && (RIDES_FEATURE_ENABLED || hasBlockPlan)
+              Platform.OS !== 'ios' &&
+              selectedCourse &&
+              (RIDES_FEATURE_ENABLED || hasBlockPlan)
                 ? () => (
                     <View
                       style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -133,7 +137,35 @@ export default function ScheduleStackLayout() {
                   )
                 : undefined,
           }}
-        />
+        >
+          {/* Native bar button items: iOS drops custom header views when it
+              moves the header items into the side column of a folded iPhone
+              Duo, which would hide these entry points. */}
+          {Platform.OS === 'ios' &&
+          selectedCourse &&
+          (RIDES_FEATURE_ENABLED || hasBlockPlan) ? (
+            <Stack.Toolbar placement="right">
+              {RIDES_FEATURE_ENABLED ? (
+                <Stack.Toolbar.Button
+                  icon="car"
+                  tintColor={tintColor}
+                  onPress={() => setCarpoolOpen(true)}
+                  accessibilityLabel="Carpool öffnen"
+                  accessibilityHint="Öffnet Carpool-Informationen"
+                />
+              ) : null}
+              {hasBlockPlan ? (
+                <Stack.Toolbar.Button
+                  icon="calendar.badge.clock"
+                  tintColor={tintColor}
+                  onPress={() => router.push('/schedule/block-plan')}
+                  accessibilityLabel="Blockplan öffnen"
+                  accessibilityHint="Zeigt Theorie- und Praxisphasen aller Semester"
+                />
+              ) : null}
+            </Stack.Toolbar>
+          ) : null}
+        </Stack.Screen>
         <Stack.Screen name="block-plan" options={{ title: 'Blockplan' }} />
       </Stack>
       {RIDES_FEATURE_ENABLED && (

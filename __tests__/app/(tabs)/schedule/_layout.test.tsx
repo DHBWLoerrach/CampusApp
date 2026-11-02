@@ -1,22 +1,29 @@
 import { render } from '@testing-library/react-native';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import ScheduleStackLayout from '@/app/(tabs)/schedule/_layout';
 import { navBarOptions } from '@/constants/Navigation';
 
 const mockUseCourseContext = jest.fn();
 const mockUseBlockPlan = jest.fn();
 
-// Renders the header buttons a Stack.Screen declares so they can be asserted on.
+// Renders the header buttons a Stack.Screen declares, both the custom header
+// views (Android) and the native toolbar items (iOS), so they can be asserted on.
 jest.mock('expo-router', () => {
-  const { View } = require('react-native');
+  const { Text, View } = require('react-native');
 
   const Stack = ({ children }: any) => <View>{children}</View>;
-  Stack.Screen = ({ options }: any) => (
+  Stack.Screen = ({ options, children }: any) => (
     <View>
       {options?.headerRight ? options.headerRight() : null}
       {options?.headerTitle ? options.headerTitle() : null}
+      {children}
     </View>
   );
+  const Toolbar = ({ children }: any) => <View>{children}</View>;
+  Toolbar.Button = ({ accessibilityLabel, icon }: any) => (
+    <Text accessibilityLabel={accessibilityLabel}>{icon}</Text>
+  );
+  Stack.Toolbar = Toolbar;
 
   return { Stack, router: { push: jest.fn() } };
 });
@@ -93,6 +100,36 @@ describe('ScheduleStackLayout block plan entry point', () => {
     const { queryByLabelText } = await render(<ScheduleStackLayout />);
 
     expect(queryByLabelText('Blockplan öffnen')).toBeTruthy();
+  });
+
+  it('declares the block plan icon as a native toolbar item on iOS', async () => {
+    // iOS drops custom header views when it moves the header items into the
+    // side column of a folded iPhone Duo; native items move along.
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    const { getByLabelText } = await render(<ScheduleStackLayout />);
+
+    // HeaderIconButton is a touchable with the button role, the toolbar
+    // mock is not, so the role tells the two paths apart.
+    expect(getByLabelText('Blockplan öffnen').props.accessibilityRole).toBe(
+      undefined
+    );
+  });
+
+  it('keeps the block plan icon as a custom header view on Android', async () => {
+    // Android toolbar buttons only take image icons, not SF Symbols.
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    try {
+      const { getByLabelText } = await render(<ScheduleStackLayout />);
+
+      expect(getByLabelText('Blockplan öffnen').props.accessibilityRole).toBe(
+        'button'
+      );
+    } finally {
+      platform.restore();
+    }
   });
 
   it('uses the shared navigation title typography for the course switcher', async () => {

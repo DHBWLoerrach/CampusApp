@@ -13,6 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+const SHEET_HORIZONTAL_PADDING = 20;
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function BottomSheet({
@@ -130,6 +132,10 @@ export default function BottomSheet({
           {
             backgroundColor: background,
             paddingBottom: Math.max(16, insets.bottom + 12),
+            // The sheet spans the full width, so keep its content clear of a
+            // side inset such as the status bar column on a folded display.
+            paddingLeft: SHEET_HORIZONTAL_PADDING + insets.left,
+            paddingRight: SHEET_HORIZONTAL_PADDING + insets.right,
             transform: [{ translateY: sheetTranslateY }],
           },
         ]}
@@ -172,7 +178,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderCurve: 'continuous',
     paddingTop: 12,
-    paddingHorizontal: 20,
     maxHeight: '80%',
     boxShadow: '0 -6px 16px rgba(0, 0, 0, 0.2)',
   },

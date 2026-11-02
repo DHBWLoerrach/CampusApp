@@ -8,6 +8,7 @@ import {
   type ImageSourcePropType,
 } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import InfoModal from '@/components/services/InfoModal';
 import { INFO_PAGES, type InfoKey } from '@/components/services/InfoPages';
@@ -195,34 +196,46 @@ export default function ServicesScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {serviceGroups.map((group) => (
-          <View key={group.title} style={styles.section}>
-            <ThemedText style={styles.sectionTitle}>{group.title}</ThemedText>
-            <View style={styles.grid}>
-              {group.services.map(
-                ({ title, displayTitle, icon, url, image, content, route }) => (
-                  <ServiceCard
-                    key={title}
-                    title={title}
-                    displayTitle={displayTitle}
-                    icon={icon}
-                    onPress={() => {
-                      if (image) {
-                        setImageModal({ title, source: image });
-                      } else if (url) {
-                        openLink(url);
-                      } else if (content) {
-                        setInfoKey(content);
-                      } else if (route) {
-                        router.push(route);
-                      }
-                    }}
-                  />
-                )
-              )}
+        {/* Inset the content, not the scroll view, so the grid stays clear of
+            a side inset while the scroll view still spans the window. */}
+        <SafeAreaView edges={['left', 'right']}>
+          {serviceGroups.map((group) => (
+            <View key={group.title} style={styles.section}>
+              <ThemedText style={styles.sectionTitle}>{group.title}</ThemedText>
+              <View style={styles.grid}>
+                {group.services.map(
+                  ({
+                    title,
+                    displayTitle,
+                    icon,
+                    url,
+                    image,
+                    content,
+                    route,
+                  }) => (
+                    <ServiceCard
+                      key={title}
+                      title={title}
+                      displayTitle={displayTitle}
+                      icon={icon}
+                      onPress={() => {
+                        if (image) {
+                          setImageModal({ title, source: image });
+                        } else if (url) {
+                          openLink(url);
+                        } else if (content) {
+                          setInfoKey(content);
+                        } else if (route) {
+                          router.push(route);
+                        }
+                      }}
+                    />
+                  )
+                )}
+              </View>
             </View>
-          </View>
-        ))}
+          ))}
+        </SafeAreaView>
       </ScrollView>
 
       <InfoModal

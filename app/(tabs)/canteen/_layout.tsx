@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Stack } from 'expo-router';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import BottomSheet from '@/components/ui/BottomSheet';
 import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { navBarOptions } from '@/constants/Navigation';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
+const CANTEEN_INFO_LABEL = 'Mensa-Informationen anzeigen';
+const CANTEEN_INFO_HINT = 'Blendet Infos zur Mensa Campus Hangstraße ein';
 
 export default function CanteenStackLayout() {
   const [canteenInfoOpen, setCanteenInfoOpen] = useState(false);
@@ -20,17 +23,37 @@ export default function CanteenStackLayout() {
           name="(sections)"
           options={{
             title: 'Mensa',
-            headerRight: () => (
-              <HeaderIconButton
-                onPress={() => setCanteenInfoOpen(true)}
-                name="clock"
-                color={tintColor}
-                accessibilityLabel="Mensa-Informationen anzeigen"
-                accessibilityHint="Blendet Infos zur Mensa Campus Hangstraße ein"
-              />
-            ),
+            // Android toolbar buttons only take image icons, so Android keeps
+            // the custom header view.
+            headerRight:
+              Platform.OS === 'ios'
+                ? undefined
+                : () => (
+                    <HeaderIconButton
+                      onPress={() => setCanteenInfoOpen(true)}
+                      name="clock"
+                      color={tintColor}
+                      accessibilityLabel={CANTEEN_INFO_LABEL}
+                      accessibilityHint={CANTEEN_INFO_HINT}
+                    />
+                  ),
           }}
-        />
+        >
+          {/* A native bar button item: iOS drops custom header views when it
+              moves the header items into the side column of a folded iPhone
+              Duo, which would leave no way to open the canteen info. */}
+          {Platform.OS === 'ios' ? (
+            <Stack.Toolbar placement="right">
+              <Stack.Toolbar.Button
+                icon="clock"
+                tintColor={tintColor}
+                onPress={() => setCanteenInfoOpen(true)}
+                accessibilityLabel={CANTEEN_INFO_LABEL}
+                accessibilityHint={CANTEEN_INFO_HINT}
+              />
+            </Stack.Toolbar>
+          ) : null}
+        </Stack.Screen>
         <Stack.Screen
           name="nfc-sheet"
           options={{
