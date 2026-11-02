@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import StatusBanner from '@/components/ui/StatusBanner';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -213,9 +214,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
+    ...READABLE_CONTENT,
     padding: 16,
   },
   bannerWrap: {
+    ...READABLE_CONTENT,
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 4,

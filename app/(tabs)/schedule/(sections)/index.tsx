@@ -18,6 +18,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import ErrorWithReloadButton from '@/components/ui/ErrorWithReloadButton';
 import StatusBanner from '@/components/ui/StatusBanner';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import EmptyState from '@/components/ui/EmptyState';
 import {
@@ -184,6 +185,7 @@ export default function ScheduleList() {
         ref={ref}
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
+        contentContainerStyle={styles.listContent}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item) => item.uid}
         renderItem={renderLecture}
@@ -220,9 +222,11 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   banner: {
+    ...READABLE_CONTENT,
     marginTop: 12,
     marginBottom: 4,
   },
+  listContent: READABLE_CONTENT,
   sectionHeader: {
     minHeight: 34,
     paddingHorizontal: 4,

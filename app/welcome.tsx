@@ -7,6 +7,7 @@ import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
 import { useRoleContext } from '@/context/RoleContext';
 import { dhbwRed } from '@/constants/Colors';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import { disclaimerText } from '@/constants/InfoTexts';
 import type { Role } from '@/constants/Roles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    ...READABLE_CONTENT,
     paddingHorizontal: SPACING,
     gap: SPACING,
   },

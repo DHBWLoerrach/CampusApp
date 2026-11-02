@@ -4,6 +4,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
+    ...READABLE_CONTENT,
     padding: 16,
   },
   itemContainer: {

@@ -45,6 +45,7 @@ import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import type { YmdDate } from '@/lib/berlinDate';
 import {
   findCurrentPhase,
@@ -518,6 +519,7 @@ export default function BlockPlanView() {
         testID="block-plan-list"
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
+        contentContainerStyle={styles.listContent}
         onContentSizeChange={revealPastArchive}
         onScroll={handleScroll}
         scrollEventThrottle={16}
@@ -608,9 +610,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   banner: {
+    ...READABLE_CONTENT,
     marginTop: 12,
     marginBottom: 4,
   },
+  listContent: READABLE_CONTENT,
   phaseCardSeparator: {
     height: 8,
   },

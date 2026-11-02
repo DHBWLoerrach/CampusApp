@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { Colors, dhbwRed } from '@/constants/Colors';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
 
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    ...READABLE_CONTENT,
     padding: 16,
     paddingBottom: 32,
   },

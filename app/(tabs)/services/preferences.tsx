@@ -4,6 +4,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import RoleSelection from '@/components/services/RoleSelection';
 import { dhbwRed } from '@/constants/Colors';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import { useColorSchemeOverride } from '@/context/ColorSchemeContext';
 import { useRoleContext } from '@/context/RoleContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    ...READABLE_CONTENT,
     flex: 1,
     padding: 16,
     gap: 16,

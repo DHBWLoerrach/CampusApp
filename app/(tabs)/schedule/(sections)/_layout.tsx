@@ -21,7 +21,11 @@ import CodeCompanionPromoSheetContent, {
   CodeCompanionPromoSheetTitle,
 } from '@/components/schedule/CodeCompanionPromoSheetContent';
 import { useCourseContext } from '@/context/CourseContext';
-import { TOP_TABS_SAFE_AREA_INSETS } from '@/constants/Layout';
+import {
+  READABLE_CONTENT,
+  READABLE_CONTENT_MAX_WIDTH,
+  TOP_TABS_SAFE_AREA_INSETS,
+} from '@/constants/Layout';
 import { LAST_SCHEDULE_SUBTAB_KEY } from '@/constants/StorageKeys';
 import {
   dismissCodeCompanionPromo,
@@ -32,6 +36,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import TopTabLabel from '@/components/ui/TopTabLabel';
 
 // Create a shared query client instance for all schedule views
+// The promo banner card has 12dp side margins; widening its wrapper by those
+// margins lines the card up with the readable lecture list below it.
+const PROMO_BANNER_WRAPPER = {
+  ...READABLE_CONTENT,
+  maxWidth: READABLE_CONTENT_MAX_WIDTH + 2 * 12,
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -199,7 +210,10 @@ export default function ScheduleLayout() {
       <View>
         <MaterialTopTabBar {...props} />
         {showPromoReopen ? (
-          <CodeCompanionPromoBanner onPress={showPromo} />
+          // The banner has side margins, so a wrapper carries the max width.
+          <View style={PROMO_BANNER_WRAPPER}>
+            <CodeCompanionPromoBanner onPress={showPromo} />
+          </View>
         ) : null}
       </View>
     ),

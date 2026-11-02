@@ -28,6 +28,7 @@ import { ThemedText } from '@/components/ui/ThemedText';
 import { ThemedView } from '@/components/ui/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import StatusBanner from '@/components/ui/StatusBanner';
+import { READABLE_CONTENT } from '@/constants/Layout';
 import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useRoleContext } from '@/context/RoleContext';
 import type { Role } from '@/constants/Roles';
@@ -384,6 +385,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   listContent: {
+    ...READABLE_CONTENT,
     padding: 12,
     gap: 12,
   },
