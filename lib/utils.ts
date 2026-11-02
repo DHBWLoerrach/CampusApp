@@ -1,14 +1,9 @@
-import { Linking, Platform } from 'react-native';
+import { Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { dhbwRed } from '@/constants/Colors';
 
 export const openLink = async (url: string) => {
   if (!url) return;
-
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
-    return;
-  }
 
   if (url.startsWith('http')) {
     await WebBrowser.openBrowserAsync(url, {

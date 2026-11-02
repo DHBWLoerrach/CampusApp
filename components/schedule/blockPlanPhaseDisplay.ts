@@ -5,7 +5,7 @@ import type { BlockPlanPhase, PhaseType } from '@/lib/blockPlanDomain';
 
 type PhaseDisplay = {
   label: string;
-  /** SF Symbol name; mapped to Material icons on Android/web by IconSymbol. */
+  /** SF Symbol name; mapped to Material icons on Android by IconSymbol. */
   icon: 'graduationcap' | 'briefcase';
 };
 

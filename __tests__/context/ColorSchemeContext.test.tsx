@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
-import { Appearance, Platform } from 'react-native';
+import { Appearance } from 'react-native';
 import {
   ColorSchemeProvider,
   useColorSchemeOverride,
@@ -19,7 +19,6 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe('ColorSchemeProvider', () => {
-  const originalOS = Platform.OS;
   let setColorScheme: jest.SpyInstance;
 
   beforeEach(() => {
@@ -31,7 +30,6 @@ describe('ColorSchemeProvider', () => {
   });
 
   afterEach(() => {
-    Platform.OS = originalOS;
     jest.restoreAllMocks();
   });
 
@@ -60,16 +58,5 @@ describe('ColorSchemeProvider', () => {
 
     await act(() => result.current.setAlwaysDark(false));
     expect(setColorScheme).toHaveBeenLastCalledWith('auto');
-  });
-
-  it('skips the native scheme on web', async () => {
-    Platform.OS = 'web';
-    mockGetItem.mockResolvedValue('1');
-    const { result } = await renderHook(() => useColorSchemeOverride(), {
-      wrapper,
-    });
-
-    expect(result.current.alwaysDark).toBe(true);
-    expect(setColorScheme).not.toHaveBeenCalled();
   });
 });

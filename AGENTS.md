@@ -15,7 +15,7 @@
 
 - `npm install`: Install dependencies.
 - `npm run start` or `npx expo`: Start Metro bundler and open Expo tools.
-- `npm run android` | `npm run ios` | `npm run web`: Run locally on Android, iOS, or Web.
+- `npm run android` | `npm run ios`: Run locally on Android or iOS. The app has no web target.
 - `npm run lint`: ESLint check using `eslint-config-expo`.
 - `npm run test`: Run Jest unit tests.
 - `npm run test:watch`: Run Jest in watch mode.
@@ -43,7 +43,7 @@
 - Name test files `*.test.ts` / `*.test.tsx`.
 - Run `npm run test` locally; `npm run test:watch` for development.
 - Mock theme hooks (`useThemeColor`) and context providers as needed.
-- Validate critical flows manually on Android, iOS, and Web; run `npm run lint` in CI.
+- Validate critical flows manually on Android and iOS; run `npm run lint` in CI.
 
 ## Commit & Pull Request Guidelines
 

@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 24,
   },
-  // Keeps the text edges aligned on wide viewports (web, tablets) instead of
+  // Keeps the text edges aligned on wide windows (tablets) instead of
   // letting each line spread to the full window width.
   inner: {
     width: '100%',

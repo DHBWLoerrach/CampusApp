@@ -1,4 +1,4 @@
-import { Linking, Platform, Pressable, StyleSheet } from 'react-native';
+import { Linking, Pressable, StyleSheet } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -7,11 +7,9 @@ import EmptyState from '@/components/ui/EmptyState';
 export default function OfflineEmptyState({
   title = 'Keine Internetverbindung',
   message = 'Inhalte können ohne Internetverbindung nicht geladen werden.',
-  onOpenSettings = Platform.OS === 'web'
-    ? undefined
-    : () => {
-        void Linking.openSettings();
-      },
+  onOpenSettings = () => {
+    void Linking.openSettings();
+  },
   onRetry,
   style,
 }: {

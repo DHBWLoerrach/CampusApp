@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import {
   Linking,
-  Platform,
   Text,
   type TextProps,
   type StyleProp,
@@ -31,11 +30,7 @@ const trimTrailingPunctuation = (url: string) => {
 };
 
 const openLink = (url: string) => {
-  if (Platform.OS === 'web') {
-    window.open(url, '_blank');
-  } else {
-    Linking.openURL(url);
-  }
+  Linking.openURL(url);
 };
 
 const LinkifiedText: React.FC<LinkifiedTextProps> = memo(

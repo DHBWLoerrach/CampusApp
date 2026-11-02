@@ -4,7 +4,6 @@ import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import BlockPlanIcon from '@expo/material-symbols/calendar_clock.xml';
 import CarIcon from '@expo/material-symbols/directions_car.xml';
 import BottomSheet from '@/components/ui/BottomSheet';
-import HeaderIconButton from '@/components/ui/HeaderIconButton';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ThemedText } from '@/components/ui/ThemedText';
 import RideMatchSheetContent from '@/components/schedule/RideMatchSheetContent';
@@ -107,46 +106,13 @@ export default function ScheduleStackLayout() {
                   </TouchableOpacity>
                 )
               : undefined,
-            // Stack.Toolbar renders nothing on web, so web keeps the custom
-            // header view.
-            headerRight:
-              Platform.OS === 'web' &&
-              selectedCourse &&
-              (RIDES_FEATURE_ENABLED || hasBlockPlan)
-                ? () => (
-                    <View
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
-                    >
-                      {RIDES_FEATURE_ENABLED && (
-                        <HeaderIconButton
-                          onPress={() => setCarpoolOpen(true)}
-                          name="car"
-                          color={tintColor}
-                          accessibilityLabel="Carpool öffnen"
-                          accessibilityHint="Öffnet Carpool-Informationen"
-                        />
-                      )}
-                      {hasBlockPlan && (
-                        <HeaderIconButton
-                          onPress={() => router.push('/schedule/block-plan')}
-                          name="calendar.badge.clock"
-                          color={tintColor}
-                          accessibilityLabel="Blockplan öffnen"
-                          accessibilityHint="Zeigt Theorie- und Praxisphasen aller Semester"
-                        />
-                      )}
-                    </View>
-                  )
-                : undefined,
           }}
         >
-          {/* Native bar button items on iOS and Android. iOS drops custom
-              header views when it moves the header items into the side
-              column of a folded iPhone Duo, which would hide these entry
-              points. Android takes Material Symbols as image sources. */}
-          {Platform.OS !== 'web' &&
-          selectedCourse &&
-          (RIDES_FEATURE_ENABLED || hasBlockPlan) ? (
+          {/* Native bar button items. iOS drops custom header views when it
+              moves the header items into the side column of a folded iPhone
+              Duo, which would hide these entry points. Android takes Material
+              Symbols as image sources. */}
+          {selectedCourse && (RIDES_FEATURE_ENABLED || hasBlockPlan) ? (
             <Stack.Toolbar placement="right">
               {RIDES_FEATURE_ENABLED ? (
                 <Stack.Toolbar.Button

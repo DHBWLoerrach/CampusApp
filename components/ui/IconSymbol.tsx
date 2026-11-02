@@ -1,4 +1,4 @@
-// Fallback for using MaterialIcons and MaterialCommunityIcons on Android and web.
+// Fallback for using MaterialIcons and MaterialCommunityIcons on Android.
 
 import MaterialIcons from '@react-native-vector-icons/material-icons/static';
 import MaterialCommunityIcons from '@react-native-vector-icons/material-design-icons/static';
@@ -104,7 +104,7 @@ const MAPPING = {
 } as Record<string, IconConfig>;
 
 /**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
+ * An icon component that uses native SF Symbols on iOS, and Material Icons on Android.
  * This ensures a consistent look across platforms, and optimal resource usage.
  * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
  * Falls back to MaterialCommunityIcons if the icon is not available in MaterialIcons.

@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { Appearance, Platform } from 'react-native';
+import { Appearance } from 'react-native';
 import Storage from 'expo-sqlite/kv-store';
 
 // Centralized color scheme override state. When alwaysDark is true,
@@ -53,9 +53,9 @@ export function ColorSchemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Native UI such as the tab bar and alerts only follows the app-wide scheme,
-  // not the React theme. react-native-web does not implement setColorScheme.
+  // not the React theme.
   useEffect(() => {
-    if (!isReady || Platform.OS === 'web') return;
+    if (!isReady) return;
     Appearance.setColorScheme(alwaysDark ? 'dark' : 'auto');
   }, [alwaysDark, isReady]);
 

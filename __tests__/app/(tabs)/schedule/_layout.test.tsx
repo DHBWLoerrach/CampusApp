@@ -6,16 +6,14 @@ import { navBarOptions } from '@/constants/Navigation';
 const mockUseCourseContext = jest.fn();
 const mockUseBlockPlan = jest.fn();
 
-// Renders the header buttons a Stack.Screen declares, both the custom header
-// views (web) and the native toolbar items (iOS, Android), so they can be
-// asserted on.
+// Renders the header title and the native toolbar items a Stack.Screen
+// declares, so they can be asserted on.
 jest.mock('expo-router', () => {
   const { Text, View } = require('react-native');
 
   const Stack = ({ children }: any) => <View>{children}</View>;
   Stack.Screen = ({ options, children }: any) => (
     <View>
-      {options?.headerRight ? options.headerRight() : null}
       {options?.headerTitle ? options.headerTitle() : null}
       {children}
     </View>
@@ -103,48 +101,27 @@ describe('ScheduleStackLayout block plan entry point', () => {
     expect(queryByLabelText('Blockplan öffnen')).toBeTruthy();
   });
 
-  it('declares the block plan icon as a native toolbar item on iOS', async () => {
-    // iOS drops custom header views when it moves the header items into the
-    // side column of a folded iPhone Duo; native items move along.
+  it('uses an SF Symbol for the block plan toolbar item on iOS', async () => {
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
     const { getByLabelText } = await render(<ScheduleStackLayout />);
 
-    // HeaderIconButton is a touchable with the button role, the toolbar
-    // mock is not, so the role tells the two paths apart.
-    expect(getByLabelText('Blockplan öffnen').props.accessibilityRole).toBe(
-      undefined
+    expect(getByLabelText('Blockplan öffnen').props.children).toBe(
+      'calendar.badge.clock'
     );
   });
 
-  it('declares the block plan icon as a native toolbar item with an image icon on Android', async () => {
-    // Android toolbar buttons only take image sources, not SF Symbols, so the
-    // icon is a Material Symbol asset.
+  it('uses a Material Symbol image for the block plan toolbar item on Android', async () => {
+    // Android toolbar buttons only take image sources, not SF Symbols.
     const platform = jest.replaceProperty(Platform, 'OS', 'android');
     mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
 
     try {
       const { getByLabelText } = await render(<ScheduleStackLayout />);
-      const item = getByLabelText('Blockplan öffnen');
 
-      expect(item.props.accessibilityRole).toBe(undefined);
-      expect(item.props.children).not.toBe('calendar.badge.clock');
-    } finally {
-      platform.restore();
-    }
-  });
-
-  it('keeps the block plan icon as a custom header view on web', async () => {
-    // Stack.Toolbar renders nothing on web.
-    const platform = jest.replaceProperty(Platform, 'OS', 'web');
-    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
-
-    try {
-      const { getAllByLabelText } = await render(<ScheduleStackLayout />);
-      const items = getAllByLabelText('Blockplan öffnen');
-
-      expect(items).toHaveLength(1);
-      expect(items[0].props.accessibilityRole).toBe('button');
+      expect(getByLabelText('Blockplan öffnen').props.children).not.toBe(
+        'calendar.badge.clock'
+      );
     } finally {
       platform.restore();
     }

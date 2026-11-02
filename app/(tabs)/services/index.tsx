@@ -60,7 +60,7 @@ function ServiceCard({
           <IconSymbol size={32} name={icon} color={iconColor} />
         </View>
         {/* Required so the soft hyphens in `displayTitle` break on Android;
-            iOS/Web ignore this prop but honor the soft hyphens directly. */}
+            iOS ignores this prop but honor the soft hyphens directly. */}
         <ThemedText
           style={styles.cardTitle}
           android_hyphenationFrequency="normal"
