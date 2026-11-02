@@ -1,22 +1,26 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
-  Animated,
-  Easing,
-  Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { BottomSheet as NativeBottomSheet, RNHostView } from '@expo/ui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
 const SHEET_HORIZONTAL_PADDING = 20;
+// Share of the window the sheet content may take before it scrolls.
+const SHEET_MAX_HEIGHT_RATIO = 0.8;
+// Keeps the content mounted while the native dismiss animation runs, so the
+// sheet does not collapse to an empty frame on its way out.
+const UNMOUNT_DELAY_MS = 400;
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
+/**
+ * A native bottom sheet (SwiftUI sheet on iOS, Material 3 ModalBottomSheet on
+ * Android) with a title and scrollable React Native content.
+ */
 export default function BottomSheet({
   visible,
   title,
@@ -32,162 +36,65 @@ export default function BottomSheet({
 }) {
   const background = useThemeColor({}, 'background');
   const insets = useSafeAreaInsets();
-  const { height: screenHeight } = useWindowDimensions();
-  const [isMounted, setIsMounted] = useState(visible);
-  const [sheetProgress] = useState(() => new Animated.Value(visible ? 0 : 1));
-  const [backdropOpacity] = useState(() => new Animated.Value(visible ? 1 : 0));
-  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { height: windowHeight } = useWindowDimensions();
+  // The native sheet stays in the tree while hidden, so the content is only
+  // mounted while it is shown. Closed sheets must not run their content, e.g.
+  // the ride matches would otherwise fetch on every schedule visit.
+  const [contentMounted, setContentMounted] = useState(visible);
 
   useEffect(() => {
-    if (closeTimeout.current) {
-      clearTimeout(closeTimeout.current);
-      closeTimeout.current = null;
-    }
-
-    if (visible && !isMounted) {
-      // The sheet must be mounted before the opening animation can run.
+    if (visible) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsMounted(true);
+      setContentMounted(true);
       return;
     }
+    const timeout = setTimeout(
+      () => setContentMounted(false),
+      UNMOUNT_DELAY_MS
+    );
+    return () => clearTimeout(timeout);
+  }, [visible]);
 
-    if (!isMounted) return;
-
-    const toValue = visible ? 0 : 1;
-    const fadeTo = visible ? 1 : 0;
-
-    const sheetDuration = visible ? 360 : 300;
-    const sheetEasing = visible
-      ? Easing.out(Easing.cubic)
-      : Easing.in(Easing.cubic);
-    const backdropDuration = visible ? 240 : 200;
-    const backdropEasing = visible
-      ? Easing.out(Easing.cubic)
-      : Easing.in(Easing.cubic);
-
-    Animated.parallel([
-      Animated.timing(sheetProgress, {
-        toValue,
-        duration: sheetDuration,
-        easing: sheetEasing,
-        useNativeDriver: true,
-      }),
-      Animated.timing(backdropOpacity, {
-        toValue: fadeTo,
-        duration: backdropDuration,
-        easing: backdropEasing,
-        useNativeDriver: true,
-      }),
-    ]).start(({ finished }) => {
-      if (!finished) return;
-      if (!visible) {
-        setIsMounted(false);
-      }
-    });
-
-    if (!visible) {
-      closeTimeout.current = setTimeout(() => {
-        setIsMounted(false);
-        closeTimeout.current = null;
-      }, sheetDuration + 50);
-    }
-
-    return () => {
-      if (closeTimeout.current) {
-        clearTimeout(closeTimeout.current);
-        closeTimeout.current = null;
-      }
-    };
-  }, [visible, isMounted, sheetProgress, backdropOpacity]);
-
-  const sheetTranslateY = useMemo(
-    () =>
-      sheetProgress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, Math.max(0, screenHeight)],
-      }),
-    [screenHeight, sheetProgress]
-  );
+  const maxContentHeight =
+    (windowHeight - insets.top - insets.bottom) * SHEET_MAX_HEIGHT_RATIO;
 
   return (
-    <Modal
-      visible={isMounted}
-      animationType="none"
-      transparent
-      onRequestClose={onClose}
-      statusBarTranslucent
+    <NativeBottomSheet
+      isPresented={visible}
+      onDismiss={onClose}
+      containerColor={background}
+      contentPadding={0}
     >
-      <AnimatedPressable
-        style={[styles.backdrop, { opacity: backdropOpacity }]}
-        onPress={onClose}
-        accessibilityRole="button"
-        accessibilityLabel="Sheet schließen"
-        accessibilityHint="Schließt die eingeblendeten Informationen"
-      >
-        {/* spacer to capture taps; sheet stops propagation below */}
-      </AnimatedPressable>
-      <Animated.View
-        style={[
-          styles.sheet,
-          {
-            backgroundColor: background,
-            paddingBottom: Math.max(16, insets.bottom + 12),
-            // The sheet spans the full width, so keep its content clear of a
-            // side inset such as the status bar column on a folded display.
-            paddingLeft: SHEET_HORIZONTAL_PADDING + insets.left,
-            paddingRight: SHEET_HORIZONTAL_PADDING + insets.right,
-            transform: [{ translateY: sheetTranslateY }],
-          },
-        ]}
-        accessibilityViewIsModal
-      >
-        <View style={styles.handle} accessibilityElementsHidden />
-        <View style={styles.titleContainer}>
-          {titleContent ?? (
-            <ThemedText style={styles.title}>{title}</ThemedText>
-          )}
-        </View>
-        <ScrollView
-          style={styles.content}
-          contentInsetAdjustmentBehavior="never"
-          contentContainerStyle={{ paddingBottom: 24 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {children}
-        </ScrollView>
-      </Animated.View>
-    </Modal>
+      {contentMounted ? (
+        <RNHostView matchContents={{ vertical: true }}>
+          <View style={[styles.content, { maxHeight: maxContentHeight }]}>
+            <View style={styles.titleContainer}>
+              {titleContent ?? (
+                <ThemedText style={styles.title} accessibilityRole="header">
+                  {title}
+                </ThemedText>
+              )}
+            </View>
+            <ScrollView
+              style={styles.scroll}
+              contentInsetAdjustmentBehavior="never"
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+              nestedScrollEnabled
+            >
+              {children}
+            </ScrollView>
+          </View>
+        </RNHostView>
+      ) : null}
+    </NativeBottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-  },
-  sheet: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderCurve: 'continuous',
-    paddingTop: 12,
-    maxHeight: '80%',
-    boxShadow: '0 -6px 16px rgba(0, 0, 0, 0.2)',
-  },
-  handle: {
-    alignSelf: 'center',
-    width: 36,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: 'rgba(255,255,255,0.35)',
-    marginBottom: 8,
+  content: {
+    paddingTop: 20,
+    paddingHorizontal: SHEET_HORIZONTAL_PADDING,
   },
   title: {
     fontSize: 18,
@@ -198,7 +105,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  content: {
-    maxHeight: '100%',
+  scroll: {
+    flexGrow: 0,
+  },
+  scrollContent: {
+    paddingBottom: 24,
   },
 });
