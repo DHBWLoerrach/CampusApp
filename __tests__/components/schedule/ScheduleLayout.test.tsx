@@ -2,19 +2,25 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import ScheduleLayout from '@/app/(tabs)/schedule/(sections)/_layout';
 
 const mockStorageGetItem = jest.fn();
+const mockStorageSetItem = jest.fn();
 const mockUseCourseContext = jest.fn();
 const mockGetDismissed = jest.fn();
 const mockDismissPromo = jest.fn();
 const mockRouterNavigate = jest.fn();
+// The sub-tab the tabs focus first: the list when the tab bar opens plain
+// /schedule, or the sub-tab a cold start redirected to.
+let mockFirstFocusedSubTab = 'index';
 
 jest.mock('expo-sqlite/kv-store', () => ({
   getItem: (...args: unknown[]) => mockStorageGetItem(...args),
-  setItem: jest.fn(),
+  setItem: (...args: unknown[]) => mockStorageSetItem(...args),
 }));
 
 jest.mock('expo-router', () => ({
   useIsFocused: () => true,
-  useRouter: () => ({ navigate: mockRouterNavigate }),
+  router: {
+    navigate: (...args: unknown[]) => mockRouterNavigate(...args),
+  },
 }));
 
 jest.mock('expo-router/js-top-tabs', () => {
@@ -36,7 +42,14 @@ jest.mock('expo-router/js-top-tabs', () => {
     </View>
   );
 
-  Navigator.Screen = ({ children }: any) => <View>{children}</View>;
+  Navigator.Screen = ({ name, listeners }: any) => {
+    React.useEffect(() => {
+      if (name === mockFirstFocusedSubTab) listeners?.focus?.();
+      // Only the first focus matters here.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    return null;
+  };
 
   return {
     TopTabs: Navigator,
@@ -116,10 +129,13 @@ describe('ScheduleLayout Code Companion promo', () => {
   beforeEach(() => {
     consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     mockStorageGetItem.mockReset();
+    mockStorageSetItem.mockReset();
+    mockStorageSetItem.mockResolvedValue(undefined);
     mockUseCourseContext.mockReset();
     mockGetDismissed.mockReset();
     mockDismissPromo.mockReset();
     mockRouterNavigate.mockReset();
+    mockFirstFocusedSubTab = 'index';
 
     mockStorageGetItem.mockResolvedValue('index');
     mockUseCourseContext.mockReturnValue({
@@ -226,5 +242,39 @@ describe('ScheduleLayout Code Companion promo', () => {
 
     expect(setSelectedCourse).toHaveBeenCalledWith('TIF24A');
     expect(mockRouterNavigate).toHaveBeenCalledWith('/schedule/week');
+  });
+
+  it('restores the last sub-tab when the tab bar opens the schedule', async () => {
+    mockStorageGetItem.mockResolvedValue('week');
+
+    await render(<ScheduleLayout />);
+
+    await waitFor(() => {
+      expect(mockRouterNavigate).toHaveBeenCalledWith('/schedule/week');
+    });
+    expect(mockRouterNavigate).toHaveBeenCalledTimes(1);
+    // The list only shows until the navigation lands, so it is not persisted.
+    expect(mockStorageSetItem).not.toHaveBeenCalledWith(
+      'lastScheduleSubtab',
+      'index'
+    );
+  });
+
+  it('keeps the sub-tab a cold start already redirected to', async () => {
+    mockStorageGetItem.mockResolvedValue('week');
+    mockFirstFocusedSubTab = 'week';
+
+    const { findByText } = await render(<ScheduleLayout />);
+
+    // The tabs only render once the stored sub-tab has been read.
+    await findByText('TopTabBar');
+    expect(mockRouterNavigate).not.toHaveBeenCalled();
+  });
+
+  it('stays on the list when it was the last sub-tab', async () => {
+    const { findByText } = await render(<ScheduleLayout />);
+
+    await findByText('TopTabBar');
+    expect(mockRouterNavigate).not.toHaveBeenCalled();
   });
 });

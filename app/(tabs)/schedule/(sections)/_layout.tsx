@@ -1,5 +1,5 @@
 import Storage from 'expo-sqlite/kv-store';
-import { useIsFocused, useRouter } from 'expo-router';
+import { router, useIsFocused } from 'expo-router';
 import {
   MaterialTopTabBar,
   TopTabs,
@@ -46,7 +46,6 @@ const queryClient = new QueryClient({
 export default function ScheduleLayout() {
   const { selectedCourse, setSelectedCourse, isLoading } = useCourseContext();
   const isFocused = useIsFocused();
-  const router = useRouter();
   const [initialSubTab, setInitialSubTab] = useState<ScheduleSubTabName | null>(
     null
   );
@@ -55,6 +54,8 @@ export default function ScheduleLayout() {
   const [promoDismissed, setPromoDismissed] = useState<boolean | null>(null);
   const [promoOpen, setPromoOpen] = useState(false);
   const promoOpenRef = useRef(false);
+  // Sub-tab to restore if the tabs first focus the list instead.
+  const pendingRestoreRef = useRef<ScheduleSubTabName | null>(null);
   const isEligibleCourse = isCodeCompanionEligibleCourse(selectedCourse);
 
   const showPromo = useCallback(() => {
@@ -66,7 +67,17 @@ export default function ScheduleLayout() {
     setPromoOpen(true);
   }, [isEligibleCourse, promoDismissed]);
 
-  // Read last opened schedule sub-tab so we can set it as initial route
+  // Restore the last viewed sub-tab through the route, as expo-router has no
+  // initialRouteName for TopTabs.
+  const restoreSubTab = useCallback((name: ScheduleSubTabName) => {
+    setRestoringSubTab(name);
+    router.navigate(getScheduleSubTabHref(name));
+  }, []);
+
+  // Read the last opened sub-tab. A cold start into the schedule already
+  // arrives on it via the /schedule/<sub> redirect (app/index.tsx), whereas the
+  // tab bar opens plain /schedule, which shows the list first. The pathname
+  // cannot tell these apart, as it still names the previous tab on mount.
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -74,9 +85,9 @@ export default function ScheduleLayout() {
         const saved = (await Storage.getItem(LAST_SCHEDULE_SUBTAB_KEY)) as
           string | null;
         if (!mounted) return;
-        setInitialSubTab(
-          saved && isScheduleSubTabName(saved) ? saved : 'index'
-        );
+        const subTab = saved && isScheduleSubTabName(saved) ? saved : 'index';
+        setInitialSubTab(subTab);
+        pendingRestoreRef.current = subTab === 'index' ? null : subTab;
       } catch {
         if (mounted) setInitialSubTab('index');
       }
@@ -156,6 +167,21 @@ export default function ScheduleLayout() {
     setRestoringSubTab((prev) => (prev === name ? null : prev));
   }, []);
 
+  // Only the first focus after reading storage can be the plain /schedule
+  // entry. Persisting the list there would overwrite the sub-tab to restore.
+  const handleSubTabFocus = useCallback(
+    (name: ScheduleSubTabName) => {
+      const pending = pendingRestoreRef.current;
+      pendingRestoreRef.current = null;
+      if (pending && name === 'index') {
+        restoreSubTab(pending);
+        return;
+      }
+      persistSubTab(name);
+    },
+    [persistSubTab, restoreSubTab]
+  );
+
   // Enhanced tab options with course display
   const enhancedTabBarOptions = {
     ...topTabBarOptions,
@@ -185,14 +211,12 @@ export default function ScheduleLayout() {
     return null; // Or a loading spinner if you prefer
   }
 
-  // Restore the last viewed sub-tab. Two entry paths rely on the route: a cold
-  // start arrives via the /schedule/<sub> redirect (app/index.tsx), while the
-  // tabs remounted after course selection would start on their first screen.
-  // The router applies navigation after the course update has mounted the tabs.
+  // The tabs remounted after course selection would start on their first
+  // screen. The router applies navigation after the course update has mounted
+  // the tabs.
   const handleCourseSelected = (course: string) => {
-    setRestoringSubTab(initialSubTab);
     setSelectedCourse(course);
-    router.navigate(getScheduleSubTabHref(initialSubTab));
+    restoreSubTab(initialSubTab);
   };
 
   return (
@@ -211,17 +235,17 @@ export default function ScheduleLayout() {
               <TopTabs.Screen
                 name="index"
                 options={{ title: 'Liste' }}
-                listeners={{ focus: () => persistSubTab('index') }}
+                listeners={{ focus: () => handleSubTabFocus('index') }}
               />
               <TopTabs.Screen
                 name="week"
                 options={{ title: 'Woche' }}
-                listeners={{ focus: () => persistSubTab('week') }}
+                listeners={{ focus: () => handleSubTabFocus('week') }}
               />
               <TopTabs.Screen
                 name="day"
                 options={{ title: 'Tag' }}
-                listeners={{ focus: () => persistSubTab('day') }}
+                listeners={{ focus: () => handleSubTabFocus('day') }}
               />
             </TopTabs>
           ) : (
