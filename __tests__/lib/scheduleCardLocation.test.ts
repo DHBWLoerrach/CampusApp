@@ -112,4 +112,46 @@ describe('getScheduleCardLocationDisplay', () => {
     );
     expect(meta.extraTextCollapsed).not.toContain('>');
   });
+
+  // Cases carried over from the removed getLocationMeta parser
+  it('keeps the text next to an online marker as extra', () => {
+    const meta = getScheduleCardLocationDisplay({
+      location: 'begleitetes Selbststudium, online',
+      description: '',
+    });
+    expect(meta.isOnline).toBe(true);
+    expect(meta.roomText).toBeNull();
+    expect(meta.extraTextExpanded).toBe('begleitetes Selbststudium');
+  });
+
+  it('treats a URL as online and keeps the remaining text as extra', () => {
+    const meta = getScheduleCardLocationDisplay({
+      location: 'begleitetes Selbststudium https://bbb.dhbw.de/meeting',
+      description: '',
+    });
+    expect(meta.isOnline).toBe(true);
+    expect(meta.hasUrls).toBe(true);
+    expect(meta.extraTextExpanded).toBe(
+      'begleitetes Selbststudium · https://bbb.dhbw.de/meeting'
+    );
+  });
+
+  it('splits a comma-separated location into room and extra', () => {
+    const meta = getScheduleCardLocationDisplay({
+      location: 'Hörsaal A, begleitetes Selbststudium',
+      description: '',
+    });
+    expect(meta.isOnline).toBe(false);
+    expect(meta.roomText).toBe('Hörsaal A');
+    expect(meta.extraTextExpanded).toBe('begleitetes Selbststudium');
+  });
+
+  it('prefers the room-like part as room', () => {
+    const meta = getScheduleCardLocationDisplay({
+      location: 'DHBW Lörrach, Hörsaal A',
+      description: '',
+    });
+    expect(meta.roomText).toBe('Hörsaal A');
+    expect(meta.extraTextExpanded).toBe('DHBW Lörrach');
+  });
 });

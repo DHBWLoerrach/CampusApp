@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  type ImageSourcePropType,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ui/ThemedText';
@@ -16,7 +17,7 @@ import { openLink } from '@/lib/utils';
 const links: {
   title: string;
   url: string;
-  img: any;
+  img: ImageSourcePropType;
 }[] = [
   {
     title: 'Herzlich Willkommen',

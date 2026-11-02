@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: dhbwRed,
   },
   startButtonDisabled: {
-    opacity: 0.5, // nicht nur Farbe als Hinweis
+    opacity: 0.5, // Signal the disabled state by more than color alone
   },
   startButtonLabel: {
     color: '#fff',

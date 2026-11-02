@@ -3,6 +3,7 @@
 import MaterialIcons from '@react-native-vector-icons/material-icons/static';
 import MaterialCommunityIcons from '@react-native-vector-icons/material-design-icons/static';
 import { ComponentProps } from 'react';
+import type { SymbolWeight } from 'expo-symbols';
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
 
 type IconSource = 'material' | 'community';
@@ -119,7 +120,7 @@ export function IconSymbol({
   color: string | OpaqueColorValue;
   style?: StyleProp<TextStyle>;
   // Keep signature compatible with iOS variant which supports `weight`
-  weight?: any;
+  weight?: SymbolWeight;
 }) {
   const iconConfig = MAPPING[name];
   if (iconConfig.source === 'community') {

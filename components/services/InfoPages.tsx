@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Link } from 'expo-router';
 import * as Application from 'expo-application';
 import { disclaimerText } from '@/constants/InfoTexts';
-import { ThemedText } from '@/components/ui/ThemedText';
+import { ThemedText, type ThemedTextProps } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { openLink } from '@/lib/utils';
@@ -17,7 +17,7 @@ const InfoText = ({
   children,
   isLink,
 }: {
-  style?: any;
+  style?: ThemedTextProps['style'];
   children: React.ReactNode;
   isLink?: boolean;
 }) => {

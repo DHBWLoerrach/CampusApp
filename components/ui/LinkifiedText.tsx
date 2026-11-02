@@ -48,7 +48,7 @@ const LinkifiedText: React.FC<LinkifiedTextProps> = memo(
     return (
       <Text style={[style]} numberOfLines={numberOfLines}>
         {parts.map((part, index) => {
-          if (part.length === 0) return null; // nicht trimmen -> Spaces/Zeilenumbrüche bleiben erhalten
+          if (part.length === 0) return null; // Do not trim: keeps spaces and line breaks intact
           const isUrl = /^https?:\/\//i.test(part);
           if (!isUrl) {
             return <Text key={`t-${index}`}>{part}</Text>;

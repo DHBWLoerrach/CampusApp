@@ -1,5 +1,12 @@
 import { useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  type ImageSourcePropType,
+} from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import { IconSymbol, type IconSymbolName } from '@/components/ui/IconSymbol';
 import InfoModal from '@/components/services/InfoModal';
@@ -75,7 +82,7 @@ type ServiceGroup = {
     displayTitle?: string;
     icon: IconSymbolName;
     url?: string;
-    image?: any;
+    image?: ImageSourcePropType;
     content?: InfoKey;
     route?: Href;
   }[];
@@ -171,7 +178,7 @@ export default function ServicesScreen() {
 
   const [imageModal, setImageModal] = useState<{
     title: string;
-    source: any;
+    source: ImageSourcePropType;
   } | null>(null);
   const [infoKey, setInfoKey] = useState<InfoKey | null>(null);
   const Active = useMemo(
