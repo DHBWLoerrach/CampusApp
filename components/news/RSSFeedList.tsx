@@ -19,7 +19,6 @@ import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { dhbwRed } from '@/constants/Colors';
 import {
   fetchAndParseRSSFeed,
   type RSSFeed,
@@ -44,6 +43,7 @@ function ListItem({ item }: { item: Item }) {
   const thumb = item.enclosures?.[0]?.url;
   const colorScheme = useColorScheme();
   const borderColor = useThemeColor({}, 'border');
+  const titleColor = useThemeColor({}, 'accentText');
   const now = new Date();
 
   const publishedDate = item.published ? new Date(item.published) : null;
@@ -87,9 +87,7 @@ function ListItem({ item }: { item: Item }) {
         <View style={styles.textContainer}>
           <ThemedText
             numberOfLines={3}
-            style={styles.title}
-            lightColor={dhbwRed}
-            darkColor={dhbwRed}
+            style={[styles.title, { color: titleColor }]}
           >
             {item.title}
           </ThemedText>

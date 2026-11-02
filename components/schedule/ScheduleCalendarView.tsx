@@ -163,6 +163,7 @@ export default function ScheduleCalendarView({
 
   const borderColor = useThemeColor({}, 'border');
   const tintColor = useThemeColor({}, 'tint');
+  const accentTextColor = useThemeColor({}, 'accentText');
   const backgroundColor = useThemeColor({}, 'background');
   const dayNumberContainer = useThemeColor({}, 'dayNumberContainer');
   const dayTextColor = useThemeColor({}, 'dayTextColor');
@@ -354,8 +355,8 @@ export default function ScheduleCalendarView({
       },
       nowIndicatorColor: tintColor,
       headerBackgroundColor: backgroundColor,
-      hourTextStyle: { color: tintColor, fontWeight: 600 },
-      todayName: { color: tintColor, fontWeight: 600 },
+      hourTextStyle: { color: accentTextColor, fontWeight: 600 },
+      todayName: { color: accentTextColor, fontWeight: 600 },
       todayNumberContainer: {
         backgroundColor: tintColor,
       },
@@ -366,6 +367,7 @@ export default function ScheduleCalendarView({
       },
     }),
     [
+      accentTextColor,
       backgroundColor,
       borderColor,
       dayNumberContainer,

@@ -11,6 +11,8 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 const ICON_SIZE = Platform.OS === 'ios' ? 16 : 24;
+// Minimum touch target: 44 pt (Apple HIG) and 48 dp (Material Design)
+const MIN_TOUCH_SIZE = Platform.OS === 'ios' ? 44 : 48;
 
 interface HeaderProps {
   currentDate: string;
@@ -25,7 +27,7 @@ const Header: FC<HeaderProps> = ({
   onPressPrevious,
   onPressNext,
 }) => {
-  const tintColor = useThemeColor({}, 'tint');
+  const accentColor = useThemeColor({}, 'accentText');
   const backgroundColor = useThemeColor({}, 'background');
 
   const title = useMemo(() => {
@@ -47,28 +49,46 @@ const Header: FC<HeaderProps> = ({
     >
       <View style={styles.headerRightContent}>
         <View style={styles.navigation}>
-          <TouchableOpacity hitSlop={8} onPress={onPressPrevious}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={onPressPrevious}
+            accessibilityRole="button"
+            accessibilityLabel="Vorheriger Zeitraum"
+          >
             <IconSymbol
               size={ICON_SIZE}
               name="chevron.left"
-              color={tintColor}
+              color={accentColor}
             />
           </TouchableOpacity>
-          <TouchableOpacity hitSlop={8} onPress={onPressNext}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={onPressNext}
+            accessibilityRole="button"
+            accessibilityLabel="Nächster Zeitraum"
+          >
             <IconSymbol
               size={ICON_SIZE}
               name="chevron.right"
-              color={tintColor}
+              color={accentColor}
             />
           </TouchableOpacity>
         </View>
-        <Text style={[styles.headerTitle, { color: tintColor }]}>{title}</Text>
+        <Text
+          style={[styles.headerTitle, { color: accentColor }]}
+          accessibilityRole="header"
+        >
+          {title}
+        </Text>
         <TouchableOpacity
-          hitSlop={8}
+          style={styles.todayButton}
           activeOpacity={0.6}
           onPress={onPressToday}
+          accessibilityRole="button"
+          accessibilityLabel="Heute"
+          accessibilityHint="Springt zum heutigen Datum"
         >
-          <Text style={[styles.headerTitle, { color: tintColor }]}>
+          <Text style={[styles.todayText, { color: accentColor }]}>
             {Platform.OS === 'android' ? 'HEUTE' : 'Heute'}
           </Text>
         </TouchableOpacity>
@@ -82,8 +102,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    // No horizontal padding: the touch targets around the arrows and
+    // "Heute" already inset the visible content from the screen edges
   },
   headerRightContent: {
     flexDirection: 'row',
@@ -96,11 +116,26 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontSize: 16,
     fontWeight: '500',
-    marginLeft: 8,
   },
   navigation: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+  },
+  arrowButton: {
+    width: MIN_TOUCH_SIZE,
+    height: MIN_TOUCH_SIZE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  todayButton: {
+    minWidth: MIN_TOUCH_SIZE,
+    minHeight: MIN_TOUCH_SIZE,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  todayText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 });

@@ -19,6 +19,8 @@ function RadioItem({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="radio"
+      accessibilityState={{ checked: selected }}
       style={({ pressed }) => [
         styles.item,
         {
@@ -27,7 +29,12 @@ function RadioItem({
         },
       ]}
     >
-      <View style={[styles.outerCircle, { borderColor: border }]}>
+      {/* Decorative radio circle; the state is exposed via accessibilityState */}
+      <View
+        style={[styles.outerCircle, { borderColor: border }]}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
         {selected ? (
           <View
             style={{
@@ -52,7 +59,11 @@ export default function RoleSelection({
   onRoleChange: (role: Role) => void;
 }) {
   return (
-    <View style={styles.group}>
+    <View
+      style={styles.group}
+      accessibilityRole="radiogroup"
+      accessibilityLabel="Mensa-Preisgruppe"
+    >
       {roles.map((r) => (
         <RadioItem
           key={r}

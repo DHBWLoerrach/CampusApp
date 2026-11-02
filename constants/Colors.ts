@@ -4,6 +4,9 @@
  */
 
 export const dhbwRed = '#E2001A';
+// Lighter red for text and links on dark surfaces; dhbwRed only reaches
+// about 2.6:1 contrast on dark cards (WCAG AA requires 4.5:1)
+const dhbwRedOnDark = '#FF7A85';
 const dhbwGray = '#5C6971';
 const lightGray = '#DADADA';
 const veryLightGray = 'rgb(233,233,233)';
@@ -13,6 +16,7 @@ export const Colors = {
     text: '#11181C',
     background: '#ffffff',
     tint: dhbwRed,
+    accentText: dhbwRed,
     icon: dhbwGray,
     tabIconDefault: dhbwGray,
     tabIconSelected: dhbwRed,
@@ -26,6 +30,7 @@ export const Colors = {
     text: '#ECEDEE',
     background: '#151718',
     tint: dhbwRed,
+    accentText: dhbwRedOnDark,
     icon: lightGray,
     tabIconDefault: lightGray,
     tabIconSelected: dhbwRed,

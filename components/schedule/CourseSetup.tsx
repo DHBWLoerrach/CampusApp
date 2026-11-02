@@ -261,7 +261,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     borderRadius: 8,
-    height: 54,
+    // Grows with the system font size instead of clipping the text
+    minHeight: 54,
     paddingLeft: 16,
     // Reserve space for the trailing action
     paddingRight: 44,
@@ -276,7 +277,8 @@ const styles = StyleSheet.create({
   trailingAction: {
     position: 'absolute',
     right: 10,
-    height: '100%',
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
     width: 28,
