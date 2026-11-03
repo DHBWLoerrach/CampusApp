@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Pressable, View, StyleSheet, useColorScheme } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { ThemedText } from '@/components/ui/ThemedText';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -231,20 +232,14 @@ export default function RideMatchSheetContent({
     return `(${dateLabel}) ${label} ${time} · Kurse: ${courses}`;
   };
 
-  // Best-effort copy: works on web; on native we just set state to show feedback
   const tryCopy = async (text: string) => {
     try {
-      // @ts-ignore
-      if (globalThis?.navigator?.clipboard?.writeText) {
-        // @ts-ignore
-        await globalThis.navigator.clipboard.writeText(text);
-      }
+      await Clipboard.setStringAsync(text);
       setCopied('Text kopiert');
-      setTimeout(() => setCopied(null), 1500);
     } catch {
-      setCopied('Bereit zum Einfügen');
-      setTimeout(() => setCopied(null), 1500);
+      setCopied('Kopieren fehlgeschlagen');
     }
+    setTimeout(() => setCopied(null), 1500);
   };
 
   return (
