@@ -24,6 +24,45 @@ const formatTimeRange = (start: Date, end: Date) => {
   return `${startTime}–${endTime}`;
 };
 
+interface RoomChipTextProps {
+  text: string;
+  color: string;
+  expanded: boolean;
+  measured: boolean;
+  onMeasured: (isTruncated: boolean) => void;
+}
+
+// Room label inside the chip. The invisible measuring text (no numberOfLines)
+// shares one slot with the visible text, so both wrap at exactly the same
+// width (icon and chevron excluded). Otherwise the ghost wraps at a wider
+// width and truncation goes undetected.
+const RoomChipText = ({
+  text,
+  color,
+  expanded,
+  measured,
+  onMeasured,
+}: RoomChipTextProps) => (
+  <View style={styles.roomTextSlot}>
+    {!measured && (
+      <Text
+        onTextLayout={(e) => onMeasured(e.nativeEvent.lines.length > 1)}
+        style={[styles.chipText, styles.measureGhost]}
+      >
+        {text}
+      </Text>
+    )}
+
+    <Text
+      numberOfLines={expanded ? undefined : 1}
+      ellipsizeMode={expanded ? 'clip' : 'tail'}
+      style={[styles.chipText, { color }]}
+    >
+      {text}
+    </Text>
+  </View>
+);
+
 const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const scheme = useColorScheme() ?? 'light';
   const cardBg = useThemeColor({}, 'background');
@@ -44,6 +83,10 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
   const [roomMeasured, setRoomMeasured] = useState(false);
   const [isRoomTruncated, setIsRoomTruncated] = useState(false);
   const [isRoomExpanded, setIsRoomExpanded] = useState(false);
+  const handleRoomMeasured = (isTruncated: boolean) => {
+    setIsRoomTruncated(isTruncated);
+    setRoomMeasured(true);
+  };
   const [extraMeasured, setExtraMeasured] = useState(false);
   const [isExtraMultiline, setIsExtraMultiline] = useState(false);
   const [isExtraExpanded, setIsExtraExpanded] = useState(false);
@@ -110,27 +153,13 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                   style={styles.metaIcon}
                 />
 
-                {/* Invisible measuring text: same width, without numberOfLines */}
-                {!roomMeasured && (
-                  <Text
-                    onTextLayout={(e) => {
-                      setIsRoomTruncated(e.nativeEvent.lines.length > 1);
-                      setRoomMeasured(true);
-                    }}
-                    style={[styles.chipText, styles.measureGhost]}
-                  >
-                    {roomText}
-                  </Text>
-                )}
-
-                {/* Visible text (1 line) */}
-                <Text
-                  numberOfLines={isRoomExpanded ? undefined : 1}
-                  ellipsizeMode={isRoomExpanded ? 'clip' : 'tail'}
-                  style={[styles.chipText, { color: secondaryText }]}
-                >
-                  {roomText}
-                </Text>
+                <RoomChipText
+                  text={roomText}
+                  color={secondaryText}
+                  expanded={isRoomExpanded}
+                  measured={roomMeasured}
+                  onMeasured={handleRoomMeasured}
+                />
 
                 {/* Chevron only when truncated */}
                 <IconSymbol
@@ -156,25 +185,13 @@ const LectureCard: React.FC<LectureCardProps> = ({ event }) => {
                   color={secondaryText}
                   style={styles.metaIcon}
                 />
-                {!roomMeasured && (
-                  <Text
-                    onTextLayout={(e) => {
-                      setIsRoomTruncated(e.nativeEvent.lines.length > 1);
-                      setRoomMeasured(true);
-                    }}
-                    style={[styles.chipText, styles.measureGhost]}
-                  >
-                    {roomText}
-                  </Text>
-                )}
-
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={[styles.chipText, { color: secondaryText }]}
-                >
-                  {roomText}
-                </Text>
+                <RoomChipText
+                  text={roomText}
+                  color={secondaryText}
+                  expanded={false}
+                  measured={roomMeasured}
+                  onMeasured={handleRoomMeasured}
+                />
               </View>
             )}
           </>
@@ -316,6 +333,11 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 13,
     flexShrink: 1,
+  },
+  // Shared slot for visible and measuring room text (see RoomChipText)
+  roomTextSlot: {
+    flexShrink: 1,
+    minWidth: 0,
   },
   trailingIcon: {
     marginLeft: 6,
