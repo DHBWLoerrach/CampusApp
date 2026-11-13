@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, within } from '@testing-library/react-native';
 import LectureCard from '@/components/schedule/LectureCard';
 import type { TimetableEvent } from '@/lib/icalService';
 
@@ -52,5 +52,27 @@ describe('LectureCard', () => {
 
     expect(getByLabelText('Weniger anzeigen')).toBeTruthy();
     expect(getByText(longUrl)).toBeTruthy();
+  });
+
+  it('shares one measuring slot between ghost and visible room text', async () => {
+    // The invisible measuring text must wrap at exactly the width of the
+    // visible text. If it instead spans the whole chip (icon included),
+    // truncation goes undetected and the chip can never be expanded.
+    const room = 'HS VI, Raum 023; K326';
+    const { getAllByText } = await render(
+      <LectureCard event={createEvent({ location: room })} />
+    );
+
+    const roomTexts = getAllByText(room);
+    expect(roomTexts).toHaveLength(2); // ghost + visible
+
+    // The two texts must have the same parent element (the shared slot), and
+    // that parent must not also be the chip containing the door icon.
+    const [ghost, visible] = roomTexts;
+    expect(ghost.parent).not.toBeNull();
+    expect(ghost.parent).toBe(visible.parent);
+    expect(
+      within(ghost.parent!).queryAllByText('door.left.hand.open')
+    ).toHaveLength(0);
   });
 });
