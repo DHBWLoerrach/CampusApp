@@ -6,7 +6,10 @@
     "orientation": "portrait",
     "scheme": "campusapp",
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.dhbw.loerrach.campusapp",
@@ -20,7 +23,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/monochrome-icon.png"
       },
-      "permissions": ["android.permission.NFC"],
+      "permissions": [
+        "android.permission.NFC"
+      ],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "plugins": [
@@ -50,7 +55,8 @@
       "expo-font",
       "expo-image",
       "@react-native-vector-icons/material-icons",
-      "@react-native-vector-icons/material-design-icons"
+      "@react-native-vector-icons/material-design-icons",
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true,
