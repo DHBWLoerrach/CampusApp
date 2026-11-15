@@ -1,134 +1,66 @@
-import { render, screen } from '@testing-library/react-native';
-import CanteenLayout from '@/app/(tabs)/canteen/(sections)/_layout';
+import { render, within } from '@testing-library/react-native';
+import { Platform } from 'react-native';
+import CanteenStackLayout from '@/app/(tabs)/canteen/_layout';
 
-let mockWindowWidth = 390;
-let mockFontScale = 1;
-let mockRightInset = 0;
-let mockTopTabsProps: any;
+// Renders the native toolbar items a Stack.Screen declares, grouped by
+// placement, so they can be asserted on.
+jest.mock('expo-router', () => {
+  const { Text, View } = require('react-native');
 
-jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
-  __esModule: true,
-  default: () => ({
-    width: mockWindowWidth,
-    height: 800,
-    scale: 3,
-    fontScale: mockFontScale,
-  }),
-}));
+  const Stack = ({ children }: any) => <View>{children}</View>;
+  Stack.Screen = ({ children }: any) => <View>{children}</View>;
+  const Toolbar = ({ children, placement }: any) => (
+    <View testID={`toolbar-${placement}`}>{children}</View>
+  );
+  Toolbar.Button = ({ accessibilityLabel, icon }: any) => (
+    <Text accessibilityLabel={accessibilityLabel}>{icon}</Text>
+  );
+  Toolbar.View = ({ children }: any) => <View>{children}</View>;
+  Stack.Toolbar = Toolbar;
 
-jest.mock('react-native-safe-area-context', () => {
-  const { View } = require('react-native');
-
-  return {
-    SafeAreaView: ({ children }: any) => <View>{children}</View>,
-    useSafeAreaInsets: () => ({
-      top: 0,
-      right: mockRightInset,
-      bottom: 0,
-      left: 0,
-    }),
-  };
+  return { Stack };
 });
 
-// Renders each screen's title so the tab labels can be asserted on.
-jest.mock('expo-router/js-top-tabs', () => {
-  const { View, Text } = require('react-native');
-
-  const TopTabs = (props: any) => {
-    mockTopTabsProps = props;
-    return <View>{props.children}</View>;
-  };
-  TopTabs.Screen = ({ options }: any) => <Text>{options?.title}</Text>;
-
-  return { TopTabs };
-});
-
-jest.mock('@/lib/canteenClosures', () => ({
-  getCanteenClosureForDates: () => null,
+jest.mock('@/hooks/useThemeColor', () => ({
+  useThemeColor: () => '#11181c',
 }));
 
-jest.mock('@/components/canteen/CanteenClosedScreen', () => ({
+jest.mock('@/components/ui/IconSymbol', () => ({
+  IconSymbol: () => null,
+}));
+
+jest.mock('@/components/ui/BottomSheet', () => ({
   __esModule: true,
   default: () => null,
 }));
 
-describe('CanteenLayout weekday tab titles', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-    // Monday, so the window is Mon–Fri of the same week.
-    jest.setSystemTime(new Date(2026, 9, 26, 10, 0));
-    mockFontScale = 1;
-    mockRightInset = 0;
+describe('CanteenStackLayout header', () => {
+  it('shows only the info button on iPhone', async () => {
+    const { getByTestId, queryByTestId } = await render(<CanteenStackLayout />);
+
+    expect(
+      within(getByTestId('toolbar-right')).getByLabelText(
+        'Mensa-Informationen anzeigen'
+      )
+    ).toBeTruthy();
+    expect(queryByTestId('toolbar-left')).toBeNull();
   });
 
-  afterEach(() => {
-    jest.useRealTimers();
-  });
+  it('fills the leading toolbar with the canteen name on iPad', async () => {
+    // iPadOS hides the navigation title below the top tab bar, which would
+    // leave the info button alone in its row.
+    const isPad = jest
+      .spyOn(Platform as unknown as { isPad: boolean }, 'isPad', 'get')
+      .mockReturnValue(true);
 
-  it('abbreviates weekdays on narrow windows', async () => {
-    mockWindowWidth = 390;
-    await render(<CanteenLayout />);
+    try {
+      const { getByTestId } = await render(<CanteenStackLayout />);
 
-    for (const title of ['Heute', 'Morgen', 'Mi', 'Do', 'Fr']) {
-      expect(screen.getByText(title)).toBeTruthy();
+      expect(
+        within(getByTestId('toolbar-left')).getByText('Hangstraße')
+      ).toBeTruthy();
+    } finally {
+      isPad.mockRestore();
     }
-    expect(screen.queryByText('Mittwoch')).toBeNull();
-  });
-
-  it('spells out weekdays on medium-width windows', async () => {
-    mockWindowWidth = 600;
-    await render(<CanteenLayout />);
-
-    for (const title of [
-      'Heute',
-      'Morgen',
-      'Mittwoch',
-      'Donnerstag',
-      'Freitag',
-    ]) {
-      expect(screen.getByText(title)).toBeTruthy();
-    }
-    expect(screen.queryByText('Mi')).toBeNull();
-  });
-
-  it('keeps abbreviations on medium-width windows with large system text', async () => {
-    mockWindowWidth = 600;
-    mockFontScale = 1.5;
-    await render(<CanteenLayout />);
-
-    for (const title of ['Heute', 'Morgen', 'Mi', 'Do', 'Fr']) {
-      expect(screen.getByText(title)).toBeTruthy();
-    }
-    expect(screen.queryByText('Donnerstag')).toBeNull();
-  });
-
-  it('spells out weekdays with large system text when the window is wide enough', async () => {
-    mockWindowWidth = 900;
-    mockFontScale = 1.5;
-    await render(<CanteenLayout />);
-
-    for (const title of ['Mittwoch', 'Donnerstag', 'Freitag']) {
-      expect(screen.getByText(title)).toBeTruthy();
-    }
-  });
-
-  it('excludes side insets from the width available to the tabs', async () => {
-    // Wide enough on its own, but the status bar column takes 84 dp.
-    mockWindowWidth = 650;
-    mockRightInset = 84;
-    await render(<CanteenLayout />);
-
-    for (const title of ['Mi', 'Do', 'Fr']) {
-      expect(screen.getByText(title)).toBeTruthy();
-    }
-    expect(screen.queryByText('Donnerstag')).toBeNull();
-  });
-
-  it('keeps the tab bar from padding side insets a second time', async () => {
-    mockWindowWidth = 650;
-    mockRightInset = 84;
-    await render(<CanteenLayout />);
-
-    expect(mockTopTabsProps.safeAreaInsets).toEqual({ left: 0, right: 0 });
   });
 });
