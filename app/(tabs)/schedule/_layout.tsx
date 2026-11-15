@@ -28,6 +28,7 @@ export default function ScheduleStackLayout() {
   const textColor = useThemeColor({}, 'text');
   const borderColor = useThemeColor({}, 'border');
   const tintColor = useThemeColor({}, 'tint');
+  const isIpad = Platform.OS === 'ios' && Platform.isPad;
 
   // Only expose the entry point once a remote or cached plan is available.
   // Network, HTTP, and parsing errors must not suggest that a plan exists.
@@ -56,6 +57,42 @@ export default function ScheduleStackLayout() {
     }
   };
 
+  const courseSwitcher = (
+    <TouchableOpacity
+      onPress={() =>
+        otherCourses.length ? setCourseSwitchOpen(true) : handleChangeCourse()
+      }
+      hitSlop={8}
+      accessibilityRole="button"
+      accessibilityLabel={
+        otherCourses.length ? 'Kurs schnell wechseln' : 'Kurs wechseln'
+      }
+      accessibilityHint="Öffnet den Kurswechsel"
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          // The toolbar item's glass capsule hugs its content.
+          paddingHorizontal: isIpad ? 10 : 0,
+        }}
+      >
+        <Text
+          numberOfLines={1}
+          style={{
+            color: tintColor,
+            fontSize: NAV_HEADER_TITLE_FONT_SIZE,
+            fontWeight: NAV_HEADER_TITLE_FONT_WEIGHT,
+            marginRight: 6,
+          }}
+        >
+          {scheduleTitle}
+        </Text>
+        <IconSymbol name="chevron.down" size={16} color={tintColor} />
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <>
       <Stack screenOptions={navBarOptions}>
@@ -63,55 +100,22 @@ export default function ScheduleStackLayout() {
           name="(sections)"
           options={{
             title: scheduleTitle,
-            headerTitle: selectedCourse
-              ? () => (
-                  <TouchableOpacity
-                    onPress={() =>
-                      otherCourses.length
-                        ? setCourseSwitchOpen(true)
-                        : handleChangeCourse()
-                    }
-                    hitSlop={8}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      otherCourses.length
-                        ? 'Kurs schnell wechseln'
-                        : 'Kurs wechseln'
-                    }
-                    accessibilityHint="Öffnet den Kurswechsel"
-                  >
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          color: tintColor,
-                          fontSize: NAV_HEADER_TITLE_FONT_SIZE,
-                          fontWeight: NAV_HEADER_TITLE_FONT_WEIGHT,
-                          marginRight: 6,
-                        }}
-                      >
-                        {scheduleTitle}
-                      </Text>
-                      <IconSymbol
-                        name="chevron.down"
-                        size={16}
-                        color={tintColor}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )
-              : undefined,
+            // iPadOS shows the root tabs in the top bar and moves a custom
+            // title view into a row of its own below the bar button items, so
+            // iPad places the course switcher in the leading toolbar instead.
+            headerTitle:
+              selectedCourse && !isIpad ? () => courseSwitcher : undefined,
           }}
         >
           {/* Native bar button items. iOS drops custom header views when it
               moves the header items into the side column of a folded iPhone
               Duo, which would hide these entry points. Android takes Material
               Symbols as image sources. */}
+          {selectedCourse && isIpad ? (
+            <Stack.Toolbar placement="left">
+              <Stack.Toolbar.View>{courseSwitcher}</Stack.Toolbar.View>
+            </Stack.Toolbar>
+          ) : null}
           {selectedCourse && (RIDES_FEATURE_ENABLED || hasBlockPlan) ? (
             <Stack.Toolbar placement="right">
               {RIDES_FEATURE_ENABLED ? (

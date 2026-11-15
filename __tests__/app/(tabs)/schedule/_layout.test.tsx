@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { render, within } from '@testing-library/react-native';
 import { Platform, StyleSheet } from 'react-native';
 import ScheduleStackLayout from '@/app/(tabs)/schedule/_layout';
 import { navBarOptions } from '@/constants/Navigation';
@@ -18,7 +18,10 @@ jest.mock('expo-router', () => {
       {children}
     </View>
   );
-  const Toolbar = ({ children }: any) => <View>{children}</View>;
+  const Toolbar = ({ children, placement }: any) => (
+    <View testID={`toolbar-${placement}`}>{children}</View>
+  );
+  Toolbar.View = ({ children }: any) => <View>{children}</View>;
   Toolbar.Button = ({ accessibilityLabel, icon }: any) => (
     <Text accessibilityLabel={accessibilityLabel}>{icon}</Text>
   );
@@ -141,6 +144,37 @@ describe('ScheduleStackLayout block plan entry point', () => {
     expect(courseTitleStyle.fontWeight).toBe(
       navBarOptions.headerTitleStyle.fontWeight
     );
+  });
+
+  it('shows the course switcher as the header title on iPhone', async () => {
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    const { getByText, queryByTestId } = await render(<ScheduleStackLayout />);
+
+    expect(getByText('TIF26A')).toBeTruthy();
+    expect(queryByTestId('toolbar-left')).toBeNull();
+  });
+
+  it('moves the course switcher into the leading toolbar on iPad', async () => {
+    // iPadOS puts a custom title view in a row below the bar button items,
+    // so the switcher has to share the toolbar row with the block plan icon.
+    const isPad = jest
+      .spyOn(Platform as unknown as { isPad: boolean }, 'isPad', 'get')
+      .mockReturnValue(true);
+    mockUseBlockPlan.mockReturnValue({ data: PLAN_RESULT });
+
+    try {
+      const { getByTestId } = await render(<ScheduleStackLayout />);
+
+      expect(
+        within(getByTestId('toolbar-left')).getByText('TIF26A')
+      ).toBeTruthy();
+      expect(
+        within(getByTestId('toolbar-right')).getByLabelText('Blockplan öffnen')
+      ).toBeTruthy();
+    } finally {
+      isPad.mockRestore();
+    }
   });
 
   it('hides the icon when the API reports no plan for the course', async () => {
