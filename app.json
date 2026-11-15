@@ -1,15 +1,12 @@
 {
   "expo": {
-    "name": "Campus LÖ",
+    "name": "Campus LO",
     "slug": "CampusApp",
     "version": "3.2.0",
     "orientation": "portrait",
     "scheme": "campusapp",
     "userInterfaceStyle": "automatic",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "de.dhbw.loerrach.campusapp",
@@ -23,9 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "monochromeImage": "./assets/images/monochrome-icon.png"
       },
-      "permissions": [
-        "android.permission.NFC"
-      ],
+      "permissions": ["android.permission.NFC"],
       "package": "de.dhbwloe.loerrach.campusapp"
     },
     "plugins": [
@@ -56,7 +51,13 @@
       "expo-image",
       "@react-native-vector-icons/material-icons",
       "@react-native-vector-icons/material-design-icons",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "./plugins/withNativeDisplayName",
+        {
+          "displayName": "Campus LÖ"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
