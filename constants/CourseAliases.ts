@@ -14,7 +14,9 @@ export const COURSE_ALIAS_MAP: Record<string, string> = {
  */
 export function resolveCourseAlias(input: string): string {
   const norm = input.trim().toLowerCase();
-  return COURSE_ALIAS_MAP[norm] ?? norm;
+  return Object.prototype.hasOwnProperty.call(COURSE_ALIAS_MAP, norm)
+    ? COURSE_ALIAS_MAP[norm]
+    : norm;
 }
 
 // Reverse lookup table, built once from COURSE_ALIAS_MAP.
@@ -34,5 +36,7 @@ const COURSE_ALIAS_REVERSE_MAP: Record<string, string> = Object.fromEntries(
  */
 export function unresolveCourseAlias(input: string): string {
   const norm = input.trim().toLowerCase();
-  return COURSE_ALIAS_REVERSE_MAP[norm] ?? norm;
+  return Object.prototype.hasOwnProperty.call(COURSE_ALIAS_REVERSE_MAP, norm)
+    ? COURSE_ALIAS_REVERSE_MAP[norm]
+    : norm;
 }
