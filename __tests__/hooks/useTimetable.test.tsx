@@ -92,13 +92,14 @@ describe('useTimetable', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0][0]).toContain('kal-tif25a@');
-    expect(Object.keys(result.current.data ?? {})).toEqual([
+    expect(result.current.data?.incomplete).toBe(false);
+    expect(Object.keys(result.current.data?.days ?? {})).toEqual([
       '2026-11-03',
       '2026-12-24',
       '2026-12-25',
       '2026-12-26',
     ]);
-    expect(result.current.data?.['2026-11-03'][0]).toMatchObject({
+    expect(result.current.data?.days['2026-11-03'][0]).toMatchObject({
       title: 'Geschäftsprozesse',
       location: 'S021',
       allDay: false,
@@ -123,7 +124,7 @@ describe('useTimetable', () => {
     await rerender({ course: 'WWI24B' });
 
     await waitFor(() =>
-      expect(result.current.data?.['2026-11-03'][0].title).toBe('WWI24B')
+      expect(result.current.data?.days['2026-11-03'][0].title).toBe('WWI24B')
     );
     expect(fetchMock.mock.calls[1][0]).toContain('kal-wwi24b@');
   });
@@ -196,6 +197,6 @@ describe('useTimetable', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(result.current.data?.['2026-11-03'][0].title).toBe('TIF25A');
+    expect(result.current.data?.days['2026-11-03'][0].title).toBe('TIF25A');
   });
 });

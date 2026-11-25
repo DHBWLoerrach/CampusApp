@@ -26,6 +26,7 @@ import LinkifiedText from '@/components/ui/LinkifiedText';
 import { ThemedText } from '@/components/ui/ThemedText';
 import {
   getTimetableErrorMessage,
+  SCHEDULE_INCOMPLETE_MESSAGE,
   SCHEDULE_OFFLINE_MESSAGE,
   SCHEDULE_STALE_ERROR_MESSAGE,
   SCHEDULE_STALE_OFFLINE_MESSAGE,
@@ -164,7 +165,7 @@ export default function ScheduleCalendarView({
 
   // Transform timetable data to CalendarView format
   const events = useMemo(
-    (): CalendarEvent[] => (data ? toCalendarEvents(data, tintColor) : []),
+    (): CalendarEvent[] => (data ? toCalendarEvents(data.days, tintColor) : []),
     [data, tintColor]
   );
 
@@ -390,6 +391,13 @@ export default function ScheduleCalendarView({
           style={styles.banner}
         />
       ) : null}
+      {data?.incomplete && (
+        <StatusBanner
+          title="Unvollständiger Vorlesungsplan"
+          message={SCHEDULE_INCOMPLETE_MESSAGE}
+          style={styles.banner}
+        />
+      )}
       <Header
         currentDate={currentDate}
         onPressToday={_onPressToday}

@@ -20,7 +20,7 @@ https://itunes.apple.com/de/app/dhbw-lorrach-campus-app/id1106917276
 
    `cd CampusApp`
 
-3. Die Abhängigkeiten bzw. npm-Pakete in Node.js installieren:
+3. Die Node-Version aus `.nvmrc` verwenden (mit nvm über `nvm use`) und die Abhängigkeiten installieren:
 
    `npm ci`
 

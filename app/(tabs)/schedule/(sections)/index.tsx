@@ -23,6 +23,7 @@ import OfflineEmptyState from '@/components/ui/OfflineEmptyState';
 import EmptyState from '@/components/ui/EmptyState';
 import {
   getTimetableErrorMessage,
+  SCHEDULE_INCOMPLETE_MESSAGE,
   SCHEDULE_OFFLINE_MESSAGE,
   SCHEDULE_STALE_ERROR_MESSAGE,
   SCHEDULE_STALE_OFFLINE_MESSAGE,
@@ -96,12 +97,12 @@ export default function ScheduleList() {
     if (!data) return [];
 
     // 1. Filter out past days and transform into SectionList format
-    const futureSections = Object.keys(data)
+    const futureSections = Object.keys(data.days)
       .filter((dateKey) => dateKey >= today) // Keep today and future days
       .sort() // Sort keys chronologically (YYYY-MM-DD string format allows this)
       .map((dateKey) => ({
         title: dateKey, // We use the raw date key as the title for now
-        data: data[dateKey], // The events for that day
+        data: data.days[dateKey], // The events for that day
       }));
 
     return futureSections;
@@ -181,6 +182,13 @@ export default function ScheduleList() {
           style={styles.banner}
         />
       ) : null}
+      {data?.incomplete && (
+        <StatusBanner
+          title="Unvollständiger Vorlesungsplan"
+          message={SCHEDULE_INCOMPLETE_MESSAGE}
+          style={styles.banner}
+        />
+      )}
       <SectionList
         ref={ref}
         contentInsetAdjustmentBehavior="automatic"
@@ -190,7 +198,7 @@ export default function ScheduleList() {
         keyExtractor={(item) => item.uid}
         renderItem={renderLecture}
         renderSectionHeader={renderSectionHeader}
-        ListEmptyComponent={ScheduleEmptyState}
+        ListEmptyComponent={data?.incomplete ? undefined : ScheduleEmptyState}
         ItemSeparatorComponent={LectureSeparator}
         refreshControl={
           <RefreshControl

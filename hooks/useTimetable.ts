@@ -3,7 +3,7 @@ import {
   CalendarError,
   CalendarErrorCode,
   getStructuredTimetable,
-  StructuredTimetable,
+  type TimetableResult,
 } from '@/lib/icalService';
 
 /**
@@ -12,7 +12,7 @@ import {
  */
 export function useTimetable(course?: string) {
   const normalizedCourse = course?.trim() || undefined;
-  return useQuery<StructuredTimetable, CalendarError>({
+  return useQuery<TimetableResult, CalendarError>({
     // We specify the success and error types
     queryKey: ['schedule', normalizedCourse], // Include course in the key for proper caching per course
     queryFn: ({ signal }) => {

@@ -10,7 +10,7 @@
     "lint": "expo lint",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "test:ics": "node ./scripts/parse-ics.js",
+    "test:ics": "node ./scripts/parse-ics.ts",
     "check:format": "prettier --check \"**/*.{js,ts,tsx,css,json}\"",
     "format": "prettier --write \"**/*.{js,ts,tsx,css,json}\""
   },

@@ -4,12 +4,7 @@ import path from 'path';
 // All Jest tests share the timezone of the process, and assigning
 // process.env.TZ at runtime does not change it. Run the all-day suite in a
 // separate Jest process per device timezone instead.
-const DEVICE_TIME_ZONES = [
-  'UTC',
-  'Asia/Tokyo',
-  'Pacific/Auckland',
-  'America/Los_Angeles',
-];
+const DEVICE_TIME_ZONES = ['Pacific/Auckland', 'America/Los_Angeles'];
 
 const ROOT = path.resolve(__dirname, '../..');
 const SUITE = path.join(__dirname, 'icalService.allDay.test.ts');

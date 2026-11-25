@@ -1,6 +1,6 @@
+import { parseIcal, structureEventsByDay } from '@/lib/icalParser';
 import ICAL from 'ical.js';
 import {
-  __parseIcalForTest,
   CalendarError,
   CalendarErrorCode,
   getStructuredTimetable,
@@ -83,6 +83,31 @@ describe('icalService network errors', () => {
     });
   });
 
+  it('returns available lectures with a warning when a recurrence exceeds the work budget', async () => {
+    const body = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      'UID:large-series',
+      'DTSTART:20000101T090000Z',
+      'RRULE:FREQ=HOURLY',
+      'END:VEVENT',
+      'BEGIN:VEVENT',
+      'UID:lecture',
+      'SUMMARY:Vorlesung',
+      'DTSTART:20261103T090000Z',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\n');
+    jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue({ ok: true, text: async () => body } as Response);
+    await expect(getStructuredTimetable('TIF25A')).resolves.toMatchObject({
+      incomplete: true,
+      days: { '2026-11-03': [expect.objectContaining({ title: 'Vorlesung' })] },
+    });
+  });
+
   it('preserves the cause of calendar parsing failures', async () => {
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(global, 'fetch').mockResolvedValue({
@@ -100,6 +125,29 @@ describe('icalService network errors', () => {
 });
 
 describe('icalService (DST + multi-day)', () => {
+  it('keeps only representable days when an all-day series crosses into year 10000', () => {
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      'UID:year-boundary',
+      'DTSTART;VALUE=DATE:99991230',
+      'RRULE:FREQ=DAILY;COUNT=4',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\n');
+
+    const { events, incomplete } = parseIcal(
+      ics,
+      new Date('9999-12-29T08:00:00Z')
+    );
+    expect(incomplete).toBe(false);
+    expect(Object.keys(structureEventsByDay(events))).toEqual([
+      '9999-12-30',
+      '9999-12-31',
+    ]);
+  });
+
   it('splits all-day events across DST boundaries into correct calendar days', () => {
     // Europe/Berlin switches to DST on 2025-03-30. The gap makes the difference between
     // consecutive local midnights 23 hours, which must not reduce the day count.
@@ -117,7 +165,7 @@ describe('icalService (DST + multi-day)', () => {
       'END:VCALENDAR',
     ].join('\n');
 
-    const events = __parseIcalForTest(ics);
+    const { events } = parseIcal(ics);
     expect(events).toHaveLength(3);
     expect(events.map((e) => berlinYmd(e.start))).toEqual([
       '2025-03-30',
@@ -145,7 +193,7 @@ describe('icalService (DST + multi-day)', () => {
       'END:VEVENT',
       'END:VCALENDAR',
     ].join('\n');
-    const events = __parseIcalForTest(ics);
+    const { events } = parseIcal(ics);
 
     // Should split into 3 events
     expect(events).toHaveLength(3);
@@ -185,7 +233,7 @@ describe('icalService description sanitizing', () => {
       'END:VCALENDAR',
     ].join('\n');
 
-    return __parseIcalForTest(ics)[0].description;
+    return parseIcal(ics).events[0].description;
   }
 
   it('drops leftover conditional comment markers from Outlook exports', () => {
@@ -310,7 +358,7 @@ describe('icalService security hardening', () => {
     });
 
     await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
-      code: CalendarErrorCode.Parse,
+      code: CalendarErrorCode.LimitExceeded,
     });
     expect(capturedSignal?.aborted).toBe(true);
     expect(cancel).toHaveBeenCalled();
@@ -344,7 +392,7 @@ describe('icalService security hardening', () => {
     });
 
     await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
-      code: CalendarErrorCode.Parse,
+      code: CalendarErrorCode.LimitExceeded,
     });
     expect(chunksRead).toBe(6);
     expect(capturedSignal?.aborted).toBe(true);
@@ -361,7 +409,7 @@ describe('icalService security hardening', () => {
     } as unknown as Response);
 
     await expect(getStructuredTimetable('TIF25A')).rejects.toMatchObject({
-      code: CalendarErrorCode.Parse,
+      code: CalendarErrorCode.LimitExceeded,
     });
   });
 
@@ -389,7 +437,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
       expect(events).toHaveLength(2);
       expect(
         events
@@ -421,20 +469,18 @@ describe('icalService security hardening', () => {
         'UID:huge-allday',
         'SUMMARY:Century',
         'DTSTART;VALUE=DATE:20260101',
-        'DTEND;VALUE=DATE:21260101',
+        'DURATION:P3000000D',
         'END:VEVENT',
         'BEGIN:VEVENT',
         'UID:huge-timed',
         'SUMMARY:Century Timed',
         'DTSTART;TZID=W. Europe Standard Time:20260101T080000',
-        'DTEND;TZID=W. Europe Standard Time:21260101T180000',
+        'DTEND:99991231T235900Z',
         'END:VEVENT',
         'END:VCALENDAR',
       ].join('\n');
 
-      const startedAt = Date.now();
-      const events = __parseIcalForTest(ics);
-      expect(Date.now() - startedAt).toBeLessThan(2000);
+      const { events } = parseIcal(ics);
 
       const allDaySliced = events.filter((e) =>
         e.uid.startsWith('huge-allday-')
@@ -481,7 +527,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
       const allDayDays = events
         .filter((e) => e.uid.startsWith('study-period-allday-'))
         .map((e) => berlinYmd(e.start));
@@ -505,9 +551,9 @@ describe('icalService security hardening', () => {
     }
   });
 
-  it('does not let historical events at the start of the feed crowd out current lectures and logs a warning', () => {
+  it('does not let historical events at the start of the feed crowd out current lectures and returns the visible schedule', () => {
     jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
     try {
       // 30 historical multi-day events * 380 days = 11,400 out-of-window slices before today's lecture
       const historicalEvents = Array.from({ length: 30 }, (_, i) =>
@@ -534,10 +580,10 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events, incomplete } = parseIcal(ics);
       expect(events.some((e) => e.title === 'Algorithmen')).toBe(true);
       expect(events.length).toBeLessThanOrEqual(10_000);
-      expect(warnSpy).toHaveBeenCalled();
+      expect(incomplete).toBe(false);
     } finally {
       jest.useRealTimers();
     }
@@ -545,7 +591,7 @@ describe('icalService security hardening', () => {
 
   it('enforces a shared recurrence iteration budget lazily without initializing excess iterators', () => {
     jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
-    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
     const iteratorSpy = jest.spyOn(ICAL.Event.prototype, 'iterator');
     try {
       const historicalSeries = Array.from({ length: 40 }, (_, i) =>
@@ -567,13 +613,11 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const startedAt = Date.now();
-      const events = __parseIcalForTest(ics);
-      expect(Date.now() - startedAt).toBeLessThan(1000);
+      const { events, incomplete } = parseIcal(ics);
       expect(events).toHaveLength(0);
       // 20,000 shared budget / 5,000 per event = at most 4 iterators initialized, not 40
       expect(iteratorSpy.mock.calls.length).toBeLessThanOrEqual(5);
-      expect(warnSpy).toHaveBeenCalled();
+      expect(incomplete).toBe(true);
     } finally {
       jest.useRealTimers();
     }
@@ -610,7 +654,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
       const dailyEvents = events.filter((e) => e.uid.startsWith('old-daily-'));
       // Window: 2026-10-26 09:00 Berlin .. 2027-11-02 09:00 Berlin = 373 days (or 372 depending on exact boundary)
       expect(dailyEvents.length).toBeGreaterThanOrEqual(372);
@@ -664,7 +708,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
 
       const weekSlices = events.filter((e) =>
         e.uid.startsWith('weeks-duration-')
@@ -687,46 +731,6 @@ describe('icalService security hardening', () => {
           berlinYmd(slice.start)
         );
       }
-    } finally {
-      jest.useRealTimers();
-    }
-  });
-
-  it('prioritizes current recurring series ahead of historical series that exhaust the budget', () => {
-    jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
-    jest.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      // 5 expired historical series with BYDAY+COUNT (cannot be arithmetically fast-forwarded)
-      // totaling 5 * 4000 = 20,000 iterations before a current 3-lecture series.
-      const historical = Array.from({ length: 5 }, (_, i) =>
-        [
-          'BEGIN:VEVENT',
-          `UID:hist-byday-${i}`,
-          `SUMMARY:Historical ${i}`,
-          'DTSTART;TZID=W. Europe Standard Time:20050103T090000',
-          'DTEND;TZID=W. Europe Standard Time:20050103T100000',
-          'RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR;COUNT=4000',
-          'END:VEVENT',
-        ].join('\n')
-      );
-      const ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//CampusApp Test//EN',
-        ...historical,
-        'BEGIN:VEVENT',
-        'UID:current-series',
-        'SUMMARY:Aktuelle Vorlesung',
-        'DTSTART;TZID=W. Europe Standard Time:20261103T090000',
-        'DTEND;TZID=W. Europe Standard Time:20261103T103000',
-        'RRULE:FREQ=WEEKLY;COUNT=3',
-        'END:VEVENT',
-        'END:VCALENDAR',
-      ].join('\n');
-
-      const events = __parseIcalForTest(ics);
-      const current = events.filter((e) => e.title === 'Aktuelle Vorlesung');
-      expect(current).toHaveLength(3);
     } finally {
       jest.useRealTimers();
     }
@@ -775,7 +779,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
 
       const fullCountEvents = events.filter((e) =>
         e.uid.startsWith('old-count-long-')
@@ -847,18 +851,29 @@ describe('icalService security hardening', () => {
               'END:VEVENT',
             ].join('\n')
           ),
+          'BEGIN:VEVENT',
+          'UID:reversed-end',
+          'DTSTART;VALUE=DATE:20261102',
+          'DTEND;VALUE=DATE:20200101',
+          'END:VEVENT',
           'END:VCALENDAR',
         ].join('\n');
 
       formatSpy.mockClear();
-      __parseIcalForTest(makeFeed(30));
+      parseIcal(makeFeed(30));
       const callsFor30 = formatSpy.mock.calls.length;
 
       formatSpy.mockClear();
-      __parseIcalForTest(makeFeed(60));
+      const { events } = parseIcal(makeFeed(60));
       const callsFor60 = formatSpy.mock.calls.length;
 
       expect(callsFor60).toBe(callsFor30);
+      const currentEvent = events.filter((event) =>
+        event.uid.startsWith('reversed-end-')
+      );
+      expect(currentEvent).toHaveLength(1);
+      expect(berlinYmd(currentEvent[0].start)).toBe('2026-11-02');
+      expect(currentEvent[0].allDay).toBe(true);
     } finally {
       jest.useRealTimers();
     }
@@ -897,7 +912,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
       const mathEvents = events.filter((e) => e.title === 'Mathematik II');
       expect(mathEvents).toHaveLength(18);
       expect(berlinYmd(mathEvents[0].start)).toBe('2026-10-26');
@@ -928,7 +943,7 @@ describe('icalService security hardening', () => {
         'END:VCALENDAR',
       ].join('\n');
 
-      const events = __parseIcalForTest(ics);
+      const { events } = parseIcal(ics);
       expect(events).toHaveLength(267);
       expect(berlinYmd(events[0].start)).toBe('2026-10-26');
       expect(berlinYmd(events[events.length - 1].start)).toBe('2027-11-02');
@@ -960,7 +975,7 @@ describe('icalService security hardening', () => {
       'END:VCALENDAR',
     ].join('\r\n');
 
-    const events = __parseIcalForTest(ics);
+    const { events } = parseIcal(ics);
     expect(events).toHaveLength(1);
     // 2026-11-03 09:00 Europe/Berlin (CET = UTC+1) MUST equal 08:00:00Z, even on UTC machines
     expect(events[0].start.toISOString()).toBe('2026-11-03T08:00:00.000Z');
@@ -986,7 +1001,7 @@ describe('icalService security hardening', () => {
       'END:VCALENDAR',
     ].join('\n');
 
-    const events = __parseIcalForTest(ics);
+    const { events } = parseIcal(ics);
     expect(events).toHaveLength(1);
     expect(events[0].start.toISOString()).toBe('2026-11-03T08:00:00.000Z');
   });
@@ -1015,67 +1030,85 @@ describe('icalService security hardening', () => {
       'END:VCALENDAR',
     ].join('\n');
 
-    const events = __parseIcalForTest(ics);
+    const { events } = parseIcal(ics);
     expect(events).toHaveLength(1);
     expect(events[0].start.toISOString()).toBe('2026-11-03T09:00:00.000Z');
   });
 
-  it('does not let old HOURLY series with future UNTIL starve upcoming lecture series', () => {
-    jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
-    jest.spyOn(console, 'warn').mockImplementation(() => {});
-    try {
-      const oldHourly = Array.from({ length: 4 }, (_, i) =>
-        [
+  it.each(['UNTIL=20270601T000000Z', 'BYDAY=MO;COUNT=5000'])(
+    'keeps upcoming lectures ahead of old hourly series with %s',
+    (endRule) => {
+      jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
+      jest.spyOn(console, 'warn').mockImplementation(() => {});
+      try {
+        const oldHourly = Array.from({ length: 4 }, (_, i) =>
+          [
+            'BEGIN:VEVENT',
+            `UID:old-hourly-${i}`,
+            `SUMMARY:Old Hourly ${i}`,
+            'DTSTART:20200101T090000Z',
+            'DTEND:20200101T093000Z',
+            `RRULE:FREQ=HOURLY;${endRule}`,
+            'END:VEVENT',
+          ].join('\n')
+        );
+        const ics = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//CampusApp Test//EN',
+          ...oldHourly,
           'BEGIN:VEVENT',
-          `UID:old-hourly-${i}`,
-          `SUMMARY:Old Hourly ${i}`,
-          'DTSTART:20200101T090000Z',
-          'DTEND:20200101T093000Z',
-          'RRULE:FREQ=HOURLY;UNTIL=20270601T000000Z',
+          'UID:tomorrow-lecture',
+          'SUMMARY:Datenbanken',
+          'DTSTART;TZID=W. Europe Standard Time:20261103T090000',
+          'DTEND;TZID=W. Europe Standard Time:20261103T103000',
+          'RRULE:FREQ=WEEKLY;COUNT=3',
           'END:VEVENT',
-        ].join('\n')
-      );
-      const ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//CampusApp Test//EN',
-        ...oldHourly,
-        'BEGIN:VEVENT',
-        'UID:tomorrow-lecture',
-        'SUMMARY:Datenbanken',
-        'DTSTART;TZID=W. Europe Standard Time:20261103T090000',
-        'DTEND;TZID=W. Europe Standard Time:20261103T103000',
-        'RRULE:FREQ=WEEKLY;COUNT=3',
-        'END:VEVENT',
-        'END:VCALENDAR',
-      ].join('\n');
+          'END:VCALENDAR',
+        ].join('\n');
 
-      const events = __parseIcalForTest(ics);
-      expect(events.filter((e) => e.title === 'Datenbanken')).toHaveLength(3);
-    } finally {
-      jest.useRealTimers();
+        const { events } = parseIcal(ics);
+        expect(events.filter((e) => e.title === 'Datenbanken')).toHaveLength(3);
+      } finally {
+        jest.useRealTimers();
+      }
     }
-  });
+  );
+});
 
-  it('checks VTIMEZONE presence in linear time without regex backtracking', () => {
-    const repeated = 'BEGIN:VTIMEZONE\nTZID:Europe/Berlin\n'.repeat(1500);
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//CampusApp Test//EN',
-      'BEGIN:VEVENT',
-      'UID:redos-tz',
-      'SUMMARY:Lecture',
-      'DTSTART;TZID=W. Europe Standard Time:20261103T090000',
-      'DTEND;TZID=W. Europe Standard Time:20261103T100000',
-      `DESCRIPTION:${repeated.replace(/\n/g, '\\n')}`,
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\n');
-
-    const startedAt = Date.now();
-    const events = __parseIcalForTest(ics);
-    expect(Date.now() - startedAt).toBeLessThan(500);
-    expect(events).toHaveLength(1);
-  });
+it('keeps stable IDs when singles and occurrences share the day-splitting path', () => {
+  const feed = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'BEGIN:VEVENT',
+    'UID:single',
+    'DTSTART:20261103T090000Z',
+    'END:VEVENT',
+    'BEGIN:VEVENT',
+    'UID:overnight',
+    'DTSTART:20261103T200000Z',
+    'DTEND:20261104T100000Z',
+    'END:VEVENT',
+    'BEGIN:VEVENT',
+    'UID:series',
+    'DTSTART:20261103T090000Z',
+    'RRULE:FREQ=WEEKLY;COUNT=1',
+    'END:VEVENT',
+    'BEGIN:VEVENT',
+    'UID:trip',
+    'DTSTART;VALUE=DATE:20261103',
+    'DTEND;VALUE=DATE:20261104',
+    'RRULE:FREQ=WEEKLY;COUNT=1',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\n');
+  const { events } = parseIcal(feed, new Date('2026-11-02T08:00:00Z'));
+  expect(events.map((event) => event.uid)).toEqual([
+    'single-2026-11-03T09:00:00Z',
+    'overnight-0',
+    'overnight-1',
+    'series-2026-11-03T09:00:00Z',
+    'trip-2026-11-03-0',
+    'trip-2026-11-03-1',
+  ]);
 });

@@ -1,4 +1,4 @@
-import { __parseIcalForTest } from '@/lib/icalService';
+import { parseIcal } from '@/lib/icalParser';
 
 // Runs in the host timezone with `npm run test`; icalService.timezones.test.ts
 // runs it again in separate processes with other device timezones.
@@ -78,7 +78,7 @@ describe(`icalService all-day events (device timezone ${
   ])(
     'places %s (%s to %s) on the Berlin days of the feed',
     (summary, dtstart, dtend, expectedDays) => {
-      const events = __parseIcalForTest(allDayIcs(summary, dtstart, dtend));
+      const { events } = parseIcal(allDayIcs(summary, dtstart, dtend));
 
       expect(events.map((e) => berlinYmd(e.start))).toEqual(expectedDays);
       expect(events.every((e) => e.allDay)).toBe(true);
@@ -93,17 +93,20 @@ describe(`icalService all-day events (device timezone ${
     }
   );
 
-  it('treats an all-day event without DTEND as a single day', () => {
-    const events = __parseIcalForTest(allDayIcs('Brückentag', '20261019'));
-
-    expect(events.map((e) => berlinYmd(e.start))).toEqual(['2026-10-19']);
+  it.each([
+    ['20261019', '2026-10-19'],
+    ['99991231', '9999-12-31'],
+  ])('treats %s without DTEND as a single Berlin day', (start, expectedDay) => {
+    const { events } = parseIcal(allDayIcs('Brückentag', start));
+    expect(events.map((e) => berlinYmd(e.start))).toEqual([expectedDay]);
+    expect(berlinYmd(new Date(events[0].end.getTime() - 1))).toBe(expectedDay);
   });
 
   it('splits recurring all-day events into Berlin days across DST', () => {
     // Recurrences are expanded relative to now
     jest.useFakeTimers({ now: new Date('2026-11-02T08:00:00Z') });
     try {
-      const events = __parseIcalForTest(
+      const { events } = parseIcal(
         allDayIcs('Serie', '20270327', '20270329', [
           'RRULE:FREQ=YEARLY;COUNT=1',
         ])

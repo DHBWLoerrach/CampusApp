@@ -9,7 +9,7 @@
 - `context/` and `hooks/`: React Context providers and custom hooks.
 - `assets/`: Fonts, images, screenshots. Load fonts in `app/_layout.tsx`.
 - `android/`, `ios/`: Generated native projects managed by Expo with CNG (not in git repo)
-- `scripts/`: One-off utilities (e.g., `parse-ics.js`).
+- `scripts/`: One-off utilities (e.g., `parse-ics.ts`).
 
 ## Build, Test, and Development Commands
 

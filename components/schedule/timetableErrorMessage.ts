@@ -13,6 +13,8 @@ export function getTimetableErrorMessage(error: unknown): string {
       return `Der Kalenderdienst hat mit HTTP ${error.status ?? 'Fehler'} geantwortet.`;
     case CalendarErrorCode.Network:
       return 'Der Kalenderdienst ist derzeit nicht erreichbar. Bitte versuche es erneut.';
+    case CalendarErrorCode.LimitExceeded:
+      return 'Die Kalenderdatei ist zu groß und konnte nicht geladen werden.';
     case CalendarErrorCode.Parse:
       return 'Die Kalenderdaten haben ein ungültiges Format und konnten nicht verarbeitet werden.';
     case CalendarErrorCode.InvalidCourse:
@@ -30,3 +32,6 @@ export const SCHEDULE_STALE_OFFLINE_MESSAGE =
 
 export const SCHEDULE_STALE_ERROR_MESSAGE =
   'Der Vorlesungsplan konnte nicht aktualisiert werden. Es werden zuletzt geladene Daten angezeigt.';
+
+export const SCHEDULE_INCOMPLETE_MESSAGE =
+  'Einige Termine fehlen möglicherweise, weil der Kalender nur teilweise verarbeitet werden konnte.';

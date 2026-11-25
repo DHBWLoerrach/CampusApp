@@ -1,4 +1,5 @@
 import {
+  berlinMidnight,
   inclusiveDayCount,
   msUntilBerlinMidnight,
   todayInBerlin,
@@ -90,4 +91,26 @@ describe('msUntilBerlinMidnight', () => {
       }
     }
   });
+});
+
+it('resolves midnight when Intl returns hour 24 for the same calendar date', () => {
+  const format = Intl.DateTimeFormat.prototype.formatToParts;
+  const spy = jest
+    .spyOn(Intl.DateTimeFormat.prototype, 'formatToParts')
+    .mockImplementation(function (this: Intl.DateTimeFormat, date) {
+      return format
+        .call(this, date)
+        .map((part) =>
+          part.type === 'hour' && part.value === '00'
+            ? { ...part, value: '24' }
+            : part
+        );
+    });
+  try {
+    expect(berlinMidnight(ymd('2026-10-26')).toISOString()).toBe(
+      '2026-10-25T23:00:00.000Z'
+    );
+  } finally {
+    spy.mockRestore();
+  }
 });

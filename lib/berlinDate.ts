@@ -16,13 +16,6 @@ export type YmdDate = string & { readonly [ymdBrand]: true };
 const YMD_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
-const BERLIN_YMD_FORMATTER = new Intl.DateTimeFormat('en-CA', {
-  timeZone: 'Europe/Berlin',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-});
-
 const BERLIN_DATETIME_FORMATTER = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'Europe/Berlin',
   year: 'numeric',
@@ -35,8 +28,8 @@ const BERLIN_DATETIME_FORMATTER = new Intl.DateTimeFormat('en-GB', {
 });
 
 export function todayInBerlin(now: Date = new Date()): YmdDate {
-  // `en-CA` renders as YYYY-MM-DD, so the result is a YmdDate by construction.
-  return BERLIN_YMD_FORMATTER.format(now) as YmdDate;
+  const day = new Date(berlinDayNumber(now) * MS_IN_DAY);
+  return ymd(day.toISOString().split('T')[0]);
 }
 
 export function isValidYmd(value: unknown): value is YmdDate {
@@ -67,14 +60,18 @@ function berlinWallClockAsUtc(at: Date): number {
   const partValue = (type: Intl.DateTimeFormatPartTypes) =>
     Number(parts.find((part) => part.type === type)?.value ?? 0);
 
-  return Date.UTC(
+  const wall = new Date(0);
+  wall.setUTCFullYear(
     partValue('year'),
     partValue('month') - 1,
-    partValue('day'),
+    partValue('day')
+  );
+  return wall.setUTCHours(
     // `hour12: false` renders midnight as 24 in some environments.
     partValue('hour') % 24,
     partValue('minute'),
-    partValue('second')
+    partValue('second'),
+    0
   );
 }
 
@@ -88,26 +85,40 @@ function berlinOffsetMs(at: Date): number {
  * a timer scheduled with it never fires just before the change.
  *
  * Subtracting the elapsed wall-clock time from 24 hours would be wrong on the
- * two DST days, which are 23 and 25 hours long — on the March switch the timer
- * would fire at 01:00 and leave the caller a day behind until then. Instead the
- * next midnight is resolved as a real instant: the offset is applied once, then
- * re-read at the resulting instant, which settles a DST change in between.
+ * two DST days, which are 23 and 25 hours long. Resolve the following
+ * calendar day's midnight as an instant before computing the delay.
  */
 export function msUntilBerlinMidnight(now: Date = new Date()): number {
-  const wallNow = berlinWallClockAsUtc(now);
-  const nextMidnightWall =
-    Math.floor(wallNow / MS_IN_DAY) * MS_IN_DAY + MS_IN_DAY;
+  const midnight = berlinMidnightForDay(berlinDayNumber(now) + 1);
+  return Math.max(midnight.getTime() - now.getTime(), 0) + 1000;
+}
 
-  let instant = nextMidnightWall - berlinOffsetMs(now);
-  instant = nextMidnightWall - berlinOffsetMs(new Date(instant));
+/** Calendar days since 1970-01-01, independent of the device timezone. */
+export function calendarDayNumber(
+  year: number,
+  month: number,
+  day: number
+): number {
+  return new Date(0).setUTCFullYear(year, month - 1, day) / MS_IN_DAY;
+}
 
-  // Never return zero or less: a timer built on it would spin.
-  return Math.max(instant - now.getTime(), 0) + 1000;
+export function berlinDayNumber(instant: Date): number {
+  return Math.floor(berlinWallClockAsUtc(instant) / MS_IN_DAY);
 }
 
 function utcDayKey(day: YmdDate): number {
-  const [year, month, dayOfMonth] = day.split('-').map(Number);
-  return Date.UTC(year, month - 1, dayOfMonth);
+  return Date.parse(day + 'T00:00:00Z');
+}
+
+export function berlinMidnight(day: YmdDate): Date {
+  return berlinMidnightForDay(utcDayKey(day) / MS_IN_DAY);
+}
+
+/** Resolve the start of a Berlin calendar day, including DST transitions. */
+export function berlinMidnightForDay(day: number): Date {
+  const wall = day * MS_IN_DAY;
+  const estimate = wall - berlinOffsetMs(new Date(wall));
+  return new Date(wall - berlinOffsetMs(new Date(estimate)));
 }
 
 /** Days from `from` to `to`, counting both boundary days. */
